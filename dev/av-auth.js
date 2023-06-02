@@ -113,7 +113,16 @@ class AVAuth extends LitElement {
 
   static properties = {
     auth: { type: Object },
+    mode: {type: String, enum: ['sign in', 'sign up']},
+    email: {},
+    password: {}
   };
+  constructor() {
+    super();
+    this.mode = 'sign in';
+    this.email = '';
+    this.password = '';
+  }
 
   render() {
     return html`
@@ -122,7 +131,7 @@ class AVAuth extends LitElement {
 
         <input type="hidden" name="ga_id" class="js-octo-ga-id-input">
         <div id="auth-form-header">
-          <h1>Sign in to Host</h1>
+          <h1>${this.mode === 'sign in' ? html`Вход на Хост` : html`Создание аккаунта`}</h1>
         </div>
                  
         <div id="auth-form-body">
@@ -133,24 +142,26 @@ class AVAuth extends LitElement {
                                                                                                  name="authenticity_token"
                                                                                                  value="u3ygHAuIWywYasB2fEy/XQr3ESM3Ds6TY24muWDbTLdKkTdLMKAFgHzGNQkBcpdY+z87t/muUAZ+xuR6UoglrQ==">
             <label for="login_field">
-              Username or email address
+              Email address
             </label>
             <input type="text" name="login" id="login_field" class="form-control input-block js-login-field"
+                   .value="${this.email}" @change="${e => {this.email = e.target.value}}"
                    autocapitalize="off" autocorrect="off" autocomplete="username" autofocus="autofocus">
 
             <div class="position-relative">
               <label for="password">
                 Password
               </label>
-              <input type="password" name="password" id="password"
+              <input type="password" name="password" id="password" .value="${this.password}" @change="${e => {this.password = e.target.value}}"
                      class="form-control form-control input-block js-password-field" autocomplete="current-password">
               
 
-              <input type="submit" name="commit" value="Sign in" id="sign-in-button"
+              <input type="submit" name="commit" value="${this.mode === 'sign in'? 'Войти' : 'Создать аккаунт'}" id="sign-in-button"
                      data-disable-with="Signing in…" data-signin-label="Sign in"
+                     @click="${this.signInSignUp}"
                      data-sso-label="Sign in with your identity provider" development="false">
 
-              <a class="label-link position-absolute top-0 right-0" tabindex="0" href="/password_reset">Forgot
+              <a .hidden="${this.mode === 'sign up'}" class="label-link" tabindex="0" href="/password_reset">Forgot
                 password?</a>
             </div>
           </form>
@@ -159,14 +170,24 @@ class AVAuth extends LitElement {
 
 
         <p class="login-callout mt-3">
-          New to Host?
+          ${this.mode === 'sign in' ? html`Нет аккаунта?` : html`Есть аккаунт?`}
           <a data-ga-click="Sign in, switch to sign up"
              data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;sign in switch to sign up&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/login&quot;,&quot;user_id&quot;:null}}"
              data-hydro-click-hmac="72d062e79bb6ab076a3b88b32943286ea51894183bd812a5038d00013946f239"
-             href="/signup?source=login">Create an account</a>.
+             @click="${this.switchMode}"
+             href="/signup?source=login">${this.mode === 'sign in' ? html`Создать акканут` : html`Войти в аккаунт`}</a>.
         </p>
 
       </div>    `;
+  }
+
+  switchMode(e) {
+    e.preventDefault();
+    this.mode = this.mode === 'sign up' ? 'sign in' : 'sign up';
+  }
+  signInSignUp(e) {
+    e.preventDefault()
+    console.log('e:', e);
   }
 
   // firstUpdated() {
