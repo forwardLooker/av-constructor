@@ -1,0 +1,32 @@
+{
+  "name": "constructor",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Audio Visual",
+  "main": "my-element.js",
+  "module": "my-element.js",
+  "type": "module",
+  "scripts": {
+    "serve": "wds --watch",
+    "serve:prod": "MODE=prod npm run serve"
+  },
+  "keywords": [
+    "web-components",
+    "lit-element",
+    "javascript",
+    "lit"
+  ],
+  "author": "Anvar Khakimov",
+  "license": "Private",
+  "dependencies": {
+    "firebase": "^9.22.1",
+    "firebaseui": "^6.0.2",
+    "lit": "^2.7.4"
+  },
+  "devDependencies": {
+    "@web/dev-server": "^0.1.31",
+    "@web/dev-server-legacy": "^1.0.0",
+    "@webcomponents/webcomponentsjs": "^2.6.0"
+  },
+  "customElements": "custom-elements.json"
+}
