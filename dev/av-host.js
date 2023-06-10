@@ -1,4 +1,4 @@
-import {LitElement, html, css} from 'lit';
+import {AVElement, html, css} from './av-element.js';
 
 import './av-auth.js';
 
@@ -16,55 +16,54 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
 
-export class AVHost extends LitElement {
-    static get styles() {
-        return css`
-            :host {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-            }
-            header {
-                font-size: 40px;
-                top: 0;
-                height: 60px;
-                z-index: 4;
-                background: #fff;
-                display: flex;
-                padding: 0 1.5em;
-                justify-content: stretch;
-                box-sizing: border-box;
-                box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
-            }
-            main {
-                flex: 1;
-                padding: 16px;
-                display: flex;
-                border: 0.5px solid black;
-            }
-        `;
+
+export class AVHost extends AVElement {
+  static get styles() {
+    return css`
+      :host {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
       }
+      #header {
+        padding: 0 1.5em;
+        box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
+      }
+      main {
+        flex: 1;
+        padding: 16px;
+        display: flex;
+        border: 0.5px solid black;
+      }
+    `;
+  }
 
       static properties = {
         domainsList: {},
         authorized: {},
-        pad: {attribute: true}
+        user: {},
       };
 
       constructor() {
-        super();
-        this.authorized = false;
+          super();
+          this.authorized = false;
       }
 
     render() {
-        return html`
-          <header>Хост тест</header>
-          <main>
-              ${
-                this.authorized ?  this.renderDomainsList() : html`<av-auth .auth=${auth}></av-auth>`
-              }
-          </main>
-        `
+      return html`
+        <div id="header" class="row space-between">
+          <h3>Хост тест</h3>
+          <div ${this.showIf(this.user)} class="col align-center justify-center">
+              <div>${this.user?.email}</div>
+              <button @click="${this.signOut}">Выйти</button>
+          </div>
+        </div>
+        <main>
+          ${
+            this.user ?  this.renderDomainsList() : html`<av-auth .auth=${auth}></av-auth>`
+          }
+        </main>
+      `
     }
 
     renderDomainsList() {
@@ -78,8 +77,26 @@ export class AVHost extends LitElement {
       `
     }
 
+    async signOut() {
+        await auth.signOut();
+        this.authorized = false;
+        this.user = null;
+    }
+
    async connectedCallback() {
-        super.connectedCallback()
+        super.connectedCallback();
+        auth.onAuthStateChanged((user) => {
+           if (user) {
+               // User is signed in, see docs for a list of available properties
+               // https://firebase.google.com/docs/reference/js/v8/firebase.User
+               var uid = user.uid;
+               this.authorized = true;
+               this.user = user;
+           } else {
+               // User is signed out
+               // ...
+           }
+        });
         const domainsCol = db.collection('Domains');
         const domainsSnapshot = await domainsCol.get();
         const domainsList = domainsSnapshot.docs.map(doc => doc.data().name);

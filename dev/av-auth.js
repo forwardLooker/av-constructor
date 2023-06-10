@@ -1,6 +1,6 @@
-import {LitElement, css, html} from 'lit';
+import {AVElement, css, html} from './av-element.js';
 
-class AVAuth extends LitElement {
+class AVAuth extends AVElement {
   static get styles() {
     return css`
       * {
@@ -186,8 +186,37 @@ class AVAuth extends LitElement {
     this.mode = this.mode === 'sign up' ? 'sign in' : 'sign up';
   }
   signInSignUp(e) {
-    e.preventDefault()
-    console.log('e:', e);
+    e.preventDefault();
+    console.log('signInSignUp event:', e);
+    console.log('this.closest:', this.closest('body'));
+    const auth = firebase.auth();
+    if (this.mode === 'sign up') {
+      auth.createUserWithEmailAndPassword(this.email, this.password)
+          .then((userCredential) => {
+            console.log('onSignUpSuccess:', userCredential);
+            var user = userCredential.user;
+            // this.authorized = true;
+            // this.user = user;
+          })
+          .catch((error) => {
+            console.log('onCreateError:', error);
+            var errorCode = error.code;
+            var errorMessage = error.message;
+          });
+    } else {
+      auth.signInWithEmailAndPassword(this.email, this.password)
+          .then((userCredential) => {
+            console.log('onSignIpSuccess:', userCredential);
+            var user = userCredential.user;
+            this.authorized = true;
+            this.user = user;
+          })
+          .catch((error) => {
+            console.log('onLoginError:', error);
+            var errorCode = error.code;
+            var errorMessage = error.message;
+          });
+    }
   }
 
   // firstUpdated() {
