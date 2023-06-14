@@ -1,0 +1,31 @@
+export class Item {
+  _listenersIdIncrementator;
+  _listeners;
+  listen(eventName, callback) {
+    if (this._listenersIdIncrementator === undefined) {
+      this._listenersIdIncrementator = 1;
+    }
+    const listenerId = this._listenersIdIncrementator++;
+    if (!this._listeners) {
+      this._listeners = {};
+    }
+    if (!this._listeners[eventName]) {
+      this._listeners[eventName] = {};
+    }
+    this._listeners[eventName][listenerId] = callback;
+    return listenerId;
+  }
+  clearListener(listenerId) {
+    if (this._listeners) {
+      Object.keys(this._listeners).forEach((name) => {
+        delete this._listeners[name][listenerId];
+      })
+    }
+  }
+  fire(eventName, data) {
+    if (this._listeners[eventName]) {
+      Object.keys(this._listeners[eventName])
+        .forEach(listenerId => this._listeners[eventName][listenerId](data))
+    }
+  }
+};

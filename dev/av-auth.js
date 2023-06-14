@@ -112,7 +112,6 @@ class AVAuth extends AVElement {
   }
 
   static properties = {
-    auth: { type: Object },
     mode: {type: String, enum: ['sign in', 'sign up']},
     email: {},
     password: {}
@@ -189,32 +188,21 @@ class AVAuth extends AVElement {
     e.preventDefault();
     console.log('signInSignUp event:', e);
     console.log('this.closest:', this.closest('body'));
-    const auth = firebase.auth();
     if (this.mode === 'sign up') {
-      auth.createUserWithEmailAndPassword(this.email, this.password)
+      this.auth.createUserWithEmailAndPassword(this.email, this.password)
           .then((userCredential) => {
             console.log('onSignUpSuccess:', userCredential);
-            var user = userCredential.user;
-            // this.authorized = true;
-            // this.user = user;
           })
           .catch((error) => {
             console.log('onCreateError:', error);
-            var errorCode = error.code;
-            var errorMessage = error.message;
           });
     } else {
-      auth.signInWithEmailAndPassword(this.email, this.password)
+      this.auth.signInWithEmailAndPassword(this.email, this.password)
           .then((userCredential) => {
             console.log('onSignIpSuccess:', userCredential);
-            var user = userCredential.user;
-            this.authorized = true;
-            this.user = user;
           })
           .catch((error) => {
             console.log('onLoginError:', error);
-            var errorCode = error.code;
-            var errorMessage = error.message;
           });
     }
   }

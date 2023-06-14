@@ -2,6 +2,8 @@ import {AVElement, html, css} from './av-element.js';
 
 import './av-auth.js';
 
+import {Host} from'./Host.js';
+
 const firebaseConfig = {
   apiKey: "AIzaSyCygBNBbRUdhXGIwsOnZiDKAGZx4PIDc6I",
   authDomain: "arta-vision-constructor.firebaseapp.com",
@@ -12,10 +14,12 @@ const firebaseConfig = {
   measurementId: "G-ZRVD2Z59JF"
 };
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-const db = firebaseApp.firestore();
-const auth = firebaseApp.auth();
-
+const host = new Host();
+host.firebase = firebase.initializeApp(firebaseConfig);
+host.firebaseConfig = firebaseConfig
+host.db = host.firebase.firestore();
+host.auth = host.firebase.auth();
+AVElement.Host = host;
 
 export class AVHost extends AVElement {
   static get styles() {
@@ -29,24 +33,21 @@ export class AVHost extends AVElement {
         padding: 0 1.5em;
         box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
       }
-      main {
-        flex: 1;
-        padding: 16px;
-        display: flex;
-        border: 0.5px solid black;
+      #sidebar {
+        width: 25%;
       }
     `;
   }
 
       static properties = {
         domainsList: {},
-        authorized: {},
-        user: {},
       };
+
+      // config = this.fromHost('config')
 
       constructor() {
           super();
-          this.authorized = false;
+          this.domainsList = [];
       }
 
     render() {
@@ -55,12 +56,12 @@ export class AVHost extends AVElement {
           <h3>Хост тест</h3>
           <div ${this.showIf(this.user)} class="col align-center justify-center">
               <div>${this.user?.email}</div>
-              <button @click="${this.signOut}">Выйти</button>
+              <button @click="${() => this.auth.signOut()}">Выйти</button>
           </div>
         </div>
-        <main>
+        <main class="flex-1 row pad-8 border">
           ${
-            this.user ?  this.renderDomainsList() : html`<av-auth .auth=${auth}></av-auth>`
+            this.user ?  this.renderDomainsList() : html`<av-auth></av-auth>`
           }
         </main>
       `
@@ -68,40 +69,26 @@ export class AVHost extends AVElement {
 
     renderDomainsList() {
       return html`
-        <article>
-          <p>
-            Manage complexity by building large, complex components
-            out of smaller, simpler components that do one thing well.
-          </p>
-        </article>
+        <div class="flex-1 row">
+          <div id="sidebar" class="col pad-8 border">
+              ${this.repeat(this.domainsList, (d) => d.id, (d) => html`
+                  <div>${d.name}</div>
+              `)}
+          </div>
+          <div id="content" class="flex-1 margin-left-8 pad-8 border">
+              Manage complexity by building large, complex components
+              out of smaller, simpler components that do one thing well.
+          </div>
+        </div>
       `
     }
 
-    async signOut() {
-        await auth.signOut();
-        this.authorized = false;
-        this.user = null;
-    }
-
-   async connectedCallback() {
-        super.connectedCallback();
-        auth.onAuthStateChanged((user) => {
-           if (user) {
-               // User is signed in, see docs for a list of available properties
-               // https://firebase.google.com/docs/reference/js/v8/firebase.User
-               var uid = user.uid;
-               this.authorized = true;
-               this.user = user;
-           } else {
-               // User is signed out
-               // ...
-           }
-        });
-        const domainsCol = db.collection('Domains');
-        const domainsSnapshot = await domainsCol.get();
-        const domainsList = domainsSnapshot.docs.map(doc => doc.data().name);
-        this.domainsList = domainsList;
-        // this.domainsList = ['system', 'workspace']
+    async firstUpdated() {
+      const domainsCol = this.db.collection('Domains');
+      const domainsSnapshot = await domainsCol.get();
+      const domainsList = domainsSnapshot.docs.map(doc => doc.data());
+      this.domainsList = domainsList;
+      // this.domainsList = ['system', 'workspace']
     }
 }
 window.customElements.define('av-host', AVHost);
