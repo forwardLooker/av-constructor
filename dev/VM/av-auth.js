@@ -1,4 +1,4 @@
-import {AVElement, css, html} from './av-element.js';
+import {AVElement, css, html} from './0-av-element.js';
 
 class AVAuth extends AVElement {
   static get styles() {
@@ -122,7 +122,7 @@ class AVAuth extends AVElement {
     this.email = '';
     this.password = '';
   }
-
+//TODO убрать лишние аттрибуты и классы
   render() {
     return html`
       <div class="auth-form px-3" id="login">

@@ -18,16 +18,16 @@ class showIfDirective extends Directive {
 }
 
 class AVElement extends LitElement {
-  fromHost(propName) {
-    return {
-      _fieldFromHost: propName
-    }
-  }
-  constructor() {
-    super();
-    const name = Object.keys(this).find((fieldName) => this[fieldName]?._fieldFromHost?.length > 0);
-
-  }
+  // fromHost(propName) {
+  //   return {
+  //     _fieldFromHost: propName
+  //   }
+  // }
+  // constructor() {
+  //   super();
+  //   const name = Object.keys(this).find((fieldName) => this[fieldName]?._fieldFromHost?.length > 0);
+  //
+  // }
 
   showIf = directive(showIfDirective);
   repeat = repeat;
@@ -37,7 +37,7 @@ class AVElement extends LitElement {
   get auth() { return this.Host.auth; }
   get user() {
     if (!this._userFromHost?.listenerHasSet) {
-      let listenerId = this.Host.listen('user-changed', () => {
+      let listenerId = this.Host.listen('user-state-changed', () => {
         this._userFromHost.value = this.Host.user;
         this.requestUpdate();
       })

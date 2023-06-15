@@ -1,25 +1,8 @@
-import {AVElement, html, css} from './av-element.js';
+import {AVElement, html, css} from './0-av-element.js';
 
 import './av-auth.js';
 
-import {Host} from'./Host.js';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCygBNBbRUdhXGIwsOnZiDKAGZx4PIDc6I",
-  authDomain: "arta-vision-constructor.firebaseapp.com",
-  projectId: "arta-vision-constructor",
-  storageBucket: "arta-vision-constructor.appspot.com",
-  messagingSenderId: "80353020616",
-  appId: "1:80353020616:web:27f6d324e8f2624bf433fd",
-  measurementId: "G-ZRVD2Z59JF"
-};
-
-const host = new Host();
-host.firebase = firebase.initializeApp(firebaseConfig);
-host.firebaseConfig = firebaseConfig
-host.db = host.firebase.firestore();
-host.auth = host.firebase.auth();
-AVElement.Host = host;
+import {Host} from'../M/1-Host.js';
 
 export class AVHost extends AVElement {
   static get styles() {
@@ -41,13 +24,16 @@ export class AVHost extends AVElement {
 
       static properties = {
         domainsList: {},
+        docList: {}
       };
 
       // config = this.fromHost('config')
 
       constructor() {
-          super();
-          this.domainsList = [];
+        super();
+        const host = new Host();
+        AVElement.Host = host;
+        this.domainsList = [];
       }
 
     render() {
@@ -84,11 +70,9 @@ export class AVHost extends AVElement {
     }
 
     async firstUpdated() {
-      const domainsCol = this.db.collection('Domains');
-      const domainsSnapshot = await domainsCol.get();
-      const domainsList = domainsSnapshot.docs.map(doc => doc.data());
-      this.domainsList = domainsList;
-      // this.domainsList = ['system', 'workspace']
+      const domainsList = await this.Host.getConfig();
+      this.domainsList = domainsList.map(doc => doc.data());
+      this.docList = domainsList;
     }
 }
 window.customElements.define('av-host', AVHost);
