@@ -1,4 +1,4 @@
-import {AVItem, css, html} from 'dev/VM/a-v-item.js';
+import {AVItem, css, html} from './0-av-item.js';
 
 class AVAuth extends AVItem {
   static get styles() {

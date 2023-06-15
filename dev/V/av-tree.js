@@ -12,9 +12,6 @@ export class AVTree extends AVElement {
         padding: 0 1.5em;
         box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
       }
-      #sidebar {
-        width: 25%;
-      }
     `;
   }
 
@@ -28,7 +25,9 @@ export class AVTree extends AVElement {
 
   render() {
     return html`
-      ${this.repeat()}
+      ${this.repeat(this.items, i => i.id, i => html`
+          <div>${i.name}</div>
+      `)}
     `
   }
 

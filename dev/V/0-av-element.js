@@ -17,7 +17,7 @@ class showIfDirective extends Directive {
   }
 }
 
-export class AVElement extends LitElement {
+class AVElement extends LitElement {
   showIf = directive(showIfDirective);
   repeat = repeat;
 }

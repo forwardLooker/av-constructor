@@ -1,4 +1,4 @@
-import {AVItem, html, css} from 'dev/VM/0-av-item.js';
+import {html, css, AVItem} from './0-av-item.js';
 
 import './av-auth.js';
 
@@ -91,7 +91,7 @@ export class AVHost extends AVItem {
       return html`
         <div class="flex-1 row">
           <div id="sidebar" class="col pad-8 border">
-              <av-tree items="${config.items}"></av-tree>
+              <av-tree .items="${config.items}"></av-tree>
           </div>
           <div id="content" class="flex-1 margin-left-8 pad-8 border">
               Manage complexity by building large, complex components
