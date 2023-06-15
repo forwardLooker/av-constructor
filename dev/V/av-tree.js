@@ -23,11 +23,25 @@ export class AVTree extends AVElement {
     super();
   }
 
-  render() {
+  render(nestedItems, level) {
+    let items = this.items;
+    let nestingLevel = level || 0;
+    if (this.notEmpty(nestedItems)) {
+      items = nestedItems;
+    }
+    if (this.isEmpty(nestedItems) && nestingLevel > 0) {
+      return this.nothing;
+    }
+    console.log('nest:', nestedItems);
     return html`
-      ${this.repeat(this.items, i => i.id, i => html`
-          <div>${i.name}</div>
-      `)}
+      <div class="col margin-left-16">
+        ${this.repeat(items, i => i.id, i => html`
+          <div class="col">
+              <div>${i.name}</div>
+              ${this.render(i.items, nestingLevel + 1)}
+          </div>
+        `)}
+      </div>
     `
   }
 

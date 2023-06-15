@@ -1,4 +1,4 @@
-import {html, css as litCSS, LitElement} from "lit";
+import {html, css as litCSS, LitElement, nothing} from "lit";
 import {directive, Directive} from "lit/directive.js";
 import {repeat} from 'lit/directives/repeat.js';
 
@@ -13,13 +13,20 @@ class showIfDirective extends Directive {
     return this.render();
   }
   render() {
-    return null;
+    return nothing;
   }
 }
 
 class AVElement extends LitElement {
+  nothing = nothing;
   showIf = directive(showIfDirective);
   repeat = repeat;
+  isEmpty(val) {
+    return !val || (Array.isArray(val) && val.length === 0)
+  }
+  notEmpty(val) {
+    return !this.isEmpty(val);
+  }
 }
 
 function css(...values) {
@@ -85,6 +92,9 @@ function css(...values) {
     }
     .margin-left-8 {
       margin-left: 8px;
+    }
+    .margin-left-16 {
+      margin-left: 16px;
     }
     .margin-top-8 {
       margin-top: 8px;
