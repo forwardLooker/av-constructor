@@ -1,10 +1,44 @@
-import {AVElement, html, css} from './0-av-element.js';
+import {AVItem, html, css} from 'dev/VM/0-av-item.js';
 
 import './av-auth.js';
 
+import '../V/av-tree.js';
+
 import {Host} from'../M/1-Host.js';
 
-export class AVHost extends AVElement {
+const domains = [
+  {id:'system', name: 'System'},
+  {id: 'workspace', name: 'Workspace'}
+]
+const config = {
+  version: 1,
+  id: 'main',
+  name: 'Мой Хост',
+  itemType: 'host',
+  items: [
+    {version: 1, id: 'system', name: 'System', itemType: 'domain', items: [
+        {version: 1, id: 'users', name: 'Пользователи', itemType: 'class', items: []}
+      ]},
+    {version: 1, id: 'workspace', name: 'Workspace', itemType: 'domain', items: [
+        {version: 1, id: 'dictionaries', name: 'Справочники', itemType: 'domain', items: [
+            {version: 1, id: '1', name: 'Физ. лица', itemType: 'class', items: []}
+          ]},
+        {version: 1, id: 'documents', name: 'Документы', itemType: 'domain', items: [
+            {version: 1, id: '1', name: 'Приходная налкадная', itemType: 'class', items: []}
+          ]},
+        {version: 1, id: 'services', name: 'Сервисы', itemType: 'domain', items: [
+            {version: 1, id: '1', name: 'Журнал учёта', itemType: 'domain', items: [
+                {version: 1, id: '1', name: 'Журнал учёта', itemType: 'class', items: []},
+                {version: 1, id: '2', name: 'Проводки', itemType: 'class', items: []}
+              ]}
+          ]},
+        {version: 1, id: 'solutions', name: 'Решения', itemType: 'domain', items: []},
+        {version: 1, id: 'workplaces', name: 'Рабочие места', itemType: 'domain', items: []},
+      ]},
+  ],
+}
+
+export class AVHost extends AVItem {
   static get styles() {
     return css`
       :host {
@@ -22,17 +56,17 @@ export class AVHost extends AVElement {
     `;
   }
 
-      static properties = {
-        domainsList: {},
-        docList: {}
-      };
+  static properties = {
+    domainsList: {},
+    docList: {}
+  };
 
       // config = this.fromHost('config')
 
       constructor() {
         super();
         const host = new Host();
-        AVElement.Host = host;
+        AVItem.Host = host;
         this.domainsList = [];
       }
 
@@ -57,9 +91,7 @@ export class AVHost extends AVElement {
       return html`
         <div class="flex-1 row">
           <div id="sidebar" class="col pad-8 border">
-              ${this.repeat(this.domainsList, (d) => d.id, (d) => html`
-                  <div>${d.name}</div>
-              `)}
+              <av-tree items="${config.items}"></av-tree>
           </div>
           <div id="content" class="flex-1 margin-left-8 pad-8 border">
               Manage complexity by building large, complex components

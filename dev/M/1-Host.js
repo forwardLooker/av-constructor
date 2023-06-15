@@ -12,6 +12,7 @@ export class Host extends Item {
     measurementId: "G-ZRVD2Z59JF"
   };
   db;
+  auth;
   constructor() {
     super();
     this.firebase.initializeApp(this.firebaseConfig);
