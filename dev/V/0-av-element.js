@@ -1,6 +1,7 @@
 import {html, css as litCSS, LitElement, nothing} from "lit";
 import {directive, Directive} from "lit/directive.js";
 import {repeat} from 'lit/directives/repeat.js';
+import { classMap } from 'lit/directives/class-map.js';
 
 class showIfDirective extends Directive {
   update(part, [condition]) {
@@ -21,6 +22,7 @@ class AVElement extends LitElement {
   nothing = nothing;
   showIf = directive(showIfDirective);
   repeat = repeat;
+  classMap = classMap;
   isEmpty(val) {
     return !val || (Array.isArray(val) && val.length === 0)
   }
@@ -101,6 +103,9 @@ function css(...values) {
     }
     .no-display {
       display: none;
+    }
+    .invisible {
+      visibility: hidden;
     }
   `
   return litCSS`

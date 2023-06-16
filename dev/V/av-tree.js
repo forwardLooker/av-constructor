@@ -8,15 +8,30 @@ export class AVTree extends AVElement {
         display: flex;
         flex-direction: column;
       }
-      #header {
-        padding: 0 1.5em;
-        box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
+      .row {
+        cursor: pointer;
+        overflow: hidden;
+      }
+      .row-expander {
+        font-weight: 600;
+        user-select: none;
+      }
+      .row-expander.expanded {
+        transform: rotate(90deg);
+        transition: transform .2s ease-in-out;
+      }
+      .row-name:hover {
+        background: aliceblue;
+      }
+      .row-name.selected {
+        background: lightgray;
       }
     `;
   }
 
   static properties = {
     items: {},
+    selectedItem: {}
   };
 
   constructor() {
@@ -37,12 +52,38 @@ export class AVTree extends AVElement {
       <div class="col margin-left-16">
         ${this.repeat(items, i => i.id, i => html`
           <div class="col">
-              <div>${i.name}</div>
-              ${this.render(i.items, nestingLevel + 1)}
+              <div class="row">
+                  <div
+                    class="row-expander ${this.classMap({expanded: i.expanded, invisible: this.isEmpty(i.items)})}"
+                    @click="${() => this.toggleExpand(i)}"
+                  >${html`>`}</div>
+                  <div 
+                    class="row-name margin-left-8 ${this.classMap({selected: i.selected})}"
+                    @click="${() => this.toggleSelect(i)}"
+                  >${i.name}</div>
+              </div>
+              <div ${this.showIf(i.expanded)}>
+                  ${this.render(i.items, nestingLevel + 1)}
+              </div>
           </div>
         `)}
       </div>
     `
+  }
+
+  toggleExpand(i) {
+    i.expanded = !i.expanded;
+    this.requestUpdate();
+  }
+  toggleSelect(newSelectedItem) {
+    if (this.selectedItem !== newSelectedItem) {
+      if (this.selectedItem) {
+        this.selectedItem.selected = false;
+      }
+      newSelectedItem.selected = true;
+      this.selectedItem = newSelectedItem;
+      this.requestUpdate();
+    }
   }
 
   async firstUpdated() {

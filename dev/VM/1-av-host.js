@@ -51,7 +51,7 @@ export class AVHost extends AVItem {
         box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
       }
       #sidebar {
-        width: 25%;
+        width: 20%;
       }
     `;
   }
