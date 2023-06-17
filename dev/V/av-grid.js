@@ -25,11 +25,22 @@ export class AVGrid extends AVElement {
   }
 
   render() {
-    return html`    `
+    return html`
+      <div class="row">
+          ${this.repeat(this.columns, c => c.name, c => html`
+              <div class="column flex-1">
+                  <div class="grid-header-cell border">${c.name}</div>
+                  ${this.repeat(this.items, i => i.id, i => html`
+                      <div class="grid-cell border">${i[c.name]}</div>
+                  ` )}
+              </div>
+          `)}
+      </div>
+    `
   }
 
   async firstUpdated() {
 
   }
 }
-window.customElements.define(av-grid, AVGrid);
+window.customElements.define('av-grid', AVGrid);

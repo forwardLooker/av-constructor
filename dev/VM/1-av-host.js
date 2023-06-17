@@ -3,6 +3,7 @@ import {html, css, AVItem} from './0-av-item.js';
 import './av-auth.js';
 
 import '../V/av-tree.js';
+import '../V/av-grid.js';
 
 import {Host} from'../M/1-Host.js';
 
@@ -35,9 +36,9 @@ const config = {
 }
 
 const userObjects = [
-  {version: 1, id: '1', name: 'Admin', itemType: 'object', email:'my@mail.ru'},
-  {version: 1, id: '1', name: 'Admin', itemType: 'object', email:'my@mail.ru'},
-  {version: 1, id: '1', name: 'Admin', itemType: 'object', email:'my@mail.ru'},
+  {version: 1, id: '1', name: 'Admin', itemType: 'object', email:'me@mail.ru'},
+  {version: 1, id: '2', name: 'User1', itemType: 'object', email:'myself@mail.ru'},
+  {version: 1, id: '3', name: 'Account2', itemType: 'object', email:'I@mail.ru'},
 ];
 const userFieldDescriptors = [
   {name: 'id', itemType: 'field'},
