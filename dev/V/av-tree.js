@@ -8,23 +8,23 @@ export class AVTree extends AVElement {
         display: flex;
         flex-direction: column;
       }
-      .row {
+      .tree-row {
         cursor: pointer;
         overflow: hidden;
       }
-      .row-expander {
+      .tree-row:hover {
+        border: 1px solid black;
+      }
+      .tree-row.selected {
+        border: 1px solid black;
+      }
+      .tree-row-expander {
         font-weight: 600;
         user-select: none;
       }
-      .row-expander.expanded {
-        transform: rotate(90deg);
+      .tree-row-expander.expanded {
+        transform: rotate(45deg);
         transition: transform .2s ease-in-out;
-      }
-      .row-name:hover {
-        background: aliceblue;
-      }
-      .row-name.selected {
-        background: lightgray;
       }
     `;
   }
@@ -49,16 +49,16 @@ export class AVTree extends AVElement {
     }
     console.log('nest:', nestedItems);
     return html`
-      <div class="col margin-left-16">
+      <div class="col ${this.classMap({'margin-left-16': nestingLevel > 0})}">
         ${this.repeat(items, i => i.id, i => html`
           <div class="col">
-              <div class="row">
+              <div class="tree-row row ${this.classMap({selected: i.selected})}">
                   <div
-                    class="row-expander ${this.classMap({expanded: i.expanded, invisible: this.isEmpty(i.items)})}"
+                    class="tree-row-expander ${this.classMap({expanded: i.expanded, invisible: this.isEmpty(i.items)})}"
                     @click="${() => this.toggleExpand(i)}"
                   >${html`>`}</div>
                   <div 
-                    class="row-name margin-left-8 ${this.classMap({selected: i.selected})}"
+                    class="tree-row-name margin-left-8"
                     @click="${() => this.toggleSelect(i)}"
                   >${i.name}</div>
               </div>

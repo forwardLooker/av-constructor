@@ -29,6 +29,12 @@ class AVElement extends LitElement {
   notEmpty(val) {
     return !this.isEmpty(val);
   }
+  $(selector) {
+    return this.shadowRoot.querySelector(selector);
+  }
+  $All(selector) {
+    return this.shadowRoot.querySelectorAll(selector);
+  }
 }
 
 function css(...values) {
