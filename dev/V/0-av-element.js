@@ -39,6 +39,9 @@ class AVElement extends LitElement {
 
 function css(...values) {
   const globalCSS = litCSS`
+    * {
+      box-sizing: border-box;
+    }
     .row {
         display: flex;
         flex-direction: row;

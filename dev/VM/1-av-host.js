@@ -6,10 +6,6 @@ import '../V/av-tree.js';
 
 import {Host} from'../M/1-Host.js';
 
-const domains = [
-  {id:'system', name: 'System'},
-  {id: 'workspace', name: 'Workspace'}
-]
 const config = {
   version: 1,
   id: 'main',
@@ -38,6 +34,17 @@ const config = {
   ],
 }
 
+const userObjects = [
+  {version: 1, id: '1', name: 'Admin', itemType: 'object', email:'my@mail.ru'},
+  {version: 1, id: '1', name: 'Admin', itemType: 'object', email:'my@mail.ru'},
+  {version: 1, id: '1', name: 'Admin', itemType: 'object', email:'my@mail.ru'},
+];
+const userFieldDescriptors = [
+  {name: 'id', itemType: 'field'},
+  {name: 'name', itemType: 'field'},
+  {name: 'email', itemType: 'field'}
+];
+
 export class AVHost extends AVItem {
   static get styles() {
     return css`
@@ -50,15 +57,14 @@ export class AVHost extends AVItem {
         padding: 0 1.5em;
         box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
       }
-      #sidebar {
+      #left-sidebar {
         width: 20%;
       }
     `;
   }
 
   static properties = {
-    domainsList: {},
-    docList: {}
+    config: {},
   };
 
       // config = this.fromHost('config')
@@ -67,7 +73,6 @@ export class AVHost extends AVItem {
         super();
         const host = new Host();
         AVItem.Host = host;
-        this.domainsList = [];
       }
 
     render() {
@@ -79,32 +84,30 @@ export class AVHost extends AVItem {
               <button @click="${() => this.auth.signOut()}">Выйти</button>
           </div>
         </div>
-        <main class="flex-1 row pad-8 border">
+        <div id="main" class="flex-1 row pad-8 border">
           ${
-            this.user ?  this.renderDomainsList() : html`<av-auth></av-auth>`
+            this.user ?  this.renderMain() : html`<av-auth></av-auth>`
           }
-        </main>
+        </div>
       `
     }
 
-    renderDomainsList() {
+    renderMain() {
       return html`
         <div class="flex-1 row">
-          <div id="sidebar" class="col pad-8 border">
+          <div id="left-sidebar" class="col pad-8 border">
               <av-tree .items="${config.items}"></av-tree>
           </div>
-          <div id="content" class="flex-1 margin-left-8 pad-8 border">
-              Manage complexity by building large, complex components
-              out of smaller, simpler components that do one thing well.
+          <div id="view-port" class="flex-1 margin-left-8 pad-8 border">
+              <av-grid .items="${userObjects}" .columns="${userFieldDescriptors}"></av-grid>
           </div>
         </div>
       `
     }
 
     async firstUpdated() {
-      const domainsList = await this.Host.getConfig();
-      this.domainsList = domainsList.map(doc => doc.data());
-      this.docList = domainsList;
+      const config = await this.Host.getConfig();
+      this.config = config.map(doc => doc.data());
     }
 }
 window.customElements.define('av-host', AVHost);
