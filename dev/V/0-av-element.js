@@ -35,6 +35,12 @@ class AVElement extends LitElement {
   $All(selector) {
     return this.shadowRoot.querySelectorAll(selector);
   }
+  fire(name, data) {
+    this.dispatchEvent(new CustomEvent(
+      name,
+      {bubbles: true, cancelable: true, composed: true, detail: {...data}}
+    ))
+  }
 }
 
 function css(...values) {
