@@ -29,6 +29,15 @@ export class Host extends Item {
   }
   async getConfig() {
     const rootDomainsSnap = await this.db.collection('Domains').get();
-    return rootDomainsSnap.docs;
+    const asyncConfig = rootDomainsSnap.docs.map((doc, idx) => {
+      return async function() {
+        const configSnap = await doc.ref.collection('DatasetReducers').doc('config').get();
+        const docData = doc.data();
+        docData.config = configSnap.data();
+        return docData
+      }
+    })
+    const config = Promise.all(asyncConfig.map(f => f()));
+    return config;
   }
 };

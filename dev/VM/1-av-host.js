@@ -8,33 +8,33 @@ import '../V/av-grid.js';
 
 import {Host} from'../M/1-Host.js';
 
-const config = {
-  version: 1,
-  id: 'main',
-  name: 'Мой Хост',
-  itemType: 'host',
-  items: [
-    {version: 1, id: 'system', name: 'System', itemType: 'domain', items: [
-        {version: 1, id: 'users', name: 'Пользователи', itemType: 'class', items: []}
-      ]},
-    {version: 1, id: 'workspace', name: 'Workspace', itemType: 'domain', items: [
-        {version: 1, id: 'dictionaries', name: 'Справочники', itemType: 'domain', items: [
-            {version: 1, id: '1', name: 'Физ. лица', itemType: 'class', items: []}
-          ]},
-        {version: 1, id: 'documents', name: 'Документы', itemType: 'domain', items: [
-            {version: 1, id: '1', name: 'Приходная налкадная', itemType: 'class', items: []}
-          ]},
-        {version: 1, id: 'services', name: 'Сервисы', itemType: 'domain', items: [
-            {version: 1, id: '1', name: 'Журнал учёта', itemType: 'domain', items: [
-                {version: 1, id: '1', name: 'Журнал учёта', itemType: 'class', items: []},
-                {version: 1, id: '2', name: 'Проводки', itemType: 'class', items: []}
-              ]}
-          ]},
-        {version: 1, id: 'solutions', name: 'Решения', itemType: 'domain', items: []},
-        {version: 1, id: 'workplaces', name: 'Рабочие места', itemType: 'domain', items: []},
-      ]},
-  ],
-}
+// const config = {
+//   version: 1,
+//   id: 'main',
+//   name: 'Мой Хост',
+//   itemType: 'host',
+//   items: [
+//     {version: 1, id: 'system', name: 'System', itemType: 'domain', items: [
+//         {version: 1, id: 'users', name: 'Пользователи', itemType: 'class', items: []}
+//       ]},
+//     {version: 1, id: 'workspace', name: 'Workspace', itemType: 'domain', items: [
+//         {version: 1, id: 'dictionaries', name: 'Справочники', itemType: 'domain', items: [
+//             {version: 1, id: '1', name: 'Физ. лица', itemType: 'class', items: []}
+//           ]},
+//         {version: 1, id: 'documents', name: 'Документы', itemType: 'domain', items: [
+//             {version: 1, id: '1', name: 'Приходная налкадная', itemType: 'class', items: []}
+//           ]},
+//         {version: 1, id: 'services', name: 'Сервисы', itemType: 'domain', items: [
+//             {version: 1, id: '1', name: 'Журнал учёта', itemType: 'domain', items: [
+//                 {version: 1, id: '1', name: 'Журнал учёта', itemType: 'class', items: []},
+//                 {version: 1, id: '2', name: 'Проводки', itemType: 'class', items: []}
+//               ]}
+//           ]},
+//         {version: 1, id: 'solutions', name: 'Решения', itemType: 'domain', items: []},
+//         {version: 1, id: 'workplaces', name: 'Рабочие места', itemType: 'domain', items: []},
+//       ]},
+//   ],
+// }
 
 const userObjects = [
   {version: 1, id: '1', name: 'Admin', itemType: 'object', class: 'users', email:'me@mail.ru'},
@@ -85,6 +85,7 @@ export class AVHost extends AVItem {
         super();
         const host = new Host();
         AVItem.Host = host;
+        this.config = [];
       }
 
     render() {
@@ -108,7 +109,7 @@ export class AVHost extends AVItem {
       return html`
         <div class="flex-1 row">
           <div id="left-sidebar" class="col pad-8 border">
-              <av-tree .items="${config.items}"></av-tree>
+              <av-tree .items="${this.config}"></av-tree>
           </div>
           <div id="view-port" class="flex-1 margin-left-8 pad-8 border pos-rel">
               <av-grid
@@ -137,7 +138,26 @@ export class AVHost extends AVItem {
 
     async firstUpdated() {
       const config = await this.Host.getConfig();
-      this.config = config.map(doc => doc.data());
+      const reduceSubDomainsAndClassesToItems = (items => {
+        items.forEach(i => {
+          const classes = i.classes || [];
+          const subDomains = i.subDomains || [];
+          i.items = [...subDomains, ...classes]
+          if (this.notEmpty(i.items)) {
+            reduceSubDomainsAndClassesToItems(i.items)
+          }
+        })
+      })
+      config.forEach(d => {
+        d.items = [...d.config.domains, ...d.config.classes]
+        d.items.forEach(i => {
+          const classes = i.classes || [];
+          const subDomains = i.subDomains || [];
+          i.items = [...subDomains, ...classes];
+          reduceSubDomainsAndClassesToItems(i.items);
+        })
+      })
+      this.config = config;
     }
 
     // async updated() {

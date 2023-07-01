@@ -36,10 +36,11 @@ export class AVTree extends AVElement {
 
   constructor() {
     super();
+    this.items = [];
   }
 
   render(nestedItems, level) {
-    let items = this.items;
+    let items = this.items || [];
     let nestingLevel = level || 0;
     if (this.notEmpty(nestedItems)) {
       items = nestedItems;
