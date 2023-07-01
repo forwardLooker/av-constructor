@@ -76,7 +76,10 @@ export class AVHost extends AVItem {
 
   static properties = {
     config: {},
-    selectedObjectDocument: {}
+    selectedObjectDocument: {},
+    selectedTreeItem: {},
+    objects: {},
+    fieldDescriptors: {}
   };
 
       // config = this.fromHost('config')
@@ -109,12 +112,12 @@ export class AVHost extends AVItem {
       return html`
         <div class="flex-1 row">
           <div id="left-sidebar" class="col pad-8 border">
-              <av-tree .items="${this.config}"></av-tree>
+              <av-tree .items="${this.config}" @item-select="${this.onTreeItemSelect}"></av-tree>
           </div>
           <div id="view-port" class="flex-1 margin-left-8 pad-8 border pos-rel">
               <av-grid
-                .items="${userObjects}"
-                .columns="${userFieldDescriptors}"
+                .items="${this.objects}"
+                .columns="${this.fieldDescriptors}"
                 @row-click="${this.onGridRowClick}"
               >
               </av-grid>
@@ -128,6 +131,15 @@ export class AVHost extends AVItem {
           </div>
         </div>
       `
+    }
+
+    async onTreeItemSelect(e) {
+      console.log('onTreeItemSelect:' , e);
+      this.selectedTreeItem = e.detail;
+      const classItem = this.Host.getClass(this.selectedTreeItem.reference);
+      const objects = await classItem.getObjects();
+      this.fieldDescriptors = await classItem.getFieldDescriptors();
+      this.objects = objects;
     }
 
     onGridRowClick(e) {

@@ -1,4 +1,5 @@
-import {Item} from './0-Item.js'
+import {Item} from './0-Item.js';
+import {Class} from './3-Class.js';
 
 export class Host extends Item {
   firebase = firebase;
@@ -39,5 +40,10 @@ export class Host extends Item {
     })
     const config = Promise.all(asyncConfig.map(f => f()));
     return config;
+  }
+  getClass(clsRef) {
+    const cls = new Class();
+    cls.classRef = clsRef;
+    return cls
   }
 };
