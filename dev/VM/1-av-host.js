@@ -2,6 +2,7 @@ import {html, css, AVItem} from './0-av-item.js';
 
 import './av-auth.js';
 import './4-av-object-document.js'
+import './item-panel.js'
 
 import '../V/av-tree.js';
 import '../V/av-grid.js';
@@ -86,8 +87,7 @@ export class AVHost extends AVItem {
 
       constructor() {
         super();
-        const host = new Host();
-        AVItem.Host = host;
+        AVItem.Host = new Host();
         this.config = [];
       }
 
@@ -115,6 +115,10 @@ export class AVHost extends AVItem {
               <av-tree .items="${this.config}" @item-select="${this.onTreeItemSelect}"></av-tree>
           </div>
           <div id="view-port" class="flex-1 margin-left-8 pad-8 border pos-rel">
+              <item-panel
+                ${this.showIf(this.selectedTreeItem)}
+                .item="${this.selectedTreeItem}"
+              ></item-panel>
               <av-grid
                 .items="${this.objects}"
                 .columns="${this.fieldDescriptors}"
@@ -134,9 +138,9 @@ export class AVHost extends AVItem {
     }
 
     async onTreeItemSelect(e) {
-      console.log('onTreeItemSelect:' , e);
-      this.selectedTreeItem = e.detail;
-      const classItem = this.Host.getClass(this.selectedTreeItem.reference);
+      console.log('onTreeItemSelect:', e);
+      const classItem = this.Host.getClass(e.detail.reference);
+      this.selectedTreeItem = classItem;
       const objects = await classItem.getObjects();
       this.fieldDescriptors = await classItem.getFieldDescriptors();
       this.objects = objects;
