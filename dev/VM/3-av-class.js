@@ -1,7 +1,7 @@
 import {html, css, AVItem} from './0-av-item.js';
 
 import './4-av-object-document.js'
-import './item-panel.js'
+import './av-item-panel.js'
 
 import '../V/av-grid.js';
 
@@ -45,10 +45,10 @@ export class AVClass extends AVItem {
 
   render() {
     return html`
-      <item-panel
+      <av-item-panel
         .item="${this.classItem}"
         @item-view-changed="${this.onItemViewChanged}"
-      ></item-panel>
+      ></av-item-panel>
       ${this.currentViewName === 'Grid' ? this.renderGrid() : this.nothing}
       ${this.currentViewName === 'Configurator' ? this.renderConfigurator() : this.nothing}
     `

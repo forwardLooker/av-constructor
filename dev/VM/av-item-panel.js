@@ -2,7 +2,7 @@ import {html, css, AVItem} from './0-av-item.js';
 
 import {Host} from '../M/1-Host.js';
 
-export class ItemPanel extends AVItem {
+export class AvItemPanel extends AVItem {
   static get styles() {
     return css`
       :host {
@@ -76,4 +76,4 @@ export class ItemPanel extends AVItem {
   }
 }
 
-window.customElements.define('item-panel', ItemPanel);
+window.customElements.define('av-item-panel', AvItemPanel);
