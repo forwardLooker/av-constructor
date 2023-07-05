@@ -36,6 +36,11 @@ export class AVClass extends AVItem {
 
   constructor() {
     super();
+    this.classItem = null;
+    this.currentViewName = '';
+    this.fieldDescriptors = [];
+    this.objectDocuments = [];
+    this.selectedObjectDocument = null;
   }
 
   render() {
@@ -73,6 +78,7 @@ export class AVClass extends AVItem {
 
   onGridRowClick(e) {
     console.log('onGridRow:' , e);
+    //TODO инстанцирование объекта
     this.selectedObjectDocument = e.detail.rowData;
     console.log('selectedObject:' , this.selectedObjectDocument);
   }
@@ -85,8 +91,13 @@ export class AVClass extends AVItem {
     return this.nothing
   }
 
-  async update(changedProps) {
-    super.update();
+  willUpdate(changedProps) {
+    if (changedProps.has('classItem')) {
+      this.currentViewName = this.classItem.defaultViewName
+    }
+  }
+
+  async updated(changedProps) {
     if (changedProps.has('classItem')) {
       this.fieldDescriptors = await this.classItem.getFieldDescriptors();
       this.objectDocuments = await this.classItem.getObjectDocuments();

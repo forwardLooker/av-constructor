@@ -68,13 +68,11 @@ export class ItemPanel extends AVItem {
     this.fire('item-view-changed', {newViewName: view, originalEvent: e})
   }
 
-
-  update(changedProps) {
+  willUpdate(changedProps) {
     if (changedProps.has('item')) {
       this.currentViewName = this.item.defaultViewName;
       this.availableViewsList = this.item.getViewsList()
     }
-    super.update();
   }
 }
 

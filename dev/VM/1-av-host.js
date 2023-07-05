@@ -113,7 +113,12 @@ export class AVHost extends AVItem {
 
     async onTreeItemSelect(e) {
       console.log('onTreeItemSelect:', e);
-      this.selectedTreeItem = this.Host.getClass(e.detail.reference);
+      if (e.detail.itemType === 'class') {
+        this.selectedTreeItem = this.Host.getClass(e.detail.reference);
+      }
+      if (e.detail.itemType === 'domain') {
+        this.selectedTreeItem = this.Host.getDomain(e.detail.reference)
+      }
     }
 
     async firstUpdated() {
