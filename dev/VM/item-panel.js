@@ -69,12 +69,11 @@ export class ItemPanel extends AVItem {
   }
 
 
-  update(changedProps) {
+  willUpdate(changedProps) {
     if (changedProps.has('item')) {
       this.currentViewName = this.item.defaultViewName;
       this.availableViewsList = this.item.getViewsList()
     }
-    super.update();
   }
 }
 

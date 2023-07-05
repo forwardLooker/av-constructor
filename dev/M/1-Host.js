@@ -1,5 +1,6 @@
 import {Item} from './0-Item.js';
 import {Class} from './3-Class.js';
+import {Domain} from './2-Domain.js';
 
 export class Host extends Item {
   constructor() {
@@ -46,5 +47,10 @@ export class Host extends Item {
     const cls = new Class();
     cls.classServerRef = clsRef;
     return cls
+  }
+  getDomain(dmnRef) {
+    const domain = new Domain();
+    domain.domainServerRef = dmnRef;
+    return domain
   }
 };
