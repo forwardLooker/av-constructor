@@ -4,17 +4,27 @@ export class Class extends Item {
   constructor() {
     super();
   }
-  classRef;
-  async getObjects() {
-    if (this.classRef) {
-      const objectsSnap = await this.classRef.collection('Objects').get();
+  itemType = 'class';
+  classServerRef;
+  async getObjectDocuments() {
+    if (this.classServerRef) {
+      const objectsSnap = await this.classServerRef.collection('ObjectDocuments').get();
       return objectsSnap.docs.map(doc => {
         return doc.data();
       })
     }
   }
+
   async getFieldDescriptors() {
-    const doc = await this.classRef.get();
+    const doc = await this.classServerRef.get();
     return doc.data().fieldDescriptors;
+  }
+
+  getViewsList() {
+    return ['Grid', 'Configurator'];
+  }
+
+  get defaultViewName() {
+    return 'Grid'
   }
 };

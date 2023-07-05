@@ -4,4 +4,5 @@ export class Domain extends Item {
   constructor() {
     super();
   }
+  itemType = 'domain'
 };

@@ -5,4 +5,5 @@ export class ObjectDocument extends Item {
     super();
     this.data = data
   }
+  itemType = 'objectDocument';
 };

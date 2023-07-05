@@ -35,9 +35,9 @@ export class ItemPanel extends AVItem {
 
   constructor() {
     super();
-    this.currentViewName = 'Grid';
-    this.availableViewsList = ['Grid', 'Configurator'];
     this.viewsDropdownOpened = false;
+    this.currentViewName = '';
+    this.availableViewsList = [];
   }
 
   render() {
@@ -69,8 +69,12 @@ export class ItemPanel extends AVItem {
   }
 
 
-  async firstUpdated() {
-
+  update(changedProps) {
+    if (changedProps.has('item')) {
+      this.currentViewName = this.item.defaultViewName;
+      this.availableViewsList = this.item.getViewsList()
+    }
+    super.update();
   }
 }
 

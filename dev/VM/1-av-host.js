@@ -1,11 +1,10 @@
 import {html, css, AVItem} from './0-av-item.js';
 
 import './av-auth.js';
-import './4-av-object-document.js'
-import './item-panel.js'
+import './3-av-class.js';
+import './2-av-domain.js';
 
 import '../V/av-tree.js';
-import '../V/av-grid.js';
 
 import {Host} from'../M/1-Host.js';
 
@@ -63,24 +62,12 @@ export class AVHost extends AVItem {
       #left-sidebar {
         width: 20%;
       }
-      .object-show {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        bottom: 0px;
-        left: 0px;
-        z-index: 10;
-        background: white;
-      }
     `;
   }
 
   static properties = {
     config: {},
-    selectedObjectDocument: {},
     selectedTreeItem: {},
-    objects: {},
-    fieldDescriptors: {}
   };
 
       // config = this.fromHost('config')
@@ -115,23 +102,10 @@ export class AVHost extends AVItem {
               <av-tree .items="${this.config}" @item-select="${this.onTreeItemSelect}"></av-tree>
           </div>
           <div id="view-port" class="flex-1 margin-left-8 pad-8 border pos-rel">
-              <item-panel
-                ${this.showIf(this.selectedTreeItem)}
-                .item="${this.selectedTreeItem}"
-              ></item-panel>
-              <av-grid
-                .items="${this.objects}"
-                .columns="${this.fieldDescriptors}"
-                @row-click="${this.onGridRowClick}"
-              >
-              </av-grid>
-              <av-object-document
-                ${this.showIf(this.selectedObjectDocument)}
-                class="object-show"
-                .object="${this.selectedObjectDocument}"
-                @close="${() => {this.selectedObjectDocument = null}}"
-              >
-              </av-object-document>
+              ${this.selectedTreeItem?.itemType === 'class' ?
+                      html`<av-class .classItem="${this.selectedTreeItem}"></av-class>` : this.nothing}
+              ${this.selectedTreeItem?.itemType === 'domain' ?
+                      html`<av-domain .domainItem="${this.selectedTreeItem}"></av-domain>` : this.nothing}
           </div>
         </div>
       `
@@ -139,17 +113,7 @@ export class AVHost extends AVItem {
 
     async onTreeItemSelect(e) {
       console.log('onTreeItemSelect:', e);
-      const classItem = this.Host.getClass(e.detail.reference);
-      this.selectedTreeItem = classItem;
-      const objects = await classItem.getObjects();
-      this.fieldDescriptors = await classItem.getFieldDescriptors();
-      this.objects = objects;
-    }
-
-    onGridRowClick(e) {
-        console.log('onGridRow:' , e);
-        this.selectedObjectDocument = e.detail.rowData;
-        console.log('selectedObject:' , this.selectedObjectDocument);
+      this.selectedTreeItem = this.Host.getClass(e.detail.reference);
     }
 
     async firstUpdated() {

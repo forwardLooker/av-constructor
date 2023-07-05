@@ -5,7 +5,7 @@ import { classMap } from 'lit/directives/class-map.js';
 
 class showIfDirective extends Directive {
   update(part, [condition]) {
-    console.log('showIfDirective part:', part);
+    // console.log('showIfDirective part:', part);
     if (!condition) {
       part.element.classList.add('no-display')
     } else {

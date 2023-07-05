@@ -2,18 +2,6 @@ import {Item} from './0-Item.js';
 import {Class} from './3-Class.js';
 
 export class Host extends Item {
-  firebase = firebase;
-  firebaseConfig = {
-    apiKey: "AIzaSyCygBNBbRUdhXGIwsOnZiDKAGZx4PIDc6I",
-    authDomain: "arta-vision-constructor.firebaseapp.com",
-    projectId: "arta-vision-constructor",
-    storageBucket: "arta-vision-constructor.appspot.com",
-    messagingSenderId: "80353020616",
-    appId: "1:80353020616:web:27f6d324e8f2624bf433fd",
-    measurementId: "G-ZRVD2Z59JF"
-  };
-  db;
-  auth;
   constructor() {
     super();
     this.firebase.initializeApp(this.firebaseConfig);
@@ -28,6 +16,19 @@ export class Host extends Item {
       this.fire('user-state-changed', user);
     });
   }
+  itemType = 'host'
+  firebase = firebase;
+  firebaseConfig = {
+    apiKey: "AIzaSyCygBNBbRUdhXGIwsOnZiDKAGZx4PIDc6I",
+    authDomain: "arta-vision-constructor.firebaseapp.com",
+    projectId: "arta-vision-constructor",
+    storageBucket: "arta-vision-constructor.appspot.com",
+    messagingSenderId: "80353020616",
+    appId: "1:80353020616:web:27f6d324e8f2624bf433fd",
+    measurementId: "G-ZRVD2Z59JF"
+  };
+  db;
+  auth;
   async getConfig() {
     const rootDomainsSnap = await this.db.collection('Domains').get();
     const asyncConfig = rootDomainsSnap.docs.map((doc, idx) => {
@@ -43,7 +44,7 @@ export class Host extends Item {
   }
   getClass(clsRef) {
     const cls = new Class();
-    cls.classRef = clsRef;
+    cls.classServerRef = clsRef;
     return cls
   }
 };
