@@ -20,6 +20,10 @@ export class Class extends Item {
     return doc.data().fieldDescriptors;
   }
 
+  async saveFieldDescriptors(fieldDescriptors) {
+    this.classServerRef.update({fieldDescriptors})
+  }
+
   getViewsList() {
     return ['Grid', 'Configurator'];
   }

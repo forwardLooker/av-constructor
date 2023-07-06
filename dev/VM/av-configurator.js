@@ -28,7 +28,7 @@ export class AVConfigurator extends AVItem {
       <h3>Fields:</h3>
       <button @click="${this.addField}">Добавить поле</button>
       <av-tree .items="${this.fieldDescriptors}"></av-tree>
-      <button>Сохранить</button>
+      <button @click="${this.saveFieldDescriptors}">Сохранить</button>
     `
   }
 
@@ -38,6 +38,10 @@ export class AVConfigurator extends AVItem {
       const field = {name: fieldName};
       this.fieldDescriptors = [...this.fieldDescriptors, field];
     }
+  }
+
+  saveFieldDescriptors() {
+    this.item.saveFieldDescriptors(this.fieldDescriptors)
   }
 
   async firstUpdated() {
