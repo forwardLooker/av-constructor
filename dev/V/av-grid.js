@@ -32,6 +32,9 @@ export class AVGrid extends AVElement {
       .grid-cell:hover {
         outline: 2px solid black;
       }
+      .grid-cell {
+        min-height: 2.2em;
+      }
       .grid-header-cell {
         text-align: center;
       }

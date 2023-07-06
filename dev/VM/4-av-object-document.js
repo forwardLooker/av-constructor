@@ -18,21 +18,22 @@ export class AVObjectDocument extends AVItem {
   }
 
   static properties = {
-    object: {},
+    fieldDescriptors: {},
+    objectDocument: {},
   };
 
   constructor() {
     super();
+    this.fieldDescriptors = []
   }
 
   render() {
-    const fields = Object.keys(this.object || {});
     return html`
       <div>
-          ${this.repeat(fields,  f => f, f => html`
+          ${this.repeat(this.fieldDescriptors,  f => f.name, f => html`
               <div>
-                  <label>${f}</label>
-                  <input value="${this.object[f]}">
+                  <label>${f.name}</label>
+                  <input value="${this.objectDocument[f.name]}">
               </div>
           `)}
           <div>

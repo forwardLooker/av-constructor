@@ -70,7 +70,8 @@ export class AVClass extends AVItem {
       <av-object-document
         ${this.showIf(this.selectedObjectDocument)}
         class="object-show"
-        .object="${this.selectedObjectDocument}"
+        .fieldDescriptors="${this.fieldDescriptors}"
+        .objectDocument="${this.selectedObjectDocument}"
         @close="${this.onObjectClose}"
       >
       </av-object-document>
