@@ -47,12 +47,12 @@ export class Host extends Item {
   }
   getClass(clsRef) {
     const cls = new Class();
-    cls.classServerRef = clsRef;
+    cls.serverRef = clsRef;
     return cls
   }
   getDomain(dmnRef) {
     const domain = new Domain();
-    domain.domainServerRef = dmnRef;
+    domain.serverRef = dmnRef;
     return domain
   }
 };

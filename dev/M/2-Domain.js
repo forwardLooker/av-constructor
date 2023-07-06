@@ -5,5 +5,5 @@ export class Domain extends Item {
     super();
   }
   itemType = 'domain'
-  domainServerRef;
+  serverRef;
 };

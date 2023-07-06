@@ -1,9 +1,17 @@
 import {Item} from './0-Item.js'
 
 export class ObjectDocument extends Item {
-  constructor(data) {
+  constructor() {
     super();
-    this.data = data
   }
   itemType = 'objectDocument';
+  serverRef;
+  data;
+  async getData() {
+    const doc = await this.serverRef.get();
+    this.data = doc.data();
+  }
+  async saveData(data) {
+    await this.serverRef.update(data);
+  }
 };

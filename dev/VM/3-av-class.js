@@ -73,15 +73,16 @@ export class AVClass extends AVItem {
         .fieldDescriptors="${this.fieldDescriptors}"
         .objectDocument="${this.selectedObjectDocument}"
         @close="${this.onObjectClose}"
+        @saved="${this.onObjectSaved}"
       >
       </av-object-document>
     `
   }
 
-  onGridRowClick(e) {
+  async onGridRowClick(e) {
     console.log('onGridRow:' , e);
     //TODO инстанцирование объекта
-    this.selectedObjectDocument = e.detail.rowData;
+    this.selectedObjectDocument = await this.classItem.getObjectDocument(e.detail.rowData.reference);;
     console.log('selectedObject:' , this.selectedObjectDocument);
   }
 
@@ -89,10 +90,21 @@ export class AVClass extends AVItem {
     this.selectedObjectDocument = null
   }
 
+  async onObjectSaved() {
+    this.objectDocuments = await this.classItem.getObjectDocuments();
+  }
+
   renderConfigurator() {
     return html`
-      <av-configurator .item="${this.classItem}"></av-configurator>
+      <av-configurator
+              .item="${this.classItem}"
+              @saved="${this.onFieldDescriptorsChanged}"
+      ></av-configurator>
     `
+  }
+
+  async onFieldDescriptorsChanged() {
+    this.fieldDescriptors = await this.classItem.getFieldDescriptors();
   }
 
   willUpdate(changedProps) {

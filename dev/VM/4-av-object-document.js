@@ -20,32 +20,48 @@ export class AVObjectDocument extends AVItem {
   static properties = {
     fieldDescriptors: {},
     objectDocument: {},
+    _newData: {},
   };
 
   constructor() {
     super();
-    this.fieldDescriptors = []
+    this.fieldDescriptors = [];
+    this._newData = {};
   }
 
   render() {
     return html`
       <div>
-          ${this.repeat(this.fieldDescriptors,  f => f.name, f => html`
-              <div>
-                  <label>${f.name}</label>
-                  <input value="${this.objectDocument[f.name]}">
-              </div>
-          `)}
-          <div>
-              <button>OK</button>
-              <button @click="${this.close}">Закрыть</button>
-          </div>
+        ${this.repeat(this.fieldDescriptors,  f => f.name, f => html`
+            <div>
+              <label>${f.name}</label>
+              <input
+                value="${this._newData[f.name]}"
+                @input="${(e) => {this._newData[f.name] = e.target.value} }"
+              >
+            </div>
+        `)}
+        <div>
+          <button @click="${this.saveAndClose}">OK</button>
+          <button @click="${this.close}">Закрыть</button>
+        </div>
       </div>
     `
   }
 
   close() {
     this.fire('close');
+  }
+  saveAndClose() {
+    this.objectDocument.saveData(this._newData);
+    this.fire('saved');
+    this.fire('close');
+  }
+
+  willUpdate(changedProps) {
+    if (changedProps.has('objectDocument') && this.objectDocument !== null) {
+      this._newData = this.objectDocument.data
+    }
   }
 
   async firstUpdated() {

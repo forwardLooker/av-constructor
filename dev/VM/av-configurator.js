@@ -40,8 +40,9 @@ export class AVConfigurator extends AVItem {
     }
   }
 
-  saveFieldDescriptors() {
-    this.item.saveFieldDescriptors(this.fieldDescriptors)
+  async saveFieldDescriptors() {
+    await this.item.saveFieldDescriptors(this.fieldDescriptors);
+    this.fire('saved');
   }
 
   async firstUpdated() {

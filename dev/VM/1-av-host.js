@@ -112,7 +112,7 @@ export class AVHost extends AVItem {
                 <div>${this.dialogText}</div>
                 <div ${this.showIf(this.dialogInputLabel)}>
                     <label>${this.dialogInputLabel}:</label>
-                    <input .value="${this.dialogInputValue}" @change="${e => {this.dialogInputValue = e.target.value}}">
+                    <input value="${this.dialogInputValue}" @input="${e => {this.dialogInputValue = e.target.value}}">
                 </div>
                 <div>
                     <button @click="${() => {this.fire('dialog-submitted')}}">OK</button>
