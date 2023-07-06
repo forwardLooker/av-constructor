@@ -2,6 +2,7 @@ import {html, css, AVItem} from './0-av-item.js';
 
 import './4-av-object-document.js'
 import './av-item-panel.js'
+import './av-configurator.js'
 
 import '../V/av-grid.js';
 
@@ -88,7 +89,9 @@ export class AVClass extends AVItem {
   }
 
   renderConfigurator() {
-    return this.nothing
+    return html`
+      <av-configurator .item="${this.classItem}"></av-configurator>
+    `
   }
 
   willUpdate(changedProps) {

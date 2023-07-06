@@ -3,8 +3,9 @@ import {Class} from './3-Class.js';
 import {Domain} from './2-Domain.js';
 
 export class Host extends Item {
-  constructor() {
+  constructor(hostElement) {
     super();
+    this.$hostElement = hostElement;
     this.firebase.initializeApp(this.firebaseConfig);
     this.db = this.firebase.firestore();
     this.auth = this.firebase.auth()
@@ -17,7 +18,8 @@ export class Host extends Item {
       this.fire('user-state-changed', user);
     });
   }
-  itemType = 'host'
+  itemType = 'host';
+  $hostElement;
   firebase = firebase;
   firebaseConfig = {
     apiKey: "AIzaSyCygBNBbRUdhXGIwsOnZiDKAGZx4PIDc6I",

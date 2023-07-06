@@ -62,20 +62,35 @@ export class AVHost extends AVItem {
       #left-sidebar {
         width: 20%;
       }
+      #dialog-container {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0,0,0,0.45);
+      }
+      #dialog-form {
+        background: white;
+      }
     `;
   }
 
   static properties = {
     config: {},
     selectedTreeItem: {},
+    dialogShowed: {},
+    dialogText: {},
+    dialogInputLabel: {},
+    dialogInputValue: {}
   };
 
-      // config = this.fromHost('config')
+      // config = this.fromHost('config') row justify-center align-center
 
       constructor() {
         super();
-        AVItem.Host = new Host();
+        AVItem.Host = new Host(this);
         this.config = [];
+        this.dialogInputValue = '';
       }
 
     render() {
@@ -92,7 +107,47 @@ export class AVHost extends AVItem {
             this.user ?  this.renderMain() : html`<av-auth></av-auth>`
           }
         </div>
+        <div ${this.showIf(this.dialogShowed)} id="dialog-container" class="pos-fixed row justify-center align-center">
+            <div id="dialog-form">
+                <div>${this.dialogText}</div>
+                <div ${this.showIf(this.dialogInputLabel)}>
+                    <label>${this.dialogInputLabel}:</label>
+                    <input .value="${this.dialogInputValue}" @change="${e => {this.dialogInputValue = e.target.value}}">
+                </div>
+                <div>
+                    <button @click="${() => {this.fire('dialog-submitted')}}">OK</button>
+                    <button @click="${() => {this.fire('dialog-closed')}}">Отмена</button>
+                </div>
+            </div>
+        </div>
       `
+    }
+
+    showDialog({text, input}) {
+        this.dialogShowed = true;
+        this.dialogText = text;
+        this.dialogInputLabel = input;
+        return new Promise((resolve, reject) => {
+          const listenerOnClose = () => {
+            this.removeEventListener('dialog-closed', listenerOnClose);
+            this.dialogShowed = false;
+            this.dialogText = '';
+            this.dialogInputLabel = '';
+            resolve(false);
+          }
+          this.addEventListener('dialog-closed', listenerOnClose);
+
+          const listenerOnSubmit = () => {
+            this.removeEventListener('dialog-submitted', listenerOnSubmit);
+            const resolveValue = this.dialogInputValue || true;
+            this.dialogShowed = false;
+            this.dialogText = '';
+            this.dialogInputLabel = '';
+            this.dialogInputValue = '';
+            resolve(resolveValue);
+          }
+          this.addEventListener('dialog-submitted', listenerOnSubmit)
+        })
     }
 
     renderMain() {

@@ -33,6 +33,11 @@ class AVItem extends AVElement {
       this._userFromHost = { value: null, listenerHasSet: false };
     }
   }
+
+  showDialog(...params) {
+    //TODO
+    return this.Host.$hostElement.showDialog(...params);
+  }
 }
 
 export {html, css, AVItem};

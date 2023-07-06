@@ -1,6 +1,6 @@
 import {html, css, AVItem} from './0-av-item.js';
 
-import {Host} from '../M/1-Host.js';
+import '../V/av-tree.js';
 
 export class AVConfigurator extends AVItem {
   static get styles() {
@@ -14,20 +14,40 @@ export class AVConfigurator extends AVItem {
   }
 
   static properties = {
-    domainsList: {},
+    item: {},
+    fieldDescriptors: {},
   };
 
   constructor() {
     super();
+    this.fieldDescriptors = [];
   }
 
   render() {
-
+    return html`
+      <h3>Fields:</h3>
+      <button @click="${this.addField}">Добавить поле</button>
+      <av-tree .items="${this.fieldDescriptors}"></av-tree>
+      <button>Сохранить</button>
+    `
   }
 
+  async addField() {
+    const fieldName = await this.showDialog({text: 'Введите название поля', input: 'name'});
+    if (fieldName && this.fieldDescriptors.every(f => f.name !== fieldName)) {
+      const field = {name: fieldName};
+      this.fieldDescriptors = [...this.fieldDescriptors, field];
+    }
+  }
 
   async firstUpdated() {
 
+  }
+
+  async updated(changedProps) {
+    if (changedProps.has('item')) {
+      this.fieldDescriptors = await this.item.getFieldDescriptors();
+    }
   }
 }
 
