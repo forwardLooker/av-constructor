@@ -7,11 +7,26 @@ export class ObjectDocument extends Item {
   itemType = 'objectDocument';
   serverRef;
   data;
+  innerFieldsInData = {
+    _itemType: 'objectDocument',
+    _id: '',
+    _createdDateTime: '',
+    _author: '',
+    _lastModifiedDateTime: '',
+    _lastModifiedAuthor: '',
+    _version: '',
+    _reference: ''
+  }
+  notExistOnServer;
   async getData() {
     const doc = await this.serverRef.get();
     this.data = doc.data();
   }
   async saveData(data) {
-    await this.serverRef.update(data);
+    if (this.notExistOnServer) {
+
+    } else {
+      await this.serverRef.update(data);
+    }
   }
 };

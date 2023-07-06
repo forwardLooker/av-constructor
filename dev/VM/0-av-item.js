@@ -18,7 +18,7 @@ class AVItem extends AVElement {
   get auth() { return this.Host.auth; }
   get user() {
     if (!this._userFromHost?.listenerHasSet) {
-      let listenerId = this.Host.listen('user-state-changed', () => {
+      let listenerId = this.Host.addEventListener('user-state-changed', () => {
         this._userFromHost.value = this.Host.user;
         this.requestUpdate();
       })
@@ -29,7 +29,7 @@ class AVItem extends AVElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this._userFromHost?.listenerId) {
-      this.Host.clearListener(this._userFromHost.listenerId);
+      this.Host.removeEventListener(this._userFromHost.listenerId);
       this._userFromHost = { value: null, listenerHasSet: false };
     }
   }

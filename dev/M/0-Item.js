@@ -1,7 +1,7 @@
 export class Item {
   _listenersIdIncrementator;
   _listeners;
-  listen(eventName, callback) {
+  addEventListener(eventName, callback) {
     if (this._listenersIdIncrementator === undefined) {
       this._listenersIdIncrementator = 1;
     }
@@ -15,7 +15,7 @@ export class Item {
     this._listeners[eventName][listenerId] = callback;
     return listenerId;
   }
-  clearListener(listenerId) {
+  removeEventListener(listenerId) {
     if (this._listeners) {
       Object.keys(this._listeners).forEach((name) => {
         delete this._listeners[name][listenerId];

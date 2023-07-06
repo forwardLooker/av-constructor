@@ -7,6 +7,9 @@ export class Class extends Item {
   }
   itemType = 'class';
   serverRef;
+  eventNames = [
+    'openNewObjectDocument'
+  ];
   async getObjectDocuments() {
     if (this.serverRef) {
       const objectsSnap = await this.serverRef.collection('ObjectDocuments').get();
@@ -37,6 +40,12 @@ export class Class extends Item {
     const obj = new ObjectDocument();
     obj.serverRef = objectServerRef;
     await obj.getData();
+    return obj;
+  }
+
+  getNewObjectDocument() {
+    const obj = new ObjectDocument();
+    obj.notExistOnServer = true;
     return obj;
   }
 };

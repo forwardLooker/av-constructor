@@ -42,22 +42,37 @@ export class AvItemPanel extends AVItem {
 
   render() {
     return html`
-        <div class="row justify-end pad-8 border">
-          <div id="view-selector" class="row pos-rel" @click="${this.onViewSelectorClick}">
-            <div>${this.currentViewName}</div>
-            <div id="view-selector-arrow">${html`>`}</div>
-            <div
-              ${this.showIf(this.viewsDropdownOpened)}
-              id="selection-list"
-              class="col pos-abs border"
-            >
-              ${this.repeat(this.availableViewsList, v => v, v => html`
-                <div @click="${(e) => this.selectView(v, e)}">${v}</div>
-              `)}
-            </div>  
+        <div class="row">
+          ${this.currentViewName === 'Grid' ? this.renderGridButtons() : this.nothing}
+          <div class="flex-1 row justify-end pad-8">
+            <div id="view-selector" class="row pos-rel" @click="${this.onViewSelectorClick}">
+              <div>${this.currentViewName}</div>
+              <div id="view-selector-arrow">${html`>`}</div>
+              <div
+                ${this.showIf(this.viewsDropdownOpened)}
+                id="selection-list"
+                class="col pos-abs border"
+              >
+                ${this.repeat(this.availableViewsList, v => v, v => html`
+                  <div @click="${(e) => this.selectView(v, e)}">${v}</div>
+                `)}
+              </div>  
+            </div>
           </div>
         </div>
     `
+  }
+
+  renderGridButtons() {
+    return html`
+      <div class="pad-8">
+          <button @click="${this.openNewObjectDocument}">Создать</button>
+      </div>
+    `
+  }
+
+  openNewObjectDocument() {
+    this.item.fire('openNewObjectDocument')
   }
 
   onViewSelectorClick() {

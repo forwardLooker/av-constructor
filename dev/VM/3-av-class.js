@@ -111,6 +111,11 @@ export class AVClass extends AVItem {
     if (changedProps.has('classItem')) {
       this.currentViewName = this.classItem.defaultViewName
     }
+    if (changedProps.has('classItem') && this.classItem !== null) {
+      this.classItem.addEventListener('openNewObjectDocument', () => {
+        this.selectedObjectDocument = this.classItem.getNewObjectDocument();
+      })
+    }
   }
 
   async updated(changedProps) {
