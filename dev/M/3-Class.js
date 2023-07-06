@@ -39,6 +39,7 @@ export class Class extends Item {
   async getObjectDocument(objectServerRef) {
     const obj = new ObjectDocument();
     obj.serverRef = objectServerRef;
+    obj.Class = this;
     await obj.getData();
     return obj;
   }
@@ -46,6 +47,7 @@ export class Class extends Item {
   getNewObjectDocument() {
     const obj = new ObjectDocument();
     obj.notExistOnServer = true;
+    obj.Class = this;
     return obj;
   }
 };

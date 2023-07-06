@@ -6,7 +6,8 @@ export class ObjectDocument extends Item {
   }
   itemType = 'objectDocument';
   serverRef;
-  data;
+  Class;
+  data = {};
   innerFieldsInData = {
     _itemType: 'objectDocument',
     _id: '',
@@ -15,7 +16,8 @@ export class ObjectDocument extends Item {
     _lastModifiedDateTime: '',
     _lastModifiedAuthor: '',
     _version: '',
-    _reference: ''
+    _reference: '',
+    _path: ''
   }
   notExistOnServer;
   async getData() {
@@ -24,7 +26,19 @@ export class ObjectDocument extends Item {
   }
   async saveData(data) {
     if (this.notExistOnServer) {
-
+      this.serverRef = this.Class.serverRef.collection('ObjectDocuments').doc();
+      await this.serverRef.set({
+        ...this.data,
+        _id: this.serverRef.id,
+        _reference: this.serverRef,
+        _path: this.serverRef.path,
+        _itemType: 'objectDocument',
+        _createdDateTime: Date.now().toLocaleString(), //TODO даты сделать
+        _author: this.user.email,
+        _lastModifiedDateTime: Date.now().toLocaleString(),
+        _lastModifiedAuthor: this.user.email,
+        _version: 1,
+      })
     } else {
       await this.serverRef.update(data);
     }

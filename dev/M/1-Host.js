@@ -11,9 +11,11 @@ export class Host extends Item {
     this.auth = this.firebase.auth()
     this.auth.onAuthStateChanged((user) => {
       if (user) {
-        this.user = user;
+        // this.user = user;
+        Item.user = user;
       } else {
-        this.user = null;
+        // this.user = null;
+        Item.user = null;
       }
       this.fire('user-state-changed', user);
     });

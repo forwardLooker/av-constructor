@@ -82,7 +82,7 @@ export class AVClass extends AVItem {
   async onGridRowClick(e) {
     console.log('onGridRow:' , e);
     //TODO инстанцирование объекта
-    this.selectedObjectDocument = await this.classItem.getObjectDocument(e.detail.rowData.reference);;
+    this.selectedObjectDocument = await this.classItem.getObjectDocument(e.detail.rowData._reference);;
     console.log('selectedObject:' , this.selectedObjectDocument);
   }
 

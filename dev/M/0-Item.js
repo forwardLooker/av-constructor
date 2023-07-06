@@ -1,4 +1,8 @@
 export class Item {
+  get user() {
+    return Item.user;
+  }
+
   _listenersIdIncrementator;
   _listeners;
   addEventListener(eventName, callback) {
