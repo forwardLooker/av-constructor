@@ -24,6 +24,9 @@ export class ObjectDocument extends Item {
     const doc = await this.serverRef.get();
     this.data = doc.data();
   }
+  get designJson() {
+    return this.Class.objectDocumentDesignJson;
+  }
   async saveData(data) {
     if (this.notExistOnServer) {
       this.serverRef = this.Class.serverRef.collection('ObjectDocuments').doc();
@@ -42,5 +45,8 @@ export class ObjectDocument extends Item {
     } else {
       await this.serverRef.update(data);
     }
+  }
+  async saveDesignJson(designJson) {
+    await this.Class.saveObjectDocumentDesignJson(designJson);
   }
 };

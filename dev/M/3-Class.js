@@ -6,6 +6,7 @@ export class Class extends Item {
     super();
   }
   itemType = 'class';
+  data = {};
   serverRef;
   eventNames = [
     'openNewObjectDocument'
@@ -21,11 +22,21 @@ export class Class extends Item {
 
   async getFieldDescriptors() {
     const doc = await this.serverRef.get();
-    return doc.data().fieldDescriptors;
+    this.data = doc.data();
+    return this.data.fieldDescriptors;
   }
 
   async saveFieldDescriptors(fieldDescriptors) {
     this.serverRef.update({fieldDescriptors})
+  }
+
+  get objectDocumentDesignJson() {
+    return this.data.objectDocumentDesignJson;
+  }
+
+  async saveObjectDocumentDesignJson(objectDocumentDesignJson) {
+    await this.serverRef.update({objectDocumentDesignJson});
+    this.data.objectDocumentDesignJson = objectDocumentDesignJson;
   }
 
   getViewsList() {
