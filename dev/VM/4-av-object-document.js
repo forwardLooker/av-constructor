@@ -192,7 +192,7 @@ export class AVObjectDocument extends AVItem {
     if (this.designMode === false) {
       const saveDesignFlag = await this.showDialog({text: 'Сохранить дизайн?'});
       if (saveDesignFlag) {
-        this.objectDocument.saveDesignJson(this.designJson)
+        await this.objectDocument.saveDesignJson(this.designJson)
       }
     }
   }
