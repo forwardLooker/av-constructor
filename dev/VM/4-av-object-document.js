@@ -157,6 +157,8 @@ export class AVObjectDocument extends AVItem {
 
   drop(e, idx) {
     if (this.designDragElementIndex === idx) {
+      e.target.classList.remove('dragover-top');
+      e.target.classList.remove('dragover-bottom');
       return;
     }
     const dragElement = this.designJson[this.designDragElementIndex];
