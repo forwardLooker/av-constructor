@@ -107,18 +107,8 @@ export class AVObjectDocument extends AVItem {
 
   render() {
     return html`
-      <div>
-        ${this.designJson.items.map((layoutElement, verticalIndex) => html`
-            ${this.if(layoutElement.type === 'horizontal-layout', html`
-              <div class="row">
-                  ${this.repeat(layoutElement.items, i => i.name, (i, horizontalIndex) => this._createField(i, horizontalIndex, layoutElement))}
-              </div>
-            `)}
-            ${this.if(
-              !layoutElement.type || layoutElement.type === 'field',
-              this._createField(layoutElement, verticalIndex, this.designJson)
-            )}
-        `)}
+      <div class="col">
+        ${this._renderVerticalLayout(this.designJson)}
         <div>
           <button @click="${this.saveAndClose}">OK</button>
           <button @click="${this.close}">Закрыть</button>
@@ -128,7 +118,35 @@ export class AVObjectDocument extends AVItem {
     `
   }
 
-  _createField(fieldItem, idx, containerElement) {
+  _renderVerticalLayout(vrtLayoutItem) {
+    return html`
+      <div class="col flex-1">
+        ${this.repeat(vrtLayoutItem.items, vrtItem => vrtItem.name, (layoutElement, verticalIndex) => html`
+          ${this.if(layoutElement.type === 'horizontal-layout', html`
+            <div class="row">
+              ${this.repeat(
+                layoutElement.items,
+                hrzItem => hrzItem.name,
+                (hrzItem, horizontalIndex) => {
+                    if (hrzItem.type === 'vertical-layout') {
+                      return this._renderVerticalLayout(hrzItem);
+                    } else {
+                        return this._renderField(hrzItem, horizontalIndex, layoutElement)
+                    }
+                }
+              )}
+            </div>
+          `)}
+          ${this.if(
+            !layoutElement.type || layoutElement.type === 'field',
+            this._renderField(layoutElement, verticalIndex, vrtLayoutItem)
+        )}
+      `)}
+      </div>
+    `
+  }
+
+  _renderField(fieldItem, idx, containerElement) {
     return html`
       <div class="field pos-rel flex-1 row align-center">
         <div class="label">${fieldItem.name}</div>
@@ -199,8 +217,8 @@ export class AVObjectDocument extends AVItem {
     this._removeDragBorder(e);
   }
 
-  drop(e, dropElementIndex, containerElement) {
-    if (this.designDragElement === containerElement.items[dropElementIndex]) {
+  drop(e, dropElementIndex, dropContainer) {
+    if (this.designDragElement === dropContainer.items[dropElementIndex]) {
       this._removeDragBorder(e);
       return;
     }
@@ -210,36 +228,50 @@ export class AVObjectDocument extends AVItem {
     let cutIndex = this.designDragElementIndex;
 
     if (this.designDropSide === 'left' || this.designDropSide === 'right') {
-      if (containerElement.type === 'vertical-layout') {
+      if (dropContainer.type === 'vertical-layout') {
         if (this.designDropSide === 'left') {
-          containerElement.items[dropElementIndex] = {type: 'horizontal-layout', items: [this.designDragElement, containerElement.items[dropElementIndex]]}
+          dropContainer.items[dropElementIndex] = {type: 'horizontal-layout', items: [this.designDragElement, dropContainer.items[dropElementIndex]]}
         }
         if (this.designDropSide === 'right') {
-          containerElement.items[dropElementIndex] = {type: 'horizontal-layout', items: [containerElement.items[dropElementIndex], this.designDragElement]}
+          dropContainer.items[dropElementIndex] = {type: 'horizontal-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement]}
         }
-      } else if (containerElement.type === 'horizontal-layout') {
+      } else if (dropContainer.type === 'horizontal-layout') {
         if (this.designDropSide === 'left') {
-          if (containerElement === this.designDragContainer) {
+          if (dropContainer === this.designDragContainer) {
             cutIndex = cutIndex + 1;
           }
         }
         if (this.designDropSide === 'right') {
           insertIndex = insertIndex + 1;
         }
-        containerElement.items.splice(insertIndex, 0, this.designDragElement);
+        dropContainer.items.splice(insertIndex, 0, this.designDragElement);
       }
       this.designDragContainer.items.splice(cutIndex, 1);
     }
 
     if (this.designDropSide === 'top' || this.designDropSide === 'bottom') {
-      if (this.designDropSide === 'bottom') {
-        insertIndex = insertIndex + 1;
+      if (dropContainer.type === 'horizontal-layout') {
+        let vrtElement;
+        if (this.designDropSide === 'top') {
+          vrtElement = {type: 'vertical-layout', items: [this.designDragElement, dropContainer.items[dropElementIndex]]}
+        }
+        if (this.designDropSide === 'bottom') {
+          vrtElement = {type: 'vertical-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement ]}
+        }
+        dropContainer.items.splice(insertIndex, 1)
+        dropContainer.items.splice(insertIndex, 0, vrtElement);
+        this.designDragContainer.items.splice(cutIndex, 1);
+
+      } else if (dropContainer.type === 'vertical-layout') {
+        if (this.designDropSide === 'bottom') {
+          insertIndex = insertIndex + 1;
+        }
+        if (this.designDragElementIndex > dropElementIndex) {
+          cutIndex = cutIndex + 1;
+        }
+        dropContainer.items.splice(insertIndex, 0, this.designDragElement);
+        this.designDragContainer.items.splice(cutIndex, 1);
       }
-      if (this.designDragElementIndex > dropElementIndex) {
-        cutIndex = cutIndex + 1;
-      }
-      containerElement.items.splice(insertIndex, 0, this.designDragElement);
-      this.designDragContainer.items.splice(cutIndex, 1);
     }
 
     this.requestUpdate();
