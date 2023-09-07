@@ -137,19 +137,16 @@ export class AVObjectDocument extends AVItem {
           value="${this._newData[fieldItem.name]}"
           @input="${(e) => {this._newData[fieldItem.name] = e.target.value} }"
         >
-        ${
-          this.designMode ?
-            html`
-              <div
-                class="field-overlay pos-abs"
-                draggable="true"
-                @dragstart="${(e) => this.dragstart(e, idx, containerElement)}"
-                @dragover="${this.dragover}"
-                @dragleave="${this.dragleave}"
-                @drop="${(e) => this.drop(e, idx, containerElement)}"
-              ></div>
-            ` : this.nothing
-        }
+        ${this.if(this.designMode, html`
+            <div
+              class="field-overlay pos-abs"
+              draggable="true"
+              @dragstart="${(e) => this.dragstart(e, idx, containerElement)}"
+              @dragover="${this.dragover}"
+              @dragleave="${this.dragleave}"
+              @drop="${(e) => this.drop(e, idx, containerElement)}"
+            ></div>
+        `)}  
       </div>
     `
   }
