@@ -79,6 +79,8 @@ export class AVObjectDocument extends AVItem {
     designMode: {},
     designJson: {},
     designDragElementIndex: {},
+    designDragElement: {},
+    designDragContainer: {},
     designDropSide: {enum: ['top', 'bottom', 'left', 'right', 'none']}
   };
 
@@ -95,25 +97,29 @@ export class AVObjectDocument extends AVItem {
   willUpdate(changedProps) {
     if (changedProps.has('objectDocument')) {
       this._newData = this.objectDocument.data;
-      this.designJson = this.objectDocument.designJson || this.fieldDescriptors;
+      if (this.objectDocument.designJson) {
+        this.designJson = this.deepClone(this.objectDocument.designJson)
+      } else {
+        this.designJson = {type: 'vertical-layout', items: this.deepClone(this.fieldDescriptors)};
+      }
     }
   }
 
   render() {
     return html`
       <div>
-        ${this.designJson.map((layoutElement, idx) => html`
+        ${this.designJson.items.map((layoutElement, verticalIndex) => html`
             ${
               layoutElement.type === 'horizontal-layout' ?
                 html`
                     <div class="row">
-                        ${this.repeat(layoutElement.items, i => i.name, i => this._createField(i, idx, layoutElement))}
+                        ${this.repeat(layoutElement.items, i => i.name, (i, horizontalIndex) => this._createField(i, horizontalIndex, layoutElement))}
                     </div>
                 ` : this.nothing
             }
             ${
               !layoutElement.type || layoutElement.type === 'field' ?
-                this._createField(layoutElement, idx) : this.nothing
+                this._createField(layoutElement, verticalIndex, this.designJson) : this.nothing
             }
         `)}
         <div>
@@ -125,7 +131,7 @@ export class AVObjectDocument extends AVItem {
     `
   }
 
-  _createField(fieldItem, idx, layoutElement) {
+  _createField(fieldItem, idx, containerElement) {
     return html`
       <div class="field pos-rel flex-1 row align-center">
         <div class="label">${fieldItem.name}</div>
@@ -140,10 +146,10 @@ export class AVObjectDocument extends AVItem {
               <div
                 class="field-overlay pos-abs"
                 draggable="true"
-                @dragstart="${(e) => this.dragstart(e, idx)}"
+                @dragstart="${(e) => this.dragstart(e, idx, containerElement)}"
                 @dragover="${this.dragover}"
                 @dragleave="${this.dragleave}"
-                @drop="${(e) => this.drop(e, idx, layoutElement)}"
+                @drop="${(e) => this.drop(e, idx, containerElement)}"
               ></div>
             ` : this.nothing
         }
@@ -151,8 +157,10 @@ export class AVObjectDocument extends AVItem {
     `
   }
 
-  dragstart(e, idx) {
+  dragstart(e, idx, container) {
     this.designDragElementIndex = idx;
+    this.designDragElement = container.items[idx];
+    this.designDragContainer = container;
   }
 
   dragover(e) {
@@ -197,34 +205,36 @@ export class AVObjectDocument extends AVItem {
     this._removeDragBorder(e);
   }
 
-  drop(e, dropElementIndex, layoutElement) {
-    if (this.designDragElementIndex === dropElementIndex) {
+  drop(e, dropElementIndex, containerElement) {
+    if (this.designDragElement === containerElement.items[dropElementIndex]) {
       this._removeDragBorder(e);
       return;
     }
 
-    const dragElement = this.designJson[this.designDragElementIndex];
-    const newDesign = [...this.designJson];
+    // const newDesign = [...this.designJson];
     let insertIndex = dropElementIndex;
     let cutIndex = this.designDragElementIndex;
 
     if (this.designDropSide === 'left' || this.designDropSide === 'right') {
-      if (!layoutElement || layoutElement.type !== 'horizontal-layout') {
+      if (containerElement.type === 'vertical-layout') {
         if (this.designDropSide === 'left') {
-          newDesign[dropElementIndex] = {type: 'horizontal-layout', items: [dragElement, newDesign[dropElementIndex]]}
+          containerElement.items[dropElementIndex] = {type: 'horizontal-layout', items: [this.designDragElement, containerElement.items[dropElementIndex]]}
         }
         if (this.designDropSide === 'right') {
-          newDesign[dropElementIndex] = {type: 'horizontal-layout', items: [newDesign[dropElementIndex], dragElement]}
+          containerElement.items[dropElementIndex] = {type: 'horizontal-layout', items: [containerElement.items[dropElementIndex], this.designDragElement]}
         }
-      } else {
+      } else if (containerElement.type === 'horizontal-layout') {
         if (this.designDropSide === 'left') {
-
+          if (containerElement === this.designDragContainer) {
+            cutIndex = cutIndex + 1;
+          }
         }
         if (this.designDropSide === 'right') {
+          insertIndex = insertIndex + 1;
         }
-
+        containerElement.items.splice(insertIndex, 0, this.designDragElement);
       }
-      newDesign.splice(cutIndex, 1);
+      this.designDragContainer.items.splice(cutIndex, 1);
     }
 
     if (this.designDropSide === 'top' || this.designDropSide === 'bottom') {
@@ -234,11 +244,12 @@ export class AVObjectDocument extends AVItem {
       if (this.designDragElementIndex > dropElementIndex) {
         cutIndex = cutIndex + 1;
       }
-      newDesign.splice(insertIndex, 0, dragElement);
-      newDesign.splice(cutIndex, 1);
+      containerElement.items.splice(insertIndex, 0, this.designDragElement);
+      this.designDragContainer.items.splice(cutIndex, 1);
     }
 
-    this.designJson = newDesign;
+    this.requestUpdate();
+    // this.designJson = newDesign;
     this._removeDragBorder(e);
   }
 

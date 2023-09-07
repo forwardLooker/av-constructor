@@ -23,6 +23,7 @@ class AVElement extends LitElement {
   showIf = directive(showIfDirective);
   repeat = repeat;
   classMap = classMap;
+  deepClone = (objectToClone) => JSON.parse(JSON.stringify(objectToClone))
   isEmpty(val) {
     return !val || (Array.isArray(val) && val.length === 0)
   }
