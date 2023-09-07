@@ -68,20 +68,16 @@ export class AVClass extends AVItem {
         @row-click="${this.onGridRowClick}"
       >
       </av-grid>
-      ${
-        this.selectedObjectDocument ?
-            html`
-              <av-object-document
-                class="object-show"
-                .fieldDescriptors="${this.fieldDescriptors}"
-                .objectDocument="${this.selectedObjectDocument}"
-                @close="${this.onObjectClose}"
-                @saved="${this.onObjectSaved}"
-              >
-              </av-object-document>
-            `
-            : this.nothing
-        }
+      ${this.if(this.selectedObjectDocument, html`
+          <av-object-document
+            class="object-show"
+            .fieldDescriptors="${this.fieldDescriptors}"
+            .objectDocument="${this.selectedObjectDocument}"
+            @close="${this.onObjectClose}"
+            @saved="${this.onObjectSaved}"
+          >
+          </av-object-document>
+      `)}
     `
   }
 

@@ -109,18 +109,15 @@ export class AVObjectDocument extends AVItem {
     return html`
       <div>
         ${this.designJson.items.map((layoutElement, verticalIndex) => html`
-            ${
-              layoutElement.type === 'horizontal-layout' ?
-                html`
-                    <div class="row">
-                        ${this.repeat(layoutElement.items, i => i.name, (i, horizontalIndex) => this._createField(i, horizontalIndex, layoutElement))}
-                    </div>
-                ` : this.nothing
-            }
-            ${
-              !layoutElement.type || layoutElement.type === 'field' ?
-                this._createField(layoutElement, verticalIndex, this.designJson) : this.nothing
-            }
+            ${this.if(layoutElement.type === 'horizontal-layout', html`
+              <div class="row">
+                  ${this.repeat(layoutElement.items, i => i.name, (i, horizontalIndex) => this._createField(i, horizontalIndex, layoutElement))}
+              </div>
+            `)}
+            ${this.if(
+              !layoutElement.type || layoutElement.type === 'field',
+              this._createField(layoutElement, verticalIndex, this.designJson)
+            )}
         `)}
         <div>
           <button @click="${this.saveAndClose}">OK</button>
