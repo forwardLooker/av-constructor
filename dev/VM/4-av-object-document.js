@@ -63,6 +63,12 @@ export class AVObjectDocument extends AVItem {
       .dragover-bottom {
         border-bottom: 4px solid black;
       }
+      .dragover-left {
+        border-left: 4px solid black;
+      }
+      .dragover-right {
+        border-right: 4px solid black;
+      }
     `;
   }
 
@@ -96,34 +102,51 @@ export class AVObjectDocument extends AVItem {
   render() {
     return html`
       <div>
-        ${this.repeat(this.designJson,  f => f.name, (f, idx) => html`
-            <div class="field pos-rel flex-1 row align-center">
-              <div class="label">${f.name}</div>
-              <input
-                class="input flex-1"      
-                value="${this._newData[f.name]}"
-                @input="${(e) => {this._newData[f.name] = e.target.value} }"
-              >
-                ${
-                  this.designMode ?
-                          html`
-                            <div
-                              class="field-overlay pos-abs"
-                              draggable="true"
-                              @dragstart="${(e) => this.dragstart(e, idx)}"
-                              @dragover="${this.dragover}"
-                              @dragleave="${this.dragleave}"
-                              @drop="${(e) => this.drop(e, idx)}"
-                            ></div>
-                          ` : this.nothing
-                }
-            </div>
+        ${this.designJson.map((layoutElement, idx) => html`
+            ${
+              layoutElement.type === 'horizontal-layout' ?
+                html`
+                    <div class="row">
+                        ${this.repeat(layoutElement.items, i => i.name, i => this._createField(i, idx, layoutElement))}
+                    </div>
+                ` : this.nothing
+            }
+            ${
+              !layoutElement.type || layoutElement.type === 'field' ?
+                this._createField(layoutElement, idx) : this.nothing
+            }
         `)}
         <div>
           <button @click="${this.saveAndClose}">OK</button>
           <button @click="${this.close}">Закрыть</button>
           <button @click="${this.toggleDesign}">Дизайнер</button>
         </div>
+      </div>
+    `
+  }
+
+  _createField(fieldItem, idx, layoutElement) {
+    return html`
+      <div class="field pos-rel flex-1 row align-center">
+        <div class="label">${fieldItem.name}</div>
+        <input
+          class="input flex-1"      
+          value="${this._newData[fieldItem.name]}"
+          @input="${(e) => {this._newData[fieldItem.name] = e.target.value} }"
+        >
+        ${
+          this.designMode ?
+            html`
+              <div
+                class="field-overlay pos-abs"
+                draggable="true"
+                @dragstart="${(e) => this.dragstart(e, idx)}"
+                @dragover="${this.dragover}"
+                @dragleave="${this.dragleave}"
+                @drop="${(e) => this.drop(e, idx, layoutElement)}"
+              ></div>
+            ` : this.nothing
+        }
       </div>
     `
   }
@@ -136,48 +159,94 @@ export class AVObjectDocument extends AVItem {
     // console.log('dragover e:', e);
     e.preventDefault();
     const elemRect = e.target.getBoundingClientRect();
-    if (elemRect.top + elemRect.height/2 > e.pageY) {
-      e.target.classList.add('dragover-top');
-      this.designDropSide = 'top';
-    } else {
+
+    if (elemRect.left + elemRect.width/10 > e.pageX) {
       e.target.classList.remove('dragover-top');
-    }
-    if (elemRect.top + elemRect.height/2 <= e.pageY) {
-      e.target.classList.add('dragover-bottom');
-      this.designDropSide = 'bottom'
-    } else {
       e.target.classList.remove('dragover-bottom');
+      e.target.classList.add('dragover-left');
+      this.designDropSide = 'left';
+    } else {
+      e.target.classList.remove('dragover-left');
+
+      if (elemRect.right - elemRect.width/10 <= e.pageX) {
+        e.target.classList.remove('dragover-top');
+        e.target.classList.remove('dragover-bottom');
+        e.target.classList.add('dragover-right');
+        this.designDropSide = 'right';
+      } else {
+        e.target.classList.remove('dragover-right');
+
+        if (elemRect.top + elemRect.height/2 > e.pageY) {
+          e.target.classList.add('dragover-top');
+          this.designDropSide = 'top';
+        } else {
+          e.target.classList.remove('dragover-top');
+        }
+
+        if (elemRect.top + elemRect.height/2 <= e.pageY) {
+          e.target.classList.add('dragover-bottom');
+          this.designDropSide = 'bottom'
+        } else {
+          e.target.classList.remove('dragover-bottom');
+        }
+      }
     }
   }
 
   dragleave(e) {
-    e.target.classList.remove('dragover-top');
-    e.target.classList.remove('dragover-bottom');
+    this._removeDragBorder(e);
   }
 
-  drop(e, idx) {
-    if (this.designDragElementIndex === idx) {
-      e.target.classList.remove('dragover-top');
-      e.target.classList.remove('dragover-bottom');
+  drop(e, dropElementIndex, layoutElement) {
+    if (this.designDragElementIndex === dropElementIndex) {
+      this._removeDragBorder(e);
       return;
     }
+
     const dragElement = this.designJson[this.designDragElementIndex];
     const newDesign = [...this.designJson];
-    newDesign.splice(this.designDragElementIndex, 1);
-    let dropIndex = idx;
-    if (this.designDropSide === 'top') {
-      dropIndex = idx;
+    let insertIndex = dropElementIndex;
+    let cutIndex = this.designDragElementIndex;
+
+    if (this.designDropSide === 'left' || this.designDropSide === 'right') {
+      if (!layoutElement || layoutElement.type !== 'horizontal-layout') {
+        if (this.designDropSide === 'left') {
+          newDesign[dropElementIndex] = {type: 'horizontal-layout', items: [dragElement, newDesign[dropElementIndex]]}
+        }
+        if (this.designDropSide === 'right') {
+          newDesign[dropElementIndex] = {type: 'horizontal-layout', items: [newDesign[dropElementIndex], dragElement]}
+        }
+      } else {
+        if (this.designDropSide === 'left') {
+
+        }
+        if (this.designDropSide === 'right') {
+        }
+
+      }
+      newDesign.splice(cutIndex, 1);
     }
-    if (this.designDropSide === 'bottom') {
-      dropIndex = idx + 1;
+
+    if (this.designDropSide === 'top' || this.designDropSide === 'bottom') {
+      if (this.designDropSide === 'bottom') {
+        insertIndex = insertIndex + 1;
+      }
+      if (this.designDragElementIndex > dropElementIndex) {
+        cutIndex = cutIndex + 1;
+      }
+      newDesign.splice(insertIndex, 0, dragElement);
+      newDesign.splice(cutIndex, 1);
     }
-    if (this.designDragElementIndex < idx) {
-      dropIndex = dropIndex - 1;
-    }
-    newDesign.splice(dropIndex, 0, dragElement);
+
     this.designJson = newDesign;
+    this._removeDragBorder(e);
+  }
+
+  _removeDragBorder(e) {
     e.target.classList.remove('dragover-top');
     e.target.classList.remove('dragover-bottom');
+    e.target.classList.remove('dragover-left');
+    e.target.classList.remove('dragover-right');
   }
 
   close() {
