@@ -104,9 +104,7 @@ export class AVHost extends AVItem {
           </div>
         </div>
         <div id="main" class="flex-1 row pad-8 border">
-          ${
-            this.user ?  this.renderMain() : html`<av-auth></av-auth>`
-          }
+          ${this.user ?  this.renderMain() : html`<av-auth></av-auth>`}
         </div>
         <div ${this.showIf(this.dialogShowed)} id="dialog-container" class="pos-fixed row justify-center align-center">
             <div id="dialog-form">
