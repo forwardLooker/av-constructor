@@ -42,6 +42,11 @@ export class AVObjectDocument extends AVItem {
         border-color: #d9d9d9;
         border-radius: 6px;
         transition: all .2s;
+
+        -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
+        box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
+        
+        margin-top: 2px;
       }
 
       .input:hover {
@@ -163,10 +168,15 @@ export class AVObjectDocument extends AVItem {
               @dragover="${this.dragover}"
               @dragleave="${this.dragleave}"
               @drop="${(e) => this.drop(e, idx, containerElement)}"
+              @contextmenu="${(e) => this._onDesignFieldContextMenu(e, idx, containerElement)}"
             ></div>
-        `)}  
+        `)}
       </div>
     `
+  }
+
+  async _onDesignFieldContextMenu(e, idx, containerElement) {
+    const menuResult = await this.showContextMenu(e, ['Сгруппировать']);
   }
 
   dragstart(e, idx, container) {
@@ -266,7 +276,7 @@ export class AVObjectDocument extends AVItem {
         if (this.designDropSide === 'bottom') {
           insertIndex = insertIndex + 1;
         }
-        if (this.designDragElementIndex > dropElementIndex) {
+        if (dropContainer === this.designDragContainer && this.designDragElementIndex > dropElementIndex) {
           cutIndex = cutIndex + 1;
         }
         dropContainer.items.splice(insertIndex, 0, this.designDragElement);

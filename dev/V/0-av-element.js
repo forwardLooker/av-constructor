@@ -2,6 +2,7 @@ import {html, css as litCSS, LitElement, nothing} from "lit";
 import {directive, Directive} from "lit/directive.js";
 import {repeat} from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
+import {styleMap} from 'lit/directives/style-map.js';
 
 class showIfDirective extends Directive {
   update(part, [condition]) {
@@ -24,7 +25,15 @@ class AVElement extends LitElement {
   showIf = directive(showIfDirective);
   repeat = repeat;
   classMap = classMap;
+  styleMap = styleMap;
   deepClone = (objectToClone) => JSON.parse(JSON.stringify(objectToClone))
+
+  hide() {
+    this.classList.add('no-display');
+  }
+  display() {
+    this.classList.remove('no-display');
+  }
   isEmpty(val) {
     return !val || (Array.isArray(val) && val.length === 0)
   }
@@ -102,6 +111,9 @@ function css(...values) {
     }
     .pos-fixed {
       position: fixed;
+    }
+    .pad-4 {
+      padding: 4px;
     }
     .pad-8 {
       padding: 8px;

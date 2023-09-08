@@ -5,6 +5,7 @@ import './3-av-class.js';
 import './2-av-domain.js';
 
 import '../V/av-tree.js';
+import '../V/av-context-menu.js';
 
 import {Host} from'../M/1-Host.js';
 
@@ -73,6 +74,9 @@ export class AVHost extends AVItem {
       #dialog-form {
         background: white;
       }
+      #context-menu {
+        
+      }
     `;
   }
 
@@ -82,7 +86,9 @@ export class AVHost extends AVItem {
     dialogShowed: {},
     dialogText: {},
     dialogInputLabel: {},
-    dialogInputValue: {}
+    dialogInputValue: {},
+    contextMenuOpened: {},
+    contextMenuItems: {},
   };
 
       // config = this.fromHost('config') row justify-center align-center
@@ -119,10 +125,17 @@ export class AVHost extends AVItem {
                 </div>
             </div>
         </div>
+        <av-context-menu></av-context-menu>
       `
     }
 
-    showDialog({text, input}) {
+    async showContextMenu(e, menuItems) {
+      e.preventDefault();
+      const menu = this.$('av-context-menu');
+      return menu.show(e, menuItems);
+    }
+
+  showDialog({text, input}) {
         this.dialogShowed = true;
         this.dialogText = text;
         this.dialogInputLabel = input;
