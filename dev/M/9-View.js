@@ -5,6 +5,8 @@ export class View extends Item {
     super();
   }
 };
+// TODO по идее должен содержать ObjectDocument задизайненный
+
 // TODO рассмотреть вариант использования как статического класса с агрегированием информации про все View
 // TODO рассмотреть вариант импортирования в проект лучших Vue-библиотек для совмещения или копирования визуальной и функциональной частей
 // TODO унифицировать проперти компонентов в M V VM файлах по образу item items data dataset value label options selectedItem selectedItems
