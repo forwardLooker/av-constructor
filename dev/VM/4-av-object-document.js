@@ -50,6 +50,12 @@ export class AVObjectDocument extends AVItem {
       .input:hover {
         border-color: black;
       }
+      
+      .horizontal-resizer {
+        width: 4px;
+        height: 100%;
+        cursor: col-resize;
+      }
 
       .field-overlay {
         top: 0;
@@ -161,15 +167,19 @@ export class AVObjectDocument extends AVItem {
           @input="${(e) => {this._newData[fieldItem.name] = e.target.value} }"
         >
         ${this.if(this.designMode, html`
-            <div
-              class="field-overlay pos-abs"
-              draggable="true"
-              @dragstart="${(e) => this.dragstart(e, idx, containerElement)}"
-              @dragover="${this.dragover}"
-              @dragleave="${this.dragleave}"
-              @drop="${(e) => this.drop(e, idx, containerElement)}"
-              @contextmenu="${(e) => this._onDesignFieldContextMenu(e, idx, containerElement)}"
-            ></div>
+            <div class="field-overlay pos-abs row">
+              <div
+                class="flex-1"
+                draggable="true"
+                @dragstart="${(e) => this.dragstart(e, idx, containerElement)}"
+                @dragover="${this.dragover}"
+                @dragleave="${this.dragleave}"
+                @drop="${(e) => this.drop(e, idx, containerElement)}"
+                @contextmenu="${(e) => this._onDesignFieldContextMenu(e, idx, containerElement)}"
+              >
+              </div>
+              <div class="horizontal-resizer"></div>
+            </div>
         `)}
       </div>
     `
