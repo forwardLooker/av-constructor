@@ -46,7 +46,8 @@ export class AVField extends AVItem {
 
   static properties = {
     item: {},
-    value: {}
+    value: {},
+    onInputFunc: {}
   };
 
   constructor() {
@@ -58,18 +59,19 @@ export class AVField extends AVItem {
       <div class="flex-1 row align-center">
         <label class="label">${this.item.name}</label>
         <input
-          class="input flex-1"      
+          class="input flex-1"  
           value="${this.value}"
-          @input="${(e) => {
-              this.value = e.target.value;
-              this.fire('input', {value: e.target.value});
-          }}"
+          @input="${this._input}"
         >
         <slot></slot>
       </div>
     `
   }
 
+  _input(e) {
+    this.value = e.target.value;
+    this.onInputFunc(e.target.value, e)
+  }
 
   async firstUpdated() {
 

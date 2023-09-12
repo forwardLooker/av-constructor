@@ -50,6 +50,7 @@ export class AVClass extends AVItem {
       <av-item-panel
         .item="${this.classItem}"
         @item-view-changed="${this.onItemViewChanged}"
+        .onCreateFunc="${(e) => {this.selectedObjectDocument = this.classItem.getNewObjectDocument()}}"
       ></av-item-panel>
       ${this.currentViewName === 'Grid' ? this.renderGrid() : this.nothing}
       ${this.currentViewName === 'Configurator' ? this.renderConfigurator() : this.nothing}
@@ -112,11 +113,6 @@ export class AVClass extends AVItem {
   willUpdate(changedProps) {
     if (changedProps.has('classItem')) {
       this.currentViewName = this.classItem.defaultViewName
-    }
-    if (changedProps.has('classItem') && this.classItem !== null) {
-      this.classItem.addEventListener('openNewObjectDocument', () => {
-        this.selectedObjectDocument = this.classItem.getNewObjectDocument();
-      })
     }
   }
 

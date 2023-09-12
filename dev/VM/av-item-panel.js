@@ -30,7 +30,8 @@ export class AvItemPanel extends AVItem {
     item: {},
     currentViewName: {},
     availableViewsList: {},
-    viewsDropdownOpened: {}
+    viewsDropdownOpened: {},
+    onCreateFunc: {},
   };
 
   constructor() {
@@ -66,13 +67,9 @@ export class AvItemPanel extends AVItem {
   renderGridButtons() {
     return html`
       <div class="pad-8">
-          <button @click="${this.openNewObjectDocument}">Создать</button>
+          <button @click="${this.onCreateFunc}">Создать</button>
       </div>
     `
-  }
-
-  openNewObjectDocument() {
-    this.item.fire('openNewObjectDocument')
   }
 
   onViewSelectorClick() {

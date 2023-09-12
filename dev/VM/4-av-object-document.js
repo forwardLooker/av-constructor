@@ -130,7 +130,7 @@ export class AVObjectDocument extends AVItem {
         class="pos-rel row"
         .item="${fieldItem}"
         .value="${this._newData[fieldItem.name]}"
-        @input="${(e) => {this._newData[fieldItem.name] = e.target.value}}"
+        .onInputFunc="${value => {this._newData[fieldItem.name] = value}}"
       >
         ${this.if(this.designMode, html`
             <div class="field-overlay pos-abs row">
