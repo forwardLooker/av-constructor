@@ -1,5 +1,7 @@
 import {html, css, AVItem} from './0-av-item.js';
 
+import './5-av-field.js'
+
 import {Host} from '../M/1-Host.js';
 
 export class AVObjectDocument extends AVItem {
@@ -14,41 +16,6 @@ export class AVObjectDocument extends AVItem {
       #header {
         padding: 0 1.5em;
         box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
-      }
-      
-      .field {
-      }
-      .label {
-        display: inline-block;
-        padding: 0 4px;
-      }
-
-      .input {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 4px 11px;
-        color: rgba(0, 0, 0, .88);
-        font-size: 14px;
-        line-height: 1.5714285714285714;
-        list-style: none;
-        font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial, noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol, noto color emoji;
-        position: relative;
-        display: inline-block;
-        min-width: 0;
-        background-color: #fff;
-        background-image: none;
-        border-width: 1px;
-        border-style: solid;
-        border-color: #d9d9d9;
-        border-radius: 6px;
-        transition: all .2s;
-
-        -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
-        box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
-      }
-
-      .input:hover {
-        border-color: black;
       }
       
       .horizontal-resizer {
@@ -159,13 +126,12 @@ export class AVObjectDocument extends AVItem {
 
   _renderField(fieldItem, idx, containerElement) {
     return html`
-      <div class="field pos-rel flex-1 row align-center">
-        <div class="label">${fieldItem.name}</div>
-        <input
-          class="input flex-1"      
-          value="${this._newData[fieldItem.name]}"
-          @input="${(e) => {this._newData[fieldItem.name] = e.target.value} }"
-        >
+      <av-field
+        class="pos-rel row"
+        .item="${fieldItem}"
+        .value="${this._newData[fieldItem.name]}"
+        @input="${(e) => {this._newData[fieldItem.name] = e.target.value}}"
+      >
         ${this.if(this.designMode, html`
             <div class="field-overlay pos-abs row">
               <div
@@ -178,11 +144,18 @@ export class AVObjectDocument extends AVItem {
                 @contextmenu="${(e) => this._onDesignFieldContextMenu(e, idx, containerElement)}"
               >
               </div>
-              <div class="horizontal-resizer"></div>
+              <div
+                class="horizontal-resizer"
+                @mousedown="${(e) => this._horizontalResize(e, idx, containerElement)}"
+              ></div>
             </div>
         `)}
-      </div>
+      </av-field>
     `
+  }
+
+  _horizontalResize(e, idx, containerElement) {
+
   }
 
   async _onDesignFieldContextMenu(e, idx, containerElement) {

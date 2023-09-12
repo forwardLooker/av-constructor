@@ -28,8 +28,8 @@ export class AVContextMenu extends AVElement {
     return html`
       <div id="context-menu" class="col">
         ${this.repeat(this.items, i => i, i => html`
-                <div class="contextMenuItem pad-4" @click="${e => this._onItemSelect(i)}">${i}</div>
-            `)}
+            <div class="contextMenuItem pad-4" @click="${e => this._onItemSelect(i)}">${i}</div>
+        `)}
       </div>
     `
   }
