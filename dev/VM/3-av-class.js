@@ -76,8 +76,8 @@ export class AVClass extends AVItem {
             class="object-show"
             .fieldDescriptors="${this.fieldDescriptors}"
             .objectDocument="${this.selectedObjectDocument}"
-            @close="${this._onObjectClose}"
-            @saved="${this._onObjectSaved}"
+            .onCloseFunc="${() => this.selectedObjectDocument = null}"
+            .onSavedFunc="${this._onObjectSaved}"
           >
           </av-object-document>
       `)}
@@ -109,11 +109,7 @@ export class AVClass extends AVItem {
     this.selectedObjectDocument = await this.classItem.getObjectDocument(rowItem._reference);;
   }
 
-  _onObjectClose() {
-    this.selectedObjectDocument = null
-  }
-
-  async _onObjectSaved() {
+  _onObjectSaved = async () => {
     this.objectDocuments = await this.classItem.getObjectDocuments();
   }
 

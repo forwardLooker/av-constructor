@@ -52,12 +52,15 @@ export class AVObjectDocument extends AVItem {
     fieldDescriptors: {},
     objectDocument: {},
     _newData: {},
+    onSavedFunc: {},
+    onCloseFunc: {},
+
     designMode: {},
     designJson: {},
     designDragElementIndex: {},
     designDragElement: {},
     designDragContainer: {},
-    designDropSide: {enum: ['top', 'bottom', 'left', 'right', 'none']}
+    designDropSide: {enum: ['top', 'bottom', 'left', 'right', 'none']},
   };
 
   constructor() {
@@ -89,7 +92,7 @@ export class AVObjectDocument extends AVItem {
         ${this._renderVerticalLayout(this.designJson)}
         <div>
           <button @click="${this._saveAndClose}">OK</button>
-          <button @click="${this._close}">Закрыть</button>
+          <button @click="${this.onCloseFunc}">Закрыть</button>
           <button @click="${this._toggleDesign}">Дизайнер</button>
         </div>
       </div>
@@ -287,13 +290,10 @@ export class AVObjectDocument extends AVItem {
     e.target.classList.remove('dragover-right');
   }
 
-  _close() {
-    this.fire('close');
-  }
-  _saveAndClose() {
-    this.objectDocument.saveData(this._newData);
-    this.fire('saved');
-    this.fire('close');
+  async _saveAndClose() {
+    await this.objectDocument.saveData(this._newData);
+    this.onSavedFunc();
+    this.onCloseFunc();
   }
 
   async _toggleDesign() {
