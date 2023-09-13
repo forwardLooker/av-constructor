@@ -68,7 +68,7 @@ export class AVClass extends AVItem {
       <av-grid
         .items="${this.objectDocuments}"
         .columns="${this.fieldDescriptors}"
-        @row-click="${this._onGridRowClick}"
+        .onRowClickFunc="${this._onGridRowClick}"
       >
       </av-grid>
       ${this.if(this.selectedObjectDocument, html`
@@ -104,11 +104,9 @@ export class AVClass extends AVItem {
     }
   }
 
-  async _onGridRowClick(e) {
-    console.log('onGridRow:' , e);
+  _onGridRowClick = async (rowItem) => {
     //TODO инстанцирование объекта
-    this.selectedObjectDocument = await this.classItem.getObjectDocument(e.detail.rowData._reference);;
-    console.log('selectedObject:' , this.selectedObjectDocument);
+    this.selectedObjectDocument = await this.classItem.getObjectDocument(rowItem._reference);;
   }
 
   _onObjectClose() {

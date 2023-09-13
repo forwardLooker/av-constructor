@@ -28,7 +28,7 @@ export class AVDomain extends AVItem {
   }
 
   render() {
-      return this.nothing;
+    return this.nothing;
   }
 
 

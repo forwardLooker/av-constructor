@@ -43,7 +43,8 @@ export class AVGrid extends AVElement {
 
   static properties = {
     items: {},
-    columns: {}
+    columns: {},
+    onRowClickFunc: {}
   };
 
   constructor() {
@@ -80,8 +81,7 @@ export class AVGrid extends AVElement {
   }
 
   _onCellClick(rowItem, cellName, e) {
-    this.fire(`cell-click`, {cellName, cellData: rowItem[cellName], rowData: rowItem, originalEvent: e});
-    this.fire('row-click', {rowData: rowItem, originalEvent: e})
+    this.onRowClickFunc(rowItem);
   }
 }
 window.customElements.define('av-grid', AVGrid);
