@@ -31,7 +31,8 @@ export class AVTree extends AVElement {
 
   static properties = {
     items: {},
-    selectedItem: {}
+    selectedItem: {},
+    onItemSelectFunc: {}
   };
 
   constructor() {
@@ -96,7 +97,7 @@ export class AVTree extends AVElement {
       newSelectedItem.selected = true;
       this.selectedItem = newSelectedItem;
       this.requestUpdate();
-      this.fire('item-select', newSelectedItem)
+      this.onItemSelectFunc(newSelectedItem);
     }
   }
 }

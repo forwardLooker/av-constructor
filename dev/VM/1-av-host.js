@@ -139,7 +139,10 @@ export class AVHost extends AVItem {
     return html`
       <div class="flex-1 row">
         <div id="left-sidebar" class="col pad-8 border">
-            <av-tree .items="${this.config}" @item-select="${this._onTreeItemSelect}"></av-tree>
+            <av-tree
+              .items="${this.config}"
+              .onItemSelectFunc="${this._onTreeItemSelect}"
+            ></av-tree>
         </div>
         <div id="view-port" class="flex-1 margin-left-8 pad-8 border pos-rel">
             ${this.selectedTreeItem?.itemType === 'class' ?
@@ -212,13 +215,13 @@ export class AVHost extends AVItem {
     })
   }
 
-  async _onTreeItemSelect(e) {
-    console.log('onTreeItemSelect:', e);
-    if (e.detail.itemType === 'class') {
-      this.selectedTreeItem = this.Host.getClass(e.detail._reference);
+  _onTreeItemSelect = async (item) => {
+    // console.log('onTreeItemSelect:', e);
+    if (item.itemType === 'class') {
+      this.selectedTreeItem = this.Host.getClass(item._reference);
     }
-    if (e.detail.itemType === 'domain') {
-      this.selectedTreeItem = this.Host.getDomain(e.detail._reference)
+    if (item.itemType === 'domain') {
+      this.selectedTreeItem = this.Host.getDomain(item._reference)
     }
   }
 }
