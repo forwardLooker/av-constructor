@@ -1,8 +1,8 @@
 import {html, css, AVItem} from './0-av-item.js';
 
-import './av-auth.js';
 import './3-av-class.js';
 import './2-av-domain.js';
+import './1-av-host/av-auth.js';
 
 import '../V/av-tree.js';
 import '../V/av-context-menu.js';
