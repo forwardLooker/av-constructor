@@ -41,12 +41,19 @@ export class AvItemPanel extends AVItem {
     this.availableViewsList = [];
   }
 
+  willUpdate(changedProps) {
+    if (changedProps.has('item')) {
+      this.currentViewName = this.item.defaultViewName;
+      this.availableViewsList = this.item.getViewsList()
+    }
+  }
+
   render() {
     return html`
         <div class="row">
-          ${this.currentViewName === 'Grid' ? this.renderGridButtons() : this.nothing}
+          ${this.currentViewName === 'Grid' ? this._renderGridButtons() : this.nothing}
           <div class="flex-1 row justify-end pad-8">
-            <div id="view-selector" class="row pos-rel" @click="${this.onViewSelectorClick}">
+            <div id="view-selector" class="row pos-rel" @click="${this._onViewSelectorClick}">
               <div>${this.currentViewName}</div>
               <div id="view-selector-arrow">${html`>`}</div>
               <div
@@ -55,7 +62,7 @@ export class AvItemPanel extends AVItem {
                 class="col pos-abs border"
               >
                 ${this.repeat(this.availableViewsList, v => v, v => html`
-                  <div @click="${(e) => this.selectView(v, e)}">${v}</div>
+                  <div @click="${(e) => this._selectView(v, e)}">${v}</div>
                 `)}
               </div>  
             </div>
@@ -64,7 +71,7 @@ export class AvItemPanel extends AVItem {
     `
   }
 
-  renderGridButtons() {
+  _renderGridButtons() {
     return html`
       <div class="pad-8">
           <button @click="${this.onCreateFunc}">Создать</button>
@@ -72,19 +79,21 @@ export class AvItemPanel extends AVItem {
     `
   }
 
-  onViewSelectorClick() {
-    this.viewsDropdownOpened = !this.viewsDropdownOpened;
-  }
-  selectView(view, e) {
-    this.currentViewName = view;
-    this.fire('item-view-changed', {newViewName: view, originalEvent: e})
+  async firstUpdated() {
+
   }
 
-  willUpdate(changedProps) {
-    if (changedProps.has('item')) {
-      this.currentViewName = this.item.defaultViewName;
-      this.availableViewsList = this.item.getViewsList()
-    }
+  async updated(changedProps) {
+
+  }
+
+  _onViewSelectorClick() {
+    this.viewsDropdownOpened = !this.viewsDropdownOpened;
+  }
+
+  _selectView(view, e) {
+    this.currentViewName = view;
+    this.fire('item-view-changed', {newViewName: view, originalEvent: e})
   }
 }
 

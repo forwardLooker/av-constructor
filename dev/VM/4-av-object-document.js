@@ -88,9 +88,9 @@ export class AVObjectDocument extends AVItem {
       <div class="col">
         ${this._renderVerticalLayout(this.designJson)}
         <div>
-          <button @click="${this.saveAndClose}">OK</button>
-          <button @click="${this.close}">Закрыть</button>
-          <button @click="${this.toggleDesign}">Дизайнер</button>
+          <button @click="${this._saveAndClose}">OK</button>
+          <button @click="${this._close}">Закрыть</button>
+          <button @click="${this._toggleDesign}">Дизайнер</button>
         </div>
       </div>
     `
@@ -137,10 +137,10 @@ export class AVObjectDocument extends AVItem {
               <div
                 class="flex-1"
                 draggable="true"
-                @dragstart="${(e) => this.dragstart(e, idx, containerElement)}"
-                @dragover="${this.dragover}"
-                @dragleave="${this.dragleave}"
-                @drop="${(e) => this.drop(e, idx, containerElement)}"
+                @dragstart="${(e) => this._dragstart(e, idx, containerElement)}"
+                @dragover="${this._dragover}"
+                @dragleave="${this._dragleave}"
+                @drop="${(e) => this._drop(e, idx, containerElement)}"
                 @contextmenu="${(e) => this._onDesignFieldContextMenu(e, idx, containerElement)}"
               >
               </div>
@@ -154,6 +154,14 @@ export class AVObjectDocument extends AVItem {
     `
   }
 
+  async firstUpdated() {
+
+  }
+
+  updated(changedProps) {
+
+  }
+
   _horizontalResize(e, idx, containerElement) {
 
   }
@@ -162,13 +170,13 @@ export class AVObjectDocument extends AVItem {
     const menuResult = await this.showContextMenu(e, ['Сгруппировать']);
   }
 
-  dragstart(e, idx, container) {
+  _dragstart(e, idx, container) {
     this.designDragElementIndex = idx;
     this.designDragElement = container.items[idx];
     this.designDragContainer = container;
   }
 
-  dragover(e) {
+  _dragover(e) {
     // console.log('dragover e:', e);
     e.preventDefault();
     const elemRect = e.target.getBoundingClientRect();
@@ -206,11 +214,11 @@ export class AVObjectDocument extends AVItem {
     }
   }
 
-  dragleave(e) {
+  _dragleave(e) {
     this._removeDragBorder(e);
   }
 
-  drop(e, dropElementIndex, dropContainer) {
+  _drop(e, dropElementIndex, dropContainer) {
     if (this.designDragElement === dropContainer.items[dropElementIndex]) {
       this._removeDragBorder(e);
       return;
@@ -279,16 +287,16 @@ export class AVObjectDocument extends AVItem {
     e.target.classList.remove('dragover-right');
   }
 
-  close() {
+  _close() {
     this.fire('close');
   }
-  saveAndClose() {
+  _saveAndClose() {
     this.objectDocument.saveData(this._newData);
     this.fire('saved');
     this.fire('close');
   }
 
-  async toggleDesign() {
+  async _toggleDesign() {
     this.designMode = !this.designMode;
     if (this.designMode === false) {
       const saveDesignFlag = await this.showDialog({text: 'Сохранить дизайн?'});
@@ -298,10 +306,6 @@ export class AVObjectDocument extends AVItem {
         this._addContainerReference(this.designJson);
       }
     }
-  }
-
-  async firstUpdated() {
-
   }
 
   _addContainerReference(layoutElememt) {

@@ -21,12 +21,22 @@ export class AVDomain extends AVItem {
     super();
   }
 
+  willUpdate(changedProps) {
+    if (changedProps.has('classItem')) {
+      this.currentViewName = this.classItem.defaultViewName
+    }
+  }
+
   render() {
-    return this.nothing;
+      return this.nothing;
   }
 
 
   async firstUpdated() {
+
+  }
+
+  updated(changedProps) {
 
   }
 }

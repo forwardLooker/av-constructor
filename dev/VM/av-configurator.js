@@ -23,26 +23,17 @@ export class AVConfigurator extends AVItem {
     this.fieldDescriptors = [];
   }
 
+  willUpdate(changedProps) {
+
+  }
+
   render() {
     return html`
       <h3>Fields:</h3>
-      <button @click="${this.addField}">Добавить поле</button>
+      <button @click="${this._addField}">Добавить поле</button>
       <av-tree .items="${this.fieldDescriptors}"></av-tree>
-      <button @click="${this.saveFieldDescriptors}">Сохранить</button>
+      <button @click="${this._saveFieldDescriptors}">Сохранить</button>
     `
-  }
-
-  async addField() {
-    const fieldName = await this.showDialog({text: 'Введите название поля', input: 'name'});
-    if (fieldName && this.fieldDescriptors.every(f => f.name !== fieldName)) {
-      const field = {name: fieldName};
-      this.fieldDescriptors = [...this.fieldDescriptors, field];
-    }
-  }
-
-  async saveFieldDescriptors() {
-    await this.item.saveFieldDescriptors(this.fieldDescriptors);
-    this.fire('saved');
   }
 
   async firstUpdated() {
@@ -53,6 +44,19 @@ export class AVConfigurator extends AVItem {
     if (changedProps.has('item')) {
       this.fieldDescriptors = await this.item.getFieldDescriptors();
     }
+  }
+
+  async _addField() {
+    const fieldName = await this.showDialog({text: 'Введите название поля', input: 'name'});
+    if (fieldName && this.fieldDescriptors.every(f => f.name !== fieldName)) {
+      const field = {name: fieldName};
+      this.fieldDescriptors = [...this.fieldDescriptors, field];
+    }
+  }
+
+  async _saveFieldDescriptors() {
+    await this.item.saveFieldDescriptors(this.fieldDescriptors);
+    this.fire('saved');
   }
 }
 

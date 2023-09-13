@@ -93,129 +93,133 @@ export class AVHost extends AVItem {
 
       // config = this.fromHost('config') row justify-center align-center
 
-      constructor() {
-        super();
-        AVItem.Host = new Host(this);
-        this.config = [];
-        this.dialogInputValue = '';
-      }
+  constructor() {
+    super();
+    AVItem.Host = new Host(this);
+    this.config = [];
+    this.dialogInputValue = '';
+  }
 
-    render() {
-      return html`
-        <div id="header" class="row space-between">
-          <h3>Хост тест</h3>
-          <div ${this.showIf(this.user)} class="col align-center justify-center">
-              <div>${this.user?.email}</div>
-              <button @click="${() => this.auth.signOut()}">Выйти</button>
-          </div>
-        </div>
-        <div id="main" class="flex-1 row pad-8 border">
-          ${this.user ?  this.renderMain() : html`<av-auth></av-auth>`}
-        </div>
-        <div ${this.showIf(this.dialogShowed)} id="dialog-container" class="pos-fixed row justify-center align-center">
-            <div id="dialog-form">
-                <div>${this.dialogText}</div>
-                <div ${this.showIf(this.dialogInputLabel)}>
-                    <label>${this.dialogInputLabel}:</label>
-                    <input value="${this.dialogInputValue}" @input="${e => {this.dialogInputValue = e.target.value}}">
-                </div>
-                <div>
-                    <button @click="${() => {this.fire('dialog-submitted')}}">OK</button>
-                    <button @click="${() => {this.fire('dialog-closed')}}">Отмена</button>
-                </div>
-            </div>
-        </div>
-        <av-context-menu></av-context-menu>
-      `
+  willUpdate(changedProps) {
+    if (changedProps.has('classItem')) {
+      this.currentViewName = this.classItem.defaultViewName
     }
+  }
 
-    async showContextMenu(e, menuItems) {
+  render() {
+    return html`
+      <div id="header" class="row space-between">
+        <h3>Хост тест</h3>
+        <div ${this.showIf(this.user)} class="col align-center justify-center">
+            <div>${this.user?.email}</div>
+            <button @click="${() => this.auth.signOut()}">Выйти</button>
+        </div>
+      </div>
+      <div id="main" class="flex-1 row pad-8 border">
+        ${this.user ?  this._renderMain() : html`<av-auth></av-auth>`}
+      </div>
+      <div ${this.showIf(this.dialogShowed)} id="dialog-container" class="pos-fixed row justify-center align-center">
+          <div id="dialog-form">
+              <div>${this.dialogText}</div>
+              <div ${this.showIf(this.dialogInputLabel)}>
+                  <label>${this.dialogInputLabel}:</label>
+                  <input value="${this.dialogInputValue}" @input="${e => {this.dialogInputValue = e.target.value}}">
+              </div>
+              <div>
+                  <button @click="${() => {this.fire('dialog-submitted')}}">OK</button>
+                  <button @click="${() => {this.fire('dialog-closed')}}">Отмена</button>
+              </div>
+          </div>
+      </div>
+      <av-context-menu></av-context-menu>
+    `
+  }
+
+  _renderMain() {
+    return html`
+      <div class="flex-1 row">
+        <div id="left-sidebar" class="col pad-8 border">
+            <av-tree .items="${this.config}" @item-select="${this._onTreeItemSelect}"></av-tree>
+        </div>
+        <div id="view-port" class="flex-1 margin-left-8 pad-8 border pos-rel">
+            ${this.selectedTreeItem?.itemType === 'class' ?
+              html`<av-class .classItem="${this.selectedTreeItem}"></av-class>` : this.nothing}
+            ${this.selectedTreeItem?.itemType === 'domain' ?
+              html`<av-domain .domainItem="${this.selectedTreeItem}"></av-domain>` : this.nothing}
+        </div>
+      </div>
+    `
+  }
+
+  async firstUpdated() {
+    const config = await this.Host.getConfig();
+    const reduceSubDomainsAndClassesToItems = (items => {
+      items.forEach(i => {
+        const classes = i.classes || [];
+        const subDomains = i.subDomains || [];
+        i.items = [...subDomains, ...classes]
+        if (this.notEmpty(i.items)) {
+          reduceSubDomainsAndClassesToItems(i.items)
+        }
+      })
+    })
+    config.forEach(d => {
+      d.items = [...d.config.domains, ...d.config.classes]
+      d.items.forEach(i => {
+        const classes = i.classes || [];
+        const subDomains = i.subDomains || [];
+        i.items = [...subDomains, ...classes];
+        reduceSubDomainsAndClassesToItems(i.items);
+      })
+    })
+    this.config = config;
+  }
+
+  updated(changedProps) {
+
+  }
+
+  async showContextMenu(e, menuItems) {
       e.preventDefault();
       const menu = this.$('av-context-menu');
       return menu.show(e, menuItems);
-    }
+  }
 
-  showDialog({text, input}) {
-        this.dialogShowed = true;
-        this.dialogText = text;
-        this.dialogInputLabel = input;
-        return new Promise((resolve, reject) => {
-          const listenerOnClose = () => {
-            this.removeEventListener('dialog-closed', listenerOnClose);
-            this.dialogShowed = false;
-            this.dialogText = '';
-            this.dialogInputLabel = '';
-            resolve(false);
-          }
-          this.addEventListener('dialog-closed', listenerOnClose);
-
-          const listenerOnSubmit = () => {
-            this.removeEventListener('dialog-submitted', listenerOnSubmit);
-            const resolveValue = this.dialogInputValue || true;
-            this.dialogShowed = false;
-            this.dialogText = '';
-            this.dialogInputLabel = '';
-            this.dialogInputValue = '';
-            resolve(resolveValue);
-          }
-          this.addEventListener('dialog-submitted', listenerOnSubmit)
-        })
-    }
-
-    renderMain() {
-      return html`
-        <div class="flex-1 row">
-          <div id="left-sidebar" class="col pad-8 border">
-              <av-tree .items="${this.config}" @item-select="${this.onTreeItemSelect}"></av-tree>
-          </div>
-          <div id="view-port" class="flex-1 margin-left-8 pad-8 border pos-rel">
-              ${this.selectedTreeItem?.itemType === 'class' ?
-                      html`<av-class .classItem="${this.selectedTreeItem}"></av-class>` : this.nothing}
-              ${this.selectedTreeItem?.itemType === 'domain' ?
-                      html`<av-domain .domainItem="${this.selectedTreeItem}"></av-domain>` : this.nothing}
-          </div>
-        </div>
-      `
-    }
-
-    async onTreeItemSelect(e) {
-      console.log('onTreeItemSelect:', e);
-      if (e.detail.itemType === 'class') {
-        this.selectedTreeItem = this.Host.getClass(e.detail._reference);
+  async showDialog({text, input}) {
+    this.dialogShowed = true;
+    this.dialogText = text;
+    this.dialogInputLabel = input;
+    return new Promise((resolve, reject) => {
+      const listenerOnClose = () => {
+        this.removeEventListener('dialog-closed', listenerOnClose);
+        this.dialogShowed = false;
+        this.dialogText = '';
+        this.dialogInputLabel = '';
+        resolve(false);
       }
-      if (e.detail.itemType === 'domain') {
-        this.selectedTreeItem = this.Host.getDomain(e.detail._reference)
+      this.addEventListener('dialog-closed', listenerOnClose);
+
+      const listenerOnSubmit = () => {
+        this.removeEventListener('dialog-submitted', listenerOnSubmit);
+        const resolveValue = this.dialogInputValue || true;
+        this.dialogShowed = false;
+        this.dialogText = '';
+        this.dialogInputLabel = '';
+        this.dialogInputValue = '';
+        resolve(resolveValue);
       }
-    }
+      this.addEventListener('dialog-submitted', listenerOnSubmit)
+    })
+  }
 
-    async firstUpdated() {
-      const config = await this.Host.getConfig();
-      const reduceSubDomainsAndClassesToItems = (items => {
-        items.forEach(i => {
-          const classes = i.classes || [];
-          const subDomains = i.subDomains || [];
-          i.items = [...subDomains, ...classes]
-          if (this.notEmpty(i.items)) {
-            reduceSubDomainsAndClassesToItems(i.items)
-          }
-        })
-      })
-      config.forEach(d => {
-        d.items = [...d.config.domains, ...d.config.classes]
-        d.items.forEach(i => {
-          const classes = i.classes || [];
-          const subDomains = i.subDomains || [];
-          i.items = [...subDomains, ...classes];
-          reduceSubDomainsAndClassesToItems(i.items);
-        })
-      })
-      this.config = config;
+  async _onTreeItemSelect(e) {
+    console.log('onTreeItemSelect:', e);
+    if (e.detail.itemType === 'class') {
+      this.selectedTreeItem = this.Host.getClass(e.detail._reference);
     }
-
-    // async updated() {
-    //     await this.updateComplete
-    //   console.log('av-grid', this.$('av-grid'));
-    //   this.$('av-grid').addEventListener('row-click', (e) => console.log('row-click-ev:', e));
-    // }
+    if (e.detail.itemType === 'domain') {
+      this.selectedTreeItem = this.Host.getDomain(e.detail._reference)
+    }
+  }
 }
 window.customElements.define('av-host', AVHost);

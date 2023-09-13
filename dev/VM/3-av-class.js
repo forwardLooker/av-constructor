@@ -45,28 +45,30 @@ export class AVClass extends AVItem {
     this.selectedObjectDocument = null;
   }
 
+  willUpdate(changedProps) {
+    if (changedProps.has('classItem')) {
+      this.currentViewName = this.classItem.defaultViewName
+    }
+  }
+
   render() {
     return html`
       <av-item-panel
         .item="${this.classItem}"
-        @item-view-changed="${this.onItemViewChanged}"
+        @item-view-changed="${this._onItemViewChanged}"
         .onCreateFunc="${(e) => {this.selectedObjectDocument = this.classItem.getNewObjectDocument()}}"
       ></av-item-panel>
-      ${this.currentViewName === 'Grid' ? this.renderGrid() : this.nothing}
-      ${this.currentViewName === 'Configurator' ? this.renderConfigurator() : this.nothing}
+      ${this.currentViewName === 'Grid' ? this._renderGrid() : this.nothing}
+      ${this.currentViewName === 'Configurator' ? this._renderConfigurator() : this.nothing}
     `
   }
 
-  onItemViewChanged(e) {
-    this.currentViewName = e.detail.newViewName
-  }
-
-  renderGrid() {
+  _renderGrid() {
     return html`
       <av-grid
         .items="${this.objectDocuments}"
         .columns="${this.fieldDescriptors}"
-        @row-click="${this.onGridRowClick}"
+        @row-click="${this._onGridRowClick}"
       >
       </av-grid>
       ${this.if(this.selectedObjectDocument, html`
@@ -74,46 +76,25 @@ export class AVClass extends AVItem {
             class="object-show"
             .fieldDescriptors="${this.fieldDescriptors}"
             .objectDocument="${this.selectedObjectDocument}"
-            @close="${this.onObjectClose}"
-            @saved="${this.onObjectSaved}"
+            @close="${this._onObjectClose}"
+            @saved="${this._onObjectSaved}"
           >
           </av-object-document>
       `)}
     `
   }
 
-  async onGridRowClick(e) {
-    console.log('onGridRow:' , e);
-    //TODO инстанцирование объекта
-    this.selectedObjectDocument = await this.classItem.getObjectDocument(e.detail.rowData._reference);;
-    console.log('selectedObject:' , this.selectedObjectDocument);
-  }
-
-  onObjectClose() {
-    this.selectedObjectDocument = null
-  }
-
-  async onObjectSaved() {
-    this.objectDocuments = await this.classItem.getObjectDocuments();
-  }
-
-  renderConfigurator() {
+  _renderConfigurator() {
     return html`
       <av-configurator
               .item="${this.classItem}"
-              @saved="${this.onFieldDescriptorsChanged}"
+              @saved="${this._onFieldDescriptorsChanged}"
       ></av-configurator>
     `
   }
 
-  async onFieldDescriptorsChanged() {
-    this.fieldDescriptors = await this.classItem.getFieldDescriptors();
-  }
+  firstUpdated() {
 
-  willUpdate(changedProps) {
-    if (changedProps.has('classItem')) {
-      this.currentViewName = this.classItem.defaultViewName
-    }
   }
 
   async updated(changedProps) {
@@ -121,6 +102,29 @@ export class AVClass extends AVItem {
       this.fieldDescriptors = await this.classItem.getFieldDescriptors();
       this.objectDocuments = await this.classItem.getObjectDocuments();
     }
+  }
+
+  _onItemViewChanged(e) {
+    this.currentViewName = e.detail.newViewName
+  }
+
+  async _onGridRowClick(e) {
+    console.log('onGridRow:' , e);
+    //TODO инстанцирование объекта
+    this.selectedObjectDocument = await this.classItem.getObjectDocument(e.detail.rowData._reference);;
+    console.log('selectedObject:' , this.selectedObjectDocument);
+  }
+
+  _onObjectClose() {
+    this.selectedObjectDocument = null
+  }
+
+  async _onObjectSaved() {
+    this.objectDocuments = await this.classItem.getObjectDocuments();
+  }
+
+  async _onFieldDescriptorsChanged() {
+    this.fieldDescriptors = await this.classItem.getFieldDescriptors();
   }
 }
 

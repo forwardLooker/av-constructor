@@ -116,12 +116,18 @@ class AVAuth extends AVItem {
     email: {},
     password: {}
   };
+
   constructor() {
     super();
     this.mode = 'sign in';
     this.email = '';
     this.password = '';
   }
+
+  willUpdate(changedProps) {
+
+  }
+
 //TODO убрать лишние аттрибуты и классы
   render() {
     return html`
@@ -157,7 +163,7 @@ class AVAuth extends AVItem {
 
               <input type="submit" name="commit" value="${this.mode === 'sign in'? 'Войти' : 'Создать аккаунт'}" id="sign-in-button"
                      data-disable-with="Signing in…" data-signin-label="Sign in"
-                     @click="${this.signInSignUp}"
+                     @click="${this._signInSignUp}"
                      data-sso-label="Sign in with your identity provider" development="false">
 
               <a .hidden="${this.mode === 'sign up'}" class="label-link" tabindex="0" href="/password_reset">Forgot
@@ -173,18 +179,27 @@ class AVAuth extends AVItem {
           <a data-ga-click="Sign in, switch to sign up"
              data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;sign in switch to sign up&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/login&quot;,&quot;user_id&quot;:null}}"
              data-hydro-click-hmac="72d062e79bb6ab076a3b88b32943286ea51894183bd812a5038d00013946f239"
-             @click="${this.switchMode}"
+             @click="${this._switchMode}"
              href="/signup?source=login">${this.mode === 'sign in' ? html`Создать акканут` : html`Войти в аккаунт`}</a>.
         </p>
 
       </div>    `;
   }
 
-  switchMode(e) {
+  firstUpdated() {
+
+  }
+
+  updated(changedProps) {
+
+  }
+
+  _switchMode(e) {
     e.preventDefault();
     this.mode = this.mode === 'sign up' ? 'sign in' : 'sign up';
   }
-  signInSignUp(e) {
+
+  _signInSignUp(e) {
     e.preventDefault();
     console.log('signInSignUp event:', e);
     console.log('this.closest:', this.closest('body'));
@@ -206,9 +221,5 @@ class AVAuth extends AVItem {
           });
     }
   }
-
-  // firstUpdated() {
-  //
-  // }
 }
 customElements.define('av-auth', AVAuth);

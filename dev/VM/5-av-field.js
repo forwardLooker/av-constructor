@@ -68,13 +68,17 @@ export class AVField extends AVItem {
     `
   }
 
+  async firstUpdated() {
+
+  }
+
+  async updated(changedProps) {
+
+  }
+
   _input(e) {
     this.value = e.target.value;
     this.onInputFunc(e.target.value, e)
-  }
-
-  async firstUpdated() {
-
   }
 }
 
