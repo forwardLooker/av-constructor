@@ -1,8 +1,8 @@
 import {html, css, AVItem} from './0-av-item.js';
 
 import './4-av-object-document.js'
-import './av-item-panel.js'
 import './av-configurator.js'
+import './3-av-class/av-class-panel.js'
 
 import '../V/av-grid.js';
 
@@ -53,11 +53,11 @@ export class AVClass extends AVItem {
 
   render() {
     return html`
-      <av-item-panel
+      <av-class-panel
         .item="${this.classItem}"
-        @item-view-changed="${this._onItemViewChanged}"
+        .onClassViewChangedFunc="${viewName => this.currentViewName = viewName}"
         .onCreateFunc="${(e) => {this.selectedObjectDocument = this.classItem.getNewObjectDocument()}}"
-      ></av-item-panel>
+      ></av-class-panel>
       ${this.currentViewName === 'Grid' ? this._renderGrid() : this.nothing}
       ${this.currentViewName === 'Configurator' ? this._renderConfigurator() : this.nothing}
     `
@@ -102,10 +102,6 @@ export class AVClass extends AVItem {
       this.fieldDescriptors = await this.classItem.getFieldDescriptors();
       this.objectDocuments = await this.classItem.getObjectDocuments();
     }
-  }
-
-  _onItemViewChanged(e) {
-    this.currentViewName = e.detail.newViewName
   }
 
   async _onGridRowClick(e) {

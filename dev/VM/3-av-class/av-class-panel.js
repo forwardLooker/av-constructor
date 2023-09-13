@@ -1,8 +1,6 @@
-import {html, css, AVItem} from './0-av-item.js';
+import {html, css, AVItem} from '../0-av-item.js';
 
-import {Host} from '../M/1-Host.js';
-
-export class AvItemPanel extends AVItem {
+export class AvClassPanel extends AVItem {
   static get styles() {
     return css`
       :host {
@@ -32,6 +30,7 @@ export class AvItemPanel extends AVItem {
     availableViewsList: {},
     viewsDropdownOpened: {},
     onCreateFunc: {},
+    onClassViewChangedFunc: {}
   };
 
   constructor() {
@@ -61,8 +60,8 @@ export class AvItemPanel extends AVItem {
                 id="selection-list"
                 class="col pos-abs border"
               >
-                ${this.repeat(this.availableViewsList, v => v, v => html`
-                  <div @click="${(e) => this._selectView(v, e)}">${v}</div>
+                ${this.repeat(this.availableViewsList, v => v, viewName => html`
+                  <div @click="${(e) => this._selectView(viewName)}">${viewName}</div>
                 `)}
               </div>  
             </div>
@@ -91,10 +90,10 @@ export class AvItemPanel extends AVItem {
     this.viewsDropdownOpened = !this.viewsDropdownOpened;
   }
 
-  _selectView(view, e) {
+  _selectView(view) {
     this.currentViewName = view;
-    this.fire('item-view-changed', {newViewName: view, originalEvent: e})
+    this.onClassViewChangedFunc(view);
   }
 }
 
-window.customElements.define('av-item-panel', AvItemPanel);
+window.customElements.define('av-class-panel', AvClassPanel);
