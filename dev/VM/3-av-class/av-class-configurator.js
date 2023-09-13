@@ -16,6 +16,7 @@ export class AvClassConfigurator extends AVItem {
   static properties = {
     item: {},
     fieldDescriptors: {},
+    onSaveFunc: {}
   };
 
   constructor() {
@@ -56,7 +57,7 @@ export class AvClassConfigurator extends AVItem {
 
   async _saveFieldDescriptors() {
     await this.item.saveFieldDescriptors(this.fieldDescriptors);
-    this.fire('saved');
+    this.onSaveFunc();
   }
 }
 

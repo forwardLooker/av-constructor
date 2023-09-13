@@ -87,8 +87,8 @@ export class AVClass extends AVItem {
   _renderConfigurator() {
     return html`
       <av-class-configurator
-              .item="${this.classItem}"
-              @saved="${this._onFieldDescriptorsChanged}"
+        .item="${this.classItem}"
+        .onSaveFunc="${this._onFieldDescriptorsChanged}"
       ></av-class-configurator>
     `
   }
@@ -119,7 +119,7 @@ export class AVClass extends AVItem {
     this.objectDocuments = await this.classItem.getObjectDocuments();
   }
 
-  async _onFieldDescriptorsChanged() {
+  _onFieldDescriptorsChanged = async () => {
     this.fieldDescriptors = await this.classItem.getFieldDescriptors();
   }
 }
