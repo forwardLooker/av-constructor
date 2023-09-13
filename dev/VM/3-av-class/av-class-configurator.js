@@ -1,8 +1,8 @@
-import {html, css, AVItem} from './0-av-item.js';
+import {html, css, AVItem} from '../0-av-item.js';
 
-import '../V/av-tree.js';
+import '../../V/av-tree.js';
 
-export class AVConfigurator extends AVItem {
+export class AvClassConfigurator extends AVItem {
   static get styles() {
     return css`
       :host {
@@ -60,4 +60,4 @@ export class AVConfigurator extends AVItem {
   }
 }
 
-window.customElements.define('av-configurator', AVConfigurator);
+window.customElements.define('av-class-configurator', AvClassConfigurator);

@@ -1,7 +1,7 @@
 import {html, css, AVItem} from './0-av-item.js';
 
 import './4-av-object-document.js'
-import './av-configurator.js'
+import './3-av-class/av-class-configurator.js'
 import './3-av-class/av-class-panel.js'
 
 import '../V/av-grid.js';
@@ -86,10 +86,10 @@ export class AVClass extends AVItem {
 
   _renderConfigurator() {
     return html`
-      <av-configurator
+      <av-class-configurator
               .item="${this.classItem}"
               @saved="${this._onFieldDescriptorsChanged}"
-      ></av-configurator>
+      ></av-class-configurator>
     `
   }
 

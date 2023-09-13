@@ -52,7 +52,6 @@ export class AVTree extends AVElement {
     if (this.isEmpty(nestedItems) && nestingLevel > 0) {
       return this.nothing;
     }
-    console.log('nest:', nestedItems);
     return html`
       <div class="col ${this.classMap({'margin-left-16': nestingLevel > 0})}">
         ${this.repeat(items, i => i.id, i => html`
