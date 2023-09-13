@@ -39,6 +39,10 @@ export class AVTree extends AVElement {
     this.items = [];
   }
 
+  willUpdate(changedProps) {
+
+  }
+
   render(nestedItems, level) {
     let items = this.items || [];
     let nestingLevel = level || 0;
@@ -56,11 +60,11 @@ export class AVTree extends AVElement {
               <div class="tree-row row ${this.classMap({selected: i.selected})}">
                   <div
                     class="tree-row-expander ${this.classMap({expanded: i.expanded, invisible: this.isEmpty(i.items)})}"
-                    @click="${() => this.toggleExpand(i)}"
+                    @click="${() => this._toggleExpand(i)}"
                   >${html`>`}</div>
                   <div 
                     class="tree-row-name margin-left-8"
-                    @click="${() => this.toggleSelect(i)}"
+                    @click="${() => this._toggleSelect(i)}"
                   >${i.name}</div>
               </div>
               <div ${this.showIf(i.expanded)}>
@@ -72,11 +76,20 @@ export class AVTree extends AVElement {
     `
   }
 
-  toggleExpand(i) {
+  async firstUpdated() {
+
+  }
+
+  async updated(changedProps) {
+
+  }
+
+  _toggleExpand(i) {
     i.expanded = !i.expanded;
     this.requestUpdate();
   }
-  toggleSelect(newSelectedItem) {
+
+  _toggleSelect(newSelectedItem) {
     if (this.selectedItem !== newSelectedItem) {
       if (this.selectedItem) {
         this.selectedItem.selected = false;
@@ -86,10 +99,6 @@ export class AVTree extends AVElement {
       this.requestUpdate();
       this.fire('item-select', newSelectedItem)
     }
-  }
-
-  async firstUpdated() {
-
   }
 }
 window.customElements.define('av-tree', AVTree);

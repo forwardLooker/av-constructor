@@ -50,6 +50,10 @@ export class AVGrid extends AVElement {
     super();
   }
 
+  willUpdate(changedProps) {
+
+  }
+
   render() {
     return html`
       <div class="grid-container row">
@@ -58,7 +62,7 @@ export class AVGrid extends AVElement {
                   <div class="grid-header-cell pad-8">${c.name}</div>
                   ${this.repeat(this.items, i => i.id, i => html`
                       <div row-item-id="${i.id}" column-name="${c.name}" class="grid-cell pad-8"
-                           @click="${(e) => this.onCellClick(i, c.name, e)}"
+                           @click="${(e) => this._onCellClick(i, c.name, e)}"
                       >${i[c.name]}</div>
                   ` )}
               </div>
@@ -67,13 +71,17 @@ export class AVGrid extends AVElement {
     `
   }
 
-  onCellClick(rowItem, cellName, e) {
-    this.fire(`cell-click`, {cellName, cellData: rowItem[cellName], rowData: rowItem, originalEvent: e});
-    this.fire('row-click', {rowData: rowItem, originalEvent: e})
-  }
-
   async firstUpdated() {
 
+  }
+
+  async updated(changedProps) {
+
+  }
+
+  _onCellClick(rowItem, cellName, e) {
+    this.fire(`cell-click`, {cellName, cellData: rowItem[cellName], rowData: rowItem, originalEvent: e});
+    this.fire('row-click', {rowData: rowItem, originalEvent: e})
   }
 }
 window.customElements.define('av-grid', AVGrid);

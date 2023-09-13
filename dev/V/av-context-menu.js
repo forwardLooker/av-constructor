@@ -23,6 +23,11 @@ export class AVContextMenu extends AVElement {
     super();
     this.items = [];
   }
+
+  willUpdate(changedProps) {
+
+  }
+
 // TODO подобрать цвета и отступы а так очень похоже на нативное контекст меню
   render() {
     return html`
@@ -34,8 +39,12 @@ export class AVContextMenu extends AVElement {
     `
   }
 
-  _onItemSelect(item) {
-    this.fire('context-menu-item-selected', {menuItem: item})
+  firstUpdated() {
+    this.hide();
+  }
+
+  async updated(changedProps) {
+
   }
 
   show(e, menuItems) {
@@ -67,8 +76,8 @@ export class AVContextMenu extends AVElement {
     })
   }
 
-  async firstUpdated() {
-    this.hide();
+  _onItemSelect(item) {
+    this.fire('context-menu-item-selected', {menuItem: item})
   }
 }
 window.customElements.define('av-context-menu', AVContextMenu);
