@@ -78,10 +78,16 @@ export class AVObjectDocument extends AVItem {
       this._newData = this.objectDocument.data;
       if (this.objectDocument.designJson) {
         const designJson = this.deepClone(this.objectDocument.designJson);
+        // TODO доделать
+        const addedItems = this._findNewFieldDescriptors(this.fieldDescriptors, designJson.originalItems);
         this._addContainerReference(designJson);
         this.designJson = designJson;
       } else {
-        this.designJson = {type: 'vertical-layout', items: this.deepClone(this.fieldDescriptors)};
+        this.designJson = {
+          type: 'vertical-layout',
+          items: this.deepClone(this.fieldDescriptors),
+          originalItems: this.deepClone(this.fieldDescriptors)
+        };
       }
     }
   }
@@ -332,6 +338,18 @@ export class AVObjectDocument extends AVItem {
       cont.container.items.splice(DragContIndex, 1)
       this._removeEmptyContainers(cont.container)
     }
+  }
+
+  _findNewFieldDescriptors(fields, fieldsInDesign) {
+    let newFields = [];
+    fields.forEach(f => {
+      fieldsInDesign.forEach(fInDesign => {
+        if (f.name !== fInDesign.name) {
+          newFields.push(f);
+        }
+      })
+    })
+    return newFields;
   }
 }
 
