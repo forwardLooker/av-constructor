@@ -200,9 +200,31 @@ export class AVObjectDocument extends AVItem {
   }
 
   _startHorizontalResize(e, idx, containerElement) {
-    const fieldElem = e.target.closest('av-field');
-    const fieldElemRect = fieldElem.getBoundingClientRect();
-    const startFieldWidth = fieldElemRect.width;
+    // запрет на изменение ширины крайнего правого элемента
+    if ((!containerElement.items[idx].type ||
+      containerElement.items[idx].type === 'field') &&
+      !containerElement.container
+    ) {
+      return;
+    }
+    if (containerElement.type === 'horizontal-layout' &&
+      idx === containerElement.items.length - 1
+    ) {
+      if (this._isHorizontalContainerFarRightInDesign(containerElement)) {
+        return;
+      }
+    }
+    if (
+      containerElement.type === 'vertical-layout' &&
+      containerElement.container.items.findIndex(i => i === containerElement) === containerElement.container.items.length - 1
+    ) {
+      if (this._isHorizontalContainerFarRightInDesign(containerElement.container)) {
+        return;
+      }
+    }
+    const resizeElem = e.target.closest('av-field');
+    const resizeElemRect = resizeElem.getBoundingClientRect();
+    const startResizeElemWidth = resizeElemRect.width;
     // console.log('elemRect', elemRect);
     console.log('mousedown', e);
     const startResizePageX = e.pageX;
@@ -215,7 +237,7 @@ export class AVObjectDocument extends AVItem {
 
       console.log('move e', moveEv);
       const pageXDiff = moveEv.pageX - startResizePageX;
-      const newWidth = (startFieldWidth + pageXDiff) + 'px';
+      const newWidth = (startResizeElemWidth + pageXDiff) + 'px';
       console.log('newWidth:', newWidth);
       const forStyleWidthObj = {
         'flex-basis': newWidth,
@@ -231,18 +253,45 @@ export class AVObjectDocument extends AVItem {
           containerElement.style = forStyleWidthObj;
         }
       } else {
-        if (containerElement.items[idx].style) {
-          containerElement.items[idx].style = {
-            ...containerElement.items[idx].style,
-            ...forStyleWidthObj
+        if (
+          containerElement.type === 'horizontal-layout' &&
+          idx === containerElement.items.length - 1
+        ) {
+          if (containerElement.container.style) {
+            containerElement.container.style = {
+              ...containerElement.container.style,
+              ...forStyleWidthObj
+            }
+          } else {
+            containerElement.container.style = forStyleWidthObj;
           }
         } else {
-          containerElement.items[idx].style = forStyleWidthObj;
+          if (containerElement.items[idx].style) {
+            containerElement.items[idx].style = {
+              ...containerElement.items[idx].style,
+              ...forStyleWidthObj
+            }
+          } else {
+            containerElement.items[idx].style = forStyleWidthObj;
+          }
         }
       }
 
       this.requestUpdate();
     }
+  }
+
+  _isHorizontalContainerFarRightInDesign(containerElement) {
+    if (!containerElement.container.container) {
+      return true;
+    }
+    if (
+      containerElement.container.container.items.findIndex(i => i === containerElement.container) ===
+      containerElement.container.container.items.length - 1
+    ) {
+        return this._isHorizontalContainerFarRightInDesign(containerElement.container.container)
+    }
+    return false;
   }
 
   async _onDesignFieldContextMenu(e, idx, containerElement) {
