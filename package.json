@@ -20,7 +20,6 @@
   "license": "Private",
   "dependencies": {
     "firebase": "^9.22.1",
-    "firebaseui": "^6.0.2",
     "lit": "^2.7.4"
   },
   "devDependencies": {

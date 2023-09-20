@@ -78,9 +78,21 @@ export class AVObjectDocument extends AVItem {
       this._newData = this.objectDocument.data;
       if (this.objectDocument.designJson) {
         const designJson = this.deepClone(this.objectDocument.designJson);
-        // TODO доделать
-        const addedItems = this._findNewFieldDescriptors(this.fieldDescriptors, designJson.originalItems);
+        const fieldDescriptors = this.deepClone(this.fieldDescriptors)
+
+        const addedItems = this._findNewFieldDescriptors(fieldDescriptors, designJson.originalItems);
+        const deletedItems = this._findDeletedFieldDescriptors(fieldDescriptors, designJson.originalItems);
+        // add
+        designJson.items = designJson.items.concat(addedItems);
+        designJson.originalItems = designJson.originalItems.concat(addedItems);
+        // delete
         this._addContainerReference(designJson);
+        this._removeDeletedItems(designJson, deletedItems); // in designJson.items
+        deletedItems.forEach(delItem => { // in designJson.originalItems
+          const forDelIndexInOrigItems = designJson.originalItems.findIndex(origItem => origItem.name === delItem.name);
+          designJson.originalItems.splice(forDelIndexInOrigItems, 1);
+        })
+
         this.designJson = designJson;
       } else {
         this.designJson = {
@@ -341,15 +353,30 @@ export class AVObjectDocument extends AVItem {
   }
 
   _findNewFieldDescriptors(fields, fieldsInDesign) {
-    let newFields = [];
-    fields.forEach(f => {
-      fieldsInDesign.forEach(fInDesign => {
-        if (f.name !== fInDesign.name) {
-          newFields.push(f);
-        }
-      })
+    return fields.filter(f => fieldsInDesign.every(fInDesign => fInDesign.name !== f.name))
+  }
+
+  _findDeletedFieldDescriptors(fields, fieldsInDesign) {
+    return fieldsInDesign.filter(fInDesign => fields.every(f => f.name !== fInDesign.name))
+  }
+
+  _removeDeletedItems(designJson, deletedItems) {
+    deletedItems.forEach(delItem => {
+      this._removeDeletedItemInContainer(delItem, designJson);
     })
-    return newFields;
+  }
+  _removeDeletedItemInContainer(delItem, containerEl) {
+    const forDelItemIndex = containerEl.items.findIndex(i => i.name === delItem.name);
+    if (forDelItemIndex > -1) {
+      containerEl.items.splice(forDelItemIndex, 1);
+      this._removeEmptyContainers(containerEl);
+    } else {
+      const containerElements = containerEl.items.filter(i => i.type && i.type !== 'field');
+      containerElements.forEach(contEl => {
+        this._removeDeletedItemInContainer(delItem, contEl)
+      })
+    }
+
   }
 }
 
