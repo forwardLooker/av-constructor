@@ -146,9 +146,16 @@ export class AVObjectDocument extends AVItem {
   }
 
   _renderField(fieldItem, idx, containerElement) {
+    let fieldStyle;
+    if (fieldItem.style) {
+      fieldStyle = this.styleMap(fieldItem.style);
+    } else {
+      fieldStyle = this.nothing;
+    }
     return html`
       <av-field
         class="pos-rel row"
+        style="${fieldStyle}"
         .item="${fieldItem}"
         .value="${this._newData[fieldItem.name]}"
         .onInputFunc="${value => {this._newData[fieldItem.name] = value}}"
@@ -167,7 +174,7 @@ export class AVObjectDocument extends AVItem {
               </div>
               <div
                 class="horizontal-resizer"
-                @mousedown="${(e) => this._horizontalResize(e, idx, containerElement)}"
+                @mousedown="${(e) => this._startHorizontalResize(e, idx, containerElement)}"
               ></div>
             </div>
         `)}
@@ -183,8 +190,38 @@ export class AVObjectDocument extends AVItem {
 
   }
 
-  _horizontalResize(e, idx, containerElement) {
+  _startHorizontalResize(e, idx, containerElement) {
+    const fieldElem = e.target.closest('av-field');
+    const fieldElemRect = fieldElem.getBoundingClientRect();
+    const startFieldWidth = fieldElemRect.width;
+    // console.log('elemRect', elemRect);
+    console.log('mousedown', e);
+    const startResizePageX = e.pageX;
+    window.document.onmousemove = moveEv => {
+      moveEv.preventDefault();
+      window.document.onmouseup = upEv => {
+        window.document.onmousemove = null;
+        window.document.onmouseup = null;
+      }
 
+      console.log('move e', moveEv);
+      const pageXDiff = moveEv.pageX - startResizePageX;
+      const newWidth = (startFieldWidth + pageXDiff) + 'px';
+      console.log('newWidth:', newWidth);
+      const forStyleWidthObj = {
+        'flex-basis': newWidth,
+        'flex-grow': 0,
+      };
+      if (containerElement.items[idx].style) {
+        containerElement.items[idx].style = {
+          ...containerElement.items[idx].style,
+          ...forStyleWidthObj
+        }
+      } else {
+        containerElement.items[idx].style = forStyleWidthObj;
+      }
+      this.requestUpdate();
+    }
   }
 
   async _onDesignFieldContextMenu(e, idx, containerElement) {
