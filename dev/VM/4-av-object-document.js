@@ -118,8 +118,17 @@ export class AVObjectDocument extends AVItem {
   }
 
   _renderVerticalLayout(vrtLayoutItem) {
+    let vrtLayoutItemStyle;
+    if (vrtLayoutItem.style) {
+      vrtLayoutItemStyle = this.styleMap(vrtLayoutItem.style);
+    } else {
+      vrtLayoutItemStyle = this.nothing;
+    }
     return html`
-      <div class="vertical-layout col flex-1">
+      <div 
+        class="vertical-layout col flex-1"
+        style="${vrtLayoutItemStyle}"
+      >
         ${this.repeat(vrtLayoutItem.items, vrtItem => vrtItem.name, (layoutElement, verticalIndex) => html`
           ${this.if(layoutElement.type === 'horizontal-layout', html`
             <div class="horizontal-layout row flex-1">
@@ -212,14 +221,26 @@ export class AVObjectDocument extends AVItem {
         'flex-basis': newWidth,
         'flex-grow': 0,
       };
-      if (containerElement.items[idx].style) {
-        containerElement.items[idx].style = {
-          ...containerElement.items[idx].style,
-          ...forStyleWidthObj
+      if (containerElement.type === 'vertical-layout') {
+        if (containerElement.style) {
+          containerElement.style = {
+            ...containerElement.style,
+            ...forStyleWidthObj
+          }
+        } else {
+          containerElement.style = forStyleWidthObj;
         }
       } else {
-        containerElement.items[idx].style = forStyleWidthObj;
+        if (containerElement.items[idx].style) {
+          containerElement.items[idx].style = {
+            ...containerElement.items[idx].style,
+            ...forStyleWidthObj
+          }
+        } else {
+          containerElement.items[idx].style = forStyleWidthObj;
+        }
       }
+
       this.requestUpdate();
     }
   }
@@ -287,6 +308,11 @@ export class AVObjectDocument extends AVItem {
       return;
     }
 
+    if (this.designDragElement.style) {
+      delete this.designDragElement.style['flex-basis'];
+      delete this.designDragElement.style['flex-grow'];
+    }
+
     // const newDesign = [...this.designJson];
     let insertIndex = dropElementIndex;
     let cutIndex = this.designDragElementIndex;
@@ -321,6 +347,16 @@ export class AVObjectDocument extends AVItem {
         if (this.designDropSide === 'bottom') {
           vrtElement = {container: dropContainer, type: 'vertical-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement ]}
         }
+
+        if (dropContainer.items[dropElementIndex].style) {
+          vrtElement.style = {
+            'flex-basis': dropContainer.items[dropElementIndex].style['flex-basis'],
+            'flex-grow': dropContainer.items[dropElementIndex].style['flex-grow'],
+          }
+          delete dropContainer.items[dropElementIndex].style['flex-basis'];
+          delete dropContainer.items[dropElementIndex].style['flex-grow'];
+        }
+
         dropContainer.items.splice(insertIndex, 1)
         dropContainer.items.splice(insertIndex, 0, vrtElement);
 
