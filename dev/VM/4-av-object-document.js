@@ -197,39 +197,44 @@ export class AVObjectDocument extends AVItem {
     this.designDragContainer = container;
   }
 
+  _findFieldOverlay(e) {
+    return e.target.closest('.field-overlay');
+  }
+
   _dragover(e) {
     // console.log('dragover e:', e);
     e.preventDefault();
-    const elemRect = e.target.getBoundingClientRect();
+    const fieldOverlay = this._findFieldOverlay(e);
+    const elemRect = fieldOverlay.getBoundingClientRect();
 
     if (elemRect.left + elemRect.width/10 > e.pageX) {
-      e.target.classList.remove('dragover-top');
-      e.target.classList.remove('dragover-bottom');
-      e.target.classList.add('dragover-left');
+      fieldOverlay.classList.remove('dragover-top');
+      fieldOverlay.classList.remove('dragover-bottom');
+      fieldOverlay.classList.add('dragover-left');
       this.designDropSide = 'left';
     } else {
-      e.target.classList.remove('dragover-left');
+      fieldOverlay.classList.remove('dragover-left');
 
       if (elemRect.right - elemRect.width/10 <= e.pageX) {
-        e.target.classList.remove('dragover-top');
-        e.target.classList.remove('dragover-bottom');
-        e.target.classList.add('dragover-right');
+        fieldOverlay.classList.remove('dragover-top');
+        fieldOverlay.classList.remove('dragover-bottom');
+        fieldOverlay.classList.add('dragover-right');
         this.designDropSide = 'right';
       } else {
-        e.target.classList.remove('dragover-right');
+        fieldOverlay.classList.remove('dragover-right');
 
         if (elemRect.top + elemRect.height/2 > e.pageY) {
-          e.target.classList.add('dragover-top');
+          fieldOverlay.classList.add('dragover-top');
           this.designDropSide = 'top';
         } else {
-          e.target.classList.remove('dragover-top');
+          fieldOverlay.classList.remove('dragover-top');
         }
 
         if (elemRect.top + elemRect.height/2 <= e.pageY) {
-          e.target.classList.add('dragover-bottom');
+          fieldOverlay.classList.add('dragover-bottom');
           this.designDropSide = 'bottom'
         } else {
-          e.target.classList.remove('dragover-bottom');
+          fieldOverlay.classList.remove('dragover-bottom');
         }
       }
     }
@@ -302,10 +307,11 @@ export class AVObjectDocument extends AVItem {
   }
 
   _removeDragBorder(e) {
-    e.target.classList.remove('dragover-top');
-    e.target.classList.remove('dragover-bottom');
-    e.target.classList.remove('dragover-left');
-    e.target.classList.remove('dragover-right');
+    const fieldOverlay = this._findFieldOverlay(e);
+    fieldOverlay.classList.remove('dragover-top');
+    fieldOverlay.classList.remove('dragover-bottom');
+    fieldOverlay.classList.remove('dragover-left');
+    fieldOverlay.classList.remove('dragover-right');
   }
 
   async _saveAndClose() {
