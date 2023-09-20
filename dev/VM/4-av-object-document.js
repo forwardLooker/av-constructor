@@ -222,7 +222,17 @@ export class AVObjectDocument extends AVItem {
         return;
       }
     }
-    const resizeElem = e.target.closest('av-field');
+    let resizeElem;
+    if (containerElement.type === 'vertical-layout') {
+      resizeElem = e.target.closest('.vertical-layout')
+    } else if (
+      containerElement.type === 'horizontal-layout' &&
+      idx === containerElement.items.length - 1
+    ) {
+      resizeElem = e.target.closest('.vertical-layout')
+    } else if (containerElement.type === 'horizontal-layout') {
+      resizeElem = e.target.closest('av-field')
+    }
     const resizeElemRect = resizeElem.getBoundingClientRect();
     const startResizeElemWidth = resizeElemRect.width;
     // console.log('elemRect', elemRect);
