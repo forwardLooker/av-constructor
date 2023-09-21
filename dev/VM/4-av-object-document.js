@@ -228,9 +228,10 @@ export class AVObjectDocument extends AVItem {
         return;
       }
     }
+
     const startResizePageX = msDownEvent.pageX;
     const resizeElem = fieldItem.domElement;
-    const resizeElemRect = resizeElem.getBoundingClientRect();
+    const resizeElemRect = resizeElem.getBoundingClientRect(); // долгая операция внутри моусмува не вариант использовать
 
     let firstVerticalNotRightest;
     let resizeVrtElemRect;
@@ -249,7 +250,7 @@ export class AVObjectDocument extends AVItem {
       window.document.onmousemove = null;
       window.document.onmouseup = null;
     }
-    // TODO т.е. себя и ближайший вертикальный который не крайний правый или само поле если в грз и не крайний правый
+    // т.е. себя и ближайший вертикальный который не крайний правый или само поле если в грз и не крайний правый
     window.document.onmousemove = moveEv => {
       moveEv.preventDefault();
       const pageXDiff = moveEv.pageX - startResizePageX;
