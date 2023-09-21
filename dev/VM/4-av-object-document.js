@@ -247,10 +247,11 @@ export class AVObjectDocument extends AVItem {
     }
 
     window.document.onmouseup = upEv => {
+      upEv.preventDefault();
       window.document.onmousemove = null;
       window.document.onmouseup = null;
     }
-    // т.е. себя и ближайший вертикальный который не крайний правый или само поле если в грз и не крайний правый
+    // TODO убрать себя если ближайший вертикальный который не крайний правый
     window.document.onmousemove = moveEv => {
       moveEv.preventDefault();
       const pageXDiff = moveEv.pageX - startResizePageX;
@@ -286,7 +287,7 @@ export class AVObjectDocument extends AVItem {
               ...forStyleVrtWidthObj
             }
           } else {
-            firstVerticalNotRightest.style = forStyleWidthObj;
+            firstVerticalNotRightest.style = forStyleVrtWidthObj;
           }
         }
       }
