@@ -3,6 +3,7 @@ import {directive, Directive} from "lit/directive.js";
 import {repeat} from 'lit/directives/repeat.js';
 import { classMap } from 'lit/directives/class-map.js';
 import {styleMap} from 'lit/directives/style-map.js';
+import { ref } from 'lit/directives/ref.js';
 
 class showIfDirective extends Directive {
   update(part, [condition]) {
@@ -26,6 +27,7 @@ class AVElement extends LitElement {
   repeat = repeat;
   classMap = classMap;
   styleMap = styleMap;
+  ref = ref;
   deepClone = (objectToClone) => JSON.parse(JSON.stringify(objectToClone))
 
   hide() {

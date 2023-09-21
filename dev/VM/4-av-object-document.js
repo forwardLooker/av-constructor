@@ -128,10 +128,14 @@ export class AVObjectDocument extends AVItem {
       <div 
         class="vertical-layout col flex-1"
         style="${vrtLayoutItemStyle}"
+        ${this.ref(vrtDomElement => vrtLayoutItem.domElement = vrtDomElement)}
       >
         ${this.repeat(vrtLayoutItem.items, vrtItem => vrtItem.name, (layoutElement, verticalIndex) => html`
           ${this.if(layoutElement.type === 'horizontal-layout', html`
-            <div class="horizontal-layout row flex-1">
+            <div
+              class="horizontal-layout row flex-1"
+              ${this.ref(hrzDomElement => layoutElement.domElement = hrzDomElement)}
+            >
               ${this.repeat(
                 layoutElement.items,
                 hrzItem => hrzItem.name,
@@ -165,6 +169,7 @@ export class AVObjectDocument extends AVItem {
       <av-field
         class="pos-rel row"
         style="${fieldStyle}"
+        ${this.ref(fieldDomElement => fieldItem.domElement = fieldDomElement)}
         .item="${fieldItem}"
         .value="${this._newData[fieldItem.name]}"
         .onInputFunc="${value => {this._newData[fieldItem.name] = value}}"
@@ -174,16 +179,16 @@ export class AVObjectDocument extends AVItem {
               <div
                 class="flex-1"
                 draggable="true"
-                @dragstart="${(e) => this._dragstart(e, idx, containerElement)}"
+                @dragstart="${(e) => this._dragstart(e, fieldItem, idx, containerElement)}"
                 @dragover="${this._dragover}"
                 @dragleave="${this._dragleave}"
-                @drop="${(e) => this._drop(e, idx, containerElement)}"
-                @contextmenu="${(e) => this._onDesignFieldContextMenu(e, idx, containerElement)}"
+                @drop="${(e) => this._drop(e, fieldItem, idx, containerElement)}"
+                @contextmenu="${(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}"
               >
               </div>
               <div
                 class="horizontal-resizer"
-                @mousedown="${(e) => this._startHorizontalResize(e, idx, containerElement)}"
+                @mousedown="${(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}"
               ></div>
             </div>
         `)}
@@ -199,7 +204,8 @@ export class AVObjectDocument extends AVItem {
 
   }
 
-  _startHorizontalResize(e, idx, containerElement) {
+  _startHorizontalResize(msDownEvent, fieldItem, idx, containerElement) {
+    msDownEvent.preventDefault();
     // запрет на изменение ширины крайнего правого элемента
     if ((!containerElement.items[idx].type ||
       containerElement.items[idx].type === 'field') &&
@@ -222,72 +228,80 @@ export class AVObjectDocument extends AVItem {
         return;
       }
     }
-    let resizeElem;
-    if (containerElement.type === 'vertical-layout') {
-      resizeElem = e.target.closest('.vertical-layout')
-    } else if (
-      containerElement.type === 'horizontal-layout' &&
-      idx === containerElement.items.length - 1
-    ) {
-      resizeElem = e.target.closest('.vertical-layout')
-    } else if (containerElement.type === 'horizontal-layout') {
-      resizeElem = e.target.closest('av-field')
-    }
+    const startResizePageX = msDownEvent.pageX;
+    const resizeElem = fieldItem.domElement;
     const resizeElemRect = resizeElem.getBoundingClientRect();
-    const startResizeElemWidth = resizeElemRect.width;
-    // console.log('elemRect', elemRect);
-    console.log('mousedown', e);
-    const startResizePageX = e.pageX;
+
+    let firstVerticalNotRightest;
+    let resizeVrtElemRect;
+    if (
+      (containerElement.type === 'horizontal-layout' && idx === containerElement.items.length - 1) ||
+      containerElement.type === 'vertical-layout'
+    ) {
+      const firstVertical = containerElement.type === 'vertical-layout' ? containerElement : containerElement.container;
+      firstVerticalNotRightest = this._findFirstVerticalNotRightestInHorizontal(firstVertical);
+      if (firstVerticalNotRightest) {
+        resizeVrtElemRect = firstVerticalNotRightest.domElement.getBoundingClientRect();
+      }
+    }
+
+    window.document.onmouseup = upEv => {
+      window.document.onmousemove = null;
+      window.document.onmouseup = null;
+    }
+    // TODO т.е. себя и ближайший вертикальный который не крайний правый или само поле если в грз и не крайний правый
     window.document.onmousemove = moveEv => {
       moveEv.preventDefault();
-      window.document.onmouseup = upEv => {
-        window.document.onmousemove = null;
-        window.document.onmouseup = null;
-      }
-
-      console.log('move e', moveEv);
       const pageXDiff = moveEv.pageX - startResizePageX;
-      const newWidth = (startResizeElemWidth + pageXDiff) + 'px';
+
+      const newWidth = (resizeElemRect.width + pageXDiff) + 'px';
       console.log('newWidth:', newWidth);
       const forStyleWidthObj = {
         'flex-basis': newWidth,
         'flex-grow': 0,
-      };
-      if (containerElement.type === 'vertical-layout') {
-        if (containerElement.style) {
-          containerElement.style = {
-            ...containerElement.style,
-            ...forStyleWidthObj
-          }
-        } else {
-          containerElement.style = forStyleWidthObj;
+      }
+      if (fieldItem.style) {
+        fieldItem.style = {
+          ...fieldItem.style,
+          ...forStyleWidthObj
         }
       } else {
-        if (
-          containerElement.type === 'horizontal-layout' &&
-          idx === containerElement.items.length - 1
-        ) {
-          if (containerElement.container.style) {
-            containerElement.container.style = {
-              ...containerElement.container.style,
-              ...forStyleWidthObj
-            }
-          } else {
-            containerElement.container.style = forStyleWidthObj;
+        fieldItem.style = forStyleWidthObj;
+      }
+
+      if (
+          (containerElement.type === 'horizontal-layout' && idx === containerElement.items.length - 1) ||
+          containerElement.type === 'vertical-layout'
+      ) {
+        if (firstVerticalNotRightest) {
+          const newVrtWidth = (resizeVrtElemRect.width + pageXDiff) + 'px';
+          const forStyleVrtWidthObj = {
+            'flex-basis': newVrtWidth,
+            'flex-grow': 0,
           }
-        } else {
-          if (containerElement.items[idx].style) {
-            containerElement.items[idx].style = {
-              ...containerElement.items[idx].style,
-              ...forStyleWidthObj
+          if (firstVerticalNotRightest.style) {
+            firstVerticalNotRightest.style = {
+              ...firstVerticalNotRightest.style,
+              ...forStyleVrtWidthObj
             }
           } else {
-            containerElement.items[idx].style = forStyleWidthObj;
+            firstVerticalNotRightest.style = forStyleWidthObj;
           }
         }
       }
 
       this.requestUpdate();
+    }
+  }
+
+  _findFirstVerticalNotRightestInHorizontal(firstVertical) {
+    if (!firstVertical.container) {
+      return false;
+    }
+    if (firstVertical.container.items.findIndex(i => i === firstVertical) === firstVertical.container.items.length - 1) {
+      return this._findFirstVerticalNotRightestInHorizontal(firstVertical.container.container);
+    } else {
+      return firstVertical;
     }
   }
 
@@ -304,11 +318,11 @@ export class AVObjectDocument extends AVItem {
     return false;
   }
 
-  async _onDesignFieldContextMenu(e, idx, containerElement) {
+  async _onDesignFieldContextMenu(e,fieldItem, idx, containerElement) {
     const menuResult = await this.showContextMenu(e, ['Сгруппировать']);
   }
 
-  _dragstart(e, idx, container) {
+  _dragstart(e, fieldItem, idx, container) {
     this.designDragElementIndex = idx;
     this.designDragElement = container.items[idx];
     this.designDragContainer = container;
@@ -361,7 +375,7 @@ export class AVObjectDocument extends AVItem {
     this._removeDragBorder(e);
   }
 
-  _drop(e, dropElementIndex, dropContainer) {
+  _drop(e, fieldItem, dropElementIndex, dropContainer) {
     if (this.designDragElement === dropContainer.items[dropElementIndex]) {
       this._removeDragBorder(e);
       return;
