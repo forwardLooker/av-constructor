@@ -66,6 +66,7 @@ export class AVClass extends AVItem {
   _renderGrid() {
     return html`
       <av-grid
+        class="margin-top-8"
         .items="${this.objectDocuments}"
         .columns="${this.fieldDescriptors}"
         .onRowClickFunc="${this._onGridRowClick}"

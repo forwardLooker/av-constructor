@@ -6,9 +6,9 @@ export class AvClassPanel extends AVItem {
   static get styles() {
     return css`
       :host {
-        flex: 1;
         display: flex;
         flex-direction: column;
+        border-bottom: 2px solid black;
       }
       #view-selector {
         cursor: pointer;

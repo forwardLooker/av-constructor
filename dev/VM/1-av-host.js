@@ -6,6 +6,7 @@ import './1-av-host/av-auth.js';
 
 import '../V/av-tree.js';
 import '../V/av-context-menu.js';
+import '../V/av-text-header.js';
 
 import {Host} from'../M/1-Host.js';
 
@@ -144,7 +145,7 @@ export class AVHost extends AVItem {
               .onItemSelectFunc="${this._onTreeItemSelect}"
             ></av-tree>
         </div>
-        <div id="view-port" class="flex-1 margin-left-8 pad-8 border pos-rel">
+        <div id="view-port" class="col flex-1 margin-left-8 pad-8 border pos-rel">
             ${this.selectedTreeItem?.itemType === 'class' ?
               html`<av-class .classItem="${this.selectedTreeItem}"></av-class>` : this.nothing}
             ${this.selectedTreeItem?.itemType === 'domain' ?

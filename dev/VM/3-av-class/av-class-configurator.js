@@ -30,10 +30,16 @@ export class AvClassConfigurator extends AVItem {
 
   render() {
     return html`
-      <h3>Fields:</h3>
-      <button @click="${this._addField}">Добавить поле</button>
-      <av-tree .items="${this.fieldDescriptors}"></av-tree>
-      <button @click="${this._saveFieldDescriptors}">Сохранить</button>
+        <div class="col space-between flex-1">
+          <div class="col">
+            <av-text-header class="margin-top-8">Fields:</av-text-header>
+            <av-button @click="${this._addField}">Добавить поле</av-button>
+            <av-tree .items="${this.fieldDescriptors}"></av-tree>
+          </div>
+          <div class="row justify-end">
+            <av-button @click="${this._saveFieldDescriptors}">Сохранить</av-button>
+          </div>
+        </div>
     `
   }
 
