@@ -110,7 +110,7 @@ export class AVObjectDocument extends AVItem {
         ${this._renderVerticalLayout(this.designJson)}
         <div>
           <button @click="${this._saveAndClose}">OK</button>
-          <button @click="${this.onCloseFunc}">Закрыть</button>
+          <button @click="${this.onCloseFunc}">Отмена</button>
           <button @click="${this._toggleDesign}">Дизайнер</button>
         </div>
       </div>
@@ -256,21 +256,22 @@ export class AVObjectDocument extends AVItem {
       moveEv.preventDefault();
       const pageXDiff = moveEv.pageX - startResizePageX;
 
-      const newWidth = (resizeElemRect.width + pageXDiff) + 'px';
-      console.log('newWidth:', newWidth);
-      const forStyleWidthObj = {
-        'flex-basis': newWidth,
-        'flex-grow': 0,
-      }
-      if (fieldItem.style) {
-        fieldItem.style = {
-          ...fieldItem.style,
-          ...forStyleWidthObj
+      if (containerElement.type === 'horizontal-layout' && idx !== containerElement.items.length - 1) {
+        const newWidth = (resizeElemRect.width + pageXDiff) + 'px';
+        console.log('newWidth:', newWidth);
+        const forStyleWidthObj = {
+          'flex-basis': newWidth,
+          'flex-grow': 0,
         }
-      } else {
-        fieldItem.style = forStyleWidthObj;
+        if (fieldItem.style) {
+          fieldItem.style = {
+            ...fieldItem.style,
+            ...forStyleWidthObj
+          }
+        } else {
+          fieldItem.style = forStyleWidthObj;
+        }
       }
-
       if (
           (containerElement.type === 'horizontal-layout' && idx === containerElement.items.length - 1) ||
           containerElement.type === 'vertical-layout'
