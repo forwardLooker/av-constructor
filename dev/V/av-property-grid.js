@@ -31,6 +31,7 @@ export class AVPropertyGrid extends AVElement {
 
   static properties = {
     items: {},
+    item: {},
     selectedItem: {},
     onItemSelectFunc: {}
   };
@@ -41,7 +42,9 @@ export class AVPropertyGrid extends AVElement {
   }
 
   willUpdate(changedProps) {
+    if (changedProps.has('item')) {
 
+    }
   }
 
   render(nestedItems, level) {

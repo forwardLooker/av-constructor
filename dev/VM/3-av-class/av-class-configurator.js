@@ -20,6 +20,7 @@ export class AvClassConfigurator extends AVItem {
   static properties = {
     classItem: {},
     fieldDescriptors: {},
+    _newFieldDescriptors: {},
     selectedField: {},
     onSaveFunc: {}
   };
@@ -27,10 +28,13 @@ export class AvClassConfigurator extends AVItem {
   constructor() {
     super();
     this.fieldDescriptors = [];
+    this._newFieldDescriptors = [];
   }
 
   willUpdate(changedProps) {
-
+    if (changedProps.has('fieldDescriptors')) {
+      this._newFieldDescriptors = this.fieldDescriptors;
+    }
   }
 
   render() {
@@ -45,11 +49,12 @@ export class AvClassConfigurator extends AVItem {
             <div class="row margin-top-8">
               <av-tree
                 class="fields-tree border"
-                .items="${this.fieldDescriptors}"
+                .items="${this._newFieldDescriptors}"
                 .onItemSelectFunc="${this._onTreeItemSelect}"
               ></av-tree>
               <av-property-grid
                 class="flex-1 margin-left-8 border"
+                .item="${this.selectedField}"
                 .items="${prGridItems}"
               ></av-property-grid>
             </div>
@@ -77,14 +82,14 @@ export class AvClassConfigurator extends AVItem {
 
   async _addField() {
     const fieldName = await this.showDialog({text: 'Введите название поля', input: 'name'});
-    if (fieldName && this.fieldDescriptors.every(f => f.name !== fieldName)) {
+    if (fieldName && this._newFieldDescriptors.every(f => f.name !== fieldName)) {
       const field = {name: fieldName, label: fieldName, type: 'Строка'};
-      this.fieldDescriptors = [...this.fieldDescriptors, field];
+      this._newFieldDescriptors = [...this._newFieldDescriptors, field];
     }
   }
 
   async _saveFieldDescriptors() {
-    await this.classItem.saveFieldDescriptors(this.fieldDescriptors);
+    await this.classItem.saveFieldDescriptors(this._newFieldDescriptors);
     this.onSaveFunc();
   }
 }

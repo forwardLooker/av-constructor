@@ -119,7 +119,7 @@ export class AVObjectDocument extends AVItem {
         this.designJson = designJson;
       } else {
         this.designJson = {
-          type: 'vertical-layout',
+          viewItemType: 'vertical-layout',
           items: this.deepClone(this.fieldDescriptors),
           originalItems: this.deepClone(this.fieldDescriptors)
         };
@@ -158,7 +158,7 @@ export class AVObjectDocument extends AVItem {
         ${this.ref(vrtDomElement => vrtLayoutItem.domElement = vrtDomElement)}
       >
         ${this.repeat(vrtLayoutItem.items, vrtItem => vrtItem.name, (layoutElement, verticalIndex) => html`
-          ${this.if(layoutElement.type === 'horizontal-layout', html`
+          ${this.if(layoutElement.viewItemType === 'horizontal-layout', html`
             <div
               class="horizontal-layout row flex-1"
               ${this.ref(hrzDomElement => layoutElement.domElement = hrzDomElement)}
@@ -167,7 +167,7 @@ export class AVObjectDocument extends AVItem {
                 layoutElement.items,
                 hrzItem => hrzItem.name,
                 (hrzItem, horizontalIndex) => {
-                    if (hrzItem.type === 'vertical-layout') {
+                    if (hrzItem.viewItemType === 'vertical-layout') {
                       return this._renderVerticalLayout(hrzItem);
                     } else {
                         return this._renderField(hrzItem, horizontalIndex, layoutElement)
@@ -177,7 +177,7 @@ export class AVObjectDocument extends AVItem {
             </div>
           `)}
           ${this.if(
-            !layoutElement.type || layoutElement.type === 'field',
+            !layoutElement.viewItemType || layoutElement.viewItemType === 'field',
             this._renderField(layoutElement, verticalIndex, vrtLayoutItem)
         )}
       `)}
@@ -234,13 +234,13 @@ export class AVObjectDocument extends AVItem {
   _startHorizontalResize(msDownEvent, fieldItem, idx, containerElement) {
     msDownEvent.preventDefault();
     // запрет на изменение ширины крайнего правого элемента
-    if ((!containerElement.items[idx].type ||
-      containerElement.items[idx].type === 'field') &&
+    if ((!containerElement.items[idx].viewItemType ||
+      containerElement.items[idx].viewItemType === 'field') &&
       !containerElement.container
     ) {
       return;
     }
-    if (containerElement.type === 'horizontal-layout' &&
+    if (containerElement.viewItemType === 'horizontal-layout' &&
       idx === containerElement.items.length - 1
     ) {
       if (this._isHorizontalContainerFarRightInDesign(containerElement)) {
@@ -248,7 +248,7 @@ export class AVObjectDocument extends AVItem {
       }
     }
     if (
-      containerElement.type === 'vertical-layout' &&
+      containerElement.viewItemType === 'vertical-layout' &&
       containerElement.container.items.findIndex(i => i === containerElement) === containerElement.container.items.length - 1
     ) {
       if (this._isHorizontalContainerFarRightInDesign(containerElement.container)) {
@@ -263,10 +263,10 @@ export class AVObjectDocument extends AVItem {
     let firstVerticalNotRightest;
     let resizeVrtElemRect;
     if (
-      (containerElement.type === 'horizontal-layout' && idx === containerElement.items.length - 1) ||
-      containerElement.type === 'vertical-layout'
+      (containerElement.viewItemType === 'horizontal-layout' && idx === containerElement.items.length - 1) ||
+      containerElement.viewItemType === 'vertical-layout'
     ) {
-      const firstVertical = containerElement.type === 'vertical-layout' ? containerElement : containerElement.container;
+      const firstVertical = containerElement.viewItemType === 'vertical-layout' ? containerElement : containerElement.container;
       firstVerticalNotRightest = this._findFirstVerticalNotRightestInHorizontal(firstVertical);
       if (firstVerticalNotRightest) {
         resizeVrtElemRect = firstVerticalNotRightest.domElement.getBoundingClientRect();
@@ -283,7 +283,7 @@ export class AVObjectDocument extends AVItem {
       moveEv.preventDefault();
       const pageXDiff = moveEv.pageX - startResizePageX;
 
-      if (containerElement.type === 'horizontal-layout' && idx !== containerElement.items.length - 1) {
+      if (containerElement.viewItemType === 'horizontal-layout' && idx !== containerElement.items.length - 1) {
         const newWidth = (resizeElemRect.width + pageXDiff) + 'px';
         console.log('newWidth:', newWidth);
         const forStyleWidthObj = {
@@ -300,8 +300,8 @@ export class AVObjectDocument extends AVItem {
         }
       }
       if (
-          (containerElement.type === 'horizontal-layout' && idx === containerElement.items.length - 1) ||
-          containerElement.type === 'vertical-layout'
+          (containerElement.viewItemType === 'horizontal-layout' && idx === containerElement.items.length - 1) ||
+          containerElement.viewItemType === 'vertical-layout'
       ) {
         if (firstVerticalNotRightest) {
           const newVrtWidth = (resizeVrtElemRect.width + pageXDiff) + 'px';
@@ -421,14 +421,14 @@ export class AVObjectDocument extends AVItem {
     let cutIndex = this.designDragElementIndex;
 
     if (this.designDropSide === 'left' || this.designDropSide === 'right') {
-      if (dropContainer.type === 'vertical-layout') {
+      if (dropContainer.viewItemType === 'vertical-layout') {
         if (this.designDropSide === 'left') {
-          dropContainer.items[dropElementIndex] = {container: dropContainer, type: 'horizontal-layout', items: [this.designDragElement, dropContainer.items[dropElementIndex]]}
+          dropContainer.items[dropElementIndex] = {container: dropContainer, viewItemType: 'horizontal-layout', items: [this.designDragElement, dropContainer.items[dropElementIndex]]}
         }
         if (this.designDropSide === 'right') {
-          dropContainer.items[dropElementIndex] = {container: dropContainer, type: 'horizontal-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement]}
+          dropContainer.items[dropElementIndex] = {container: dropContainer, viewItemType: 'horizontal-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement]}
         }
-      } else if (dropContainer.type === 'horizontal-layout') {
+      } else if (dropContainer.viewItemType === 'horizontal-layout') {
         if (this.designDropSide === 'left') {
           if (dropContainer === this.designDragContainer) {
             cutIndex = cutIndex + 1;
@@ -442,13 +442,13 @@ export class AVObjectDocument extends AVItem {
     }
 
     if (this.designDropSide === 'top' || this.designDropSide === 'bottom') {
-      if (dropContainer.type === 'horizontal-layout') {
+      if (dropContainer.viewItemType === 'horizontal-layout') {
         let vrtElement;
         if (this.designDropSide === 'top') {
-          vrtElement = {container: dropContainer, type: 'vertical-layout', items: [this.designDragElement, dropContainer.items[dropElementIndex]]}
+          vrtElement = {container: dropContainer, viewItemType: 'vertical-layout', items: [this.designDragElement, dropContainer.items[dropElementIndex]]}
         }
         if (this.designDropSide === 'bottom') {
-          vrtElement = {container: dropContainer, type: 'vertical-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement ]}
+          vrtElement = {container: dropContainer, viewItemType: 'vertical-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement ]}
         }
 
         if (dropContainer.items[dropElementIndex].style) {
@@ -463,7 +463,7 @@ export class AVObjectDocument extends AVItem {
         dropContainer.items.splice(insertIndex, 1)
         dropContainer.items.splice(insertIndex, 0, vrtElement);
 
-      } else if (dropContainer.type === 'vertical-layout') {
+      } else if (dropContainer.viewItemType === 'vertical-layout') {
         if (this.designDropSide === 'bottom') {
           insertIndex = insertIndex + 1;
         }
@@ -501,16 +501,30 @@ export class AVObjectDocument extends AVItem {
     if (this.designMode === false) {
       const saveDesignFlag = await this.showDialog({text: 'Сохранить дизайн?'});
       if (saveDesignFlag) {
-        this._removeContainerReference(this.designJson);
-        await this.objectDocument.saveDesignJson(this.designJson);
-        this._addContainerReference(this.designJson);
+        return this._saveDesign();
       }
+    }
+  }
+
+  async _saveDesign() {
+    this._removeContainerReference(this.designJson);
+    this._removeDomElementReference(this.designJson);
+    await this.objectDocument.saveDesignJson(this.designJson);
+    this._addContainerReference(this.designJson);
+  }
+
+  _removeDomElementReference(layoutElememt) {
+    delete layoutElememt.domElement;
+    if (layoutElememt.items) {
+      layoutElememt.items.forEach(i => {
+        this._removeDomElementReference(i);
+      })
     }
   }
 
   _addContainerReference(layoutElememt) {
     layoutElememt.items.forEach((i) => {
-      if (i.type && i.type !== 'field') {
+      if (i.viewItemType && i.viewItemType !== 'field') {
         i.container = layoutElememt;
         this._addContainerReference(i)
       }
@@ -518,7 +532,7 @@ export class AVObjectDocument extends AVItem {
   }
   _removeContainerReference(layoutElement) {
     layoutElement.items.forEach(i => {
-      if (i.type && i.type !== 'field') {
+      if (i.viewItemType && i.viewItemType !== 'field') {
         if (i.container) {
           delete i.container;
         }
@@ -553,7 +567,7 @@ export class AVObjectDocument extends AVItem {
       containerEl.items.splice(forDelItemIndex, 1);
       this._removeEmptyContainers(containerEl);
     } else {
-      const containerElements = containerEl.items.filter(i => i.type && i.type !== 'field');
+      const containerElements = containerEl.items.filter(i => i.viewItemType && i.viewItemType !== 'field');
       containerElements.forEach(contEl => {
         this._removeDeletedItemInContainer(delItem, contEl)
       })
