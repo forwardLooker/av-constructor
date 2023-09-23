@@ -15,27 +15,18 @@ export class AVField extends AVItem {
         padding: 0 4px;
       }
       .input {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 4px 11px;
-        color: rgba(0, 0, 0, .88);
-        font-size: 14px;
-        line-height: 1.5714285714285714;
-        list-style: none;
-        font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial, noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol, noto color emoji;
         position: relative;
         display: inline-block;
-        min-width: 0;
+        padding: 5px 12px;
+        line-height: 20px;
         background-color: #fff;
-        background-image: none;
-        border-width: 1px;
-        border-style: solid;
-        border-color: #d9d9d9;
-        border-radius: 6px;
         transition: all .2s;
-
-        -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
-        box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
+        border: 1px solid black;
+        border-radius: 6px;
+        box-shadow: gray;
+        vertical-align: middle;
+        //-webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
+        //box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
       }
 
       .input:hover {

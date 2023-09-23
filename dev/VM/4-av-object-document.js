@@ -8,14 +8,37 @@ export class AVObjectDocument extends AVItem {
   static get styles() {
     return css`
       :host {
+        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+        line-height: 1.5;
+        word-wrap: break-word;
         flex: 1;
         display: flex;
         flex-direction: column;
       }
-
-      #header {
-        padding: 0 1.5em;
-        box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
+      
+      av-field {
+        margin-top: 2px;
+      }
+      
+      .standart-button {
+        text-align: center;
+        color: white;
+        background-color: black;
+        border-color: black;
+        box-shadow: gray;
+        transition: 80ms cubic-bezier(0.33, 1, 0.68, 1);
+        transition-property: color,background-color,box-shadow,border-color;
+        padding: 5px 16px;
+        font-size: 14px;
+        font-weight: var(--base-text-weight-medium, 500);
+        line-height: 20px;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid;
+        border-radius: 6px;
+        appearance: none;
       }
       
       .horizontal-resizer {
@@ -106,12 +129,16 @@ export class AVObjectDocument extends AVItem {
 
   render() {
     return html`
-      <div class="col">
-        ${this._renderVerticalLayout(this.designJson)}
+      <div class="col space-between height-100">
         <div>
-          <button @click="${this._saveAndClose}">OK</button>
-          <button @click="${this.onCloseFunc}">Отмена</button>
-          <button @click="${this._toggleDesign}">Дизайнер</button>
+          ${this._renderVerticalLayout(this.designJson)}
+        </div>  
+        <div class="row justify-end">
+          <div>
+            <button class="standart-button" @click="${this._saveAndClose}">OK</button>
+            <button class="standart-button" @click="${this.onCloseFunc}">Отмена</button>
+            <button class="standart-button" @click="${this._toggleDesign}">Дизайнер</button>
+          </div>  
         </div>
       </div>
     `
