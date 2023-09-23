@@ -126,6 +126,22 @@ function css(...values) {
     .pad-8 {
       padding: 8px;
     }
+    .pad-vrt-4 {
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    .pad-vrt-8 {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+    .pad-hrz-4 {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+    .pad-hrz-8 {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
     .border {
         border: 0.5px solid black;
     }

@@ -1,5 +1,7 @@
 import {html, css, AVItem} from '../0-av-item.js';
 
+import '../../V/av-button.js';
+
 export class AvClassPanel extends AVItem {
   static get styles() {
     return css`
@@ -10,6 +12,7 @@ export class AvClassPanel extends AVItem {
       }
       #view-selector {
         cursor: pointer;
+        align-items: center;
       }
       #view-selector-arrow {
         transform: rotate(90deg);
@@ -72,8 +75,8 @@ export class AvClassPanel extends AVItem {
 
   _renderGridButtons() {
     return html`
-      <div class="pad-8">
-          <button @click="${this.onCreateFunc}">Создать</button>
+      <div class="pad-vrt-8">
+        <av-button @click="${this.onCreateFunc}">Создать</av-button>
       </div>
     `
   }
