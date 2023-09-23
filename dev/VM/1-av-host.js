@@ -7,6 +7,7 @@ import './1-av-host/av-auth.js';
 import '../V/av-tree.js';
 import '../V/av-context-menu.js';
 import '../V/av-text-header.js';
+import '../V/av-property-grid.js'
 
 import {Host} from'../M/1-Host.js';
 

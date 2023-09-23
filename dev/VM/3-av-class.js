@@ -54,9 +54,9 @@ export class AVClass extends AVItem {
   render() {
     return html`
       <av-class-panel
-        .item="${this.classItem}"
+        .classItem="${this.classItem}"
         .onClassViewChangedFunc="${viewName => this.currentViewName = viewName}"
-        .onCreateFunc="${(e) => {this.selectedObjectDocument = this.classItem.getNewObjectDocument()}}"
+        .onCreateFunc="${(e) => {this.selectedObjectDocument = this.class.getNewObjectDocument()}}"
       ></av-class-panel>
       ${this.currentViewName === 'Grid' ? this._renderGrid() : this.nothing}
       ${this.currentViewName === 'Configurator' ? this._renderConfigurator() : this.nothing}
@@ -88,7 +88,7 @@ export class AVClass extends AVItem {
   _renderConfigurator() {
     return html`
       <av-class-configurator
-        .item="${this.classItem}"
+        .classItem="${this.classItem}"
         .onSaveFunc="${this._onFieldDescriptorsChanged}"
       ></av-class-configurator>
     `

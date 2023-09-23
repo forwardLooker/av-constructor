@@ -28,7 +28,7 @@ export class AvClassPanel extends AVItem {
   }
 
   static properties = {
-    item: {},
+    classItem: {},
     currentViewName: {},
     availableViewsList: {},
     viewsDropdownOpened: {},
@@ -44,9 +44,9 @@ export class AvClassPanel extends AVItem {
   }
 
   willUpdate(changedProps) {
-    if (changedProps.has('item')) {
-      this.currentViewName = this.item.defaultViewName;
-      this.availableViewsList = this.item.getViewsList()
+    if (changedProps.has('classItem')) {
+      this.currentViewName = this.classItem.defaultViewName;
+      this.availableViewsList = this.classItem.getViewsList()
     }
   }
 
