@@ -1,8 +1,8 @@
 import {html, css, AVItem} from './0-av-item.js';
 
-import './5-av-field.js'
+import './5-av-field.js';
 
-import {Host} from '../M/1-Host.js';
+import '../V/av-button.js';
 
 export class AVObjectDocument extends AVItem {
   static get styles() {
@@ -135,9 +135,9 @@ export class AVObjectDocument extends AVItem {
         </div>  
         <div class="row justify-end">
           <div>
-            <button class="standart-button" @click="${this._saveAndClose}">OK</button>
-            <button class="standart-button" @click="${this.onCloseFunc}">Отмена</button>
-            <button class="standart-button" @click="${this._toggleDesign}">Дизайнер</button>
+            <av-button @click="${this._saveAndClose}">OK</av-button>
+            <av-button @click="${this.onCloseFunc}">Отмена</av-button>
+            <av-button @click="${this._toggleDesign}">Дизайнер</av-button>
           </div>  
         </div>
       </div>
