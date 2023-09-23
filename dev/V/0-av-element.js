@@ -22,6 +22,7 @@ class showIfDirective extends Directive {
 
 class AVElement extends LitElement {
   nothing = nothing;
+  noop = () => {};
   if = (condition, element) => condition ? element : this.nothing;
   showIf = directive(showIfDirective);
   repeat = repeat;

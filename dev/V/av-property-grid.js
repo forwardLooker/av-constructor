@@ -30,8 +30,8 @@ export class AVPropertyGrid extends AVElement {
   }
 
   static properties = {
-    items: {},
     item: {},
+    items: {},
     selectedItem: {},
     onItemSelectFunc: {}
   };
@@ -39,6 +39,7 @@ export class AVPropertyGrid extends AVElement {
   constructor() {
     super();
     this.items = [];
+    this.onItemSelectFunc = this.noop;
   }
 
   willUpdate(changedProps) {

@@ -33,12 +33,12 @@ export class AvClassConfigurator extends AVItem {
 
   willUpdate(changedProps) {
     if (changedProps.has('fieldDescriptors')) {
-      this._newFieldDescriptors = this.fieldDescriptors;
+      this._newFieldDescriptors = this.deepClone(this.fieldDescriptors);
     }
   }
 
   render() {
-    const prGridItems = [{name: 'label'}, {name: 'type'}];
+    const prGridItems = [{name: 'label'}, {name: 'dataType'}];
     return html`
         <div class="col space-between flex-1">
           <div class="col">
@@ -83,7 +83,7 @@ export class AvClassConfigurator extends AVItem {
   async _addField() {
     const fieldName = await this.showDialog({text: 'Введите название поля', input: 'name'});
     if (fieldName && this._newFieldDescriptors.every(f => f.name !== fieldName)) {
-      const field = {name: fieldName, label: fieldName, type: 'Строка'};
+      const field = {name: fieldName, label: fieldName, dataType: 'Строка'};
       this._newFieldDescriptors = [...this._newFieldDescriptors, field];
     }
   }

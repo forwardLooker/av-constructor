@@ -57,15 +57,17 @@ export class AVTree extends AVElement {
       <div class="col ${this.classMap({'margin-left-16': nestingLevel > 0})}">
         ${this.repeat(items, i => i.id, i => html`
           <div class="col">
-              <div class="tree-row row ${this.classMap({selected: i.selected})}">
-                  <div
-                    class="tree-row-expander ${this.classMap({expanded: i.expanded, invisible: this.isEmpty(i.items)})}"
-                    @click="${() => this._toggleExpand(i)}"
-                  >${html`>`}</div>
-                  <div 
-                    class="tree-row-name margin-left-8"
-                    @click="${() => this._toggleSelect(i)}"
-                  >${i.name}</div>
+              <div 
+                class="tree-row row ${this.classMap({selected: i.selected})}"
+                @click="${(e) => this._toggleSelect(e, i)}"
+              >
+                <div
+                  class="tree-row-expander ${this.classMap({expanded: i.expanded, invisible: this.isEmpty(i.items)})}"
+                  @click="${() => this._toggleExpand(i)}"
+                >${html`>`}</div>
+                <div 
+                  class="tree-row-name margin-left-8"
+                >${i.name}</div>
               </div>
               <div ${this.showIf(i.expanded)}>
                   ${this.render(i.items, nestingLevel + 1)}
@@ -89,7 +91,10 @@ export class AVTree extends AVElement {
     this.requestUpdate();
   }
 
-  _toggleSelect(newSelectedItem) {
+  _toggleSelect(e, newSelectedItem) {
+    if (e.target.classList.contains('tree-row-expander')) {
+      return;
+    }
     if (this.selectedItem !== newSelectedItem) {
       if (this.selectedItem) {
         this.selectedItem.selected = false;
