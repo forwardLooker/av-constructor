@@ -1,20 +1,12 @@
-import {html, css, AVItem} from './0-av-item.js';
+import {AVElement, css, html} from './0-av-element.js';
 
-import {Host} from '../M/1-Host.js';
-
-export class AVField extends AVItem {
+export class AVTextInput extends AVElement {
   static get styles() {
     return css`
       :host {
         flex: 1;
-        display: flex;
-        flex-direction: column;
       }
-      .label {
-        display: inline-block;
-        padding: 0 4px;
-      }
-      .input {
+      input {
         position: relative;
         display: inline-block;
         padding: 5px 12px;
@@ -29,33 +21,29 @@ export class AVField extends AVItem {
         //box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
       }
 
-      .input:hover {
+      input:hover {
         border-color: black;
       }
     `;
   }
 
   static properties = {
-    fieldItem: {},
     value: {},
     onInputFunc: {}
+    // items: {},
   };
 
   constructor() {
     super();
+    this.onInputFunc = this.noop;
   }
 
   render() {
     return html`
-      <div class="flex-1 row align-center">
-        <label class="label">${this.fieldItem.name}</label>
         <input
-          class="input flex-1"  
           value="${this.value}"
           @input="${this._input}"
         >
-        <slot></slot>
-      </div>
     `
   }
 
@@ -71,6 +59,6 @@ export class AVField extends AVItem {
     this.value = e.target.value;
     this.onInputFunc(e.target.value, e)
   }
-}
 
-window.customElements.define('av-field', AVField);
+}
+window.customElements.define('av-text-input', AVTextInput);

@@ -22,7 +22,7 @@ export class AvClassConfigurator extends AVItem {
     fieldDescriptors: {},
     _newFieldDescriptors: {},
     selectedField: {},
-    onSaveFunc: {}
+    onSaveFunc: {},
   };
 
   constructor() {
@@ -50,12 +50,12 @@ export class AvClassConfigurator extends AVItem {
               <av-tree
                 class="fields-tree border"
                 .items="${this._newFieldDescriptors}"
-                .onItemSelectFunc="${this._onTreeItemSelect}"
+                .onItemSelectFunc="${item => this.selectedField = item}"
               ></av-tree>
               <av-property-grid
                 class="flex-1 margin-left-8 border"
-                .item="${this.selectedField}"
-                .items="${prGridItems}"
+                .inspectedItem="${this.selectedField}"
+                .propertyItems="${prGridItems}"
               ></av-property-grid>
             </div>
           </div>
@@ -74,10 +74,6 @@ export class AvClassConfigurator extends AVItem {
     if (changedProps.has('classItem')) {
       this.fieldDescriptors = await this.classItem.getFieldDescriptors();
     }
-  }
-
-  _onTreeItemSelect(item) {
-    this.selectedField = item;
   }
 
   async _addField() {

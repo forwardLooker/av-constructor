@@ -1,5 +1,8 @@
 import {AVElement, css, html} from './0-av-element.js';
 
+import './av-label.js';
+import './av-text-input.js';
+
 export class AVPropertyGrid extends AVElement {
   static get styles() {
     return css`
@@ -30,26 +33,30 @@ export class AVPropertyGrid extends AVElement {
   }
 
   static properties = {
-    item: {},
-    items: {},
+    inspectedItem: {},
+    propertyItems: {},
     selectedItem: {},
     onItemSelectFunc: {}
   };
 
   constructor() {
     super();
-    this.items = [];
+    this.propertyItems = [];
     this.onItemSelectFunc = this.noop;
   }
 
   willUpdate(changedProps) {
-    if (changedProps.has('item')) {
+    if (changedProps.has('inspectedItem')) {
 
     }
   }
 
   render(nestedItems, level) {
-    let items = this.items || [];
+    if (!this.inspectedItem) {
+      return this.nothing;
+    }
+
+    let items = this.propertyItems || [];
     let nestingLevel = level || 0;
     if (this.notEmpty(nestedItems)) {
       items = nestedItems;
@@ -59,25 +66,34 @@ export class AVPropertyGrid extends AVElement {
     }
     return html`
       <div class="col ${this.classMap({'margin-left-16': nestingLevel > 0})}">
-        ${this.repeat(items, i => i.id, i => html`
+        ${this.repeat(items, i => i.name, propertyItem => html`
           <div class="col">
-              <div class="tree-row row ${this.classMap({selected: i.selected})}">
+              <div class="tree-row row ${this.classMap({selected: propertyItem.selected})}">
                   <div
-                    class="tree-row-expander ${this.classMap({expanded: i.expanded, invisible: this.isEmpty(i.items)})}"
-                    @click="${() => this._toggleExpand(i)}"
+                    class="tree-row-expander ${this.classMap({expanded: propertyItem.expanded, invisible: this.isEmpty(propertyItem.items)})}"
+                    @click="${() => this._toggleExpand(propertyItem)}"
                   >${html`>`}</div>
-                  <av-field
-                    class="tree-row-name margin-left-8"
-                    .item="${i}"
-                    @click="${() => this._toggleSelect(i)}"
-                  ></av-field>
+                  ${this._renderPropGridRow(propertyItem)}
               </div>
-              <div ${this.showIf(i.expanded)}>
-                  ${this.render(i.items, nestingLevel + 1)}
+              <div ${this.showIf(propertyItem.expanded)}>
+                  ${this.render(propertyItem.items, nestingLevel + 1)}
               </div>
           </div>
         `)}
       </div>
+    `
+  }
+
+  _renderPropGridRow(propertyItem) {
+    return html`
+      <div class="flex-1 row align-center margin-left-8">
+        <av-label>${propertyItem.name}</av-label>
+        <av-text-input
+          .value="${this.inspectedItem[propertyItem.name]}"
+          .onInputFunc="${value => this._updateInspectedItem(value, propertyItem)}"
+        >
+      </div>
+
     `
   }
 
@@ -87,6 +103,10 @@ export class AVPropertyGrid extends AVElement {
 
   async updated(changedProps) {
 
+  }
+
+  _updateInspectedItem(value, propertyItem) {
+    this.inspectedItem[propertyItem.name] = value;
   }
 
   _toggleExpand(i) {

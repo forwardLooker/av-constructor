@@ -4,10 +4,13 @@ import './3-av-class.js';
 import './2-av-domain.js';
 import './1-av-host/av-auth.js';
 
+import '../V/av-text-header.js';
+import '../V/av-label.js';
+import '../V/av-text-input.js';
+
 import '../V/av-tree.js';
 import '../V/av-context-menu.js';
-import '../V/av-text-header.js';
-import '../V/av-property-grid.js'
+import '../V/av-property-grid.js';
 
 import {Host} from'../M/1-Host.js';
 

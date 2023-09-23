@@ -197,7 +197,7 @@ export class AVObjectDocument extends AVItem {
         class="pos-rel row"
         style="${fieldStyle}"
         ${this.ref(fieldDomElement => fieldItem.domElement = fieldDomElement)}
-        .item="${fieldItem}"
+        .fieldItem="${fieldItem}"
         .value="${this._newData[fieldItem.name]}"
         .onInputFunc="${value => {this._newData[fieldItem.name] = value}}"
       >
