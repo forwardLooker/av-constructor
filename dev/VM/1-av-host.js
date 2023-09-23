@@ -112,7 +112,7 @@ export class AVHost extends AVItem {
         <h3>Хост тест</h3>
         <div ${this.showIf(this.user)} class="col align-center justify-center">
             <div>${this.user?.email}</div>
-            <button @click="${() => this.auth.signOut()}">Выйти</button>
+            <av-button @click="${() => this.auth.signOut()}">Выйти</av-button>
         </div>
       </div>
       <div id="main" class="flex-1 row pad-8 border">
@@ -126,8 +126,8 @@ export class AVHost extends AVItem {
                   <input value="${this.dialogInputValue}" @input="${e => {this.dialogInputValue = e.target.value}}">
               </div>
               <div>
-                  <button @click="${() => {this.fire('dialog-submitted')}}">OK</button>
-                  <button @click="${() => {this.fire('dialog-closed')}}">Отмена</button>
+                  <av-button @click="${() => {this.fire('dialog-submitted')}}">OK</av-button>
+                  <av-button @click="${() => {this.fire('dialog-closed')}}">Отмена</av-button>
               </div>
           </div>
       </div>
