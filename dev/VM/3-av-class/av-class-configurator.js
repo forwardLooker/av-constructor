@@ -41,12 +41,12 @@ export class AvClassConfigurator extends AVItem {
     const prGridItems = [{name: 'label'}, {name: 'dataType'}];
     return html`
         <div class="col space-between flex-1">
-          <div class="col">
+          <div class="col flex-1">
             <av-text-header class="margin-top-8">Fields:</av-text-header>
             <div>
               <av-button @click="${this._addField}">Добавить поле</av-button>
             </div>
-            <div class="row margin-top-8">
+            <div class="row flex-1 margin-top-8">
               <av-tree
                 class="fields-tree border"
                 .items="${this._newFieldDescriptors}"
