@@ -25,6 +25,10 @@ export class AVField extends AVItem {
         //-webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
         //box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
       }
+      
+      .input-number {
+        text-align: end;
+      }
 
       .input:hover {
         border-color: black;
@@ -49,7 +53,7 @@ export class AVField extends AVItem {
         ${this.renderInput(
           {
             value: this.value,
-            onInputFunc: this._input,
+            onInputFunc: this._onInput,
             type: this.fieldItem.dataType
           }
         )}
@@ -73,10 +77,21 @@ export class AVField extends AVItem {
     if (type === 'number') {
       inputElement = html`
         <input
-          class="input flex-1"
+          class="input input-number flex-1"
           autocomplete="off"
           type="${type}"
           value="${value}"
+          @input="${onInputFunc}"
+        >
+      `
+    }
+    if (type === 'boolean') {
+      inputElement = html`
+        <input
+          class="input flex-1"
+          autocomplete="off"
+          type="checkbox"
+          ?checked="${value}"
           @input="${onInputFunc}"
         >
       `
@@ -92,9 +107,13 @@ export class AVField extends AVItem {
 
   }
 
-  _input(e) {
-    this.value = e.target.value;
-    this.onInputFunc(e.target.value, e)
+  _onInput = (e) => {
+    let value = e.target.value;
+    if (this.fieldItem.dataType === 'boolean') {
+      value = e.target.checked;
+    }
+    this.value = value;
+    this.onInputFunc(value, e)
   }
 }
 

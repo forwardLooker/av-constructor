@@ -524,7 +524,7 @@ export class AVObjectDocument extends AVItem {
   async _saveDesign() {
     this._removeContainerReference(this.designJson);
     this._removeDomElementReference(this.designJson);
-    await this.objectDocument.saveDesignJson(this.designJson);
+    await this.objectDocument.saveDesignJson(this.deepClone(this.designJson));
     this._addContainerReference(this.designJson);
   }
 
