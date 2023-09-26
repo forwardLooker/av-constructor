@@ -69,7 +69,7 @@ export class AVField extends AVItem {
         <input
           class="input flex-1"
           autocomplete="off"
-          value="${value}"
+          .value="${(value === null || value === undefined) ? '' : value}"
           @input="${onInputFunc}"
         >
       `
@@ -80,7 +80,7 @@ export class AVField extends AVItem {
           class="input input-number flex-1"
           autocomplete="off"
           type="${type}"
-          value="${value}"
+          .value="${(value === null || value === undefined) ? '' : value}"
           @input="${onInputFunc}"
         >
       `

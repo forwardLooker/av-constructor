@@ -84,18 +84,29 @@ export class AVPropertyGrid extends AVElement {
     `
   }
 
+  // _renderPropGridRow(propertyItem) {
+  //   return html`
+  //     <div class="flex-1 row align-center margin-left-8">
+  //       <av-label>${propertyItem.name}</av-label>
+  //       <av-text-input
+  //         .value="${this.inspectedItem[propertyItem.name]}"
+  //         .onInputFunc="${value => this._updateInspectedItem(value, propertyItem)}"
+  //       ></av-text-input>
+  //     </div>
+  //   `
+  // }
+
   _renderPropGridRow(propertyItem) {
     return html`
-      <div class="flex-1 row align-center margin-left-8">
-        <av-label>${propertyItem.name}</av-label>
-        <av-text-input
-          .value="${this.inspectedItem[propertyItem.name]}"
-          .onInputFunc="${value => this._updateInspectedItem(value, propertyItem)}"
-        >
-      </div>
-
+      <av-field
+        .fieldItem="${propertyItem}"
+        .value="${this.inspectedItem[propertyItem.name]}"
+        .onInputFunc="${value => this._updateInspectedItem(value, propertyItem)}"
+      >
+      </av-field>
     `
   }
+
 
   async firstUpdated() {
 

@@ -31,6 +31,7 @@ export class AVTree extends AVElement {
 
   static properties = {
     items: {},
+    _items: {},
     selectedItem: {},
     onItemSelectFunc: {}
   };
@@ -41,11 +42,13 @@ export class AVTree extends AVElement {
   }
 
   willUpdate(changedProps) {
-
+    if (changedProps.has('items')) {
+      this._items = this.deepClone(this.items);
+    }
   }
 
   render(nestedItems, level) {
-    let items = this.items || [];
+    let items = this._items || [];
     let nestingLevel = level || 0;
     if (this.notEmpty(nestedItems)) {
       items = nestedItems;
@@ -102,7 +105,8 @@ export class AVTree extends AVElement {
       newSelectedItem.selected = true;
       this.selectedItem = newSelectedItem;
       this.requestUpdate();
-      this.onItemSelectFunc(newSelectedItem);
+      const newSelectedItemOriginal = this.findDeepObjInItemsBy({name: newSelectedItem.name}, {items: this.items});
+      this.onItemSelectFunc(newSelectedItemOriginal);
     }
   }
 }
