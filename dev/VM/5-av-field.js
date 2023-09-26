@@ -11,10 +11,6 @@ export class AVField extends AVItem {
         display: flex;
         flex-direction: column;
       }
-      .label {
-        display: inline-block;
-        padding: 0 4px;
-      }
       .input {
         position: relative;
         display: inline-block;
@@ -49,15 +45,43 @@ export class AVField extends AVItem {
   render() {
     return html`
       <div class="flex-1 row align-center">
-        <av-label>${this.fieldItem.name}</av-label>
-        <input
-          class="input flex-1"  
-          value="${this.value}"
-          @input="${this._input}"
-        >
+        <av-label>${this.fieldItem.label || this.fieldItem.name}</av-label>
+        ${this.renderInput(
+          {
+            value: this.value,
+            onInputFunc: this._input,
+            type: this.fieldItem.dataType
+          }
+        )}
         <slot></slot>
       </div>
     `
+  }
+
+  renderInput({value, onInputFunc, type}) {
+    let inputElement;
+    if (!type || type === 'text') {
+      inputElement = html`
+        <input
+          class="input flex-1"
+          autocomplete="off"
+          value="${value}"
+          @input="${onInputFunc}"
+        >
+      `
+    }
+    if (type === 'number') {
+      inputElement = html`
+        <input
+          class="input flex-1"
+          autocomplete="off"
+          type="${type}"
+          value="${value}"
+          @input="${onInputFunc}"
+        >
+      `
+    }
+    return inputElement;
   }
 
   async firstUpdated() {

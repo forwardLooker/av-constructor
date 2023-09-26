@@ -37,14 +37,17 @@ export class AVTextInput extends AVElement {
     super();
     this.onInputFunc = this.noop;
   }
-
+// TODO поа не используется из-за бага
   render() {
     return html`
-        <input
-          autocomplete="off"
-          value="${this.value}"
-          @input="${this._input}"
-        >
+        <div class="flex-1 row">
+          <input
+            class="flex-1"
+            autocomplete="off"
+            value="${this.value}"
+            @input="${this._input}"
+          >
+        </div>
     `
   }
 
@@ -57,7 +60,7 @@ export class AVTextInput extends AVElement {
   }
 
   _input(e) {
-    this.value = e.target.value;
+    // this.value = e.target.value;
     this.onInputFunc(e.target.value, e)
   }
 

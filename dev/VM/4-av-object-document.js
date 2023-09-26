@@ -101,8 +101,24 @@ export class AVObjectDocument extends AVItem {
       this._newData = this.objectDocument.data;
       if (this.objectDocument.designJson) {
         const designJson = this.deepClone(this.objectDocument.designJson);
-        const fieldDescriptors = this.deepClone(this.fieldDescriptors)
+        const fieldDescriptors = this.deepClone(this.fieldDescriptors);
 
+        // upgrade metadata
+        fieldDescriptors.forEach(fD => {
+          const fieldInOrigItems = designJson.originalItems.find(origItem => origItem.name === fD.name);
+          if (fieldInOrigItems) {
+            if (!this.isDeepEqual(fD, fieldInOrigItems)) {
+              const fieldInDesign = this.findDeepObjInItemsBy({name: fD.name}, designJson);
+              if (fieldInDesign) {
+                Object.keys(fD).forEach(prop => {
+                  fieldInDesign[prop] = fD[prop];
+                  fieldInOrigItems[prop] = fD[prop];
+                });
+              }
+            }
+          }
+        })
+        // find added and deleted
         const addedItems = this._findNewFieldDescriptors(fieldDescriptors, designJson.originalItems);
         const deletedItems = this._findDeletedFieldDescriptors(fieldDescriptors, designJson.originalItems);
         // add
@@ -115,7 +131,6 @@ export class AVObjectDocument extends AVItem {
           const forDelIndexInOrigItems = designJson.originalItems.findIndex(origItem => origItem.name === delItem.name);
           designJson.originalItems.splice(forDelIndexInOrigItems, 1);
         })
-
         this.designJson = designJson;
       } else {
         this.designJson = {
