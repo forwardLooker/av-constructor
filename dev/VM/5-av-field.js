@@ -1,6 +1,7 @@
 import {html, css, AVItem} from './0-av-item.js';
 
-import {Host} from '../M/1-Host.js';
+import '../V/av-label.js';
+import '../V/av-text-input.js';
 
 export class AVField extends AVItem {
   static get styles() {
@@ -48,7 +49,7 @@ export class AVField extends AVItem {
   render() {
     return html`
       <div class="flex-1 row align-center">
-        <label class="label">${this.fieldItem.name}</label>
+        <av-label>${this.fieldItem.name}</av-label>
         <input
           class="input flex-1"  
           value="${this.value}"

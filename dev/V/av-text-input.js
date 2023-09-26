@@ -41,6 +41,7 @@ export class AVTextInput extends AVElement {
   render() {
     return html`
         <input
+          autocomplete="off"
           value="${this.value}"
           @input="${this._input}"
         >
