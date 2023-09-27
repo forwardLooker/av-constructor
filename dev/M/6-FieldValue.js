@@ -1,6 +1,6 @@
 import {Item} from './0-Item.js'
 
-export class DataType extends Item {
+export class FieldValue extends Item {
   constructor() {
     super();
   }
