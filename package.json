@@ -3,12 +3,18 @@
   "private": true,
   "version": "0.0.1",
   "description": "Audio Visual",
-  "main": "my-element.js",
-  "module": "my-element.js",
-  "type": "module",
+  "main": "app/index.js",
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  },
   "scripts": {
     "serve": "wds --watch",
-    "serve:prod": "MODE=prod npm run serve"
+    "serve:prod": "MODE=prod npm run serve",
+    "create": "webpack",
+    "start": "webpack-dev-server --open"
   },
   "keywords": [
     "web-components",
@@ -20,12 +26,24 @@
   "license": "Private",
   "dependencies": {
     "firebase": "^9.22.1",
-    "lit": "^2.7.4"
+    "lit": "^2.7.4",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2"
   },
   "devDependencies": {
     "@web/dev-server": "^0.1.31",
     "@web/dev-server-legacy": "^1.0.0",
-    "@webcomponents/webcomponentsjs": "^2.6.0"
+    "@webcomponents/webcomponentsjs": "^2.6.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "8.0.0",
+    "css-loader": "^1.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.23.0",
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.6"
   },
   "customElements": "custom-elements.json"
 }
