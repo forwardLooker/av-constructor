@@ -55,7 +55,7 @@ export class AvClassPanel extends AVItem {
         <div class="row">
           ${this.currentViewName === 'Grid' ? this._renderGridButtons() : this.nothing}
           <div class="flex-1 row justify-end pad-8">
-            <div id="view-selector" class="row pos-rel" @click="${this._onViewSelectorClick}">
+            <div id="view-selector" class="view-selector row pos-rel" @click="${this._onViewSelectorClick}">
               <div>${this.currentViewName}</div>
               <div id="view-selector-arrow">${html`>`}</div>
               <div
@@ -64,7 +64,7 @@ export class AvClassPanel extends AVItem {
                 class="col pos-abs border"
               >
                 ${this.repeat(this.availableViewsList, v => v, viewName => html`
-                  <div @click="${(e) => this._selectView(viewName)}">${viewName}</div>
+                  <div class="selection-item" @click="${(e) => this._selectView(viewName)}">${viewName}</div>
                 `)}
               </div>  
             </div>
@@ -89,8 +89,21 @@ export class AvClassPanel extends AVItem {
 
   }
 
+  _windowClickHandler = (e) => {
+    this.viewsDropdownOpened = false;
+    window.removeEventListener('click', this._windowClickHandler);
+  }
+
   _onViewSelectorClick() {
-    this.viewsDropdownOpened = !this.viewsDropdownOpened;
+    if (!this.viewsDropdownOpened) {
+      this.viewsDropdownOpened = true;
+      setTimeout(() => {
+        window.addEventListener('click', this._windowClickHandler);
+      }, 4)
+    } else {
+      this.viewsDropdownOpened = false;
+      window.removeEventListener('click', this._windowClickHandler);
+    }
   }
 
   _selectView(view) {

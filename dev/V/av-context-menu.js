@@ -54,7 +54,7 @@ export class AVContextMenu extends AVElement {
     this.display();
     return new Promise((resolve, reject) => {
       this.addEventListener('context-menu-item-selected', listenerOnSelect);
-      window.addEventListener('click', listenerOnCloseWithoutSelect)
+      window.addEventListener('click', listenerOnCloseWithoutSelect);
 
       const self = this;
       function listenerOnSelect(e) {
