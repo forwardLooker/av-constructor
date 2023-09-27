@@ -26,6 +26,11 @@ export class AVButton extends AVElement {
         border-radius: 6px;
         appearance: none;
       }
+
+      .standart-button:hover {
+        //opacity: 0.88;
+        
+      }
     `;
   }
 

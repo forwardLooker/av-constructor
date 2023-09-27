@@ -56,7 +56,7 @@ export class AVClass extends AVItem {
       <av-class-panel
         .classItem="${this.classItem}"
         .onClassViewChangedFunc="${viewName => this.currentViewName = viewName}"
-        .onCreateFunc="${(e) => {this.selectedObjectDocument = this.class.getNewObjectDocument()}}"
+        .onCreateFunc="${(e) => {this.selectedObjectDocument = this.classItem.getNewObjectDocument()}}"
       ></av-class-panel>
       ${this.currentViewName === 'Grid' ? this._renderGrid() : this.nothing}
       ${this.currentViewName === 'Configurator' ? this._renderConfigurator() : this.nothing}
