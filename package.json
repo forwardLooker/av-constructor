@@ -3,7 +3,8 @@
   "private": true,
   "version": "0.0.1",
   "description": "Audio Visual",
-  "main": "app/index.js",
+  "main": "index.js",
+  "type": "module",
   "babel": {
     "presets": [
       "@babel/preset-env",
@@ -13,8 +14,8 @@
   "scripts": {
     "serve": "wds --watch",
     "serve:prod": "MODE=prod npm run serve",
-    "create": "webpack",
-    "start": "webpack-dev-server --open"
+    "create-react-dist": "webpack",
+    "start-react": "webpack-dev-server --open"
   },
   "keywords": [
     "web-components",
@@ -33,7 +34,7 @@
   "devDependencies": {
     "@web/dev-server": "^0.1.31",
     "@web/dev-server-legacy": "^1.0.0",
-    "@webcomponents/webcomponentsjs": "^2.6.0",
+
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",

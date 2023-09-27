@@ -28,8 +28,7 @@ export class AVButton extends AVElement {
       }
 
       .standart-button:hover {
-        //opacity: 0.88;
-        
+        opacity: 0.90;
       }
     `;
   }
