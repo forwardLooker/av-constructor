@@ -49,6 +49,7 @@ export class AVField extends AVItem {
     fieldItem: {},
     value: {},
     isLabelHidden: {type: Boolean},
+    labelPosition: {enum: ['left', 'top']},
     onInputFunc: {}
   };
 
@@ -57,9 +58,15 @@ export class AVField extends AVItem {
     this.onInputFunc = this.noop;
   }
 
+  willUpdate(changedProps) {
+    if (changedProps.has('fieldItem')) {
+      this.labelPosition = this.fieldItem.dataType === 'array'? 'top' : 'left';
+    }
+  }
+
   render() {
     return html`
-      <div class="flex-1 row align-center">
+      <div class="flex-1 ${this.labelPosition === 'top'? 'column' : 'row'} align-center">
         ${this.if(!this.isLabelHidden, html`
           <av-label>${this.fieldItem.label || this.fieldItem.name}</av-label>
         `)}
@@ -70,7 +77,7 @@ export class AVField extends AVItem {
             fieldItem: this.fieldItem,
           }
         )}
-        <slot></slot>
+          <slot></slot>
       </div>
     `
   }
