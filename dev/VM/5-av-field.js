@@ -79,7 +79,7 @@ export class AVField extends AVItem {
           @input="${onInputFunc}"
         >
       `
-      if (variant === 'dropdown' && valuesList) {
+      if (variant === 'select' && valuesList) {
         const valuesArr = valuesList.split(',');
         const trimedValuesArr = valuesArr.map(str => str.trim());
         inputElement = html`
