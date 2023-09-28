@@ -58,9 +58,7 @@ export class AVField extends AVItem {
           {
             value: this.value,
             onInputFunc: this._onInput,
-            type: this.fieldItem.dataType,
-            variant: this.fieldItem.variant,
-            valuesList: this.fieldItem.valuesList,
+            fieldItem: this.fieldItem,
           }
         )}
         <slot></slot>
@@ -68,9 +66,9 @@ export class AVField extends AVItem {
     `
   }
 
-  renderInput({value, onInputFunc, type, variant, valuesList}) {
+  renderInput({value, onInputFunc, fieldItem}) {
     let inputElement;
-    if (!type || type === 'string') {
+    if (!fieldItem.dataType || fieldItem.dataType === 'string') {
       inputElement = html`
         <input
           class="input flex-1"
@@ -79,8 +77,8 @@ export class AVField extends AVItem {
           @input="${onInputFunc}"
         >
       `
-      if (variant === 'select' && valuesList) {
-        const valuesArr = valuesList.split(',');
+      if (fieldItem.variant === 'select' && fieldItem.valuesList) {
+        const valuesArr = fieldItem.valuesList.split(',');
         const trimedValuesArr = valuesArr.map(str => str.trim());
         inputElement = html`
           <select
@@ -96,18 +94,18 @@ export class AVField extends AVItem {
         `
       }
     }
-    if (type === 'number') {
+    if (fieldItem.dataType === 'number') {
       inputElement = html`
         <input
           class="input input-number flex-1"
           autocomplete="off"
-          type="${type}"
+          type="${fieldItem.dataType}"
           .value="${(value === null || value === undefined) ? '' : value}"
           @input="${onInputFunc}"
         >
       `
     }
-    if (type === 'boolean') {
+    if (fieldItem.dataType === 'boolean') {
       inputElement = html`
         <input
           class="input flex-1"
@@ -116,6 +114,26 @@ export class AVField extends AVItem {
           ?checked="${value}"
           @input="${onInputFunc}"
         >
+      `
+    }
+    if (fieldItem.dataType === 'array') {
+      const gridItems = value || [];
+      let gridRef;
+      inputElement = html`
+          <div class="flex-1 row align-start">
+            <av-button
+              @click="${() => {
+                  gridItems.push({});
+                  gridRef.requestUpdate();
+              }}"
+            >+</av-button>
+            <av-grid
+              ${this.ref(el => gridRef = el)}
+              .items="${gridItems}"
+              .columns="${fieldItem.items}"
+            >
+            </av-grid>
+          </div>
       `
     }
     return inputElement;
