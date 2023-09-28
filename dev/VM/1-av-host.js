@@ -68,6 +68,10 @@ export class AVHost extends AVItem {
       #left-sidebar {
         width: 20%;
       }
+      #view-port {
+        overflow: scroll;
+      }
+      \
       #dialog-container {
         top: 0;
         right: 0;
