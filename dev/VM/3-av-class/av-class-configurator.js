@@ -40,7 +40,7 @@ export class AvClassConfigurator extends AVItem {
   render() {
     const prGridItems = [
       {name: 'label'},
-      {name: 'dataType', dataType: 'string', variant: 'dropdown', valuesList: 'string,number,boolean,array,object'},
+      {name: 'dataType', dataType: 'string', variant: 'select', valuesList: 'string,number,boolean,array,object'},
       {name: 'variant'},
       {name: 'valuesList'}
     ];
