@@ -38,7 +38,12 @@ export class AvClassConfigurator extends AVItem {
   }
 
   render() {
-    const prGridItems = [{name: 'label'}, {name: 'dataType'}];
+    const prGridItems = [
+      {name: 'label'},
+      {name: 'dataType', dataType: 'string', variant: 'dropdown', valuesList: 'string,number,boolean,array,object'},
+      {name: 'variant'},
+      {name: 'valuesList'}
+    ];
     return html`
         <div class="col space-between flex-1">
           <div class="col flex-1">

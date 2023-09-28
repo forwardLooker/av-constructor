@@ -14,7 +14,7 @@ export class AVField extends AVItem {
       .input {
         position: relative;
         display: inline-block;
-        padding: 5px 12px;
+        padding: 5px 10px;
         line-height: 20px;
         background-color: #fff;
         transition: all .2s;
@@ -26,8 +26,12 @@ export class AVField extends AVItem {
         //box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
       }
       
-      .input-number {
+      .input.input-number {
         text-align: end;
+      }
+      
+      .input.select {
+        padding: 5px 8px;
       }
 
       .input:hover {
@@ -54,7 +58,9 @@ export class AVField extends AVItem {
           {
             value: this.value,
             onInputFunc: this._onInput,
-            type: this.fieldItem.dataType
+            type: this.fieldItem.dataType,
+            variant: this.fieldItem.variant,
+            valuesList: this.fieldItem.valuesList,
           }
         )}
         <slot></slot>
@@ -62,9 +68,9 @@ export class AVField extends AVItem {
     `
   }
 
-  renderInput({value, onInputFunc, type}) {
+  renderInput({value, onInputFunc, type, variant, valuesList}) {
     let inputElement;
-    if (!type || type === 'text') {
+    if (!type || type === 'string') {
       inputElement = html`
         <input
           class="input flex-1"
@@ -73,6 +79,22 @@ export class AVField extends AVItem {
           @input="${onInputFunc}"
         >
       `
+      if (variant === 'dropdown' && valuesList) {
+        const valuesArr = valuesList.split(',');
+        const trimedValuesArr = valuesArr.map(str => str.trim());
+        inputElement = html`
+          <select
+            class="input select flex-1"
+            autocomplete="off"
+            @input="${onInputFunc}"
+          >
+            <option value=""></option>
+            ${this.repeat(trimedValuesArr, str => html`
+              <option .value="${str}" ?selected="${str === value}">${str}</option>
+            `)}
+          </select>
+        `
+      }
     }
     if (type === 'number') {
       inputElement = html`
