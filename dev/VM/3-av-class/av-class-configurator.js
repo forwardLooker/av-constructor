@@ -42,7 +42,8 @@ export class AvClassConfigurator extends AVItem {
       {name: 'label'},
       {name: 'dataType', dataType: 'string', variant: 'select', valuesList: 'string,number,boolean,array,object'},
       {name: 'variant'},
-      {name: 'valuesList'}
+      {name: 'valuesList'},
+      {name: 'defaultValue'},
     ];
     return html`
         <div class="col space-between flex-1">

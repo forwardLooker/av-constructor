@@ -30,7 +30,12 @@ export class AVField extends AVItem {
         text-align: end;
       }
       
+      .input.checkbox {
+        height: 26px;
+      }
+      
       .input.select {
+        height: 32px;
         padding: 5px 8px;
       }
 
@@ -43,17 +48,21 @@ export class AVField extends AVItem {
   static properties = {
     fieldItem: {},
     value: {},
+    isLabelHidden: {type: Boolean},
     onInputFunc: {}
   };
 
   constructor() {
     super();
+    this.onInputFunc = this.noop;
   }
 
   render() {
     return html`
       <div class="flex-1 row align-center">
-        <av-label>${this.fieldItem.label || this.fieldItem.name}</av-label>
+        ${this.if(!this.isLabelHidden, html`
+          <av-label>${this.fieldItem.label || this.fieldItem.name}</av-label>
+        `)}
         ${this.renderInput(
           {
             value: this.value,
@@ -108,7 +117,7 @@ export class AVField extends AVItem {
     if (fieldItem.dataType === 'boolean') {
       inputElement = html`
         <input
-          class="input flex-1"
+          class="input checkbox flex-1"
           autocomplete="off"
           type="checkbox"
           ?checked="${value}"
@@ -125,12 +134,16 @@ export class AVField extends AVItem {
               @click="${() => {
                   gridItems.push({});
                   gridRef.requestUpdate();
+                  this.onInputFunc(gridItems);
               }}"
             >+</av-button>
             <av-grid
               ${this.ref(el => gridRef = el)}
               .items="${gridItems}"
               .columns="${fieldItem.items}"
+              isTypedColumns
+              isCellEditable
+              .onDataInItemsChanged="${this.onInputFunc}"
             >
             </av-grid>
           </div>

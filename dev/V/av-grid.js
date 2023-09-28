@@ -44,11 +44,16 @@ export class AVGrid extends AVElement {
   static properties = {
     items: {},
     columns: {},
+    isTypedColumns: {type: Boolean},
+    isCellEditable: {type: Boolean},
+    onDataInItemsChanged: {},
+    onCellInputFunc: {},
     onRowClickFunc: {}
   };
 
   constructor() {
     super();
+    this.onRowClickFunc = this.noop;
   }
 
   willUpdate(changedProps) {
@@ -64,7 +69,7 @@ export class AVGrid extends AVElement {
                   ${this.repeat(this.items, i => i.id, i => html`
                       <div row-item-id="${i.id}" column-name="${c.name}" class="grid-cell pad-8"
                            @click="${(e) => this._onCellClick(i, c.name, e)}"
-                      >${i[c.name]}</div>
+                      >${this._renderCellContent(i, c)}</div>
                   ` )}
               </div>
           `)}
@@ -78,6 +83,30 @@ export class AVGrid extends AVElement {
 
   async updated(changedProps) {
 
+  }
+
+  _renderCellContent(item, column) {
+    if (this.isTypedColumns && this.isCellEditable) {
+      return html`
+        <av-field
+          .value="${item[column.name]}"
+          .fieldItem="${column}"
+          isLabelHidden
+          .onInputFunc="${value => {
+            item[column.name] = value;
+            this.onDataInItemsChanged(this.items, item, column);
+          }}"
+        ></av-field>
+      `
+    }
+    const value = item[column.name];
+    if (Array.isArray(value)) {
+      return 'Табличное';
+    }
+    if (typeof value === 'object') {
+      return 'Объектное';
+    }
+    return value;
   }
 
   _onCellClick(rowItem, cellName, e) {
