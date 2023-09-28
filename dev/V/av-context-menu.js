@@ -62,7 +62,7 @@ export class AVContextMenu extends AVElement {
         window.removeEventListener('click', listenerOnCloseWithoutSelect);
         self.hide();
         self.items = [];
-        resolve(e.detail);
+        resolve(e.detail.menuItem);
       }
       function listenerOnCloseWithoutSelect(e) {
         self.removeEventListener('context-menu-item-selected', listenerOnSelect);

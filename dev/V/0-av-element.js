@@ -163,7 +163,10 @@ function css(...values) {
       padding-right: 8px;
     }
     .border {
-        border: 0.5px solid black;
+      border: 0.5px solid black;
+    }
+    .margin-left-4 {
+      margin-left: 4px;
     }
     .margin-left-8 {
       margin-left: 8px;

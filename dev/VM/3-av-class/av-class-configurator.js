@@ -56,6 +56,7 @@ export class AvClassConfigurator extends AVItem {
                 class="fields-tree border"
                 .items="${this._newFieldDescriptors}"
                 .onItemSelectFunc="${item => this.selectedField = item}"
+                .onItemContextMenuFunc="${this._onTreeItemContextMenu}"
               ></av-tree>
               <av-property-grid
                 class="flex-1 margin-left-8 border"
@@ -81,10 +82,26 @@ export class AvClassConfigurator extends AVItem {
     }
   }
 
+  _onTreeItemContextMenu = async (e, item) => {
+    const menuChoice = await this.showContextMenu(e, ['Добавить вложенное поле', 'Удалить поле']);
+    if (menuChoice === 'Добавить вложенное поле') {
+      const fieldName = await this.showDialog({text: 'Введите название поля', input: 'name'});
+      if (fieldName) {
+        if (this.notEmpty(item.items) && item.items.every(f => f.name !== fieldName)) {
+          item.items.push({name: fieldName, label: fieldName, dataType: 'string'})
+        }
+        if (this.isEmpty(item.items)) {
+          item.items = [{name: fieldName, label: fieldName, dataType: 'string'}];
+        }
+        this._newFieldDescriptors = [...this._newFieldDescriptors];
+      }
+    }
+  }
+
   async _addField() {
     const fieldName = await this.showDialog({text: 'Введите название поля', input: 'name'});
     if (fieldName && this._newFieldDescriptors.every(f => f.name !== fieldName)) {
-      const field = {name: fieldName, label: fieldName, dataType: 'Строка'};
+      const field = {name: fieldName, label: fieldName, dataType: 'string'};
       this._newFieldDescriptors = [...this._newFieldDescriptors, field];
     }
   }
