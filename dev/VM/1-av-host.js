@@ -165,25 +165,25 @@ export class AVHost extends AVItem {
 
   async firstUpdated() {
     const config = await this.Host.getConfig();
-    const reduceSubDomainsAndClassesToItems = (items => {
-      items.forEach(i => {
-        const classes = i.classes || [];
-        const subDomains = i.subDomains || [];
-        i.items = [...subDomains, ...classes]
-        if (this.notEmpty(i.items)) {
-          reduceSubDomainsAndClassesToItems(i.items)
-        }
-      })
-    })
-    config.forEach(d => {
-      d.items = [...d.config.domains, ...d.config.classes]
-      d.items.forEach(i => {
-        const classes = i.classes || [];
-        const subDomains = i.subDomains || [];
-        i.items = [...subDomains, ...classes];
-        reduceSubDomainsAndClassesToItems(i.items);
-      })
-    })
+    // const reduceSubDomainsAndClassesToItems = (items => {
+    //   items.forEach(i => {
+    //     const classes = i.classes || [];
+    //     const subDomains = i.subDomains || [];
+    //     i.items = [...subDomains, ...classes]
+    //     if (this.notEmpty(i.items)) {
+    //       reduceSubDomainsAndClassesToItems(i.items)
+    //     }
+    //   })
+    // })
+    // config.forEach(d => {
+    //   d.items = [...d.config.domains, ...d.config.classes]
+    //   d.items.forEach(i => {
+    //     const classes = i.classes || [];
+    //     const subDomains = i.subDomains || [];
+    //     i.items = [...subDomains, ...classes];
+    //     reduceSubDomainsAndClassesToItems(i.items);
+    //   })
+    // })
     this.config = config;
   }
 
