@@ -32,4 +32,27 @@ export class Item {
         .forEach(listenerId => this._listeners[eventName][listenerId](data))
     }
   }
+
+  findDeepObjInItemsBy = (queryObj, dataObjWithItems) => {
+    const keys = Object.keys(queryObj);
+    let resultObj;
+    if (this.notEmpty(dataObjWithItems.items)) {
+      resultObj = dataObjWithItems.items.find(i => {
+        return keys.every(key => i[key] === queryObj[key])
+      })
+    }
+    if (!resultObj && this.notEmpty(dataObjWithItems.items)) {
+      dataObjWithItems.items.forEach(i => {
+        if (!resultObj) {
+          resultObj = this.findDeepObjInItemsBy(queryObj, i);
+        }
+      })
+    }
+    return resultObj;
+  };
+
+  notEmpty(val) {
+    return Array.isArray(val) && val.length > 0;
+  }
+
 };

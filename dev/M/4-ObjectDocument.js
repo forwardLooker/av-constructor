@@ -36,9 +36,9 @@ export class ObjectDocument extends Item {
         _reference: this.serverRef,
         _path: this.serverRef.path,
         _itemType: 'objectDocument',
-        _createdDateTime: Date.now().toLocaleString(), //TODO даты сделать
+        _createdDateTime: new Date().toLocaleString(), //TODO даты сделать
         _author: this.user.email,
-        _lastModifiedDateTime: Date.now().toLocaleString(),
+        _lastModifiedDateTime: new Date().toLocaleString(),
         _lastModifiedAuthor: this.user.email,
         _version: 1,
       })

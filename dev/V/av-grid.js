@@ -57,7 +57,12 @@ export class AVGrid extends AVElement {
   }
 
   willUpdate(changedProps) {
-
+    if (changedProps.has('items') && !this.items) {
+      this.items = []
+    }
+    if (changedProps.has('columns') && !this.columns) {
+      this.columns = []
+    }
   }
 
   render() {

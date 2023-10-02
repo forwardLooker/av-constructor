@@ -32,7 +32,7 @@ export class AvClassConfigurator extends AVItem {
   }
 
   willUpdate(changedProps) {
-    if (changedProps.has('fieldDescriptors')) {
+    if (changedProps.has('fieldDescriptors') && this.fieldDescriptors) {
       this._newFieldDescriptors = this.deepClone(this.fieldDescriptors);
     }
   }

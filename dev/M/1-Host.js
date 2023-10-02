@@ -36,28 +36,21 @@ export class Host extends Item {
   auth;
   async getConfig() {
     const rootDomainsSnap = await this.db.collection('Domains').get();
-    // const asyncConfig = rootDomainsSnap.docs.map((doc, idx) => {
-    //   return async function() {
-    //     const configSnap = await doc.ref.collection('DatasetReducers').doc('config').get();
-    //     const docData = doc.data();
-    //     docData.config = configSnap.data();
-    //     return docData
-    //   }
-    // })
-    // const config = Promise.all(asyncConfig.map(f => f()));
-    // return config;
-
     const config = rootDomainsSnap.docs.map(doc => doc.data());
     return config;
   }
   getClass(clsRef) {
     const cls = new Class();
     cls.serverRef = clsRef;
+    cls.Host = this;
+    cls.id = clsRef.id;
     return cls
   }
   getDomain(dmnRef) {
     const domain = new Domain();
     domain.serverRef = dmnRef;
+    domain.Host = this;
+    domain.id = dmnRef.id;
     return domain
   }
 };

@@ -8,6 +8,8 @@ export class Class extends Item {
   itemType = 'class';
   data = {};
   serverRef;
+  Host;
+  id;
   eventNames = [
     'openNewObjectDocument'
   ];

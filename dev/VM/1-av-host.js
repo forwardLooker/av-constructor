@@ -151,6 +151,7 @@ export class AVHost extends AVItem {
             <av-tree
               .items="${this.config}"
               .onItemSelectFunc="${this._onTreeItemSelect}"
+              .onItemContextMenuFunc="${this._onTreeItemContextMenu}"
             ></av-tree>
         </div>
         <div id="view-port" class="col flex-1 margin-left-8 pad-8 border pos-rel">
@@ -165,30 +166,37 @@ export class AVHost extends AVItem {
 
   async firstUpdated() {
     const config = await this.Host.getConfig();
-    // const reduceSubDomainsAndClassesToItems = (items => {
-    //   items.forEach(i => {
-    //     const classes = i.classes || [];
-    //     const subDomains = i.subDomains || [];
-    //     i.items = [...subDomains, ...classes]
-    //     if (this.notEmpty(i.items)) {
-    //       reduceSubDomainsAndClassesToItems(i.items)
-    //     }
-    //   })
-    // })
-    // config.forEach(d => {
-    //   d.items = [...d.config.domains, ...d.config.classes]
-    //   d.items.forEach(i => {
-    //     const classes = i.classes || [];
-    //     const subDomains = i.subDomains || [];
-    //     i.items = [...subDomains, ...classes];
-    //     reduceSubDomainsAndClassesToItems(i.items);
-    //   })
-    // })
     this.config = config;
   }
 
   updated(changedProps) {
 
+  }
+
+  _onTreeItemContextMenu = async (e, item) => {
+    e.preventDefault();
+    if (item.itemType !== 'domain') {
+      return;
+    }
+    const menuChoice = await this.showContextMenu(e, ['Создать вложенный класс', 'Создать вложенный домен']);
+    if (menuChoice === 'Создать вложенный класс') {
+      const className = await this.showDialog({text: 'Введите название класса', input: 'name'});
+      if (className) {
+        const domain = this.Host.getDomain(item.reference);
+        await domain.createClass(className);
+        const config = await this.Host.getConfig();
+        this.config = config;
+      }
+      // if (className) {
+      //   if (this.notEmpty(item.items) && item.items.every(f => f.name !== fieldName)) {
+      //     item.items.push({name: fieldName, label: fieldName, dataType: 'string'})
+      //   }
+      //   if (this.isEmpty(item.items)) {
+      //     item.items = [{name: fieldName, label: fieldName, dataType: 'string'}];
+      //   }
+      //   this._newFieldDescriptors = [...this._newFieldDescriptors];
+      // }
+    }
   }
 
   async showContextMenu(e, menuItems) {
@@ -227,10 +235,10 @@ export class AVHost extends AVItem {
   _onTreeItemSelect = async (item) => {
     // console.log('onTreeItemSelect:', e);
     if (item.itemType === 'class') {
-      this.selectedTreeItem = this.Host.getClass(item._reference);
+      this.selectedTreeItem = this.Host.getClass(item.reference);
     }
     if (item.itemType === 'domain') {
-      this.selectedTreeItem = this.Host.getDomain(item._reference)
+      this.selectedTreeItem = this.Host.getDomain(item.reference)
     }
   }
 }
