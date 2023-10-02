@@ -32,15 +32,15 @@ export class ObjectDocument extends Item {
       this.serverRef = this.Class.serverRef.collection('ObjectDocuments').doc();
       await this.serverRef.set({
         ...this.data,
-        _id: this.serverRef.id,
-        _reference: this.serverRef,
-        _path: this.serverRef.path,
-        _itemType: 'objectDocument',
-        _createdDateTime: new Date().toLocaleString(), //TODO даты сделать
-        _author: this.user.email,
-        _lastModifiedDateTime: new Date().toLocaleString(),
-        _lastModifiedAuthor: this.user.email,
-        _version: 1,
+        id: this.serverRef.id,
+        reference: this.serverRef,
+        path: this.serverRef.path,
+        itemType: 'objectDocument',
+        createdDateTime: new Date().toLocaleString(), //TODO даты сделать
+        author: this.user.email,
+        lastModifiedDateTime: new Date().toLocaleString(),
+        lastModifiedAuthor: this.user.email,
+        version: 1,
       })
     } else {
       await this.serverRef.update(data);
