@@ -175,7 +175,7 @@ export class AVHost extends AVItem {
 
   _onTreeItemContextMenu = async (e, item) => {
     e.preventDefault();
-    if (item.itemType !== 'domain') {
+    if (item.itemType !== 'domain' || item.id === 'system') {
       return;
     }
     const menuChoice = await this.showContextMenu(e, ['Создать вложенный класс', 'Создать вложенный домен']);
