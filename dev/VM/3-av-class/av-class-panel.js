@@ -44,7 +44,7 @@ export class AvClassPanel extends AVItem {
   }
 
   willUpdate(changedProps) {
-    if (changedProps.has('classItem')) {
+    if (changedProps.has('classItem') && this.classItem) {
       this.currentViewName = this.classItem.defaultViewName;
       this.availableViewsList = this.classItem.getViewsList()
     }

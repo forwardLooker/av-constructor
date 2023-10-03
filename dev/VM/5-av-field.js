@@ -50,7 +50,9 @@ export class AVField extends AVItem {
     value: {},
     isLabelHidden: {type: Boolean},
     labelPosition: {enum: ['left', 'top']},
-    onInputFunc: {}
+    onInputFunc: {},
+
+    $objectDocument: {},
   };
 
   constructor() {
@@ -156,6 +158,21 @@ export class AVField extends AVItem {
           </div>
       `
     }
+    if (fieldItem.dataType === 'link') {
+      inputElement = html`
+          <div class="flex-1 row">
+              <input
+                class="input flex-1"
+                autocomplete="off"
+                .value="${value?.name}"
+                disabled
+              >
+              <av-button @click="${() => this.showClass(fieldItem.variant)}">
+                  Выбрать
+              </av-button>
+          </div>
+        `
+    }
     return inputElement;
   }
 
@@ -165,6 +182,13 @@ export class AVField extends AVItem {
 
   async updated(changedProps) {
 
+  }
+
+  showClass(name) {
+    this.$objectDocument.showClass(name, (objDocItem) => {
+      this.value = objDocItem.data;
+      this.onInputFunc(objDocItem.data);
+    });
   }
 
   _onInput = (e) => {

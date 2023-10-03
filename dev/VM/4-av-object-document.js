@@ -68,6 +68,16 @@ export class AVObjectDocument extends AVItem {
       .dragover-right {
         border-right: 4px solid black;
       }
+      
+      #class-in-obj {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        background: white;
+      }
     `;
   }
 
@@ -156,6 +166,7 @@ export class AVObjectDocument extends AVItem {
           </div>  
         </div>
       </div>
+      <av-class id="class-in-obj" hideOnfirstUpdate></av-class>
     `
   }
 
@@ -215,6 +226,7 @@ export class AVObjectDocument extends AVItem {
         .fieldItem="${fieldItem}"
         .value="${this._newData[fieldItem.name]}"
         .onInputFunc="${value => {this._newData[fieldItem.name] = value}}"
+        .$objectDocument="${this}"
       >
         ${this.if(this.designMode, html`
             <div class="field-overlay pos-abs row">
@@ -244,6 +256,17 @@ export class AVObjectDocument extends AVItem {
 
   updated(changedProps) {
 
+  }
+
+  async showClass(name, onObjectDocumentSelected) {
+    const classInObj = this.$('#class-in-obj');
+    classInObj.display();
+    classInObj.classItem = await this.Host.getClassByName(name);
+    classInObj.onObjectDocumentSelected = (objDocItem) => {
+      classInObj.hide();
+      onObjectDocumentSelected(objDocItem);
+      classInObj.selectedObjectDocument = null;
+    };
   }
 
   _startHorizontalResize(msDownEvent, fieldItem, idx, containerElement) {

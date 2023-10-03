@@ -53,4 +53,25 @@ export class Host extends Item {
     domain.id = dmnRef.id;
     return domain
   }
+
+  async getClassByName(name) {
+    const clsInDictAndDocsSnapArr = await Promise.all(
+      [
+        this.db.collection('Domains/workspace/Domains/dictionaries/Classes').where('name', '==', name).get(),
+        this.db.collection('Domains/workspace/Domains/documents/Classes').where('name', '==', name).get()
+      ]
+    );
+    const clsInDictAndDocsArr = clsInDictAndDocsSnapArr.map(snap => snap.docs.map(d => d.data()));
+    const clsInDict = clsInDictAndDocsArr[0];
+    const clsInDocs = clsInDictAndDocsArr[1];
+    const clsData = clsInDict[0] || clsInDocs[0];
+    let classItem;
+    if (clsData) {
+      classItem = new Class();
+      classItem.serverRef = clsData.reference;
+      classItem.Host = this;
+      classItem.id = clsData.reference.id
+    }
+    return classItem;
+  }
 };

@@ -34,6 +34,9 @@ export class AVClass extends AVItem {
     fieldDescriptors: {},
     objectDocuments:{},
     selectedObjectDocument: {},
+    onObjectDocumentSelected: {},
+
+    hideOnfirstUpdate: {type: Boolean}
   };
 
   constructor() {
@@ -43,10 +46,11 @@ export class AVClass extends AVItem {
     this.fieldDescriptors = [];
     this.objectDocuments = [];
     this.selectedObjectDocument = null;
+    this.onObjectDocumentSelected = this.noop;
   }
 
   willUpdate(changedProps) {
-    if (changedProps.has('classItem')) {
+    if (changedProps.has('classItem') && this.classItem) {
       this.currentViewName = this.classItem.defaultViewName
     }
   }
@@ -95,19 +99,22 @@ export class AVClass extends AVItem {
   }
 
   firstUpdated() {
-
+    if (this.hideOnfirstUpdate) {
+      this.hide();
+    }
   }
 
   async updated(changedProps) {
-    if (changedProps.has('classItem')) {
+    if (changedProps.has('classItem') && this.classItem) {
       this.fieldDescriptors = await this.classItem.getFieldDescriptors();
       this.objectDocuments = await this.classItem.getObjectDocuments();
     }
   }
 
   _onGridRowClick = async (rowItem) => {
-    //TODO инстанцирование объекта
-    this.selectedObjectDocument = await this.classItem.getObjectDocument(rowItem._reference);;
+    const objectDocumentItem = await this.classItem.getObjectDocument(rowItem.reference);
+    this.selectedObjectDocument = objectDocumentItem;
+    this.onObjectDocumentSelected(objectDocumentItem);
   }
 
   _onObjectSaved = async () => {

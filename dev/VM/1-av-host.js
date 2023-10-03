@@ -187,15 +187,6 @@ export class AVHost extends AVItem {
         const config = await this.Host.getConfig();
         this.config = config;
       }
-      // if (className) {
-      //   if (this.notEmpty(item.items) && item.items.every(f => f.name !== fieldName)) {
-      //     item.items.push({name: fieldName, label: fieldName, dataType: 'string'})
-      //   }
-      //   if (this.isEmpty(item.items)) {
-      //     item.items = [{name: fieldName, label: fieldName, dataType: 'string'}];
-      //   }
-      //   this._newFieldDescriptors = [...this._newFieldDescriptors];
-      // }
     }
   }
 
