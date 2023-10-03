@@ -44,6 +44,9 @@ export class AvClassConfigurator extends AVItem {
       {name: 'variant'},
       {name: 'valuesList'},
       {name: 'defaultValue'},
+      {name: 'isHidden', dataType: 'boolean'},
+      {name: 'isComputed', dataType: 'boolean'},
+      {name: 'computeFunction'}
     ];
     return html`
         <div class="col space-between flex-1">

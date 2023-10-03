@@ -165,7 +165,7 @@ export class AVField extends AVItem {
                 class="input flex-1"
                 autocomplete="off"
                 .value="${value?.name}"
-                disabled
+                readonly
               >
               <av-button @click="${() => this.showClass(fieldItem.variant)}">
                   Выбрать
