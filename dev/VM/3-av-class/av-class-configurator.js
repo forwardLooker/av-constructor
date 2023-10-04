@@ -17,6 +17,17 @@ export class AvClassConfigurator extends AVItem {
     `;
   }
 
+  prGridItems = [
+    {name: 'label'},
+    {name: 'dataType', dataType: 'string', variant: 'select', valuesList: 'string,number,boolean,array,object, link, include-link'},
+    {name: 'variant'},
+    {name: 'valuesList'},
+    {name: 'defaultValue'},
+    {name: 'isHidden', dataType: 'boolean'},
+    {name: 'isComputed', dataType: 'boolean'},
+    {name: 'computeFunction'}
+  ];
+
   static properties = {
     classItem: {},
     fieldDescriptors: {},
@@ -38,16 +49,6 @@ export class AvClassConfigurator extends AVItem {
   }
 
   render() {
-    const prGridItems = [
-      {name: 'label'},
-      {name: 'dataType', dataType: 'string', variant: 'select', valuesList: 'string,number,boolean,array,object, link, include-link'},
-      {name: 'variant'},
-      {name: 'valuesList'},
-      {name: 'defaultValue'},
-      {name: 'isHidden', dataType: 'boolean'},
-      {name: 'isComputed', dataType: 'boolean'},
-      {name: 'computeFunction'}
-    ];
     return html`
         <div class="col space-between flex-1">
           <div class="col flex-1">
@@ -65,7 +66,7 @@ export class AvClassConfigurator extends AVItem {
               <av-property-grid
                 class="flex-1 margin-left-8 border"
                 .inspectedItem="${this.selectedField}"
-                .propertyItems="${prGridItems}"
+                .propertyItems="${this.prGridItems}"
               ></av-property-grid>
             </div>
           </div>
