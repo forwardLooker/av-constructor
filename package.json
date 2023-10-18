@@ -3,12 +3,13 @@
   "private": true,
   "version": "0.0.1",
   "description": "Audio Visual",
-  "main": "index.js",
-  "type": "module",
   "babel": {
     "presets": [
       "@babel/preset-env",
       "@babel/preset-react"
+    ],
+    "plugins": [
+      "babel-plugin-styled-components"
     ]
   },
   "scripts": {
@@ -29,16 +30,17 @@
     "firebase": "^9.22.1",
     "lit": "^2.7.4",
     "react": "^16.4.2",
-    "react-dom": "^16.4.2"
+    "react-dom": "^16.4.2",
+    "styled-components": "^6.0.8"
   },
   "devDependencies": {
-    "@web/dev-server": "^0.1.31",
-    "@web/dev-server-legacy": "^1.0.0",
-
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "@web/dev-server": "^0.1.31",
+    "@web/dev-server-legacy": "^1.0.0",
     "babel-loader": "8.0.0",
+    "babel-plugin-styled-components": "^2.1.4",
     "css-loader": "^1.0.0",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^0.23.0",

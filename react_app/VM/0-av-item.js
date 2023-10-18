@@ -1,0 +1,45 @@
+import {AVElement} from "../V/0-av-element.js";
+
+export class AVItem extends AVElement {
+  // fromHost(propName) {
+  //   return {
+  //     _fieldFromHost: propName
+  //   }
+  // }
+  // constructor() {
+  //   super();
+  //   const name = Object.keys(this).find((fieldName) => this[fieldName]?._fieldFromHost?.length > 0);
+  //
+  // }
+
+  static Host() {};
+  get Host() { return AVItem.Host; }
+  get db() { return this.Host.db; }
+  get auth() { return this.Host.auth; }
+  get user() {
+    if (!this._userFromHost?.listenerHasSet) {
+      let listenerId = this.Host.addEventListener('user-state-changed', () => {
+        this._userFromHost.value = this.Host.user;
+        this.forceUpdate();
+      })
+      this._userFromHost = { value: this.Host.user, listenerHasSet: true, listenerId }
+    }
+    return this._userFromHost.value;
+  }
+  componentWillUnmount() {
+    // super.componentWillUnmount();
+    if (this._userFromHost?.listenerId) {
+      this.Host.removeEventListener(this._userFromHost.listenerId);
+      this._userFromHost = { value: null, listenerHasSet: false };
+    }
+  }
+
+  showDialog(...params) {
+    //TODO
+    return this.Host.$hostElement.showDialog(...params);
+  }
+
+  showContextMenu(...params) {
+    return this.Host.$hostElement.showContextMenu(...params)
+  }
+}

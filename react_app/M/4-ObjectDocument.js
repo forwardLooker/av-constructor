@@ -1,0 +1,52 @@
+import {Item} from './0-Item.js'
+
+export class ObjectDocument extends Item {
+  constructor() {
+    super();
+  }
+  itemType = 'objectDocument';
+  serverRef;
+  Class;
+  data = {};
+  innerFieldsInData = {
+    _itemType: 'objectDocument',
+    _id: '',
+    _createdDateTime: '',
+    _author: '',
+    _lastModifiedDateTime: '',
+    _lastModifiedAuthor: '',
+    _version: '',
+    _reference: '',
+    _path: ''
+  }
+  notExistOnServer;
+  async getData() {
+    const doc = await this.serverRef.get();
+    this.data = doc.data();
+  }
+  get designJson() {
+    return this.Class.objectDocumentDesignJson;
+  }
+  async saveData(data) {
+    if (this.notExistOnServer) {
+      this.serverRef = this.Class.serverRef.collection('ObjectDocuments').doc();
+      await this.serverRef.set({
+        ...this.data,
+        id: this.serverRef.id,
+        reference: this.serverRef,
+        path: this.serverRef.path,
+        itemType: 'objectDocument',
+        createdDateTime: new Date().toLocaleString(), //TODO даты сделать
+        author: this.user.email,
+        lastModifiedDateTime: new Date().toLocaleString(),
+        lastModifiedAuthor: this.user.email,
+        version: 1,
+      })
+    } else {
+      await this.serverRef.update(data);
+    }
+  }
+  async saveDesignJson(designJson) {
+    await this.Class.saveObjectDocumentDesignJson(designJson);
+  }
+};
