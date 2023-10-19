@@ -35,11 +35,7 @@ export class AVField extends AVItem {
       border: 1px solid black;
       border-radius: 6px;
       vertical-align: middle;
-
-      &:hover {
-        border-color: black;
-      }
-
+      
       height: 32px;
       padding: 5px 8px;
     `
