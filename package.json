@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "description": "Audio Visual",
+  "type": "module",
   "babel": {
     "presets": [
       "@babel/preset-env",

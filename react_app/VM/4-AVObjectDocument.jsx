@@ -92,7 +92,7 @@ export class AVObjectDocument extends AVItem {
   render() {
     return (
       <div className="flex-1 col font-apple">
-        <div className="flex-1 col space-between">
+        <div className="flex-1 col space-between line-height-1-5">
           <div>
             {this._renderVerticalLayout(this.state.designJson)}
           </div>
@@ -152,7 +152,7 @@ export class AVObjectDocument extends AVItem {
 
   _renderField(fieldItem, idx, containerElement) {
     return (
-      <div className="pos-rel margin-top-2" key={fieldItem.name || idx}>
+      <div className="flex-1 pos-rel margin-top-2" key={fieldItem.name || idx}>
         <AVField
           style={fieldItem.style}
           ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
@@ -250,8 +250,8 @@ export class AVObjectDocument extends AVItem {
         const newWidth = (resizeElemRect.width + pageXDiff) + 'px';
         console.log('newWidth:', newWidth);
         const forStyleWidthObj = {
-          'flex-basis': newWidth,
-          'flex-grow': 0,
+          flexBasis: newWidth,
+          flexGrow: 0
         }
         if (fieldItem.style) {
           fieldItem.style = {
@@ -269,8 +269,8 @@ export class AVObjectDocument extends AVItem {
         if (firstVerticalNotRightest) {
           const newVrtWidth = (resizeVrtElemRect.width + pageXDiff) + 'px';
           const forStyleVrtWidthObj = {
-            'flex-basis': newVrtWidth,
-            'flex-grow': 0,
+            flexBasis: newVrtWidth,
+            flexGrow: 0
           }
           if (firstVerticalNotRightest.style) {
             firstVerticalNotRightest.style = {
@@ -283,7 +283,7 @@ export class AVObjectDocument extends AVItem {
         }
       }
 
-      this.requestUpdate();
+      this.forceUpdate();
     }
   }
 
@@ -311,21 +311,23 @@ export class AVObjectDocument extends AVItem {
     return false;
   }
 
-  async _onDesignFieldContextMenu(e,fieldItem, idx, containerElement) {
+  async _onDesignFieldContextMenu(e, fieldItem, idx, containerElement) {
     const menuResult = await this.showContextMenu(e, ['Сгруппировать']);
   }
 
-  _dragstart(e, fieldItem, idx, container) {
-    this.designDragElementIndex = idx;
-    this.designDragElement = container.items[idx];
-    this.designDragContainer = container;
+  _dragstart = (e, fieldItem, idx, container) => {
+    this.setState({
+      designDragElementIndex: idx,
+      designDragElement: container.items[idx],
+      designDragContainer: container
+    })
   }
 
   _findFieldOverlay(e) {
     return e.target.closest('.field-overlay');
   }
 
-  _dragover(e) {
+  _dragover = (e) => {
     // console.log('dragover e:', e);
     e.preventDefault();
     const fieldOverlay = this._findFieldOverlay(e);
@@ -364,11 +366,11 @@ export class AVObjectDocument extends AVItem {
     }
   }
 
-  _dragleave(e) {
+  _dragleave = (e) => {
     this._removeDragBorder(e);
   }
 
-  _drop(e, fieldItem, dropElementIndex, dropContainer) {
+  _drop = (e, fieldItem, dropElementIndex, dropContainer) => {
     if (this.designDragElement === dropContainer.items[dropElementIndex]) {
       this._removeDragBorder(e);
       return;
@@ -445,7 +447,7 @@ export class AVObjectDocument extends AVItem {
     this._removeDragBorder(e);
   }
 
-  _removeDragBorder(e) {
+  _removeDragBorder = (e) => {
     const fieldOverlay = this._findFieldOverlay(e);
     fieldOverlay.classList.remove('dragover-top');
     fieldOverlay.classList.remove('dragover-bottom');

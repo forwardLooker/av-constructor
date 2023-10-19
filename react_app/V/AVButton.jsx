@@ -10,7 +10,6 @@ export class AVButton extends AVElement {
       color: white;
       background-color: black;
       border-color: black;
-      box-shadow: gray;
       transition: 80ms cubic-bezier(0.33, 1, 0.68, 1);
       transition-property: color,background-color,box-shadow,border-color;
       padding: 5px 16px;
