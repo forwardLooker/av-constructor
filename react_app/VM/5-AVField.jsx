@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {html, css, AVItem} from './0-av-item.js';
+import {AVItem} from './0-av-item.js';
 
 import '../V/av-text-input.js';
 import {AVLabel} from "../V/AVLabel.jsx";
@@ -60,7 +60,7 @@ export class AVField extends AVItem {
   render() {
     return (
       <div className={`flex-1 ${this.props.labelPosition === 'top'? 'column' : 'row'} align-center`}>
-        {!this.isLabelHidden && (
+        {!this.props.isLabelHidden && (
           <AVLabel>{this.props.fieldItem.label || this.props.fieldItem.name}</AVLabel>
         )}
         {this.renderInput(
@@ -144,7 +144,7 @@ export class AVField extends AVItem {
             columns={fieldItem.items}
             isTypedColumns
             isCellEditable
-            onDataInItemsChanged={this.props.onChangeFunc}
+            onDataInItemsChangedFunc={this.props.onChangeFunc}
             >
           </AVGrid>
         </div>

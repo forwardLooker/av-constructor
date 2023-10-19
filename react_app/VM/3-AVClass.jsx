@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {html, css, AVItem} from './0-av-item.js';
+import {AVItem} from './0-av-item.js';
 
 import {AVClassPanel} from "./3-av-class/AVClassPanel.jsx";
 import {AVGrid} from "../V/AVGrid.jsx";

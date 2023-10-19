@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {AVElement, css, html} from './0-av-element.js';
+import {AVField} from "../VM/5-AVField.jsx";
 
 export class AVGrid extends AVElement {
   styles = {
@@ -61,7 +62,14 @@ export class AVGrid extends AVElement {
   _renderCellContent(item, column) {
     if (this.props.isTypedColumns && this.props.isCellEditable) {
       return (
-        <div>av-field</div>
+        <AVField
+         value={item[column.name]}
+         fieldItem={column}
+         isLabelHidden
+         onChangeFunc={value => {
+          item[column.name] = value;
+          this.onDataInItemsChangedFunc(this.props.items, item, column);
+         }}></AVField>
       )
     }
     const value = item[column.name];
