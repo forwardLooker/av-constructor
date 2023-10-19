@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {AVItem} from './0-av-item.js';
+import {AVItem} from './0-AVItem.js';
 
 import {AVClass} from './3-AVClass.jsx';
 import {AVField} from './5-AVField.jsx';

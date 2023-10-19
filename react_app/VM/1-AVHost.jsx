@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {AVItem} from './0-av-item.js';
+import {AVItem} from './0-AVItem.js';
 
 import {AVAuth} from "./1-av-host/AVAuth.jsx";
 import {AVTree} from '../V/AVTree.jsx'

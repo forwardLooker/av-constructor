@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {AVItem} from './0-av-item.js';
+import {AVItem} from './0-AVItem.js';
 
 import '../V/av-text-input.js';
 import {AVLabel} from "../V/AVLabel.jsx";

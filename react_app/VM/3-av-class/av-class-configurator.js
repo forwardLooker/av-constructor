@@ -1,4 +1,4 @@
-import {html, css, AVItem} from '../0-av-item.js';
+import {html, css, AVItem} from '../0-AVItem.js';
 
 import '../../V/AVTree.jsx';
 
