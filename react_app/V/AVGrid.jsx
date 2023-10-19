@@ -68,7 +68,7 @@ export class AVGrid extends AVElement {
          isLabelHidden
          onChangeFunc={value => {
           item[column.name] = value;
-          this.onDataInItemsChangedFunc(this.props.items, item, column);
+          this.props.onDataInItemsChangedFunc(this.props.items, item, column);
          }}></AVField>
       )
     }
