@@ -4,9 +4,11 @@ import {AVItem} from './0-av-item.js';
 
 import {AVAuth} from "./1-av-host/AVAuth.jsx";
 import {AVTree} from '../V/AVTree.jsx'
+import {AVDomain} from './2-AVDomain.jsx';
+import {AVClass} from './3-AVClass.jsx';
 
-import './3-av-class.js';
-import './2-av-domain.js';
+import {AVButton} from "../V/AVButton.jsx";
+
 
 import '../V/av-text-header.js';
 import '../V/av-label.js';
@@ -21,7 +23,7 @@ const css = () => {};
 const html = () => {};
 
 export class AVHost extends AVItem {
-  static styles = {
+  styles = {
     header: this.styled.div`
       padding: 0 1.5em;
       box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
@@ -29,22 +31,11 @@ export class AVHost extends AVItem {
     leftSidebar: this.styled.div`
       width: 20%;
     `,
-    dialogContainer: this.styled.div`
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background-color: rgba(0,0,0,0.45);
-      z-index: 1000;
-    `,
-    dialogForm: this.styled.div`
-      background: white;
-    `
   };
 
   state = {
     config: [],
-    selectedTreeItem: {},
+    selectedTreeItem: null,
     dialogShowed: false,
     dialogText: '',
     dialogInputLabel: '',
@@ -61,21 +52,21 @@ export class AVHost extends AVItem {
   render() {
     return (
         <div className="flex-1 col">
-          <AVHost.styles.header className="row space-between">
+          <this.styles.header className="row space-between">
             <h3>Хост тест</h3>
             {this.user && (
               <div className="col align-center justify-center">
                 <div>{this.user?.email}</div>
-                <button onClick={() => this.auth.signOut()}>Выйти</button>
+                <AVButton onClick={() => this.auth.signOut()}>Выйти</AVButton>
               </div>
             )}
-          </AVHost.styles.header>
+          </this.styles.header>
           <div className="flex-1 row pad-8 border">
             {this.user ?  this._renderMain() : <AVAuth></AVAuth>}
           </div>
           {this.state.dialogShowed && (
-            <AVHost.styles.dialogContainer className="pos-fixed row justify-center align-center">
-              <AVHost.styles.dialogForm>
+            <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000 bg-transparent">
+              <div className="bg-white">
                 <div>{this.state.dialogText}</div>
                 {this.state.dialogInputLabel && (
                   <div>
@@ -84,11 +75,11 @@ export class AVHost extends AVItem {
                   </div>
                 )}
                 <div>
-                  <button onClick={() => {this.fire('dialog-submitted')}}>OK</button>
-                  <button onClick={() => {this.fire('dialog-closed')}}>Отмена</button>
+                  <AVButton onClick={() => {this.fire('dialog-submitted')}}>OK</AVButton>
+                  <AVButton onClick={() => {this.fire('dialog-closed')}}>Отмена</AVButton>
                 </div>
-              </AVHost.styles.dialogForm>
-            </AVHost.styles.dialogContainer>
+              </div>
+            </div>
           )}
           <div>av-context-menu</div>
         </div>
@@ -98,16 +89,18 @@ export class AVHost extends AVItem {
   _renderMain() {
     return (
       <div className="flex-1 row">
-        <AVHost.styles.leftSidebar id="left-sidebar" className="col pad-8 border">
+        <this.styles.leftSidebar className="col pad-8 border">
           <AVTree
             items={this.state.config}
             onItemSelectFunc={this._onTreeItemSelect}
             onItemContextMenuFunc={this._onTreeItemContextMenu}
           ></AVTree>
-        </AVHost.styles.leftSidebar>
+        </this.styles.leftSidebar>
         <div id="view-port" className="pos-rel flex-1 col margin-left-8 pad-8 border scroll-y">
-          {this.selectedTreeItem?.itemType === 'class' ? (<div>av-class</div>) : ''}
-          {this.selectedTreeItem?.itemType === 'domain' ? (<div>av-domain</div>)  : ''}
+          {this.state.selectedTreeItem?.itemType === 'class' ?
+            (<AVClass classItem={this.state.selectedTreeItem}></AVClass>) : ''}
+          {this.state.selectedTreeItem?.itemType === 'domain' ?
+            (<AVDomain domainItem={this.state.selectedTreeItem}></AVDomain>)  : ''}
         </div>
       </div>
     )

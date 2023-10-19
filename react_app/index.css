@@ -85,6 +85,12 @@
 .border {
     border: 0.5px solid black;
 }
+.border-2-bot {
+    border-bottom: 2px solid black;
+}
+.margin-left-2 {
+    margin-left: 2px;
+}
 .margin-left-4 {
     margin-left: 4px;
 }
@@ -111,4 +117,31 @@
 }
 .scroll-y {
     overflow-y: scroll;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+.rotate-90 {
+    transform: rotate(90deg);
+}
+.z-index-1000 {
+    z-index: 1000;
+}
+.trbl-0 {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+.right-0 {
+    right: 0;
+}
+.bottom-0 {
+    bottom: 0;
+}
+.bg-white {
+    background: white;
+}
+.bg-transparent {
+    background-color: rgba(0,0,0,0.45);
 }

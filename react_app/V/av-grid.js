@@ -1,6 +1,12 @@
 import {AVElement, css, html} from './0-av-element.js';
 
 export class AVGrid extends AVElement {
+  static defaultProps = {
+
+  }
+}
+
+export class AVGrid2 extends AVElement {
   static get styles() {
     return css`
       :host {

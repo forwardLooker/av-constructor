@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 export class AVElement extends React.PureComponent {
   static styled = styled;
+  styled = styled;
   static noop = () => {};
   noop = () => {};
   if = (condition, element) => condition ? element : '';

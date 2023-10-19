@@ -2,8 +2,6 @@ import {html, css, AVItem} from './0-av-item.js';
 
 import './5-av-field.js';
 
-import '../V/av-button.js';
-
 export class AVObjectDocument extends AVItem {
   static get styles() {
     return css`
