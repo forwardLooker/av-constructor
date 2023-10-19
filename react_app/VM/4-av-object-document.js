@@ -2,10 +2,195 @@ import React from 'react';
 
 import {html, css, AVItem} from './0-av-item.js';
 
+import {AVClass} from './3-AVClass.jsx';
+
+import {AVButton} from "../V/AVButton.jsx";
+
 import './5-av-field.js';
 
 export class AVObjectDocument extends AVItem {
+  static defaultProps = {
+    fieldDescriptors: [],
+    objectDocument: null,
+    onSavedFunc: this.noop,
+    onCloseFunc: this.noop,
+  }
+  state = {
+    _newData: this.props.objectDocument.data,
 
+    designMode: false,
+    designJson: null,
+    designDragElementIndex: null,
+    designDragElement: null,
+    designDragContainer: null,
+    designDropSide: 'none', // enum: ['top', 'bottom', 'left', 'right', 'none']
+  }
+
+  constructor(props) {
+    super(props);
+
+    this._prepareDesignJson();
+  }
+
+  _prepareDesignJson = () => {
+    if (this.props.objectDocument) {
+      if (this.props.objectDocument.designJson) {
+        const designJson = this.deepClone(this.props.objectDocument.designJson);
+        const fieldDescriptors = this.deepClone(this.props.fieldDescriptors);
+
+        // upgrade metadata
+        fieldDescriptors.forEach(fD => {
+          const fieldInOrigItems = designJson.originalItems.find(origItem => origItem.name === fD.name);
+          if (fieldInOrigItems) {
+            if (!this.isDeepEqual(fD, fieldInOrigItems)) {
+              const fieldInDesign = this.findDeepObjInItemsBy({name: fD.name}, designJson);
+              if (fieldInDesign) {
+                Object.keys(fD).forEach(prop => {
+                  fieldInDesign[prop] = fD[prop];
+                  fieldInOrigItems[prop] = fD[prop];
+                });
+              }
+            }
+          }
+        })
+        // find added and deleted
+        const addedItems = this._findNewFieldDescriptors(fieldDescriptors, designJson.originalItems);
+        const deletedItems = this._findDeletedFieldDescriptors(fieldDescriptors, designJson.originalItems);
+        // add
+        designJson.items = designJson.items.concat(addedItems);
+        designJson.originalItems = designJson.originalItems.concat(addedItems);
+        // delete
+        this._addContainerReference(designJson);
+        this._removeDeletedItems(designJson, deletedItems); // in designJson.items
+        deletedItems.forEach(delItem => { // in designJson.originalItems
+          const forDelIndexInOrigItems = designJson.originalItems.findIndex(origItem => origItem.name === delItem.name);
+          designJson.originalItems.splice(forDelIndexInOrigItems, 1);
+        })
+        this.setState({designJson});
+      } else {
+        const designJson = {
+          viewItemType: 'vertical-layout',
+          items: this.deepClone(this.props.fieldDescriptors),
+          originalItems: this.deepClone(this.props.fieldDescriptors)
+        };
+        this.setState({designJson})
+      }
+    }
+  }
+
+  render() {
+    return (
+      <div className="flex-1 col font-apple">
+        <div className="col space-between height-100">
+          <div>
+            {this._renderVerticalLayout(this.state.designJson)}
+          </div>
+          <div className="row justify-end">
+            <div>
+              <AVButton onClick={this._saveAndClose}>OK</AVButton>
+              <AVButton onClick={this.onCloseFunc}>Отмена</AVButton>
+              <AVButton onClick={this._toggleDesign}>Дизайнер</AVButton>
+            </div>
+          </div>
+        </div>
+        <AVClass hideOnDidMount></AVClass>
+      </div>
+    )
+  }
+
+  _renderVerticalLayout(vrtLayoutItem) {
+    return (
+      <div
+        className="vertical-layout flex-1 col"
+        style={vrtLayoutItem.style}
+        ref={vrtDomElement => vrtLayoutItem.domElement = vrtDomElement}
+      >
+        {vrtLayoutItem.items.map((vrtItem, vrtIndex) => {
+          if (vrtItem.viewItemType === 'horizontal-layout') {
+            return (
+              <div
+                className="horizontal-layout flex-1 row"
+                key={vrtIndex}
+                ref={hrzDomElement => vrtItem.domElement = hrzDomElement}
+              >
+                {vrtItem.items.map((hrzItem, hrzIndex) => {
+                  if (hrzItem.viewItemType === 'vertical-layout') {
+                    return this._renderVerticalLayout(hrzItem);
+                  } else {
+                    return this._renderField(hrzItem, hrzIndex, vrtItem)
+                  }
+                })}
+              </div>
+            )
+          }
+          if (vrtItem.viewItemType === 'field' || !vrtItem.viewItemType) {
+            return this._renderField(vrtItem, vrtIndex, vrtLayoutItem)
+          }
+        })}
+      </div>
+    )
+  }
+
+  _removeDomElementReference = (layoutElememt) => {
+    delete layoutElememt.domElement;
+    if (layoutElememt.items) {
+      layoutElememt.items.forEach(i => {
+        this._removeDomElementReference(i);
+      })
+    }
+  }
+
+  _addContainerReference = (layoutElememt) => {
+    layoutElememt.items.forEach((i) => {
+      if (i.viewItemType && i.viewItemType !== 'field') {
+        i.container = layoutElememt;
+        this._addContainerReference(i)
+      }
+    })
+  }
+  _removeContainerReference = (layoutElement) => {
+    layoutElement.items.forEach(i => {
+      if (i.viewItemType && i.viewItemType !== 'field') {
+        if (i.container) {
+          delete i.container;
+        }
+        this._removeContainerReference(i)
+      }
+    })
+  }
+  _removeEmptyContainers = (cont) => {
+    if (cont.items.length === 0 && cont.container) {
+      const DragContIndex = cont.container.items.findIndex(i => i === cont);
+      cont.container.items.splice(DragContIndex, 1)
+      this._removeEmptyContainers(cont.container)
+    }
+  }
+
+  _findNewFieldDescriptors = (fields, fieldsInDesign) => {
+    return fields.filter(f => fieldsInDesign.every(fInDesign => fInDesign.name !== f.name))
+  }
+
+  _findDeletedFieldDescriptors = (fields, fieldsInDesign) => {
+    return fieldsInDesign.filter(fInDesign => fields.every(f => f.name !== fInDesign.name))
+  }
+
+  _removeDeletedItems = (designJson, deletedItems) => {
+    deletedItems.forEach(delItem => {
+      this._removeDeletedItemInContainer(delItem, designJson);
+    })
+  }
+  _removeDeletedItemInContainer = (delItem, containerEl) => {
+    const forDelItemIndex = containerEl.items.findIndex(i => i.name === delItem.name);
+    if (forDelItemIndex > -1) {
+      containerEl.items.splice(forDelItemIndex, 1);
+      this._removeEmptyContainers(containerEl);
+    } else {
+      const containerElements = containerEl.items.filter(i => i.viewItemType && i.viewItemType !== 'field');
+      containerElements.forEach(contEl => {
+        this._removeDeletedItemInContainer(delItem, contEl)
+      })
+    }
+  }
 }
 
 export class AVObjectDocument2 extends AVItem {
