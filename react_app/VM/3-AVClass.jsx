@@ -17,11 +17,12 @@ export class AVClass extends AVItem {
     hideOnDidMount: false
   }
   state = {
-    currentViewName: '',
+    currentViewName: this.props.classItem.defaultViewName,
     fieldDescriptors: [],
     objectDocuments: [],
     selectedObjectDocument: null,
   }
+
   render() {
     return (
       <div className="flex-1 col">
@@ -55,11 +56,7 @@ export class AVClass extends AVItem {
 
   componentDidMount() {
     if (this.props.hideOnDidMount) {
-      this.hide();
-    }
-
-    if (this.props.classItem) {
-      this.setState({currentViewName: this.props.classItem.defaultViewName})
+      this.hide(); // TODO у реакт компонента нету classList
     }
   }
 

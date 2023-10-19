@@ -11,10 +11,11 @@ export class AVClassPanel extends AVItem {
     onClassViewChangedFunc: this.noop
   }
   state = {
-    currentViewName: '',
-    availableViewsList: [],
+    currentViewName: this.props.classItem.defaultViewName,
+    availableViewsList: this.props.classItem.getViewsList(),
     viewsDropdownOpened: false,
   }
+
   render() {
     return (
       <div className="row border-2-bot">
@@ -42,14 +43,6 @@ export class AVClassPanel extends AVItem {
         <AVButton onClick={this.props.onCreateFunc}>Создать</AVButton>
       </div>
     )
-  }
-
-  componentDidMount() {
-    if (this.props.classItem) {
-      const currentViewName = this.props.classItem.defaultViewName;
-      const availableViewsList = this.props.classItem.getViewsList();
-      this.setState({currentViewName, availableViewsList});
-    }
   }
 
   componentDidUpdate(prevProps) {
