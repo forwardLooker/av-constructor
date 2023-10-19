@@ -163,7 +163,7 @@ export class AVObjectDocument extends AVItem {
           $objectDocument={this}
         >
           {this.designMode && (
-            <div className="field-overlay pos-abs row">
+            <div className="field-overlay pos-abs trbl-0 row border-1 bg-transparent-25">
               <div className="flex-1"
                    draggable="true"
                    onDragStart={(e) => this._dragstart(e, fieldItem, idx, containerElement)}
@@ -192,6 +192,292 @@ export class AVObjectDocument extends AVItem {
         onObjectDocumentSelected(objDocItem);
       }
     })
+  }
+
+  _startHorizontalResize(msDownEvent, fieldItem, idx, containerElement) {
+    msDownEvent.preventDefault();
+    // запрет на изменение ширины крайнего правого элемента
+    if ((!containerElement.items[idx].viewItemType ||
+        containerElement.items[idx].viewItemType === 'field') &&
+      !containerElement.container
+    ) {
+      return;
+    }
+    if (containerElement.viewItemType === 'horizontal-layout' &&
+      idx === containerElement.items.length - 1
+    ) {
+      if (this._isHorizontalContainerFarRightInDesign(containerElement)) {
+        return;
+      }
+    }
+    if (
+      containerElement.viewItemType === 'vertical-layout' &&
+      containerElement.container.items.findIndex(i => i === containerElement) === containerElement.container.items.length - 1
+    ) {
+      if (this._isHorizontalContainerFarRightInDesign(containerElement.container)) {
+        return;
+      }
+    }
+
+    const startResizePageX = msDownEvent.pageX;
+    const resizeElem = fieldItem.domElement;
+    const resizeElemRect = resizeElem.getBoundingClientRect(); // долгая операция внутри моусмува не вариант использовать
+
+    let firstVerticalNotRightest;
+    let resizeVrtElemRect;
+    if (
+      (containerElement.viewItemType === 'horizontal-layout' && idx === containerElement.items.length - 1) ||
+      containerElement.viewItemType === 'vertical-layout'
+    ) {
+      const firstVertical = containerElement.viewItemType === 'vertical-layout' ? containerElement : containerElement.container;
+      firstVerticalNotRightest = this._findFirstVerticalNotRightestInHorizontal(firstVertical);
+      if (firstVerticalNotRightest) {
+        resizeVrtElemRect = firstVerticalNotRightest.domElement.getBoundingClientRect();
+      }
+    }
+
+    window.document.onmouseup = upEv => {
+      upEv.preventDefault();
+      window.document.onmousemove = null;
+      window.document.onmouseup = null;
+    }
+    // TODO убрать себя если ближайший вертикальный который не крайний правый
+    window.document.onmousemove = moveEv => {
+      moveEv.preventDefault();
+      const pageXDiff = moveEv.pageX - startResizePageX;
+
+      if (containerElement.viewItemType === 'horizontal-layout' && idx !== containerElement.items.length - 1) {
+        const newWidth = (resizeElemRect.width + pageXDiff) + 'px';
+        console.log('newWidth:', newWidth);
+        const forStyleWidthObj = {
+          'flex-basis': newWidth,
+          'flex-grow': 0,
+        }
+        if (fieldItem.style) {
+          fieldItem.style = {
+            ...fieldItem.style,
+            ...forStyleWidthObj
+          }
+        } else {
+          fieldItem.style = forStyleWidthObj;
+        }
+      }
+      if (
+        (containerElement.viewItemType === 'horizontal-layout' && idx === containerElement.items.length - 1) ||
+        containerElement.viewItemType === 'vertical-layout'
+      ) {
+        if (firstVerticalNotRightest) {
+          const newVrtWidth = (resizeVrtElemRect.width + pageXDiff) + 'px';
+          const forStyleVrtWidthObj = {
+            'flex-basis': newVrtWidth,
+            'flex-grow': 0,
+          }
+          if (firstVerticalNotRightest.style) {
+            firstVerticalNotRightest.style = {
+              ...firstVerticalNotRightest.style,
+              ...forStyleVrtWidthObj
+            }
+          } else {
+            firstVerticalNotRightest.style = forStyleVrtWidthObj;
+          }
+        }
+      }
+
+      this.requestUpdate();
+    }
+  }
+
+  _findFirstVerticalNotRightestInHorizontal(firstVertical) {
+    if (!firstVertical.container) {
+      return false;
+    }
+    if (firstVertical.container.items.findIndex(i => i === firstVertical) === firstVertical.container.items.length - 1) {
+      return this._findFirstVerticalNotRightestInHorizontal(firstVertical.container.container);
+    } else {
+      return firstVertical;
+    }
+  }
+
+  _isHorizontalContainerFarRightInDesign(containerElement) {
+    if (!containerElement.container.container) {
+      return true;
+    }
+    if (
+      containerElement.container.container.items.findIndex(i => i === containerElement.container) ===
+      containerElement.container.container.items.length - 1
+    ) {
+      return this._isHorizontalContainerFarRightInDesign(containerElement.container.container)
+    }
+    return false;
+  }
+
+  async _onDesignFieldContextMenu(e,fieldItem, idx, containerElement) {
+    const menuResult = await this.showContextMenu(e, ['Сгруппировать']);
+  }
+
+  _dragstart(e, fieldItem, idx, container) {
+    this.designDragElementIndex = idx;
+    this.designDragElement = container.items[idx];
+    this.designDragContainer = container;
+  }
+
+  _findFieldOverlay(e) {
+    return e.target.closest('.field-overlay');
+  }
+
+  _dragover(e) {
+    // console.log('dragover e:', e);
+    e.preventDefault();
+    const fieldOverlay = this._findFieldOverlay(e);
+    const elemRect = fieldOverlay.getBoundingClientRect();
+
+    if (elemRect.left + elemRect.width/10 > e.pageX) {
+      fieldOverlay.classList.remove('dragover-top');
+      fieldOverlay.classList.remove('dragover-bottom');
+      fieldOverlay.classList.add('dragover-left');
+      this.designDropSide = 'left';
+    } else {
+      fieldOverlay.classList.remove('dragover-left');
+
+      if (elemRect.right - elemRect.width/10 <= e.pageX) {
+        fieldOverlay.classList.remove('dragover-top');
+        fieldOverlay.classList.remove('dragover-bottom');
+        fieldOverlay.classList.add('dragover-right');
+        this.designDropSide = 'right';
+      } else {
+        fieldOverlay.classList.remove('dragover-right');
+
+        if (elemRect.top + elemRect.height/2 > e.pageY) {
+          fieldOverlay.classList.add('dragover-top');
+          this.designDropSide = 'top';
+        } else {
+          fieldOverlay.classList.remove('dragover-top');
+        }
+
+        if (elemRect.top + elemRect.height/2 <= e.pageY) {
+          fieldOverlay.classList.add('dragover-bottom');
+          this.designDropSide = 'bottom'
+        } else {
+          fieldOverlay.classList.remove('dragover-bottom');
+        }
+      }
+    }
+  }
+
+  _dragleave(e) {
+    this._removeDragBorder(e);
+  }
+
+  _drop(e, fieldItem, dropElementIndex, dropContainer) {
+    if (this.designDragElement === dropContainer.items[dropElementIndex]) {
+      this._removeDragBorder(e);
+      return;
+    }
+
+    if (this.designDragElement.style) {
+      delete this.designDragElement.style['flex-basis'];
+      delete this.designDragElement.style['flex-grow'];
+    }
+
+    // const newDesign = [...this.designJson];
+    let insertIndex = dropElementIndex;
+    let cutIndex = this.designDragElementIndex;
+
+    if (this.designDropSide === 'left' || this.designDropSide === 'right') {
+      if (dropContainer.viewItemType === 'vertical-layout') {
+        if (this.designDropSide === 'left') {
+          dropContainer.items[dropElementIndex] = {container: dropContainer, viewItemType: 'horizontal-layout', items: [this.designDragElement, dropContainer.items[dropElementIndex]]}
+        }
+        if (this.designDropSide === 'right') {
+          dropContainer.items[dropElementIndex] = {container: dropContainer, viewItemType: 'horizontal-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement]}
+        }
+      } else if (dropContainer.viewItemType === 'horizontal-layout') {
+        if (this.designDropSide === 'left') {
+          if (dropContainer === this.designDragContainer) {
+            cutIndex = cutIndex + 1;
+          }
+        }
+        if (this.designDropSide === 'right') {
+          insertIndex = insertIndex + 1;
+        }
+        dropContainer.items.splice(insertIndex, 0, this.designDragElement);
+      }
+    }
+
+    if (this.designDropSide === 'top' || this.designDropSide === 'bottom') {
+      if (dropContainer.viewItemType === 'horizontal-layout') {
+        let vrtElement;
+        if (this.designDropSide === 'top') {
+          vrtElement = {container: dropContainer, viewItemType: 'vertical-layout', items: [this.designDragElement, dropContainer.items[dropElementIndex]]}
+        }
+        if (this.designDropSide === 'bottom') {
+          vrtElement = {container: dropContainer, viewItemType: 'vertical-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement ]}
+        }
+
+        if (dropContainer.items[dropElementIndex].style) {
+          vrtElement.style = {
+            'flex-basis': dropContainer.items[dropElementIndex].style['flex-basis'],
+            'flex-grow': dropContainer.items[dropElementIndex].style['flex-grow'],
+          }
+          delete dropContainer.items[dropElementIndex].style['flex-basis'];
+          delete dropContainer.items[dropElementIndex].style['flex-grow'];
+        }
+
+        dropContainer.items.splice(insertIndex, 1)
+        dropContainer.items.splice(insertIndex, 0, vrtElement);
+
+      } else if (dropContainer.viewItemType === 'vertical-layout') {
+        if (this.designDropSide === 'bottom') {
+          insertIndex = insertIndex + 1;
+        }
+        if (dropContainer === this.designDragContainer && this.designDragElementIndex > dropElementIndex) {
+          cutIndex = cutIndex + 1;
+        }
+        dropContainer.items.splice(insertIndex, 0, this.designDragElement);
+      }
+    }
+
+    this.designDragContainer.items.splice(cutIndex, 1);
+    this._removeEmptyContainers(this.designDragContainer);
+
+    this.requestUpdate();
+    // this.designJson = newDesign;
+    this._removeDragBorder(e);
+  }
+
+  _removeDragBorder(e) {
+    const fieldOverlay = this._findFieldOverlay(e);
+    fieldOverlay.classList.remove('dragover-top');
+    fieldOverlay.classList.remove('dragover-bottom');
+    fieldOverlay.classList.remove('dragover-left');
+    fieldOverlay.classList.remove('dragover-right');
+  }
+
+  _saveAndClose = async () => {
+    await this.props.objectDocument.saveData(this.state._newData);
+    this.props.onSavedFunc();
+    this.props.onCloseFunc();
+  }
+
+  _toggleDesign = async () => {
+    this.setState(
+      state => ({designMode: !state.designMode}),
+      async () => {
+        if (this.state.designMode === false) {
+          const saveDesignFlag = await this.showDialog({text: 'Сохранить дизайн?'});
+          if (saveDesignFlag) {
+            return this._saveDesign();
+          }
+        }
+      }
+    );
+  }
+
+  async _saveDesign() {
+    this._removeContainerReference(this.state.designJson);
+    this._removeDomElementReference(this.state.designJson);
+    await this.props.objectDocument.saveDesignJson(this.deepClone(this.state.designJson));
+    this._addContainerReference(this.state.designJson);
   }
 
   _removeDomElementReference = (layoutElememt) => {

@@ -64,7 +64,7 @@ export class AVHost extends AVItem {
             {this.user ?  this._renderMain() : <AVAuth></AVAuth>}
           </div>
           {this.state.dialogShowed && (
-            <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000 bg-transparent">
+            <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000 bg-transparent-45">
               <div className="bg-white">
                 <div>{this.state.dialogText}</div>
                 {this.state.dialogInputLabel && (

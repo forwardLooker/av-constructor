@@ -84,6 +84,9 @@
 .border {
     border: 0.5px solid black;
 }
+.border-1 {
+    border: 1px solid black;
+}
 .border-2-bot {
     border-bottom: 2px solid black;
 }
@@ -150,8 +153,11 @@
 .bg-white {
     background: white;
 }
-.bg-transparent {
+.bg-transparent-45 {
     background-color: rgba(0,0,0,0.45);
+}
+.bg-transparent-25 {
+    background-color: rgba(0,0,0,0.25);
 }
 .text-center {
     text-align: center;
