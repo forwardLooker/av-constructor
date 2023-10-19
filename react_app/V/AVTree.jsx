@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {AVElement, css, html} from './0-AVElement.js';
+import {AVElement} from './0-AVElement.js';
 
 export class AVTree extends AVElement {
   static styles = {

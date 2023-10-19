@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {AVItem, css, html} from '../0-AVItem.js';
+import {AVItem} from '../0-AVItem.js';
 
 import './AVAuth.css';
 
