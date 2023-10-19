@@ -157,7 +157,7 @@ export class AVField extends AVItem {
             className="flex-1"
             autoComplete="off"
             value={value?.name}
-            readonly
+            readOnly
           ></this.styles.input>
           <AVButton onClick={() => this.showClass(fieldItem.variant)}>
             Выбрать
@@ -180,7 +180,7 @@ export class AVField extends AVItem {
   }
 
   showClass = (name) => {
-    this.$objectDocument.showClass(name, (objDocItem) => {
+    this.props.$objectDocument.showClass(name, (objDocItem) => {
       this.setState({_value: objDocItem.data})
       this.props.onChangeFunc(objDocItem.data);
     });

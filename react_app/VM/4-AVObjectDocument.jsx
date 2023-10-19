@@ -182,7 +182,7 @@ export class AVObjectDocument extends AVItem {
     )
   }
 
-  async showClass(name, onObjectDocumentSelected) {
+  showClass = async (name, onObjectDocumentSelected) => {
     const openedClassItem = await this.Host.getClassByName(name);
     this.setState({
       isClassItemOpened: true,
