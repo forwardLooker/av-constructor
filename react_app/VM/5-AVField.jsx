@@ -20,10 +20,6 @@ export class AVField extends AVItem {
       border-radius: 6px;
       vertical-align: middle;
       
-      &:hover {
-        border-color: black;
-      }
-      
       &.input-number {
         text-align: end;
       }
@@ -173,15 +169,17 @@ export class AVField extends AVItem {
   }
 
   _onChange = (e) => {
+    // e.persist();
+    // console.log('onChange e', e);
     let value = e.target.value;
-    if (this.fieldItem?.dataType === 'boolean') {
+    if (e.target.type === 'checkbox') {
       value = e.target.checked;
     }
     this.setState({_value: value})
     this.props.onChangeFunc(value, e)
   }
 
-  showClass(name) {
+  showClass = (name) => {
     this.$objectDocument.showClass(name, (objDocItem) => {
       this.setState({_value: objDocItem.data})
       this.props.onChangeFunc(objDocItem.data);
