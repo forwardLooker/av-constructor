@@ -9,7 +9,7 @@ import {AVButton} from "../V/AVButton.jsx";
 
 
 export class AVObjectDocument extends AVItem {
-  style = {
+  styles = {
     horizontalResizer: this.styled.div`
       width: 4px;
       height: 100%;
@@ -162,7 +162,7 @@ export class AVObjectDocument extends AVItem {
           labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
           $objectDocument={this}
         >
-          {this.designMode && (
+          {this.state.designMode && (
             <div className="field-overlay pos-abs trbl-0 row border-1 bg-transparent-25">
               <div className="flex-1"
                    draggable="true"
