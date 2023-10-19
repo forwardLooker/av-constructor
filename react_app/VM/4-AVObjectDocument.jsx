@@ -194,7 +194,7 @@ export class AVObjectDocument extends AVItem {
     })
   }
 
-  _startHorizontalResize(msDownEvent, fieldItem, idx, containerElement) {
+  _startHorizontalResize = (msDownEvent, fieldItem, idx, containerElement) => {
     msDownEvent.preventDefault();
     // запрет на изменение ширины крайнего правого элемента
     if ((!containerElement.items[idx].viewItemType ||
@@ -287,7 +287,7 @@ export class AVObjectDocument extends AVItem {
     }
   }
 
-  _findFirstVerticalNotRightestInHorizontal(firstVertical) {
+  _findFirstVerticalNotRightestInHorizontal = (firstVertical) => {
     if (!firstVertical.container) {
       return false;
     }
@@ -311,7 +311,7 @@ export class AVObjectDocument extends AVItem {
     return false;
   }
 
-  async _onDesignFieldContextMenu(e, fieldItem, idx, containerElement) {
+  _onDesignFieldContextMenu = async (e, fieldItem, idx, containerElement) => {
     const menuResult = await this.showContextMenu(e, ['Сгруппировать']);
   }
 
@@ -323,7 +323,7 @@ export class AVObjectDocument extends AVItem {
     })
   }
 
-  _findFieldOverlay(e) {
+  _findFieldOverlay = (e) => {
     return e.target.closest('.field-overlay');
   }
 
@@ -475,7 +475,7 @@ export class AVObjectDocument extends AVItem {
     );
   }
 
-  async _saveDesign() {
+  _saveDesign = async () => {
     this._removeContainerReference(this.state.designJson);
     this._removeDomElementReference(this.state.designJson);
     await this.props.objectDocument.saveDesignJson(this.deepClone(this.state.designJson));
