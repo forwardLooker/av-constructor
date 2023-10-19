@@ -1,8 +1,14 @@
+import React from 'react';
+
 import {html, css, AVItem} from './0-av-item.js';
 
 import './5-av-field.js';
 
 export class AVObjectDocument extends AVItem {
+
+}
+
+export class AVObjectDocument2 extends AVItem {
   static get styles() {
     return css`
       :host {

@@ -3,11 +3,10 @@ import React from 'react';
 import {html, css, AVItem} from './0-av-item.js';
 
 import {AVClassPanel} from "./3-av-class/AVClassPanel.jsx";
+import {AVGrid} from "../V/AVGrid.jsx";
 
 import './4-av-object-document.js'
 import './3-av-class/av-class-configurator.js'
-
-import '../V/av-grid.js';
 
 export class AVClass extends AVItem {
   static defaultProps = {
@@ -39,8 +38,12 @@ export class AVClass extends AVItem {
 
   _renderGrid() {
     return (
-      <div>
-        <div>av-grid</div>
+      <div className="margin-top-8">
+        <AVGrid
+          items={this.state.objectDocuments}
+          columns={this.state.fieldDescriptors}
+          onRowClickFunc={this._onGridRowClick}
+        ></AVGrid>
         {this.state.selectedObjectDocument && (
           <div>av-object-document</div>
         )}
@@ -58,16 +61,30 @@ export class AVClass extends AVItem {
     if (this.props.hideOnDidMount) {
       this.hide(); // TODO у реакт компонента нету classList
     }
+
+    if (this.props.classItem) {
+      this._loadGridData();
+    }
   }
 
-  async componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps) {
     if (this.props.classItem !== prevProps.classItem) {
       this.setState({currentViewName: this.props.classItem.defaultViewName})
 
-      const fieldDescriptors = await this.props.classItem.getFieldDescriptors();
-      const objectDocuments = await this.props.classItem.getObjectDocuments();
-      this.setState({fieldDescriptors, objectDocuments});
+      this._loadGridData();
     }
+  }
+
+  _loadGridData = async () => {
+    const fieldDescriptors = await this.props.classItem.getFieldDescriptors();
+    const objectDocuments = await this.props.classItem.getObjectDocuments();
+    this.setState({fieldDescriptors, objectDocuments});
+  }
+
+  _onGridRowClick = async (rowItem) => {
+    const selectedObjectDocument = await this.props.classItem.getObjectDocument(rowItem.reference);
+    this.setState({selectedObjectDocument});
+    this.onObjectDocumentSelectedFunc(selectedObjectDocument);
   }
 
 }
