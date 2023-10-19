@@ -28,11 +28,18 @@ export class AVElement extends React.PureComponent {
     return resultObj;
   };
 
+  // _hiddem = false;
   hide() {
-    this.classList.add('no-display');
+    // if (!this._hidden) {
+    //   this._hidden = true;
+    //   this.forceUpdate();
+    // }
   }
   display() {
-    this.classList.remove('no-display');
+    // if (this._hidden) {
+    //   this._hidden = false;
+    //   this.forceUpdate();
+    // }
   }
   isEmpty(val) {
     return !val || (Array.isArray(val) && val.length === 0)

@@ -1,9 +1,19 @@
+import React from 'react';
+
 import {html, css, AVItem} from './0-av-item.js';
 
 import '../V/av-label.js';
 import '../V/av-text-input.js';
 
 export class AVField extends AVItem {
+  render() {
+    return (
+      <div>AVField</div>
+    )
+  }
+}
+
+export class AVField2 extends AVItem {
   static get styles() {
     return css`
       :host {

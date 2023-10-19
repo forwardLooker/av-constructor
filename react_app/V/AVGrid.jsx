@@ -75,7 +75,7 @@ export class AVGrid extends AVElement {
   }
 
   _onCellClick(rowItem, cellName, e) {
-    this.onRowClickFunc(rowItem);
+    this.props.onRowClickFunc(rowItem);
   }
 
 }

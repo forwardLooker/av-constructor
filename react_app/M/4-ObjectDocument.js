@@ -9,15 +9,15 @@ export class ObjectDocument extends Item {
   Class;
   data = {};
   innerFieldsInData = {
-    _itemType: 'objectDocument',
-    _id: '',
-    _createdDateTime: '',
-    _author: '',
-    _lastModifiedDateTime: '',
-    _lastModifiedAuthor: '',
-    _version: '',
-    _reference: '',
-    _path: ''
+    itemType: 'objectDocument',
+    id: '',
+    createdDateTime: '',
+    author: '',
+    lastModifiedDateTime: '',
+    lastModifiedAuthor: '',
+    version: '',
+    reference: '',
+    path: ''
   }
   notExistOnServer;
   async getData() {

@@ -33,7 +33,7 @@ export class AVButton extends AVElement {
 
   render() {
     return (
-      <this.styles.standartButton>
+      <this.styles.standartButton {...this.props}>
         {this.props.children}
       </this.styles.standartButton>
     )

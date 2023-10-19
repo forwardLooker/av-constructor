@@ -11,8 +11,8 @@ export class AVClassPanel extends AVItem {
     onClassViewChangedFunc: this.noop
   }
   state = {
-    currentViewName: this.props.classItem.defaultViewName,
-    availableViewsList: this.props.classItem.getViewsList(),
+    currentViewName: this.props.classItem?.defaultViewName,
+    availableViewsList: this.props.classItem?.getViewsList(),
     viewsDropdownOpened: false,
   }
 

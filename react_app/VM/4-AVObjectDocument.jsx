@@ -3,12 +3,20 @@ import React from 'react';
 import {html, css, AVItem} from './0-av-item.js';
 
 import {AVClass} from './3-AVClass.jsx';
+import {AVField} from './5-AVField.jsx';
 
 import {AVButton} from "../V/AVButton.jsx";
 
-import './5-av-field.js';
 
 export class AVObjectDocument extends AVItem {
+  style = {
+    horizontalResizer: this.styled.div`
+      width: 4px;
+      height: 100%;
+      cursor: col-resize;
+    `
+  }
+
   static defaultProps = {
     fieldDescriptors: [],
     objectDocument: null,
@@ -24,6 +32,10 @@ export class AVObjectDocument extends AVItem {
     designDragElement: null,
     designDragContainer: null,
     designDropSide: 'none', // enum: ['top', 'bottom', 'left', 'right', 'none']
+
+    isClassItemOpened: false,
+    openedClassItem: null,
+    onObjectDocumentSelectedInOpenedClassItem: this.noop
   }
 
   constructor(props) {
@@ -66,14 +78,13 @@ export class AVObjectDocument extends AVItem {
           const forDelIndexInOrigItems = designJson.originalItems.findIndex(origItem => origItem.name === delItem.name);
           designJson.originalItems.splice(forDelIndexInOrigItems, 1);
         })
-        this.setState({designJson});
+        this.state.designJson = designJson;
       } else {
-        const designJson = {
+        this.state.designJson = {
           viewItemType: 'vertical-layout',
           items: this.deepClone(this.props.fieldDescriptors),
           originalItems: this.deepClone(this.props.fieldDescriptors)
         };
-        this.setState({designJson})
       }
     }
   }
@@ -88,22 +99,30 @@ export class AVObjectDocument extends AVItem {
           <div className="row justify-end">
             <div>
               <AVButton onClick={this._saveAndClose}>OK</AVButton>
-              <AVButton onClick={this.onCloseFunc}>Отмена</AVButton>
+              <AVButton onClick={this.props.onCloseFunc}>Отмена</AVButton>
               <AVButton onClick={this._toggleDesign}>Дизайнер</AVButton>
             </div>
           </div>
         </div>
-        <AVClass hideOnDidMount></AVClass>
+        {this.state.isClassItemOpened && (
+          <div className="pos-abs trbl-0 z-index-100 bg-white">
+            <AVClass
+              classItem={this.state.openedClassItem}
+              onObjectDocumentSelectedFunc={this.state.onObjectDocumentSelectedInOpenedClassItem}
+            ></AVClass>
+          </div>
+        )}
       </div>
     )
   }
 
-  _renderVerticalLayout(vrtLayoutItem) {
+  _renderVerticalLayout(vrtLayoutItem, vrtLayoutItemIndex) {
     return (
       <div
         className="vertical-layout flex-1 col"
         style={vrtLayoutItem.style}
         ref={vrtDomElement => vrtLayoutItem.domElement = vrtDomElement}
+        key={vrtLayoutItemIndex || 0}
       >
         {vrtLayoutItem.items.map((vrtItem, vrtIndex) => {
           if (vrtItem.viewItemType === 'horizontal-layout') {
@@ -115,7 +134,7 @@ export class AVObjectDocument extends AVItem {
               >
                 {vrtItem.items.map((hrzItem, hrzIndex) => {
                   if (hrzItem.viewItemType === 'vertical-layout') {
-                    return this._renderVerticalLayout(hrzItem);
+                    return this._renderVerticalLayout(hrzItem, hrzIndex);
                   } else {
                     return this._renderField(hrzItem, hrzIndex, vrtItem)
                   }
@@ -129,6 +148,49 @@ export class AVObjectDocument extends AVItem {
         })}
       </div>
     )
+  }
+
+  _renderField(fieldItem, idx, containerElement) {
+    return (
+      <div className="pos-rel margin-top-2" key={fieldItem.name || idx}>
+        <AVField
+          style={fieldItem.style}
+          ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
+          fieldItem={fieldItem}
+          value={this.state._newData[fieldItem.name]}
+          onInputFunc={value => {this.state._newData[fieldItem.name] = value}}
+          $objectDocument={this}
+        >
+          {this.designMode && (
+            <div className="field-overlay pos-abs row">
+              <div className="flex-1"
+                   draggable="true"
+                   onDragStart={(e) => this._dragstart(e, fieldItem, idx, containerElement)}
+                   onDragOver={this._dragover}
+                   onDragLeave={this._dragleave}
+                   onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
+                   onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
+              ></div>
+              <this.styles.horizontalResizer
+                   onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}
+              ></this.styles.horizontalResizer>
+            </div>
+          )}
+        </AVField>
+      </div>
+    )
+  }
+
+  async showClass(name, onObjectDocumentSelected) {
+    const openedClassItem = await this.Host.getClassByName(name);
+    this.setState({
+      isClassItemOpened: true,
+      openedClassItem,
+      onObjectDocumentSelectedInOpenedClassItem: (objDocItem) => {
+        this.setState({isClassItemOpened: false})
+        onObjectDocumentSelected(objDocItem);
+      }
+    })
   }
 
   _removeDomElementReference = (layoutElememt) => {
@@ -207,27 +269,6 @@ export class AVObjectDocument2 extends AVItem {
       
       av-field {
         margin-top: 2px;
-      }
-      
-      .standart-button {
-        text-align: center;
-        color: white;
-        background-color: black;
-        border-color: black;
-        box-shadow: gray;
-        transition: 80ms cubic-bezier(0.33, 1, 0.68, 1);
-        transition-property: color,background-color,box-shadow,border-color;
-        padding: 5px 16px;
-        font-size: 14px;
-        font-weight: var(--base-text-weight-medium, 500);
-        line-height: 20px;
-        white-space: nowrap;
-        vertical-align: middle;
-        cursor: pointer;
-        user-select: none;
-        border: 1px solid;
-        border-radius: 6px;
-        appearance: none;
       }
       
       .horizontal-resizer {

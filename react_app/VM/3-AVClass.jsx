@@ -4,8 +4,7 @@ import {html, css, AVItem} from './0-av-item.js';
 
 import {AVClassPanel} from "./3-av-class/AVClassPanel.jsx";
 import {AVGrid} from "../V/AVGrid.jsx";
-
-import './4-av-object-document.js'
+import {AVObjectDocument} from './4-AVObjectDocument.jsx';
 import './3-av-class/av-class-configurator.js'
 
 export class AVClass extends AVItem {
@@ -13,10 +12,9 @@ export class AVClass extends AVItem {
     classItem: null,
 
     onObjectDocumentSelectedFunc: this.noop,
-    hideOnDidMount: false
   }
   state = {
-    currentViewName: this.props.classItem.defaultViewName,
+    currentViewName: this.props.classItem?.defaultViewName,
     fieldDescriptors: [],
     objectDocuments: [],
     selectedObjectDocument: null,
@@ -45,7 +43,14 @@ export class AVClass extends AVItem {
           onRowClickFunc={this._onGridRowClick}
         ></AVGrid>
         {this.state.selectedObjectDocument && (
-          <div>av-object-document</div>
+          <div className="pos-abs trbl-0 col pad-4 z-index-10 bg-white">
+            <AVObjectDocument
+              fieldDescriptors={this.state.fieldDescriptors}
+              objectDocument={this.state.selectedObjectDocument}
+              onCloseFunc={() => {this.setState({selectedObjectDocument: null})}}
+              onSavedFunc={this._onObjectSaved}
+            ></AVObjectDocument>
+          </div>
         )}
       </div>
     )
@@ -58,11 +63,7 @@ export class AVClass extends AVItem {
   }
 
   componentDidMount() {
-    if (this.props.hideOnDidMount) {
-      this.hide(); // TODO у реакт компонента нету classList
-    }
-
-    if (this.props.classItem) {
+    if (this.props?.classItem) {
       this._loadGridData();
     }
   }
@@ -82,9 +83,21 @@ export class AVClass extends AVItem {
   }
 
   _onGridRowClick = async (rowItem) => {
+    console.log('rowItem', rowItem);
+
     const selectedObjectDocument = await this.props.classItem.getObjectDocument(rowItem.reference);
     this.setState({selectedObjectDocument});
-    this.onObjectDocumentSelectedFunc(selectedObjectDocument);
+    this.props.onObjectDocumentSelectedFunc(selectedObjectDocument);
+  }
+
+  _onObjectSaved = async () => {
+    const objectDocuments = await this.classItem.getObjectDocuments();
+    this.setState({objectDocuments});
+  }
+
+  _onFieldDescriptorsChanged = async () => {
+    const fieldDescriptors = await this.classItem.getFieldDescriptors();
+    this.setState({fieldDescriptors});
   }
 
 }
