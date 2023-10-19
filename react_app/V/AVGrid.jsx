@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {AVElement, css, html} from './0-av-element.js';
+import {AVElement, css, html} from './0-AVElement.js';
 import {AVField} from "../VM/5-AVField.jsx";
 
 export class AVGrid extends AVElement {

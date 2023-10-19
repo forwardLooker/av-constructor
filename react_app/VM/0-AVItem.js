@@ -1,4 +1,4 @@
-import {AVElement} from "../V/0-av-element.js";
+import {AVElement} from "../V/0-AVElement.js";
 
 export class AVItem extends AVElement {
   // fromHost(propName) {

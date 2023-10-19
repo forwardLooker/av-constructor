@@ -1,4 +1,4 @@
-import {AVElement, css, html} from './0-av-element.js';
+import {AVElement, css, html} from './0-AVElement.js';
 
 import './av-text-input.js';
 

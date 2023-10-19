@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {AVElement} from './0-av-element.js';
+import {AVElement} from './0-AVElement.js';
 
 export class AVButton extends AVElement {
   styles = {
