@@ -158,7 +158,8 @@ export class AVObjectDocument extends AVItem {
           ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
           fieldItem={fieldItem}
           value={this.state._newData[fieldItem.name]}
-          onInputFunc={value => {this.state._newData[fieldItem.name] = value}}
+          onChangeFunc={value => {this.state._newData[fieldItem.name] = value}}
+          labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
           $objectDocument={this}
         >
           {this.designMode && (

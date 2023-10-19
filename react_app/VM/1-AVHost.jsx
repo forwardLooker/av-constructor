@@ -8,10 +8,9 @@ import {AVDomain} from './2-AVDomain.jsx';
 import {AVClass} from './3-AVClass.jsx';
 
 import {AVButton} from "../V/AVButton.jsx";
-
+import {AVLabel} from "../V/AVLabel.jsx";
 
 import '../V/av-text-header.js';
-import '../V/av-label.js';
 import '../V/av-text-input.js';
 
 import '../V/av-context-menu.js';
@@ -70,7 +69,7 @@ export class AVHost extends AVItem {
                 <div>{this.state.dialogText}</div>
                 {this.state.dialogInputLabel && (
                   <div>
-                    <label>${this.state.dialogInputLabel}:</label>
+                    <AVLabel>${this.state.dialogInputLabel}:</AVLabel>
                     <input value={this.state.dialogInputValue} onChange={e => {this.setState({dialogInputValue: e.target.value})}}></input>
                   </div>
                 )}

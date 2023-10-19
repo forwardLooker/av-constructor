@@ -1,6 +1,5 @@
 import {AVElement, css, html} from './0-av-element.js';
 
-import './av-label.js';
 import './av-text-input.js';
 
 export class AVPropertyGrid extends AVElement {
