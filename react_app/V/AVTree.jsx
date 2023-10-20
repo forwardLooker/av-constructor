@@ -52,7 +52,7 @@ export class AVTree extends AVElement {
                 onClick={() => this._toggleExpand(i)}
               >{'>'}</AVTree.styles.treeRowExpander>
               <div
-                className="margin-left-4"
+                className="flex-1 margin-left-4"
                 onClick={(e) => this._toggleSelect(e, i)}
                 onContextMenu={(e) => this._onRowContextMenu(e, i)}
               >{i.name}</div>
