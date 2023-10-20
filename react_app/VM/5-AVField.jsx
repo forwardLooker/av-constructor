@@ -167,6 +167,12 @@ export class AVField extends AVItem {
     return inputElement;
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.value !== prevProps.value) {
+      this.setState({_value: this.props.value});
+    }
+  }
+
   _onChange = (e) => {
     // e.persist();
     // console.log('onChange e', e);
