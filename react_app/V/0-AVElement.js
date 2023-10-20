@@ -4,9 +4,10 @@ import styled from 'styled-components';
 export class AVElement extends React.PureComponent {
   static styled = styled;
   styled = styled;
+
   static noop = () => {};
   noop = () => {};
-  if = (condition, element) => condition ? element : '';
+
   deepClone = (objectToClone) => JSON.parse(JSON.stringify(objectToClone))
   isDeepEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
 
@@ -28,35 +29,10 @@ export class AVElement extends React.PureComponent {
     return resultObj;
   };
 
-  // _hiddem = false;
-  hide() {
-    // if (!this._hidden) {
-    //   this._hidden = true;
-    //   this.forceUpdate();
-    // }
-  }
-  display() {
-    // if (this._hidden) {
-    //   this._hidden = false;
-    //   this.forceUpdate();
-    // }
-  }
   isEmpty(val) {
     return !val || (Array.isArray(val) && val.length === 0)
   }
   notEmpty(val) {
     return Array.isArray(val) && val.length > 0;
-  }
-  // $(selector) {
-  //   return this.shadowRoot.querySelector(selector);
-  // }
-  // $All(selector) {
-  //   return this.shadowRoot.querySelectorAll(selector);
-  // }
-  fire(name, data) {
-    this.dispatchEvent(new CustomEvent(
-      name,
-      {bubbles: true, cancelable: true, composed: true, detail: {...data}}
-    ))
   }
 }

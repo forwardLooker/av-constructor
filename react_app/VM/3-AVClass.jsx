@@ -10,7 +10,6 @@ import {AVClassConfigurator} from "./3-av-class/AVClassConfigurator.jsx";
 export class AVClass extends AVItem {
   static defaultProps = {
     classItem: null,
-
     onObjectDocumentSelectedFunc: this.noop,
   }
   state = {
