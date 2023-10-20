@@ -5,7 +5,7 @@ import {AVItem} from './0-AVItem.js';
 import {AVClassPanel} from "./3-av-class/AVClassPanel.jsx";
 import {AVGrid} from "../V/AVGrid.jsx";
 import {AVObjectDocument} from './4-AVObjectDocument.jsx';
-import './3-av-class/av-class-configurator.js'
+import {AVClassConfigurator} from "./3-av-class/AVClassConfigurator.jsx";
 
 export class AVClass extends AVItem {
   static defaultProps = {
@@ -58,7 +58,10 @@ export class AVClass extends AVItem {
 
   _renderConfigurator() {
     return (
-      <div>av-configurator</div>
+      <AVClassConfigurator
+        classItem={this.props.classItem}
+        onSavedFunc={this._onFieldDescriptorsChanged}
+      ></AVClassConfigurator>
     )
   }
 

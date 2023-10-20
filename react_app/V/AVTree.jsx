@@ -47,15 +47,14 @@ export class AVTree extends AVElement {
       <div className={`flex-1 col ${nestingLevel > 0 ? 'margin-left-16' : ''}`}>
         {items.map((i,idx) => (
           <div className="col" key={i.name || idx}>
-            <AVTree.styles.treeRow className={`tree-row row ${i.selected ? 'selected' : ''}`}
-              onClick={(e) => this._toggleSelect(e, i)}
-              onContextMenu={(e) => this._onRowContextMenu(e, i)}
-            >
+            <AVTree.styles.treeRow className={`row ${i.selected ? 'selected' : ''}`}>
               <AVTree.styles.treeRowExpander className={`tree-row-expander ${i.expanded ? 'expanded' : ''} ${this.isEmpty(i.items) ? 'invisible': ''}`}
                 onClick={() => this._toggleExpand(i)}
               >{'>'}</AVTree.styles.treeRowExpander>
               <div
-                className="tree-row-name margin-left-4"
+                className="margin-left-4"
+                onClick={(e) => this._toggleSelect(e, i)}
+                onContextMenu={(e) => this._onRowContextMenu(e, i)}
               >{i.name}</div>
             </AVTree.styles.treeRow>
             {i.expanded && (
@@ -76,9 +75,6 @@ export class AVTree extends AVElement {
   }
 
   _onRowContextMenu = (e, i) => {
-    if (e.target.classList.contains('tree-row-expander')) {
-      return;
-    }
     const selectedItemOriginal = this.findDeepObjInItemsBy({name: i.name}, {items: this.props.items});
     this.props.onItemContextMenuFunc(e, selectedItemOriginal);
   }
@@ -89,9 +85,6 @@ export class AVTree extends AVElement {
   }
 
   _toggleSelect = (e, newSelectedItem) => {
-    if (e.target.classList.contains('tree-row-expander')) {
-      return;
-    }
     if (this.state.selectedItem !== newSelectedItem) {
       if (this.state.selectedItem) {
         delete this.state.selectedItem.selected;

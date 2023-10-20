@@ -10,12 +10,6 @@ import {AVClass} from './3-AVClass.jsx';
 import {AVButton} from "../V/AVButton.jsx";
 import {AVLabel} from "../V/AVLabel.jsx";
 
-import '../V/av-text-header.js';
-import '../V/av-text-input.js';
-
-import '../V/av-context-menu.js';
-import '../V/av-property-grid.js';
-
 import {Host} from'../M/1-Host.js';
 
 const css = () => {};
