@@ -152,9 +152,12 @@ export class AVObjectDocument extends AVItem {
 
   _renderField(fieldItem, idx, containerElement) {
     return (
-      <div className="flex-1 pos-rel margin-top-2" key={fieldItem.name || idx}>
+      <div
+        className="flex-1 pos-rel margin-top-2"
+        style={fieldItem.style}
+        key={fieldItem.name || idx}
+      >
         <AVField
-          style={fieldItem.style}
           refOnRootDiv={fieldDomElement => fieldItem.domElement = fieldDomElement}
           fieldItem={fieldItem}
           value={this.state._newData[fieldItem.name]}
@@ -384,8 +387,9 @@ export class AVObjectDocument extends AVItem {
     }
 
     if (this.state.designDragElement.style) {
-      delete this.state.designDragElement.style.flexBasis;
-      delete this.state.designDragElement.style.flexGrow;
+      // delete this.state.designDragElement.style.flexBasis;
+      // delete this.state.designDragElement.style.flexGrow;
+      this.state.designDragElement.style = {};
     }
 
     // const newDesign = [...this.designJson];
@@ -428,8 +432,9 @@ export class AVObjectDocument extends AVItem {
             flexBasis: dropContainer.items[dropElementIndex].style.flexBasis,
             flexGrow: dropContainer.items[dropElementIndex].style.flexGrow,
           }
-          delete dropContainer.items[dropElementIndex].style.flexBasis;
-          delete dropContainer.items[dropElementIndex].style.flexGrow;
+          // delete dropContainer.items[dropElementIndex].style.flexBasis;
+          // delete dropContainer.items[dropElementIndex].style.flexGrow;
+          dropContainer.items[dropElementIndex].style = {};
         }
 
         dropContainer.items.splice(insertIndex, 1)
