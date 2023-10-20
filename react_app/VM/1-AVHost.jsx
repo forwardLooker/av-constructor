@@ -35,11 +35,13 @@ export class AVHost extends AVItem {
   state = {
     config: [],
     selectedTreeItem: null,
-    dialogShowed: false,
+
+    isDialogOpened: false,
     dialogText: '',
     dialogInputLabel: '',
     dialogInputValue: '',
-    contextMenuOpened: false,
+
+    isContextMenuOpened: false,
     contextMenuItems: [],
   }
 
@@ -51,41 +53,31 @@ export class AVHost extends AVItem {
   render() {
     return (
         <div className="flex-1 col">
-          <AVHost.styles.header className="row space-between">
-            <h3>Хост тест</h3>
-            {this.user && (
-              <div className="col align-center justify-center">
-                <div>{this.user?.email}</div>
-                <AVButton onClick={() => this.auth.signOut()}>Выйти</AVButton>
-              </div>
-            )}
-          </AVHost.styles.header>
+          <this.rHeader></this.rHeader>
           <div className="flex-1 row pad-8 border">
-            {this.user ?  this._renderMain() : <AVAuth></AVAuth>}
+            {this.user ?  <this.rMain></this.rMain> : <AVAuth></AVAuth>}
           </div>
-          {this.state.dialogShowed && (
-            <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000 bg-transparent-45">
-              <div className="bg-white">
-                <div>{this.state.dialogText}</div>
-                {this.state.dialogInputLabel && (
-                  <div>
-                    <AVLabel>${this.state.dialogInputLabel}:</AVLabel>
-                    <input value={this.state.dialogInputValue} onChange={e => {this.setState({dialogInputValue: e.target.value})}}></input>
-                  </div>
-                )}
-                <div>
-                  <AVButton onClick={() => {this.fire('dialog-submitted')}}>OK</AVButton>
-                  <AVButton onClick={() => {this.fire('dialog-closed')}}>Отмена</AVButton>
-                </div>
-              </div>
-            </div>
-          )}
+          {this.state.isDialogOpened && (<this.rDialog></this.rDialog>)}
           <div>av-context-menu</div>
         </div>
     )
   }
 
-  _renderMain() {
+  rHeader = () => {
+    return (
+      <AVHost.styles.header className="row space-between">
+        <h3>Хост тест</h3>
+        {this.user && (
+          <div className="col align-center justify-center">
+            <div>{this.user?.email}</div>
+            <AVButton onClick={() => this.auth.signOut()}>Выйти</AVButton>
+          </div>
+        )}
+      </AVHost.styles.header>
+    )
+  }
+
+  rMain = () => {
     return (
       <div className="flex-1 row">
         <AVHost.styles.leftSidebar className="col pad-8 border">
@@ -95,11 +87,31 @@ export class AVHost extends AVItem {
             onItemContextMenuFunc={this._onTreeItemContextMenu}
           ></AVTree>
         </AVHost.styles.leftSidebar>
-        <div id="view-port" className="pos-rel flex-1 col margin-left-8 pad-8 border scroll-y">
+        <div className="pos-rel flex-1 col margin-left-8 pad-8 border scroll-y">
           {this.state.selectedTreeItem?.itemType === 'class' ?
             (<AVClass classItem={this.state.selectedTreeItem}></AVClass>) : ''}
           {this.state.selectedTreeItem?.itemType === 'domain' ?
             (<AVDomain domainItem={this.state.selectedTreeItem}></AVDomain>)  : ''}
+        </div>
+      </div>
+    )
+  }
+
+  rDialog = () => {
+    return (
+      <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000 bg-transparent-45">
+        <div className="bg-white">
+          <div>{this.state.dialogText}</div>
+          {this.state.dialogInputLabel && (
+            <div>
+              <AVLabel>${this.state.dialogInputLabel}:</AVLabel>
+              <input value={this.state.dialogInputValue} onChange={e => {this.setState({dialogInputValue: e.target.value})}}></input>
+            </div>
+          )}
+          <div>
+            <AVButton onClick={() => {this.fire('dialog-submitted')}}>OK</AVButton>
+            <AVButton onClick={() => {this.fire('dialog-closed')}}>Отмена</AVButton>
+          </div>
         </div>
       </div>
     )
@@ -145,7 +157,7 @@ export class AVHost extends AVItem {
 
   async showDialog({text, input}) {
     this.setState({
-      dialogShowed: true,
+      isDialogOpened: true,
       dialogText: text,
       dialogInputLabel: input
     })
@@ -153,7 +165,7 @@ export class AVHost extends AVItem {
       const listenerOnClose = () => {
         this.removeEventListener('dialog-closed', listenerOnClose);
         this.setState({
-          dialogShowed: true,
+          isDialogOpened: true,
           dialogText: '',
           dialogInputLabel: ''
         })
@@ -165,7 +177,7 @@ export class AVHost extends AVItem {
         this.removeEventListener('dialog-submitted', listenerOnSubmit);
         const resolveValue = this.state.dialogInputValue || true;
         this.setState({
-          dialogShowed: false,
+          isDialogOpened: false,
           dialogText: '',
           dialogInputLabel: '',
           dialogInputValue: ''
