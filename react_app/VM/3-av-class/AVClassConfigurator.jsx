@@ -89,10 +89,10 @@ export class AVClassConfigurator extends AVItem {
   }
 
   _addField = async () => {
-    const fieldName = await this.showDialog({text: 'Введите название поля', input: 'name'});
+    const fieldName = await this.showDialog({text: 'Введите название поля', inputLabel: 'name'});
     if (fieldName && this.state._newFieldDescriptors.every(f => f.name !== fieldName)) {
       const field = {name: fieldName, label: fieldName, dataType: 'string'};
-      this.setState({_newFieldDescriptors: [...this._newFieldDescriptors, field]});
+      this.setState({_newFieldDescriptors: [...this.state._newFieldDescriptors, field]});
     }
   }
 

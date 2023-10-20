@@ -34,6 +34,7 @@ export class AVHost extends AVItem {
     dialogText: '',
     dialogInputLabel: '',
     dialogInputValue: '',
+    _dialogResolveFunc: null,
 
     isContextMenuOpened: false,
     contextMenuItems: [],
@@ -98,13 +99,16 @@ export class AVHost extends AVItem {
           <div>{this.state.dialogText}</div>
           {this.state.dialogInputLabel && (
             <div>
-              <AVLabel>${this.state.dialogInputLabel}:</AVLabel>
-              <input value={this.state.dialogInputValue} onChange={e => {this.setState({dialogInputValue: e.target.value})}}></input>
+              <AVLabel>{this.state.dialogInputLabel}</AVLabel>
+              <input
+                value={this.state.dialogInputValue}
+                onChange={e => this.setState({dialogInputValue: e.target.value})}>
+              </input>
             </div>
           )}
           <div>
-            <AVButton onClick={() => {this.fire('dialog-submitted')}}>OK</AVButton>
-            <AVButton onClick={() => {this.fire('dialog-closed')}}>Отмена</AVButton>
+            <AVButton onClick={this._dialogSubmitted}>OK</AVButton>
+            <AVButton onClick={this._dialogCanceled}>Отмена</AVButton>
           </div>
         </div>
       </div>
@@ -133,7 +137,7 @@ export class AVHost extends AVItem {
     }
     const menuChoice = await this.showContextMenu(e, ['Создать вложенный класс', 'Создать вложенный домен']);
     if (menuChoice === 'Создать вложенный класс') {
-      const className = await this.showDialog({text: 'Введите название класса', input: 'name'});
+      const className = await this.showDialog({text: 'Введите название класса', inputLabel: 'name'});
       if (className) {
         const domain = this.Host.getDomain(item.reference);
         await domain.createClass(className);
@@ -149,38 +153,42 @@ export class AVHost extends AVItem {
   //   return menu.show(e, menuItems);
   // }
 
-  async showDialog({text, input}) {
-    this.setState({
-      isDialogOpened: true,
-      dialogText: text,
-      dialogInputLabel: input
-    })
+  async showDialog({text, inputLabel}) {
     return new Promise((resolve, reject) => {
-      const listenerOnClose = () => {
-        this.removeEventListener('dialog-closed', listenerOnClose);
-        this.setState({
-          isDialogOpened: true,
-          dialogText: '',
-          dialogInputLabel: ''
-        })
-        resolve(false);
-      }
-      this.addEventListener('dialog-closed', listenerOnClose);
-
-      const listenerOnSubmit = () => {
-        this.removeEventListener('dialog-submitted', listenerOnSubmit);
-        const resolveValue = this.state.dialogInputValue || true;
-        this.setState({
-          isDialogOpened: false,
-          dialogText: '',
-          dialogInputLabel: '',
-          dialogInputValue: ''
-        })
-        resolve(resolveValue);
-      }
-      this.addEventListener('dialog-submitted', listenerOnSubmit)
+      this.setState({
+        isDialogOpened: true,
+        dialogText: text,
+        dialogInputLabel: inputLabel,
+        _dialogResolveFunc: resolve
+      })
     })
   }
+
+  _dialogSubmitted = () => {
+    const resolveValue = this.state.dialogInputValue || true;
+    const resolveFunc = this.state._dialogResolveFunc;
+    this.setState({
+      isDialogOpened: false,
+      dialogText: '',
+      dialogInputLabel: '',
+      dialogInputValue: '',
+      _dialogResolveFunc: null
+    });
+    resolveFunc(resolveValue);
+  }
+
+  _dialogCanceled = () => {
+    const resolveFunc = this.state._dialogResolveFunc;
+    this.setState({
+      isDialogOpened: false,
+      dialogText: '',
+      dialogInputLabel: '',
+      dialogInputValue: '',
+      _dialogResolveFunc: null
+    });
+    resolveFunc(false);
+  }
+
 }
 
 class AVHost2 extends AVItem {
