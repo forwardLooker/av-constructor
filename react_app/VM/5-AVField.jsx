@@ -62,7 +62,7 @@ export class AVField extends AVItem {
         {!this.props.isLabelHidden && (
           <AVLabel>{this.props.fieldItem.label || this.props.fieldItem.name}</AVLabel>
         )}
-        {this.renderInput(
+        {this._renderInput(
           {
             value: this.state._value,
             onChangeFunc: this._onChange,
@@ -74,7 +74,7 @@ export class AVField extends AVItem {
     )
   }
 
-  renderInput({value, onChangeFunc, fieldItem}) {
+  _renderInput({value, onChangeFunc, fieldItem}) {
     let inputElement;
     if (!fieldItem.dataType || fieldItem.dataType === 'string') {
       inputElement = (

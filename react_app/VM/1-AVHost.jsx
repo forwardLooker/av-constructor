@@ -47,17 +47,17 @@ export class AVHost extends AVItem {
   render() {
     return (
         <div className="flex-1 col">
-          <this.rHeader></this.rHeader>
+          {this._renderHeader()}
           <div className="flex-1 row pad-8 border">
-            {this.user ?  <this.rMain></this.rMain> : <AVAuth></AVAuth>}
+            {this.user ?  this._renderMain() : <AVAuth></AVAuth>}
           </div>
-          {this.state.isDialogOpened && (<this.rDialog></this.rDialog>)}
+          {this.state.isDialogOpened && this._renderDialog()}
           <div>av-context-menu</div>
         </div>
     )
   }
 
-  rHeader = () => {
+  _renderHeader() {
     return (
       <AVHost.styles.header className="row space-between">
         <h3>Хост тест</h3>
@@ -71,7 +71,7 @@ export class AVHost extends AVItem {
     )
   }
 
-  rMain = () => {
+  _renderMain() {
     return (
       <div className="flex-1 row">
         <AVHost.styles.leftSidebar className="col pad-8 border">
@@ -91,7 +91,7 @@ export class AVHost extends AVItem {
     )
   }
 
-  rDialog = () => {
+  _renderDialog() {
     return (
       <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000 bg-transparent-45">
         <div className="bg-white">
