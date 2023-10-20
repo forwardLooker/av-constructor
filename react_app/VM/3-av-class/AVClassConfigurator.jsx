@@ -75,7 +75,7 @@ export class AVClassConfigurator extends AVItem {
   _onTreeItemContextMenu = async (e, item) => {
     const menuChoice = await this.showContextMenu(e, ['Добавить вложенное поле', 'Удалить поле']);
     if (menuChoice === 'Добавить вложенное поле') {
-      const fieldName = await this.showDialog({text: 'Введите название поля', input: 'name'});
+      const fieldName = await this.showDialog({text: 'Введите название поля', inputLabel: 'name'});
       if (fieldName) {
         if (this.notEmpty(item.items) && item.items.every(f => f.name !== fieldName)) {
           item.items.push({name: fieldName, label: fieldName, dataType: 'string'})

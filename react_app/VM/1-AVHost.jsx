@@ -9,6 +9,7 @@ import {AVClass} from './3-AVClass.jsx';
 
 import {AVButton} from "../V/AVButton.jsx";
 import {AVLabel} from "../V/AVLabel.jsx";
+import {AVContextMenu} from "../V/AVContextMenu.jsx";
 
 import {Host} from'../M/1-Host.js';
 
@@ -38,6 +39,8 @@ export class AVHost extends AVItem {
 
     isContextMenuOpened: false,
     contextMenuItems: [],
+    contextMenuEvent: null,
+    _contextMenuResolveFunc: null
   }
 
   constructor() {
@@ -53,7 +56,7 @@ export class AVHost extends AVItem {
             {this.user ?  this._renderMain() : <AVAuth></AVAuth>}
           </div>
           {this.state.isDialogOpened && this._renderDialog()}
-          <div>av-context-menu</div>
+          {this.state.isContextMenuOpened && this._renderContextMenu()}
         </div>
     )
   }
@@ -115,6 +118,25 @@ export class AVHost extends AVItem {
     )
   }
 
+  _renderContextMenu() {
+    return (
+      <AVContextMenu
+        items={this.state.contextMenuItems}
+        contextMenuEvent={this.state.contextMenuEvent}
+        onItemSelectFunc={item => {
+          const resolveFunc = this.state._contextMenuResolveFunc;
+          this.setState({
+            isContextMenuOpened: false,
+            contextMenuItems: [],
+            contextMenuEvent: null,
+            _contextMenuResolveFunc: null
+          });
+          resolveFunc(item)
+        }}
+      ></AVContextMenu>
+    )
+  }
+
   async componentDidMount() {
     const config = await this.Host.getConfig();
     this.setState({config});
@@ -147,11 +169,18 @@ export class AVHost extends AVItem {
     }
   }
 
-  // async showContextMenu(e, menuItems) {
-  //   e.preventDefault();
-  //   const menu = this.$('av-context-menu');
-  //   return menu.show(e, menuItems);
-  // }
+  async showContextMenu(e, menuItems) {
+    e.preventDefault();
+    e.persist();
+    return new Promise((resolve, reject) => {
+      this.setState({
+        isContextMenuOpened: true,
+        contextMenuItems: menuItems,
+        contextMenuEvent: e,
+        _contextMenuResolveFunc: resolve
+      })
+    })
+  }
 
   async showDialog({text, inputLabel}) {
     return new Promise((resolve, reject) => {
