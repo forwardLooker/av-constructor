@@ -22,7 +22,7 @@ const css = () => {};
 const html = () => {};
 
 export class AVHost extends AVItem {
-  styles = {
+  static styles = {
     header: this.styled.div`
       padding: 0 1.5em;
       box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
@@ -51,7 +51,7 @@ export class AVHost extends AVItem {
   render() {
     return (
         <div className="flex-1 col">
-          <this.styles.header className="row space-between">
+          <AVHost.styles.header className="row space-between">
             <h3>Хост тест</h3>
             {this.user && (
               <div className="col align-center justify-center">
@@ -59,7 +59,7 @@ export class AVHost extends AVItem {
                 <AVButton onClick={() => this.auth.signOut()}>Выйти</AVButton>
               </div>
             )}
-          </this.styles.header>
+          </AVHost.styles.header>
           <div className="flex-1 row pad-8 border">
             {this.user ?  this._renderMain() : <AVAuth></AVAuth>}
           </div>
@@ -88,13 +88,13 @@ export class AVHost extends AVItem {
   _renderMain() {
     return (
       <div className="flex-1 row">
-        <this.styles.leftSidebar className="col pad-8 border">
+        <AVHost.styles.leftSidebar className="col pad-8 border">
           <AVTree
             items={this.state.config}
             onItemSelectFunc={this._onTreeItemSelect}
             onItemContextMenuFunc={this._onTreeItemContextMenu}
           ></AVTree>
-        </this.styles.leftSidebar>
+        </AVHost.styles.leftSidebar>
         <div id="view-port" className="pos-rel flex-1 col margin-left-8 pad-8 border scroll-y">
           {this.state.selectedTreeItem?.itemType === 'class' ?
             (<AVClass classItem={this.state.selectedTreeItem}></AVClass>) : ''}

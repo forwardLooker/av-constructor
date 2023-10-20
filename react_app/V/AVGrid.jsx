@@ -4,7 +4,7 @@ import {AVElement} from './0-AVElement.js';
 import {AVField} from "../VM/5-AVField.jsx";
 
 export class AVGrid extends AVElement {
-  styles = {
+  static styles = {
     gridHeaderCell: this.styled.div`
       .grid-column:first-of-type & {
         border: 1px solid black;
@@ -47,11 +47,11 @@ export class AVGrid extends AVElement {
       <div className="flex-1 row">
         {this.props.columns.map(c => (
           <div className="grid-column col flex-1" key={c.name}>
-            <this.styles.gridHeaderCell className="pad-8 text-center">{c.name}</this.styles.gridHeaderCell>
+            <AVGrid.styles.gridHeaderCell className="pad-8 text-center">{c.name}</AVGrid.styles.gridHeaderCell>
             {this.props.items.map((i, idx) => (
-              <this.styles.gridCell className="pad-8" key={i.id || idx} row-item-id={i.id} column-name={c.name}
+              <AVGrid.styles.gridCell className="pad-8" key={i.id || idx} row-item-id={i.id} column-name={c.name}
                 onClick={(e) => this._onCellClick(i, c.name, e)}
-              >{this._renderCellContent(i, c)}</this.styles.gridCell>
+              >{this._renderCellContent(i, c)}</AVGrid.styles.gridCell>
               ))}
           </div>
         ))}

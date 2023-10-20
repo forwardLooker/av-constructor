@@ -3,7 +3,7 @@ import React from 'react';
 import {AVElement} from './0-AVElement.js';
 
 export class AVButton extends AVElement {
-  styles = {
+  static styles = {
     standartButton: this.styled.button`
       display: inline-block;
       text-align: center;
@@ -32,9 +32,9 @@ export class AVButton extends AVElement {
 
   render() {
     return (
-      <this.styles.standartButton {...this.props}>
+      <AVButton.styles.standartButton {...this.props}>
         {this.props.children}
-      </this.styles.standartButton>
+      </AVButton.styles.standartButton>
     )
   }
 }

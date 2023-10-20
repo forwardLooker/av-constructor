@@ -9,7 +9,7 @@ import {AVButton} from "../V/AVButton.jsx";
 
 
 export class AVObjectDocument extends AVItem {
-  styles = {
+  static styles = {
     horizontalResizer: this.styled.div`
       width: 4px;
       height: 100%;
@@ -175,9 +175,9 @@ export class AVObjectDocument extends AVItem {
                    onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
                    onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
               ></div>
-              <this.styles.horizontalResizer
+              <AVObjectDocument.styles.horizontalResizer
                    onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}
-              ></this.styles.horizontalResizer>
+              ></AVObjectDocument.styles.horizontalResizer>
             </div>
           )}
         </AVField>
