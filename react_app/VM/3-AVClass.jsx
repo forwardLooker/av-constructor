@@ -91,12 +91,12 @@ export class AVClass extends AVItem {
   }
 
   _onObjectSaved = async () => {
-    const objectDocuments = await this.classItem.getObjectDocuments();
+    const objectDocuments = await this.props.classItem.getObjectDocuments();
     this.setState({objectDocuments});
   }
 
   _onFieldDescriptorsChanged = async () => {
-    const fieldDescriptors = await this.classItem.getFieldDescriptors();
+    const fieldDescriptors = await this.props.classItem.getFieldDescriptors();
     this.setState({fieldDescriptors});
   }
 
