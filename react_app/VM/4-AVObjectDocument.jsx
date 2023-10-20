@@ -7,7 +7,6 @@ import {AVField} from './5-AVField.jsx';
 
 import {AVButton} from "../V/AVButton.jsx";
 
-
 export class AVObjectDocument extends AVItem {
   static styles = {
     horizontalResizer: this.styled.div`
