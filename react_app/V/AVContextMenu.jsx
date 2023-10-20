@@ -13,7 +13,7 @@ export class AVContextMenu extends AVElement {
   render() {
     return (
       <div
-        className="pos-abs flex-1 col z-index-10000 bg-gainsboro"
+        className="pos-abs flex-1 col z-index-10000 bg-gainsboro cursor-default"
         style={{
           top: this.props.contextMenuEvent.pageY + 'px',
           left: this.props.contextMenuEvent.pageX + 'px'

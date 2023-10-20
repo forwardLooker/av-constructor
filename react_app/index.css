@@ -142,6 +142,9 @@
 .cursor-pointer {
     cursor: pointer;
 }
+.cursor-default {
+    cursor: default;
+}
 .rotate-90 {
     transform: rotate(90deg);
 }
