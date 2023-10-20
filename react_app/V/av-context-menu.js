@@ -1,6 +1,35 @@
 import {AVElement, css, html} from './0-AVElement.js';
 
 export class AVContextMenu extends AVElement {
+  static defaultProps = {
+    items: [],
+    contextMenuEvent: null,
+    onItemSelectFunc: this.noop
+  }
+  render() {
+    return (
+      <div
+        className="pos-abs flex-1 col z-index-10000 bg-gainsboro"
+        style={{
+          top: this.props.contextMenuEvent.pageY + 'px',
+          left: this.props.contextMenuEvent.pageX + 'px'
+        }}
+      >
+        {this.items.map(meniItem => (
+          <div
+            className="contextMenuItem pad-4"
+            key={meniItem}
+            onClick={e => this._onItemSelect(meniItem)}
+          >
+            {meniItem}
+          </div>
+        ))}
+      </div>
+    )
+  }
+}
+
+export class AVContextMenu2 extends AVElement {
   static get styles() {
     return css`
       :host {

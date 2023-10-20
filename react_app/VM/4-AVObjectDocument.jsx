@@ -152,7 +152,7 @@ export class AVObjectDocument extends AVItem {
   _renderField(fieldItem, idx, containerElement) {
     return (
       <div
-        className="flex-1 pos-rel margin-top-2"
+        className="pos-rel flex-1 margin-top-2"
         style={fieldItem.style}
         key={fieldItem.name || idx}
       >

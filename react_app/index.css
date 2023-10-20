@@ -154,6 +154,9 @@
 .z-index-1000 {
     z-index: 1000;
 }
+.z-index-10000 {
+    z-index: 10000;
+}
 .trbl-0 {
     top: 0;
     right: 0;
@@ -168,6 +171,9 @@
 }
 .bg-white {
     background: white;
+}
+.bg-gainsboro {
+    background: gainsboro;
 }
 .bg-transparent-45 {
     background-color: rgba(0,0,0,0.45);

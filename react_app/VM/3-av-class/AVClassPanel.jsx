@@ -39,7 +39,7 @@ export class AVClassPanel extends AVItem {
 
   _renderGridButtons() {
     return (
-      <div className="pad-vrt-8">
+      <div>
         <AVButton onClick={this.props.onCreateFunc}>Создать</AVButton>
       </div>
     )
