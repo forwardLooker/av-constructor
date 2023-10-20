@@ -87,8 +87,20 @@
 .border-1 {
     border: 1px solid black;
 }
-.border-2-bot {
+.border-bottom-2 {
     border-bottom: 2px solid black;
+}
+.border-top-4 {
+    border-top: 4px solid black;
+}
+.border-right-4 {
+    border-right: 4px solid black;
+}
+.border-bottom-4 {
+    border-bottom: 4px solid black;
+}
+.border-left-4 {
+    border-left: 4px solid black;
 }
 .margin-left-2 {
     margin-left: 2px;

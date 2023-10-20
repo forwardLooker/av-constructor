@@ -57,6 +57,7 @@ export class AVField extends AVItem {
     return (
       <div className={`flex-1 ${this.props.labelPosition === 'top'? 'column' : 'row'} align-center`}
          style={this.props.style}
+         ref={this.props.refOnRootDiv}
       >
         {!this.props.isLabelHidden && (
           <AVLabel>{this.props.fieldItem.label || this.props.fieldItem.name}</AVLabel>

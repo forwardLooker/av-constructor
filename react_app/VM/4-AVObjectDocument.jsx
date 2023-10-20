@@ -155,7 +155,7 @@ export class AVObjectDocument extends AVItem {
       <div className="flex-1 pos-rel margin-top-2" key={fieldItem.name || idx}>
         <AVField
           style={fieldItem.style}
-          ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
+          refOnRootDiv={fieldDomElement => fieldItem.domElement = fieldDomElement}
           fieldItem={fieldItem}
           value={this.state._newData[fieldItem.name]}
           onChangeFunc={value => {this.state._newData[fieldItem.name] = value}}
@@ -197,8 +197,7 @@ export class AVObjectDocument extends AVItem {
   _startHorizontalResize = (msDownEvent, fieldItem, idx, containerElement) => {
     msDownEvent.preventDefault();
     // запрет на изменение ширины крайнего правого элемента
-    if ((!containerElement.items[idx].viewItemType ||
-        containerElement.items[idx].viewItemType === 'field') &&
+    if ((!fieldItem.viewItemType || fieldItem.viewItemType === 'field') &&
       !containerElement.container
     ) {
       return;
@@ -231,7 +230,7 @@ export class AVObjectDocument extends AVItem {
     ) {
       const firstVertical = containerElement.viewItemType === 'vertical-layout' ? containerElement : containerElement.container;
       firstVerticalNotRightest = this._findFirstVerticalNotRightestInHorizontal(firstVertical);
-      if (firstVerticalNotRightest) {
+      if (firstVerticalNotRightest) { // TODO вот это предположительно не работает из того, что Дом теперь виртуальный
         resizeVrtElemRect = firstVerticalNotRightest.domElement.getBoundingClientRect();
       }
     }
@@ -334,36 +333,44 @@ export class AVObjectDocument extends AVItem {
     const elemRect = fieldOverlay.getBoundingClientRect();
 
     if (elemRect.left + elemRect.width/10 > e.pageX) {
-      fieldOverlay.classList.remove('dragover-top');
-      fieldOverlay.classList.remove('dragover-bottom');
-      fieldOverlay.classList.add('dragover-left');
-      this.designDropSide = 'left';
+      fieldOverlay.classList.remove('border-top-4');
+      fieldOverlay.classList.remove('border-bottom-4');
+      fieldOverlay.classList.add('border-left-4');
+      this.setState({designDropSide: 'left'});
     } else {
-      fieldOverlay.classList.remove('dragover-left');
+      fieldOverlay.classList.remove('border-left-4');
 
       if (elemRect.right - elemRect.width/10 <= e.pageX) {
-        fieldOverlay.classList.remove('dragover-top');
-        fieldOverlay.classList.remove('dragover-bottom');
-        fieldOverlay.classList.add('dragover-right');
-        this.designDropSide = 'right';
+        fieldOverlay.classList.remove('border-top-4');
+        fieldOverlay.classList.remove('border-bottom-4');
+        fieldOverlay.classList.add('border-right-4');
+        this.setState({designDropSide: 'right'});
       } else {
-        fieldOverlay.classList.remove('dragover-right');
+        fieldOverlay.classList.remove('border-right-4');
 
         if (elemRect.top + elemRect.height/2 > e.pageY) {
-          fieldOverlay.classList.add('dragover-top');
-          this.designDropSide = 'top';
+          fieldOverlay.classList.add('border-top-4');
+          this.setState({designDropSide: 'top'});
         } else {
-          fieldOverlay.classList.remove('dragover-top');
+          fieldOverlay.classList.remove('border-top-4');
         }
 
         if (elemRect.top + elemRect.height/2 <= e.pageY) {
-          fieldOverlay.classList.add('dragover-bottom');
-          this.designDropSide = 'bottom'
+          fieldOverlay.classList.add('border-bottom-4');
+          this.setState({designDropSide: 'bottom'});
         } else {
-          fieldOverlay.classList.remove('dragover-bottom');
+          fieldOverlay.classList.remove('border-bottom-4');
         }
       }
     }
+  }
+
+  _removeDragBorder = (e) => {
+    const fieldOverlay = this._findFieldOverlay(e);
+    fieldOverlay.classList.remove('border-top-4');
+    fieldOverlay.classList.remove('border-bottom-4');
+    fieldOverlay.classList.remove('border-left-4');
+    fieldOverlay.classList.remove('border-right-4');
   }
 
   _dragleave = (e) => {
@@ -371,88 +378,80 @@ export class AVObjectDocument extends AVItem {
   }
 
   _drop = (e, fieldItem, dropElementIndex, dropContainer) => {
-    if (this.designDragElement === dropContainer.items[dropElementIndex]) {
+    if (this.state.designDragElement === dropContainer.items[dropElementIndex]) {
       this._removeDragBorder(e);
       return;
     }
 
-    if (this.designDragElement.style) {
-      delete this.designDragElement.style['flex-basis'];
-      delete this.designDragElement.style['flex-grow'];
+    if (this.state.designDragElement.style) {
+      delete this.state.designDragElement.style.flexBasis;
+      delete this.state.designDragElement.style.flexGrow;
     }
 
     // const newDesign = [...this.designJson];
     let insertIndex = dropElementIndex;
-    let cutIndex = this.designDragElementIndex;
+    let cutIndex = this.state.designDragElementIndex;
 
-    if (this.designDropSide === 'left' || this.designDropSide === 'right') {
+    if (this.state.designDropSide === 'left' || this.state.designDropSide === 'right') {
       if (dropContainer.viewItemType === 'vertical-layout') {
-        if (this.designDropSide === 'left') {
-          dropContainer.items[dropElementIndex] = {container: dropContainer, viewItemType: 'horizontal-layout', items: [this.designDragElement, dropContainer.items[dropElementIndex]]}
+        if (this.state.designDropSide === 'left') {
+          dropContainer.items[dropElementIndex] = {container: dropContainer, viewItemType: 'horizontal-layout', items: [this.state.designDragElement, dropContainer.items[dropElementIndex]]}
         }
-        if (this.designDropSide === 'right') {
-          dropContainer.items[dropElementIndex] = {container: dropContainer, viewItemType: 'horizontal-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement]}
+        if (this.state.designDropSide === 'right') {
+          dropContainer.items[dropElementIndex] = {container: dropContainer, viewItemType: 'horizontal-layout', items: [dropContainer.items[dropElementIndex], this.state.designDragElement]}
         }
       } else if (dropContainer.viewItemType === 'horizontal-layout') {
-        if (this.designDropSide === 'left') {
-          if (dropContainer === this.designDragContainer) {
+        if (this.state.designDropSide === 'left') {
+          if (dropContainer === this.state.designDragContainer) {
             cutIndex = cutIndex + 1;
           }
         }
-        if (this.designDropSide === 'right') {
+        if (this.state.designDropSide === 'right') {
           insertIndex = insertIndex + 1;
         }
-        dropContainer.items.splice(insertIndex, 0, this.designDragElement);
+        dropContainer.items.splice(insertIndex, 0, this.state.designDragElement);
       }
     }
 
-    if (this.designDropSide === 'top' || this.designDropSide === 'bottom') {
+    if (this.state.designDropSide === 'top' || this.state.designDropSide === 'bottom') {
       if (dropContainer.viewItemType === 'horizontal-layout') {
         let vrtElement;
-        if (this.designDropSide === 'top') {
-          vrtElement = {container: dropContainer, viewItemType: 'vertical-layout', items: [this.designDragElement, dropContainer.items[dropElementIndex]]}
+        if (this.state.designDropSide === 'top') {
+          vrtElement = {container: dropContainer, viewItemType: 'vertical-layout', items: [this.state.designDragElement, dropContainer.items[dropElementIndex]]}
         }
-        if (this.designDropSide === 'bottom') {
-          vrtElement = {container: dropContainer, viewItemType: 'vertical-layout', items: [dropContainer.items[dropElementIndex], this.designDragElement ]}
+        if (this.state.designDropSide === 'bottom') {
+          vrtElement = {container: dropContainer, viewItemType: 'vertical-layout', items: [dropContainer.items[dropElementIndex], this.state.designDragElement ]}
         }
 
         if (dropContainer.items[dropElementIndex].style) {
           vrtElement.style = {
-            'flex-basis': dropContainer.items[dropElementIndex].style['flex-basis'],
-            'flex-grow': dropContainer.items[dropElementIndex].style['flex-grow'],
+            flexBasis: dropContainer.items[dropElementIndex].style.flexBasis,
+            flexGrow: dropContainer.items[dropElementIndex].style.flexGrow,
           }
-          delete dropContainer.items[dropElementIndex].style['flex-basis'];
-          delete dropContainer.items[dropElementIndex].style['flex-grow'];
+          delete dropContainer.items[dropElementIndex].style.flexBasis;
+          delete dropContainer.items[dropElementIndex].style.flexGrow;
         }
 
         dropContainer.items.splice(insertIndex, 1)
         dropContainer.items.splice(insertIndex, 0, vrtElement);
 
       } else if (dropContainer.viewItemType === 'vertical-layout') {
-        if (this.designDropSide === 'bottom') {
+        if (this.state.designDropSide === 'bottom') {
           insertIndex = insertIndex + 1;
         }
-        if (dropContainer === this.designDragContainer && this.designDragElementIndex > dropElementIndex) {
+        if (dropContainer === this.state.designDragContainer && this.state.designDragElementIndex > dropElementIndex) {
           cutIndex = cutIndex + 1;
         }
-        dropContainer.items.splice(insertIndex, 0, this.designDragElement);
+        dropContainer.items.splice(insertIndex, 0, this.state.designDragElement);
       }
     }
 
-    this.designDragContainer.items.splice(cutIndex, 1);
-    this._removeEmptyContainers(this.designDragContainer);
+    this.state.designDragContainer.items.splice(cutIndex, 1);
+    this._removeEmptyContainers(this.state.designDragContainer);
 
-    this.requestUpdate();
+    this.forceUpdate();
     // this.designJson = newDesign;
     this._removeDragBorder(e);
-  }
-
-  _removeDragBorder = (e) => {
-    const fieldOverlay = this._findFieldOverlay(e);
-    fieldOverlay.classList.remove('dragover-top');
-    fieldOverlay.classList.remove('dragover-bottom');
-    fieldOverlay.classList.remove('dragover-left');
-    fieldOverlay.classList.remove('dragover-right');
   }
 
   _saveAndClose = async () => {
