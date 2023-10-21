@@ -319,7 +319,7 @@ export class AVObjectDocument extends AVItem {
   _dragstart = (e, fieldItem, idx, container) => {
     this.setState({
       designDragElementIndex: idx,
-      designDragElement: container.items[idx],
+      designDragElement: fieldItem,
       designDragContainer: container
     })
   }
@@ -379,8 +379,8 @@ export class AVObjectDocument extends AVItem {
     this._removeDragBorder(e);
   }
 
-  _drop = (e, fieldItem, dropElementIndex, dropContainer) => {
-    if (this.state.designDragElement === dropContainer.items[dropElementIndex]) {
+  _drop = (e, dropFieldItem, dropElementIndex, dropContainer) => {
+    if (this.state.designDragElement === dropFieldItem) {
       this._removeDragBorder(e);
       return;
     }
@@ -398,10 +398,18 @@ export class AVObjectDocument extends AVItem {
     if (this.state.designDropSide === 'left' || this.state.designDropSide === 'right') {
       if (dropContainer.viewItemType === 'vertical-layout') {
         if (this.state.designDropSide === 'left') {
-          dropContainer.items[dropElementIndex] = {container: dropContainer, viewItemType: 'horizontal-layout', items: [this.state.designDragElement, dropContainer.items[dropElementIndex]]}
+          dropContainer.items[dropElementIndex] = {
+            container: dropContainer,
+            viewItemType: 'horizontal-layout',
+            items: [this.state.designDragElement, dropFieldItem]
+          }
         }
         if (this.state.designDropSide === 'right') {
-          dropContainer.items[dropElementIndex] = {container: dropContainer, viewItemType: 'horizontal-layout', items: [dropContainer.items[dropElementIndex], this.state.designDragElement]}
+          dropContainer.items[dropElementIndex] = {
+            container: dropContainer,
+            viewItemType: 'horizontal-layout',
+            items: [dropFieldItem, this.state.designDragElement]
+          }
         }
       } else if (dropContainer.viewItemType === 'horizontal-layout') {
         if (this.state.designDropSide === 'left') {
@@ -420,20 +428,28 @@ export class AVObjectDocument extends AVItem {
       if (dropContainer.viewItemType === 'horizontal-layout') {
         let vrtElement;
         if (this.state.designDropSide === 'top') {
-          vrtElement = {container: dropContainer, viewItemType: 'vertical-layout', items: [this.state.designDragElement, dropContainer.items[dropElementIndex]]}
+          vrtElement = {
+            container: dropContainer,
+            viewItemType: 'vertical-layout',
+            items: [this.state.designDragElement, dropFieldItem]
+          }
         }
         if (this.state.designDropSide === 'bottom') {
-          vrtElement = {container: dropContainer, viewItemType: 'vertical-layout', items: [dropContainer.items[dropElementIndex], this.state.designDragElement ]}
+          vrtElement = {
+            container: dropContainer,
+            viewItemType: 'vertical-layout',
+            items: [dropFieldItem, this.state.designDragElement]
+          }
         }
 
-        if (dropContainer.items[dropElementIndex].style) {
+        if (dropFieldItem.style) {
           vrtElement.style = {
-            flexBasis: dropContainer.items[dropElementIndex].style.flexBasis,
-            flexGrow: dropContainer.items[dropElementIndex].style.flexGrow,
+            flexBasis: dropFieldItem.style.flexBasis,
+            flexGrow: dropFieldItem.style.flexGrow,
           }
           // delete dropContainer.items[dropElementIndex].style.flexBasis;
           // delete dropContainer.items[dropElementIndex].style.flexGrow;
-          dropContainer.items[dropElementIndex].style = {};
+          dropFieldItem.style = {};
         }
 
         dropContainer.items.splice(insertIndex, 1)
