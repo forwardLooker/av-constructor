@@ -1,7 +1,7 @@
 {
-  "name": "constructor",
+  "name": "av-constructor",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Audio Visual",
   "babel": {
     "presets": [
@@ -13,22 +13,16 @@
     ]
   },
   "scripts": {
-    "serve": "wds --watch",
-    "serve:prod": "MODE=prod npm run serve",
     "create-react-dist": "webpack",
     "start-react": "webpack-dev-server --open"
   },
   "keywords": [
-    "web-components",
-    "lit-element",
-    "javascript",
-    "lit"
+    "javascript"
   ],
   "author": "Anvar Khakimov",
   "license": "Private",
   "dependencies": {
     "firebase": "^9.22.1",
-    "lit": "^2.7.4",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "styled-components": "^6.0.8"
@@ -37,8 +31,6 @@
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
-    "@web/dev-server": "^0.1.31",
-    "@web/dev-server-legacy": "^1.0.0",
     "babel-loader": "8.0.0",
     "babel-plugin-styled-components": "^2.1.4",
     "css-loader": "^1.0.0",
@@ -47,6 +39,5 @@
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.6"
-  },
-  "customElements": "custom-elements.json"
+  }
 }
