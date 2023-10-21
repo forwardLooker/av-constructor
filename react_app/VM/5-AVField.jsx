@@ -49,6 +49,7 @@ export class AVField extends AVItem {
 
     style: null,
     $objectDocument: null,
+    inspectedObject: null
   }
   state = {
     _value: this.props.value
@@ -168,7 +169,7 @@ export class AVField extends AVItem {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.value !== prevProps.value) {
+    if (this.props.value !== prevProps.value || this.props.inspectedObject !== prevProps.inspectedObject) {
       this.setState({_value: this.props.value});
     }
   }

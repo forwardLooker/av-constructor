@@ -71,6 +71,7 @@ export class AVPropertyGrid extends AVElement {
         fieldItem={propertyItem}
         value={this.props.inspectedItem[propertyItem.name]}
         onChangeFunc={value => this.props.inspectedItem[propertyItem.name] = value}
+        inspectedObject={this.props.inspectedItem}
       ></AVField>
     )
   }
