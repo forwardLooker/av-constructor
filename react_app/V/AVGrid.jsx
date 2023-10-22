@@ -47,7 +47,7 @@ export class AVGrid extends AVElement {
       <div className="flex-1 row">
         {this.props.columns.map(c => (
           <div className="grid-column col flex-1" key={c.name}>
-            <AVGrid.styles.gridHeaderCell className="pad-8 text-center">{c.name}</AVGrid.styles.gridHeaderCell>
+            <AVGrid.styles.gridHeaderCell className="pad-8 text-center">{c.label || c.name}</AVGrid.styles.gridHeaderCell>
             {this.props.items.map((i, idx) => (
               <AVGrid.styles.gridCell className="pad-8" key={i.id || idx} row-item-id={i.id} column-name={c.name}
                 onClick={(e) => this._onCellClick(i, c.name, e)}
