@@ -37,7 +37,10 @@ export class AVHost extends AVItem {
     isContextMenuOpened: false,
     contextMenuItems: [],
     contextMenuEvent: null,
-    _contextMenuResolveFunc: null
+    _contextMenuResolveFunc: null,
+
+    designMode: false,
+    $designObjectDocument: null
   }
 
   constructor() {
@@ -76,11 +79,30 @@ export class AVHost extends AVItem {
     return (
       <div className="flex-1 row">
         <AVHost.styles.leftSidebar className="col pad-8 border">
-          <AVTree
-            items={this.state.config}
-            onItemSelectFunc={this._onTreeItemSelect}
-            onItemContextMenuFunc={this._onTreeItemContextMenu}
-          ></AVTree>
+          {this.state.designMode && (
+            <div className="col">
+              <div
+                className="border pad-4"
+                draggable="true"
+                onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+                  e,
+                  {
+                    designDragElement: {viewItemType: 'space div'},
+                    designDragElementOrigin: 'instrument panel'
+                  }
+                )}
+              >
+                space div
+              </div>
+            </div>
+          )}
+          {!this.state.designMode && (
+            <AVTree
+              items={this.state.config}
+              onItemSelectFunc={this._onTreeItemSelect}
+              onItemContextMenuFunc={this._onTreeItemContextMenu}
+            ></AVTree>
+          )}
         </AVHost.styles.leftSidebar>
         <div className="pos-rel flex-1 col margin-left-8 pad-8 border scroll-y">
           {this.state.selectedTreeItem?.itemType === 'class' ?

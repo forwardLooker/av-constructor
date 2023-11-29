@@ -30,6 +30,7 @@ export class AVObjectDocument extends AVItem {
     designDragElementIndex: null,
     designDragElement: null,
     designDragContainer: null,
+    designDragElementOrigin: '', // enum ['instrument panel', 'objectDocument']
     designDropSide: 'none', // enum: ['top', 'bottom', 'left', 'right', 'none']
 
     isClassItemOpened: false,
@@ -141,7 +142,9 @@ export class AVObjectDocument extends AVItem {
               </div>
             )
           }
-          if (vrtItem.viewItemType === 'field' || !vrtItem.viewItemType) {
+          if (vrtItem.viewItemType === 'field' || !vrtItem.viewItemType ||
+            (vrtItem.viewItemType !== 'vertical-layout' && vrtItem.viewItemType !== 'horizontal-layout')
+          ) {
             return this._renderField(vrtItem, vrtIndex, vrtLayoutItem)
           }
         })}
@@ -168,7 +171,7 @@ export class AVObjectDocument extends AVItem {
             <div className="field-overlay pos-abs trbl-0 row border-1 bg-transparent-25">
               <div className="flex-1"
                    draggable="true"
-                   onDragStart={(e) => this._dragstart(e, fieldItem, idx, containerElement)}
+                   onDragStart={(e) => this.dragstart(e, fieldItem, idx, containerElement)}
                    onDragOver={this._dragover}
                    onDragLeave={this._dragleave}
                    onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
@@ -316,11 +319,17 @@ export class AVObjectDocument extends AVItem {
     const menuResult = await this.showContextMenu(e, ['Сгруппировать']);
   }
 
-  _dragstart = (e, fieldItem, idx, container) => {
+  dragstart = (e, {
+    designDragElement,
+    designDragElementIndex,
+    designDragContainer,
+    designDragElementOrigin = 'objectDocument'
+  }) => {
     this.setState({
-      designDragElementIndex: idx,
-      designDragElement: fieldItem,
-      designDragContainer: container
+      designDragElement,
+      designDragElementIndex,
+      designDragContainer,
+      designDragElementOrigin,
     })
   }
 
@@ -466,8 +475,10 @@ export class AVObjectDocument extends AVItem {
       }
     }
 
-    this.state.designDragContainer.items.splice(cutIndex, 1);
-    this._removeEmptyContainers(this.state.designDragContainer);
+    if (this.state.designDragElementOrigin !== 'instrument panel') {
+      this.state.designDragContainer.items.splice(cutIndex, 1);
+      this._removeEmptyContainers(this.state.designDragContainer);
+    }
 
     this.forceUpdate();
     // this.designJson = newDesign;
@@ -492,6 +503,11 @@ export class AVObjectDocument extends AVItem {
         }
       }
     );
+    console.log('this.Host', this.Host);
+    this.Host.$hostElement.setState(state => ({
+      designMode: !state.designMode,
+      $designObjectDocument: this
+    }));
   }
 
   _saveDesign = async () => {

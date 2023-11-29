@@ -55,6 +55,16 @@ export class AVField extends AVItem {
     _value: this.props.value
   }
   render() {
+    if (this.props.fieldItem.viewItemType === 'space div') {
+      return (
+        <div className='pad-8'
+             style={this.props.style}
+             ref={this.props.refOnRootDiv}
+        >
+          {this.props.children}
+        </div>
+      )
+    }
     return (
       <div className={`flex-1 ${this.props.labelPosition === 'top'? 'column' : 'row'} align-center`}
          style={this.props.style}
