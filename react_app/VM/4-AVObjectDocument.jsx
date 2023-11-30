@@ -324,7 +324,7 @@ export class AVObjectDocument extends AVItem {
   }
 
   _onDesignFieldContextMenu = async (e, fieldItem, idx, containerElement) => {
-    const menuResult = await this.showContextMenu(e, ['Сгруппировать']);
+    const menuResult = await this.showContextMenu(e, ['Действие']);
   }
 
   dragstart = (e, {

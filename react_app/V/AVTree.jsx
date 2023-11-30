@@ -68,6 +68,10 @@ export class AVTree extends AVElement {
     )
   }
 
+  componentDidMount() {
+    this.setState({_items: this.deepClone(this.props.items)})
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.items !== prevProps.items) {
       this.setState({_items: this.deepClone(this.props.items)})
