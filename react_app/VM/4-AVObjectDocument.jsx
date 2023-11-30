@@ -171,7 +171,15 @@ export class AVObjectDocument extends AVItem {
             <div className="field-overlay pos-abs trbl-0 row border-1 bg-transparent-25">
               <div className="flex-1"
                    draggable="true"
-                   onDragStart={(e) => this.dragstart(e, fieldItem, idx, containerElement)}
+                   onDragStart={(e) => this.dragstart(
+                     e,
+                     {
+                       designDragElement: fieldItem,
+                       designDragElementIndex: idx,
+                       designDragContainer: containerElement,
+                       designDragElementOrigin: 'objectDocument'
+                     },
+                   )}
                    onDragOver={this._dragover}
                    onDragLeave={this._dragleave}
                    onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
