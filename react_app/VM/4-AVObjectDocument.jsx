@@ -155,7 +155,7 @@ export class AVObjectDocument extends AVItem {
   _renderField(fieldItem, idx, containerElement) {
     return (
       <div
-        className="pos-rel flex-1 margin-top-2"
+        className="pos-rel col flex-1 margin-top-2"
         style={fieldItem.style}
         key={fieldItem.name || idx}
       >
@@ -169,25 +169,32 @@ export class AVObjectDocument extends AVItem {
         >
           {this.state.designMode && (
             <div className="field-overlay pos-abs trbl-0 row border-1 bg-transparent-25">
-              <div className="flex-1"
-                   draggable="true"
-                   onDragStart={(e) => this.dragstart(
-                     e,
-                     {
-                       designDragElement: fieldItem,
-                       designDragElementIndex: idx,
-                       designDragContainer: containerElement,
-                       designDragElementOrigin: 'objectDocument'
-                     },
-                   )}
-                   onDragOver={this._dragover}
-                   onDragLeave={this._dragleave}
-                   onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
-                   onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
-              ></div>
-              <AVObjectDocument.styles.horizontalResizer
-                   onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}
-              ></AVObjectDocument.styles.horizontalResizer>
+              <div className="flex-1 col">
+                <div className="flex-1 row">
+                  <div className="flex-1 z-index-10000"
+                       draggable="true"
+                       onDragStart={(e) => this.dragstart(
+                           e,
+                           {
+                             designDragElement: fieldItem,
+                             designDragElementIndex: idx,
+                             designDragContainer: containerElement,
+                             designDragElementOrigin: 'objectDocument'
+                           },
+                       )}
+                       onDragOver={this._dragover}
+                       onDragLeave={this._dragleave}
+                       onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
+                       onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
+                  ></div>
+                  <AVObjectDocument.styles.horizontalResizer
+                      onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}
+                  ></AVObjectDocument.styles.horizontalResizer>
+                </div>
+                <div className="width-100 height-2px cursor-row-resize"
+                     onMouseDown={(e) => this._startVerticalResize(e, fieldItem, idx, containerElement)}
+                ></div>
+              </div>
             </div>
           )}
         </AVField>
@@ -205,6 +212,42 @@ export class AVObjectDocument extends AVItem {
         onObjectDocumentSelected(objDocItem);
       }
     })
+  }
+
+  _startVerticalResize = (msDownEvent, fieldItem, idx, containerElement) => {
+    msDownEvent.preventDefault();
+    const startResizePageY = msDownEvent.pageY;
+    const resizeElem = fieldItem.domElement;
+    const resizeElemRect = resizeElem.getBoundingClientRect();
+
+    window.document.onmouseup = upEv => {
+      upEv.preventDefault();
+      window.document.onmousemove = null;
+      window.document.onmouseup = null;
+    }
+
+    window.document.onmousemove = moveEv => {
+      moveEv.preventDefault();
+      const pageYDiff = moveEv.pageY - startResizePageY;
+
+      const newHeight = (resizeElemRect.height + pageYDiff) + 'px';
+      console.log('newHeight:', newHeight);
+      const forStyleHeightObj = {
+        flexBasis: newHeight,
+        flexGrow: 0
+      }
+      if (fieldItem.style) {
+        fieldItem.style = {
+          ...fieldItem.style,
+          ...forStyleHeightObj
+        }
+      } else {
+        fieldItem.style = forStyleHeightObj;
+      }
+
+      this.forceUpdate();
+    }
+
   }
 
   _startHorizontalResize = (msDownEvent, fieldItem, idx, containerElement) => {

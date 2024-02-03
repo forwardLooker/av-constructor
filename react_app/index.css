@@ -10,6 +10,9 @@
 .width-100 {
     width: 100%
 }
+.height-2px {
+    height: 2px;
+}
 .row {
     display: flex;
     flex-direction: row;
@@ -141,6 +144,9 @@
 }
 .cursor-pointer {
     cursor: pointer;
+}
+.cursor-row-resize {
+    cursor: row-resize;
 }
 .cursor-default {
     cursor: default;

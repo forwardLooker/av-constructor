@@ -57,7 +57,7 @@ export class AVField extends AVItem {
   render() {
     if (this.props.fieldItem.viewItemType === 'space div') {
       return (
-        <div className='pad-8'
+        <div className='flex-1 pad-8'
              style={this.props.style}
              ref={this.props.refOnRootDiv}
         >
