@@ -71,7 +71,7 @@ export class AVField extends AVItem {
                style={this.props.style}
                ref={this.props.refOnRootDiv}
           >
-            <AVLabel>label</AVLabel>
+            <AVLabel>{this.props.fieldItem.label || 'label'}</AVLabel>
             {this.props.children}
           </div>
       )
