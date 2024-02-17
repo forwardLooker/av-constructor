@@ -94,6 +94,19 @@ export class AVHost extends AVItem {
               >
                 space div
               </div>
+              <div
+                  className="border pad-4"
+                  draggable="true"
+                  onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+                      e,
+                      {
+                        designDragElement: {viewItemType: 'label'},
+                        designDragElementOrigin: 'instrument panel'
+                      }
+                  )}
+              >
+                label
+              </div>
             </div>
           )}
           {!this.state.designMode && (

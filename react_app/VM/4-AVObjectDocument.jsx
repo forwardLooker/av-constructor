@@ -367,7 +367,16 @@ export class AVObjectDocument extends AVItem {
   }
 
   _onDesignFieldContextMenu = async (e, fieldItem, idx, containerElement) => {
-    const menuResult = await this.showContextMenu(e, ['Действие']);
+    let menuResult;
+    if (fieldItem.viewItemType === 'label') {
+      menuResult = await this.showContextMenu(e, ['Изменить label']);
+      if (menuResult === 'Изменить label') {
+        const newLabel = await this.showDialog({text: 'Введите новый label', inputLabel: 'label'});
+
+      }
+    } else {
+      menuResult = await this.showContextMenu(e, ['Действие']);
+    }
   }
 
   dragstart = (e, {
@@ -579,7 +588,7 @@ export class AVObjectDocument extends AVItem {
 
   _addContainerReference = (layoutElememt) => {
     layoutElememt.items.forEach((i) => {
-      if (i.viewItemType && i.viewItemType !== 'field') {
+      if (i.viewItemType === 'horizontal-layout' || i.viewItemType === 'vertical-layout') {
         i.container = layoutElememt;
         this._addContainerReference(i)
       }
@@ -587,7 +596,7 @@ export class AVObjectDocument extends AVItem {
   }
   _removeContainerReference = (layoutElement) => {
     layoutElement.items.forEach(i => {
-      if (i.viewItemType && i.viewItemType !== 'field') {
+      if (i.viewItemType === 'horizontal-layout' || i.viewItemType === 'vertical-layout') {
         if (i.container) {
           delete i.container;
         }
