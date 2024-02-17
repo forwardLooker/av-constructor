@@ -99,7 +99,7 @@ export class AVObjectDocument extends AVItem {
           <div className="row justify-end">
             <div>
               <AVButton onClick={this._saveAndClose}>OK</AVButton>
-              <AVButton onClick={this.props.onCloseFunc}>Отмена</AVButton>
+              <AVButton onClick={this._closeWithoutSave}>Отмена</AVButton>
               <AVButton onClick={this._toggleDesign}>Дизайнер</AVButton>
             </div>
           </div>
@@ -549,6 +549,18 @@ export class AVObjectDocument extends AVItem {
     await this.props.objectDocument.saveData(this.state._newData);
     this.props.onSavedFunc();
     this.props.onCloseFunc();
+    this.Host.$hostElement.setState(state => ({
+      designMode: false,
+      $designObjectDocument: null
+    }));
+  }
+
+  _closeWithoutSave = () => {
+    this.props.onCloseFunc();
+    this.Host.$hostElement.setState(state => ({
+      designMode: false,
+      $designObjectDocument: null
+    }));
   }
 
   _toggleDesign = async () => {
