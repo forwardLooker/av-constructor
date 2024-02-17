@@ -79,36 +79,7 @@ export class AVHost extends AVItem {
     return (
       <div className="flex-1 row">
         <AVHost.styles.leftSidebar className="col pad-8 border">
-          {this.state.designMode && (
-            <div className="col">
-              <div
-                className="border pad-4"
-                draggable="true"
-                onDragStart={(e) => this.state.$designObjectDocument.dragstart(
-                  e,
-                  {
-                    designDragElement: {viewItemType: 'space div'},
-                    designDragElementOrigin: 'instrument panel'
-                  }
-                )}
-              >
-                space div
-              </div>
-              <div
-                  className="border pad-4"
-                  draggable="true"
-                  onDragStart={(e) => this.state.$designObjectDocument.dragstart(
-                      e,
-                      {
-                        designDragElement: {viewItemType: 'label'},
-                        designDragElementOrigin: 'instrument panel'
-                      }
-                  )}
-              >
-                label
-              </div>
-            </div>
-          )}
+          {this.state.designMode && this._renderInstrumentPanel()}
           {!this.state.designMode && (
             <AVTree
               items={this.state.config}
@@ -124,6 +95,52 @@ export class AVHost extends AVItem {
             (<AVDomain domainItem={this.state.selectedTreeItem}></AVDomain>)  : ''}
         </div>
       </div>
+    )
+  }
+
+  _renderInstrumentPanel() {
+    return (
+        <div className="col">
+          <div
+              className="border pad-4"
+              draggable="true"
+              onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+                  e,
+                  {
+                    designDragElement: {viewItemType: 'space div'},
+                    designDragElementOrigin: 'instrument panel'
+                  }
+              )}
+          >
+            space div
+          </div>
+          <div
+              className="border pad-4"
+              draggable="true"
+              onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+                  e,
+                  {
+                    designDragElement: {viewItemType: 'label'},
+                    designDragElementOrigin: 'instrument panel'
+                  }
+              )}
+          >
+            label
+          </div>
+          <div
+              className="border pad-4"
+              draggable="true"
+              onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+                  e,
+                  {
+                    designDragElement: {viewItemType: 'tabs'},
+                    designDragElementOrigin: 'instrument panel'
+                  }
+              )}
+          >
+            tabs
+          </div>
+        </div>
     )
   }
 
