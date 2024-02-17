@@ -232,9 +232,16 @@ export class AVObjectDocument extends AVItem {
 
       const newHeight = (resizeElemRect.height + pageYDiff) + 'px';
       console.log('newHeight:', newHeight);
-      const forStyleHeightObj = {
-        flexBasis: newHeight,
-        flexGrow: 0
+      let forStyleHeightObj;
+      if (containerElement.viewItemType === 'horizontal-layout') {
+        forStyleHeightObj = {
+          height: newHeight
+        }
+      } else {
+        forStyleHeightObj = {
+          flexBasis: newHeight,
+          flexGrow: 0
+        }
       }
       if (fieldItem.style) {
         fieldItem.style = {
