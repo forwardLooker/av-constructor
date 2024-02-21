@@ -179,7 +179,12 @@ export class AVObjectDocument extends AVItem {
             <div className='_tab-container flex-1'>
               <div className='_tab-head row'>
                 {fieldItem.items.map(tab => (
-                    <div className='pad-0-4 border'
+                    <div
+                         className={['_tab-head-item', 'pad-0-4',
+                           fieldItem.selectedTabLabel === tab.label ? 'border-2' : 'border',
+                           fieldItem.selectedTabLabel === tab.label ? 'font-bold' : ''
+                         ].join(' ')}
+                         key={tab.label}
                          onClick={() => {
                            fieldItem.selectedTabLabel = tab.label;
                            this.forceUpdate();
@@ -191,7 +196,7 @@ export class AVObjectDocument extends AVItem {
               </div>
               <div className='_tabs-body-container pad-8 border'>
                 {fieldItem.items.map(tab => (
-                    <div className="_tab-body" hidden={fieldItem.selectedTabLabel !== tab.label}>
+                    <div className="_tab-body" key={tab.label} hidden={fieldItem.selectedTabLabel !== tab.label}>
                       {this._renderVerticalLayout(tab.items[0])}
                     </div>
                 ))}
