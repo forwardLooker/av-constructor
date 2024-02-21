@@ -120,7 +120,7 @@ export class AVHost extends AVItem {
               onDragStart={(e) => this.state.$designObjectDocument.dragstart(
                   e,
                   {
-                    designDragElement: {viewItemType: 'label'},
+                    designDragElement: {viewItemType: 'label', label: 'label'},
                     designDragElementOrigin: 'instrument panel'
                   }
               )}
@@ -133,24 +133,37 @@ export class AVHost extends AVItem {
               onDragStart={(e) => this.state.$designObjectDocument.dragstart(
                   e,
                   {
-                    designDragElement: {
-                        viewItemType: 'tabs',
-                        items: [
-                            {
-                                viewItemType: 'tab',
-                                label: 'tab 1',
-                                items: [{
-                                    viewItemType: 'vertical-layout',
-                                    items: [{
-                                        viewItemType: 'space div'
-                                    }]
-                                }]
-                            }
-                        ]
-                    },
-                    designDragElementOrigin: 'instrument panel'
+                      designDragElement: {viewItemType: 'button', label: 'button'},
+                      designDragElementOrigin: 'instrument panel'
                   }
               )}
+          >
+            button
+          </div>
+          <div
+            className="border pad-4"
+            draggable="true"
+            onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+                e,
+                {
+                  designDragElement: {
+                      viewItemType: 'tabs',
+                      items: [
+                          {
+                              viewItemType: 'tab',
+                              label: 'tab 1',
+                              items: [{
+                                  viewItemType: 'vertical-layout',
+                                  items: [{
+                                      viewItemType: 'space div'
+                                  }]
+                              }]
+                          }
+                      ]
+                  },
+                  designDragElementOrigin: 'instrument panel'
+                }
+            )}
           >
             tabs
           </div>

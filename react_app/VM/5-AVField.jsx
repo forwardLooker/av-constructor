@@ -76,6 +76,17 @@ export class AVField extends AVItem {
           </div>
       )
     }
+    if (this.props.fieldItem.viewItemType === 'button') {
+      return (
+        <div className='flex-1 pad-8'
+             style={this.props.style}
+             ref={this.props.refOnRootDiv}
+        >
+          <AVButton>{this.props.fieldItem.label || 'button'}</AVButton>
+          {this.props.children}
+        </div>
+      )
+    }
     // if (this.props.fieldItem.viewItemType === 'tabs') {
     //   return (
     //       <div className='flex-1 pad-8'

@@ -430,7 +430,7 @@ export class AVObjectDocument extends AVItem {
     e.preventDefault();
     let menu = ['Убрать элемент'];
     let menuResult;
-    if (fieldItem.viewItemType === 'label') {
+    if (fieldItem.viewItemType === 'label' || fieldItem.viewItemType === 'button') {
       menu.push('Изменить label');
       menuResult = await this.showContextMenu(e, menu);
       if (menuResult === 'Изменить label') {
