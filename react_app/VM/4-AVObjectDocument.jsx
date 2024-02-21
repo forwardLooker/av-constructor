@@ -428,9 +428,11 @@ export class AVObjectDocument extends AVItem {
 
   _onDesignFieldContextMenu = async (e, fieldItem, idx, containerElement) => {
     e.preventDefault();
+    let menu = ['Убрать элемент'];
     let menuResult;
     if (fieldItem.viewItemType === 'label') {
-      menuResult = await this.showContextMenu(e, ['Изменить label']);
+      menu.push('Изменить label');
+      menuResult = await this.showContextMenu(e, menu);
       if (menuResult === 'Изменить label') {
         const newLabel = await this.showDialog({text: 'Введите новый label', inputLabel: 'label'});
         if (newLabel) {
@@ -439,7 +441,15 @@ export class AVObjectDocument extends AVItem {
         }
       }
     } else {
-      menuResult = await this.showContextMenu(e, ['Действие']);
+      menuResult = await this.showContextMenu(e, menu);
+    }
+    if (menuResult === 'Убрать элемент') {
+      if (!fieldItem.viewItemType || fieldItem.viewItemType === 'field') {
+        return; // Сделать плашку где отображаются скрытые поля, чтобы их можно было вернуть
+      } else {
+        containerElement.items.splice(idx, 1);
+        this.forceUpdate();
+      }
     }
   }
 
