@@ -11,7 +11,7 @@ import {AVButton} from "../V/AVButton.jsx";
 import {AVLabel} from "../V/AVLabel.jsx";
 import {AVContextMenu} from "../V/AVContextMenu.jsx";
 
-import {Host} from'../M/1-Host.js';
+import {Host} from '../M/1-Host.js';
 
 export class AVHost extends AVItem {
   static styles = {

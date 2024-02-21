@@ -82,7 +82,15 @@ export class AVField extends AVItem {
              style={this.props.style}
              ref={this.props.refOnRootDiv}
         >
-          <AVButton>{this.props.fieldItem.label || 'button'}</AVButton>
+          <AVButton
+            onClick={() => {
+              if (this.props.$objectDocument) {
+                const classInstance = this.props.$objectDocument.props.objectDocument.Class;
+                const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+                moduleDefinition.methods[this.props.fieldItem.label]();
+              }
+            }}
+          >{this.props.fieldItem.label || 'button'}</AVButton>
           {this.props.children}
         </div>
       )

@@ -1,5 +1,6 @@
 import {Item} from './0-Item.js'
-import {ObjectDocument} from './4-ObjectDocument.js'
+import {ObjectDocument} from './4-ObjectDocument.js';
+import usersClass from '../Classes/users.js';
 
 export class Class extends Item {
   constructor() {
@@ -10,6 +11,7 @@ export class Class extends Item {
   serverRef;
   Host;
   id;
+  classModuleDefinitions = [usersClass];
   eventNames = [
     'openNewObjectDocument'
   ];
