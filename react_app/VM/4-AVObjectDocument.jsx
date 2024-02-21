@@ -172,8 +172,9 @@ export class AVObjectDocument extends AVItem {
         fieldItem.selectedTabLabel = fieldItem.items[0].label;
       }
       return (
-          <div className='flex-1 pad-8'
+          <div className='pos-rel flex-1 pad-8'
                style={fieldItem.style}
+               key={fieldItem.name || fieldItem.label || idx}
                ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
           >
             <div className='_tab-container flex-1'>
@@ -202,6 +203,7 @@ export class AVObjectDocument extends AVItem {
                 ))}
               </div>
             </div>
+            {(this.state.designMode && fieldItem.fullOverlayMode) && this._renderDesignFieldOverlay(fieldItem, idx, containerElement)}
           </div>
       )
     }
@@ -220,37 +222,41 @@ export class AVObjectDocument extends AVItem {
           labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
           $objectDocument={this}
         >
-          {this.state.designMode && (
-            <div className="field-overlay pos-abs trbl-0 row border-1 bg-transparent-25">
-              <div className="flex-1 col">
-                <div className="flex-1 row">
-                  <div className="flex-1 z-index-10000"
-                       draggable="true"
-                       onDragStart={(e) => this.dragstart(
-                           e,
-                           {
-                             designDragElement: fieldItem,
-                             designDragElementIndex: idx,
-                             designDragContainer: containerElement,
-                             designDragElementOrigin: 'objectDocument'
-                           },
-                       )}
-                       onDragOver={this._dragover}
-                       onDragLeave={this._dragleave}
-                       onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
-                       onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
-                  ></div>
-                  <AVObjectDocument.styles.horizontalResizer
-                      onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}
-                  ></AVObjectDocument.styles.horizontalResizer>
-                </div>
-                <div className="width-100 height-2px cursor-row-resize"
-                     onMouseDown={(e) => this._startVerticalResize(e, fieldItem, idx, containerElement)}
-                ></div>
-              </div>
-            </div>
-          )}
+          {this.state.designMode && (this._renderDesignFieldOverlay(fieldItem, idx, containerElement))}
         </AVField>
+      </div>
+    )
+  }
+
+  _renderDesignFieldOverlay(fieldItem, idx, containerElement) {
+    return (
+      <div className="field-overlay pos-abs trbl-0 row border-1 bg-transparent-25">
+        <div className="flex-1 col">
+          <div className="flex-1 row">
+            <div className="flex-1 z-index-10000"
+                 draggable="true"
+                 onDragStart={(e) => this.dragstart(
+                   e,
+                   {
+                     designDragElement: fieldItem,
+                     designDragElementIndex: idx,
+                     designDragContainer: containerElement,
+                     designDragElementOrigin: 'objectDocument'
+                   },
+                 )}
+                 onDragOver={this._dragover}
+                 onDragLeave={this._dragleave}
+                 onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
+                 onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
+            ></div>
+            <AVObjectDocument.styles.horizontalResizer
+              onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}
+            ></AVObjectDocument.styles.horizontalResizer>
+          </div>
+          <div className="width-100 height-2px cursor-row-resize"
+               onMouseDown={(e) => this._startVerticalResize(e, fieldItem, idx, containerElement)}
+          ></div>
+        </div>
       </div>
     )
   }
@@ -428,7 +434,13 @@ export class AVObjectDocument extends AVItem {
 
   _onDesignFieldContextMenu = async (e, fieldItem, idx, containerElement) => {
     e.preventDefault();
-    let menu = ['Убрать элемент'];
+    let menu = [];
+    if (fieldItem.viewItemType !== 'tabs') {
+      menu.push('Убрать элемент')
+    }
+    if (fieldItem.fullOverlayMode) {
+      menu.push('Убрать экранирование');
+    }
     let menuResult;
     if (fieldItem.viewItemType === 'label' || fieldItem.viewItemType === 'button') {
       menu.push('Изменить label');
@@ -445,11 +457,15 @@ export class AVObjectDocument extends AVItem {
     }
     if (menuResult === 'Убрать элемент') {
       if (!fieldItem.viewItemType || fieldItem.viewItemType === 'field') {
-        return; // Сделать плашку где отображаются скрытые поля, чтобы их можно было вернуть
+        return; // TODO Сделать плашку где отображаются скрытые поля, чтобы их можно было вернуть
       } else {
         containerElement.items.splice(idx, 1);
         this.forceUpdate();
       }
+    }
+    if (menuResult === 'Убрать экранирование') {
+      delete fieldItem.fullOverlayMode;
+      this.forceUpdate();
     }
   }
 
@@ -467,6 +483,7 @@ export class AVObjectDocument extends AVItem {
           'Расформировать вкладку',
           'Переместить правее',
           'Переместить левее',
+          'Экранировать'
         ]
     );
     if (menuResult === 'Добавить вкладку') {
@@ -526,7 +543,10 @@ export class AVObjectDocument extends AVItem {
       tabsFieldItem.items.splice(IndexToCut-1, 0, tab);
       this.forceUpdate();
     }
-
+    if (menuResult === 'Экранировать') {
+      tabsFieldItem.fullOverlayMode = true;
+      this.forceUpdate();
+    }
 
   }
 
