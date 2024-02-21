@@ -189,7 +189,7 @@ export class AVObjectDocument extends AVItem {
                            fieldItem.selectedTabLabel = tab.label;
                            this.forceUpdate();
                          }}
-                         onContextMenu={e => this._onTabContextMenu(e, tab, fieldItem)}
+                         onContextMenu={e => this._onTabContextMenu(e, tab, fieldItem, idx, containerElement)}
                     >{tab.label || 'tab1'}</div>
                 ))}
                 <div className='flex-1'></div>
@@ -443,13 +443,22 @@ export class AVObjectDocument extends AVItem {
     }
   }
 
-  _onTabContextMenu = async (e, tab, tabsFieldItem) => {
+  _onTabContextMenu = async (e, tab, tabsFieldItem, idx, containerElement) => {
     e.preventDefault();
     if (!this.state.designMode) {
       return;
     }
     let menuResult;
-    menuResult = await this.showContextMenu(e, ['Добавить вкладку', 'Изменить label вкладки']);
+    menuResult = await this.showContextMenu(
+        e,
+        [
+          'Добавить вкладку',
+          'Изменить label вкладки',
+          'Расформировать вкладку',
+          'Переместить правее',
+          'Переместить левее',
+        ]
+    );
     if (menuResult === 'Добавить вкладку') {
       const newTabLabel = await this.showDialog({text: 'Введите label вкладки', inputLabel: 'label'});
       if (newTabLabel) {
@@ -468,6 +477,46 @@ export class AVObjectDocument extends AVItem {
         this.forceUpdate();
       }
     }
+    if (menuResult === 'Изменить label вкладки') {
+      const newTabLabel = await this.showDialog({text: 'Введите label вкладки', inputLabel: 'label'});
+      if (newTabLabel) {
+        if (tab.label === tabsFieldItem.selectedTabLabel) {
+          tabsFieldItem.selectedTabLabel = newTabLabel;
+        }
+        tab.label = newTabLabel;
+        this.forceUpdate();
+      }
+    }
+    if (menuResult === 'Расформировать вкладку') {
+      const confirmDelete = await this.showDialog({text: `Вы уверены что хотите расформировать вкладку ${tab.label}?`})
+      if (!confirmDelete) return;
+      const IndexToCut = tabsFieldItem.items.findIndex(tabInTabs => tabInTabs === tab);
+      tabsFieldItem.items.splice(IndexToCut, 1);
+      const itemsToRelocateInDesign = tab.items[0].items;
+      // console.log('designJson in del tab:', this.state.designJson.items.concat(itemsToRelocateInDesign))
+      this.state.designJson.items = this.state.designJson.items.concat(itemsToRelocateInDesign);
+      if (tab.label === tabsFieldItem.selectedTabLabel) {
+        if (tabsFieldItem.items.length === 0) {
+          containerElement.items.splice(idx, 1); // remove tabs viewItem
+        } else {
+          tabsFieldItem.selectedTabLabel = tabsFieldItem.items[0].label
+        }
+      }
+      this.forceUpdate();
+    }
+    if (menuResult === 'Переместить правее') {
+      const IndexToCut = tabsFieldItem.items.findIndex(tabInTabs => tabInTabs === tab);
+      tabsFieldItem.items.splice(IndexToCut, 1)
+      tabsFieldItem.items.splice(IndexToCut+1, 0, tab);
+      this.forceUpdate();
+    }
+    if (menuResult === 'Переместить левее') {
+      const IndexToCut = tabsFieldItem.items.findIndex(tabInTabs => tabInTabs === tab);
+      tabsFieldItem.items.splice(IndexToCut, 1)
+      tabsFieldItem.items.splice(IndexToCut-1, 0, tab);
+      this.forceUpdate();
+    }
+
 
   }
 
