@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {AVItem} from '../0-AVItem.js';
+import {AVField} from "../5-AVField.jsx";
 
 import {AVButton} from "../../V/AVButton.jsx";
 
@@ -13,24 +14,23 @@ export class AVClassPanel extends AVItem {
   state = {
     currentViewName: this.props.classItem?.defaultViewName,
     availableViewsList: this.props.classItem?.getViewsList(),
-    viewsDropdownOpened: false,
   }
 
   render() {
     return (
-      <div className="row border-bottom-2">
+      <div className="row pad-bottom-2 border-bottom-2">
         {this.state.currentViewName === 'Grid' ? this._renderGridButtons() : ''}
-        <div className="flex-1 row justify-end pad-8">
-          <div className="view-selector pos-rel row align-center cursor-pointer" onClick={this._onViewSelectorClick}>
-            <div>{this.state.currentViewName}</div>
-            <div className="view-selector-arrow margin-left-2 rotate-90">{'>'}</div>
-            {this.state.viewsDropdownOpened && (
-              <div className='selection-list pos-abs right-0 bottom-0 col z-index-1000 bg-white border'>
-                {this.state.availableViewsList.map(viewName => (
-                  <div className="selection-item" key={viewName} onClick={(e) => this._selectView(viewName)}>{viewName}</div>
-                ))}
-              </div>
-            )}
+        <div className="flex-1 row justify-end">
+          <div>
+            <AVField
+              fieldItem={{
+                variant: 'select',
+                valuesList: this.state.availableViewsList,
+                isEmptyOptionHidden: true
+              }}
+              value={this.state.currentViewName}
+              onChangeFunc={viewName => this._selectView(viewName)}
+            ></AVField>
           </div>
         </div>
       </div>
@@ -51,23 +51,6 @@ export class AVClassPanel extends AVItem {
       const availableViewsList = this.props.classItem.getViewsList();
       this.setState({currentViewName, availableViewsList});
     }
-  }
-
-  _onViewSelectorClick = () => {
-    if (!this.state.viewsDropdownOpened) {
-      this.setState({viewsDropdownOpened: true});
-      setTimeout(() => {
-        window.addEventListener('click', this._windowClickHandler);
-      }, 4)
-    } else {
-      this.setState({viewsDropdownOpened: false});
-      window.removeEventListener('click', this._windowClickHandler);
-    }
-  }
-
-  _windowClickHandler = (e) => {
-    this.setState({viewsDropdownOpened: false});
-    window.removeEventListener('click', this._windowClickHandler);
   }
 
   _selectView(view) {

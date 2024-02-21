@@ -138,7 +138,12 @@ export class AVField extends AVItem {
         ></this.styles.input>
       )
       if (fieldItem.variant === 'select' && fieldItem.valuesList) {
-        const valuesArr = fieldItem.valuesList.split(',');
+        let valuesArr
+        if (Array.isArray(fieldItem.valuesList)) {
+          valuesArr = fieldItem.valuesList;
+        } else {
+          valuesArr = fieldItem.valuesList.split(',');
+        }
         const trimedValuesArr = valuesArr.map(str => str.trim());
         inputElement = (
           <this.styles.select
@@ -147,7 +152,9 @@ export class AVField extends AVItem {
             value={value}
             onChange={onChangeFunc}
           >
-            <option value=""></option>
+            {!fieldItem.isEmptyOptionHidden && (
+              <option value=""></option>
+            )}
             {trimedValuesArr.map(str => (
               <option key={str} value={str}>{str}</option>
             ))}
