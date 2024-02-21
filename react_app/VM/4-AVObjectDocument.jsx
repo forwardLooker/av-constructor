@@ -98,9 +98,9 @@ export class AVObjectDocument extends AVItem {
           </div>
           <div className="row justify-end">
             <div>
-              <AVButton onClick={this._saveAndClose}>OK</AVButton>
-              <AVButton onClick={this._closeWithoutSave}>Отмена</AVButton>
-              <AVButton onClick={this._toggleDesign}>Дизайнер</AVButton>
+              <AVButton onClick={this.saveAndClose}>OK</AVButton>
+              <AVButton onClick={this.closeWithoutSave}>Отмена</AVButton>
+              <AVButton onClick={this.toggleDesign}>Дизайнер</AVButton>
             </div>
           </div>
         </div>
@@ -716,7 +716,7 @@ export class AVObjectDocument extends AVItem {
     this._removeDragBorder(e);
   }
 
-  _saveAndClose = async () => {
+  saveAndClose = async () => {
     await this.props.objectDocument.saveData(this.state._newData);
     this.props.onSavedFunc();
     this.props.onCloseFunc();
@@ -726,7 +726,7 @@ export class AVObjectDocument extends AVItem {
     }));
   }
 
-  _closeWithoutSave = () => {
+  closeWithoutSave = () => {
     this.props.onCloseFunc();
     this.Host.$hostElement.setState(state => ({
       designMode: false,
@@ -734,14 +734,14 @@ export class AVObjectDocument extends AVItem {
     }));
   }
 
-  _toggleDesign = async () => {
+  toggleDesign = async () => {
     this.setState(
       state => ({designMode: !state.designMode}),
       async () => {
         if (this.state.designMode === false) {
           const saveDesignFlag = await this.showDialog({text: 'Сохранить дизайн?'});
           if (saveDesignFlag) {
-            return this._saveDesign();
+            return this.saveDesign();
           }
         }
       }
@@ -753,7 +753,7 @@ export class AVObjectDocument extends AVItem {
     }));
   }
 
-  _saveDesign = async () => {
+  saveDesign = async () => {
     this._removeContainerReference(this.state.designJson);
     this._removeDomElementReference(this.state.designJson);
     await this.props.objectDocument.saveDesignJson(this.deepClone(this.state.designJson));
