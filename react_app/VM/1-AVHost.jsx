@@ -133,7 +133,21 @@ export class AVHost extends AVItem {
               onDragStart={(e) => this.state.$designObjectDocument.dragstart(
                   e,
                   {
-                    designDragElement: {viewItemType: 'tabs'},
+                    designDragElement: {
+                        viewItemType: 'tabs',
+                        items: [
+                            {
+                                viewItemType: 'tab',
+                                label: 'tab 1',
+                                items: [{
+                                    viewItemType: 'vertical-layout',
+                                    items: [{
+                                        viewItemType: 'space div'
+                                    }]
+                                }]
+                            }
+                        ]
+                    },
                     designDragElementOrigin: 'instrument panel'
                   }
               )}

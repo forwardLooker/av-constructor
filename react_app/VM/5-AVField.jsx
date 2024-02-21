@@ -76,25 +76,25 @@ export class AVField extends AVItem {
           </div>
       )
     }
-    if (this.props.fieldItem.viewItemType === 'tabs') {
-      return (
-          <div className='flex-1 pad-8'
-               style={this.props.style}
-               ref={this.props.refOnRootDiv}
-          >
-            <div className='_tab-container flex-1'>
-              <div className='_tab-head row'>
-                <div className='pad-0-4 border'>tab 1</div>
-                <div className='flex-1'></div>
-              </div>
-              <div className='_tab-body pad-8 border'>
-                tab body
-              </div>
-            </div>
-            {this.props.children}
-          </div>
-      )
-    }
+    // if (this.props.fieldItem.viewItemType === 'tabs') {
+    //   return (
+    //       <div className='flex-1 pad-8'
+    //            style={this.props.style}
+    //            ref={this.props.refOnRootDiv}
+    //       >
+    //         <div className='_tab-container flex-1'>
+    //           <div className='_tab-head row'>
+    //             <div className='pad-0-4 border'>tab 1</div>
+    //             <div className='flex-1'></div>
+    //           </div>
+    //           <div className='_tab-body pad-8 border'>
+    //             tab body
+    //           </div>
+    //         </div>
+    //         {this.props.children}
+    //       </div>
+    //   )
+    // }
     return (
       <div className={`flex-1 ${this.props.labelPosition === 'top'? 'column' : 'row'} align-center`}
          style={this.props.style}

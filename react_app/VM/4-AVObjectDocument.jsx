@@ -153,6 +153,54 @@ export class AVObjectDocument extends AVItem {
   }
 
   _renderField(fieldItem, idx, containerElement) {
+    if (fieldItem.viewItemType === 'tabs') {
+      if (!fieldItem.items) {
+        fieldItem.items = [
+          {
+            viewItemType: 'tab',
+            label: 'tab 1',
+            items: [{
+              viewItemType: 'vertical-layout',
+              items: [{
+                viewItemType: 'space div'
+              }]
+            }]
+          }
+        ]
+      }
+      if (!fieldItem.selectedTabLabel) {
+        fieldItem.selectedTabLabel = fieldItem.items[0].label;
+      }
+      return (
+          <div className='flex-1 pad-8'
+               style={fieldItem.style}
+               ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
+          >
+            <div className='_tab-container flex-1'>
+              <div className='_tab-head row'>
+                {fieldItem.items.map(tab => (
+                    <div className='pad-0-4 border'
+                         onClick={() => {
+                           fieldItem.selectedTabLabel = tab.label;
+                           this.forceUpdate();
+                         }}
+                         onContextMenu={e => this._onTabContextMenu(e, tab, fieldItem)}
+                    >{tab.label || 'tab1'}</div>
+                ))}
+                <div className='flex-1'></div>
+              </div>
+              <div className='_tabs-body-container pad-8 border'>
+                {fieldItem.items.map(tab => (
+                    <div className="_tab-body" hidden={fieldItem.selectedTabLabel !== tab.label}>
+                      {this._renderVerticalLayout(tab.items[0])}
+                    </div>
+                ))}
+              </div>
+            </div>
+          </div>
+      )
+    }
+
     return (
       <div
         className="pos-rel col flex-1 margin-top-2"
@@ -374,6 +422,7 @@ export class AVObjectDocument extends AVItem {
   }
 
   _onDesignFieldContextMenu = async (e, fieldItem, idx, containerElement) => {
+    e.preventDefault();
     let menuResult;
     if (fieldItem.viewItemType === 'label') {
       menuResult = await this.showContextMenu(e, ['Изменить label']);
@@ -387,6 +436,34 @@ export class AVObjectDocument extends AVItem {
     } else {
       menuResult = await this.showContextMenu(e, ['Действие']);
     }
+  }
+
+  _onTabContextMenu = async (e, tab, tabsFieldItem) => {
+    e.preventDefault();
+    if (!this.state.designMode) {
+      return;
+    }
+    let menuResult;
+    menuResult = await this.showContextMenu(e, ['Добавить вкладку', 'Изменить label вкладки']);
+    if (menuResult === 'Добавить вкладку') {
+      const newTabLabel = await this.showDialog({text: 'Введите label вкладки', inputLabel: 'label'});
+      if (newTabLabel) {
+        tabsFieldItem.items.push(
+            {
+              viewItemType: 'tab',
+              label: newTabLabel,
+              items: [{
+                viewItemType: 'vertical-layout',
+                items: [{
+                  viewItemType: 'space div'
+                }]
+              }]
+            }
+        );
+        this.forceUpdate();
+      }
+    }
+
   }
 
   dragstart = (e, {
