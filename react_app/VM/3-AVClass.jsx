@@ -21,7 +21,7 @@ export class AVClass extends AVItem {
 
   render() {
     return (
-      <div className="flex-1 col">
+      <div className="pos-rel flex-1 col">
         <AVClassPanel
           classItem={this.props.classItem}
           onClassViewChangedFunc={viewName => this.setState({currentViewName: viewName})}
