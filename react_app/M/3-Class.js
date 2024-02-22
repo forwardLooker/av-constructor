@@ -3,14 +3,20 @@ import {ObjectDocument} from './4-ObjectDocument.js';
 import usersClass from '../Classes/users.js';
 
 export class Class extends Item {
-  constructor() {
+  constructor({serverRef, Host}) {
     super();
+    this.serverRef = serverRef;
+    this.id = serverRef.id;
+    this.Host = Host;
+    this.classModuleDefinitions.forEach(clsDef => {
+      clsDef.Host = this.Host;
+    })
   }
   itemType = 'class';
   data = {};
   serverRef;
-  Host;
   id;
+  Host;
   classModuleDefinitions = [usersClass];
   eventNames = [
     'openNewObjectDocument'

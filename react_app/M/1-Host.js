@@ -40,17 +40,11 @@ export class Host extends Item {
     return config;
   }
   getClass(clsRef) {
-    const cls = new Class();
-    cls.serverRef = clsRef;
-    cls.Host = this;
-    cls.id = clsRef.id;
+    const cls = new Class({serverRef: clsRef, Host: this});
     return cls
   }
   getDomain(dmnRef) {
-    const domain = new Domain();
-    domain.serverRef = dmnRef;
-    domain.Host = this;
-    domain.id = dmnRef.id;
+    const domain = new Domain({serverRef: clsRef, Host: this});
     return domain
   }
 
@@ -67,10 +61,7 @@ export class Host extends Item {
     const clsData = clsInDict[0] || clsInDocs[0];
     let classItem;
     if (clsData) {
-      classItem = new Class();
-      classItem.serverRef = clsData.reference;
-      classItem.Host = this;
-      classItem.id = clsData.reference.id
+      classItem = new Class({serverRef: clsData.reference, Host: this});
     }
     return classItem;
   }
