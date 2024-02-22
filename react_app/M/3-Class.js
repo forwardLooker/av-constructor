@@ -18,9 +18,6 @@ export class Class extends Item {
   id;
   Host;
   classModuleDefinitions = [usersClass];
-  eventNames = [
-    'openNewObjectDocument'
-  ];
   async getObjectDocuments() {
     if (this.serverRef) {
       const objectsSnap = await this.serverRef.collection('ObjectDocuments').get();

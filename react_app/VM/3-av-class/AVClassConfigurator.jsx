@@ -3,6 +3,7 @@ import React from 'react';
 import {AVItem} from '../0-AVItem.js';
 
 import {AVTextHeader} from "../../V/AVTextHeader.jsx";
+import {AVLabel} from "../../V/AVLabel.jsx";
 import {AVButton} from "../../V/AVButton.jsx";
 import {AVTree} from "../../V/AVTree.jsx";
 import {AVPropertyGrid} from "../../V/AVPropertyGrid.jsx";
@@ -32,7 +33,8 @@ export class AVClassConfigurator extends AVItem {
     return (
       <div className="flex-1 col space-between">
         <div className="flex-1 col">
-          <AVTextHeader className="margin-top-8">Fields:</AVTextHeader>
+          <AVLabel>id:{this.props.classItem.id}</AVLabel>
+          <AVLabel>name:{this.props.classItem.data.name}</AVLabel>
           <div>
             <AVButton onClick={this._addField}>Добавить поле</AVButton>
           </div>
