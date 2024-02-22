@@ -87,9 +87,11 @@ export class AVField extends AVItem {
               if (this.props.$objectDocument) {
                 const classInstance = this.props.$objectDocument.props.objectDocument.Class;
                 const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
-                const methodOnButton = moduleDefinition.methods[this.props.fieldItem.label];
-                if (methodOnButton) {
-                  methodOnButton(this.props.$objectDocument)
+                if (moduleDefinition) {
+                  const methodOnButton = moduleDefinition.methods[this.props.fieldItem.label];
+                  if (methodOnButton) {
+                    methodOnButton(this.props.$objectDocument)
+                  }
                 }
               }
             }}
