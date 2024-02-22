@@ -14,4 +14,5 @@ export class AVElement extends React.PureComponent {
   findDeepObjInItemsBy = UtilFunctions.findDeepObjInItemsBy;
   isEmpty = UtilFunctions.isEmpty;
   notEmpty = UtilFunctions.notEmpty;
+  makeDebounced = UtilFunctions.makeDebounced;
 }

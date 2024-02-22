@@ -27,6 +27,7 @@ export class AVObjectDocument extends AVItem {
 
     designMode: false,
     designJson: null,
+    designDragStarted: false,
     designDragElementIndex: null,
     designDragElement: null,
     designDragContainer: null,
@@ -238,6 +239,7 @@ export class AVObjectDocument extends AVItem {
                  onDragStart={(e) => this.dragstart(
                    e,
                    {
+                     designDragStarted: true,
                      designDragElement: fieldItem,
                      designDragElementIndex: idx,
                      designDragContainer: containerElement,
@@ -247,13 +249,16 @@ export class AVObjectDocument extends AVItem {
                  onDragOver={this._dragover}
                  onDragLeave={this._dragleave}
                  onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
+                 onDragEnd={e => this.setState({designDragStarted: false})}
                  onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
             ></div>
             <AVObjectDocument.styles.horizontalResizer
+              hidden={this.state.designDragStarted}
               onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}
             ></AVObjectDocument.styles.horizontalResizer>
           </div>
           <div className="width-100 height-2px cursor-row-resize"
+               hidden={this.state.designDragStarted}
                onMouseDown={(e) => this._startVerticalResize(e, fieldItem, idx, containerElement)}
           ></div>
         </div>
@@ -551,12 +556,14 @@ export class AVObjectDocument extends AVItem {
   }
 
   dragstart = (e, {
+    designDragStarted = true,
     designDragElement,
     designDragElementIndex,
     designDragContainer,
     designDragElementOrigin = 'objectDocument'
   }) => {
     this.setState({
+      designDragStarted,
       designDragElement,
       designDragElementIndex,
       designDragContainer,
@@ -565,11 +572,11 @@ export class AVObjectDocument extends AVItem {
   }
 
   _findFieldOverlay = (e) => {
-    return e.target.closest('.field-overlay');
+    return e.target;
+    // return e.target.closest('.field-overlay');
   }
 
   _dragover = (e) => {
-    // console.log('dragover e:', e);
     e.preventDefault();
     const fieldOverlay = this._findFieldOverlay(e);
     const elemRect = fieldOverlay.getBoundingClientRect();

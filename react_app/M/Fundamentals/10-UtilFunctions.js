@@ -29,4 +29,12 @@ export class UtilFunctions {
     return Array.isArray(val) && val.length > 0;
   }
 
+  static makeDebounced = (func, ms) => {
+    let timeout;
+    return function() {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {func.apply(this, arguments)}, ms);
+    };
+  }
+
 }
