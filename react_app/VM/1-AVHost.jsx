@@ -243,6 +243,15 @@ export class AVHost extends AVItem {
         this.setState({config});
       }
     }
+    if (menuChoice === 'Создать вложенный домен') {
+      const domainName = await this.showDialog({text: 'Введите название домена', inputLabel: 'name'});
+      if (domainName) {
+        const domain = this.Host.getDomain(item.reference);
+        await domain.createDomain(domainName);
+        const config = await this.Host.getConfig();
+        this.setState({config});
+      }
+    }
   }
 
   async showContextMenu(e, menuItems) {

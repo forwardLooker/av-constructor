@@ -1,10 +1,17 @@
 export class UtilFunctions {
   static noop = () => {};
 
-  static deepClone = (objectToClone) => JSON.parse(JSON.stringify(objectToClone))
+  static deepClone = (objectToClone) => JSON.parse(JSON.stringify(objectToClone));
+  static deepCloneArrayWithInnerRef(arrayToClone) {
+    if (!arrayToClone) return;
+    return arrayToClone.map(obj => {
+      return {...obj, items: this.deepCloneArrayWithInnerRef(obj.items), _originalItemRef: obj}
+    })
+  }
+
   static isDeepEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
 
-  static findDeepObjInItemsBy = (queryObj, dataObjWithItems) => {
+  static findDeepObjInItemsBy(queryObj, dataObjWithItems) {
     const keys = Object.keys(queryObj);
     let resultObj;
     if (this.notEmpty(dataObjWithItems.items)) {

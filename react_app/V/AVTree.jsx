@@ -69,12 +69,12 @@ export class AVTree extends AVElement {
   }
 
   componentDidMount() {
-    this.setState({_items: this.deepClone(this.props.items)})
+    this.setState({_items: this.deepCloneArrayWithInnerRef(this.props.items)})
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.items !== prevProps.items) {
-      this.setState({_items: this.deepClone(this.props.items)})
+      this.setState({_items: this.deepCloneArrayWithInnerRef(this.props.items)})
     }
   }
 
@@ -95,7 +95,7 @@ export class AVTree extends AVElement {
       }
       newSelectedItem.selected = true;
       this.setState({selectedItem: newSelectedItem});
-      const newSelectedItemOriginal = this.findDeepObjInItemsBy({name: newSelectedItem.name}, {items: this.props.items});
+      const newSelectedItemOriginal = newSelectedItem._originalItemRef;
       this.props.onItemSelectFunc(newSelectedItemOriginal);
     }
   }

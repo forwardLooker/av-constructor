@@ -9,7 +9,8 @@ export class AVElement extends React.PureComponent {
 
   static noop = UtilFunctions.noop;
   noop = UtilFunctions.noop;
-  deepClone = UtilFunctions.deepClone
+  deepClone = UtilFunctions.deepClone;
+  deepCloneArrayWithInnerRef = UtilFunctions.deepCloneArrayWithInnerRef;
   isDeepEqual = UtilFunctions.isDeepEqual;
   findDeepObjInItemsBy = UtilFunctions.findDeepObjInItemsBy;
   isEmpty = UtilFunctions.isEmpty;
