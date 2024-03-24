@@ -77,7 +77,6 @@ export class Domain extends Item {
     } else {
       targetDomainToAddNewDomain.items = [domainInitData]
     }
-    targetDomainToAddNewDomain.items.push(domainInitData);
     await workspaceDocRef.update({items: workspaceConfig.items});
   }
 
