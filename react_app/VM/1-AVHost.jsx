@@ -85,6 +85,7 @@ export class AVHost extends AVItem {
           {!this.state.designMode && (
             <AVTree
               items={this.state.config}
+              expandAllRowsNestedLevel={1}
               onItemSelectFunc={this._onTreeItemSelect}
               onItemContextMenuFunc={this._onTreeItemContextMenu}
             ></AVTree>

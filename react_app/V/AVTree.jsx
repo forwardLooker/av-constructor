@@ -26,6 +26,7 @@ export class AVTree extends AVElement {
 
   static defaultProps = {
     items: [],
+    expandAllRowsNestedLevel: 0,
     onItemSelectFunc: this.noop,
     onItemContextMenuFunc: this.noop
   }
@@ -69,13 +70,21 @@ export class AVTree extends AVElement {
   }
 
   componentDidMount() {
-    this.setState({_items: this.deepCloneArrayWithInnerRef(this.props.items)})
+    this._cloneAndPrepareItems();
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.items !== prevProps.items) {
-      this.setState({_items: this.deepCloneArrayWithInnerRef(this.props.items)})
+      this._cloneAndPrepareItems();
     }
+  }
+
+  _cloneAndPrepareItems = () => {
+    let _items = this.deepCloneArrayWithInnerRef(this.props.items);
+    if (this.props.expandAllRowsNestedLevel > 0) {
+      this._expandAllRowsByNestedLevel(_items, this.props.expandAllRowsNestedLevel);
+    }
+    this.setState({_items: _items})
   }
 
   _onRowContextMenu = (e, newSelectedItem) => {
@@ -98,5 +107,13 @@ export class AVTree extends AVElement {
       const newSelectedItemOriginal = newSelectedItem._originalItemRef;
       this.props.onItemSelectFunc(newSelectedItemOriginal);
     }
+  }
+
+  _expandAllRowsByNestedLevel(items, level) {
+    if (!items || level === 0) return;
+    items.forEach(i => {
+      i.expanded = true;
+      this._expandAllRowsByNestedLevel(i.items, level-1);
+    })
   }
 }
