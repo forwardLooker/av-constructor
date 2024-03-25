@@ -40,7 +40,12 @@ export class AVClassConfigurator extends AVItem {
           }
           return [];
         }},
-        {name: 'variantItemReference'},
+        {name: 'variantItemReference', hideIfFunc: () => {
+          if (this.state.selectedFieldDescriptor.dataType !== 'object' || this.state.selectedFieldDescriptor.variant === 'structured-object-field') {
+            return true
+          }
+          return false
+        }},
         {name: 'valuesList'},
         {name: 'defaultValue'},
       ]

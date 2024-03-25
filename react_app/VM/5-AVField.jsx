@@ -232,7 +232,7 @@ export class AVField extends AVItem {
             value={value?.name}
             readOnly
           ></this.styles.input>
-          <AVButton onClick={() => this.showClass(fieldItem.variant)}>
+          <AVButton onClick={() => this.showClass(fieldItem.variantItemReference)}>
             Выбрать
           </AVButton>
         </div>

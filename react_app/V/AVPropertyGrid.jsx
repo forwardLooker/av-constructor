@@ -44,6 +44,7 @@ export class AVPropertyGrid extends AVElement {
     if (this.isEmpty(nestedItems) && nestingLevel > 0) {
       return '';
     }
+    items = items.filter(i => !(typeof i.hideIfFunc === 'function' && i.hideIfFunc()));
     return (
       <div className={`flex-1 col ${nestingLevel > 0 ? 'margin-left-16' : ''}`}>
         {items.map((propertyItem, idx) => (
