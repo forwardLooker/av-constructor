@@ -218,6 +218,7 @@ export class AVField extends AVItem {
             isTypedColumns
             isCellEditable
             onDataInItemsChangedFunc={this.props.onChangeFunc}
+            $objectDocument={this.props.$objectDocument}
             >
           </AVGrid>
         </div>

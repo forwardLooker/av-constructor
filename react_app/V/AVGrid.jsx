@@ -39,7 +39,8 @@ export class AVGrid extends AVElement {
     isCellEditable: false,
     onDataInItemsChangedFunc: this.noop,
     onCellInputFunc: this.noop,
-    onRowClickFunc: this.noop
+    onRowClickFunc: this.noop,
+    $objectDocument: null
   }
 
   render() {
@@ -69,7 +70,9 @@ export class AVGrid extends AVElement {
          onChangeFunc={value => {
           item[column.name] = value;
           this.props.onDataInItemsChangedFunc(this.props.items, item, column);
-         }}></AVField>
+         }}
+         $objectDocument={this.props.$objectDocument}
+        ></AVField>
       )
     }
     const value = item[column.name];
