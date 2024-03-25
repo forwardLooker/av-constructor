@@ -238,6 +238,22 @@ export class AVField extends AVItem {
         </div>
       )
     }
+    if (fieldItem.dataType === 'object' && fieldItem.variant === 'link-on-class-in-domain') {
+      inputElement = (
+        <div className="flex-1 row">
+          <this.styles.input
+            className="flex-1"
+            autoComplete="off"
+            value={value?.name}
+            readOnly
+          ></this.styles.input>
+          <AVButton onClick={() => this.showItemStructure(fieldItem.variantItemReference)}>
+            Выбрать
+          </AVButton>
+        </div>
+      )
+    }
+
     return inputElement;
   }
 
@@ -264,5 +280,13 @@ export class AVField extends AVItem {
       this.props.onChangeFunc(objDocItem.data);
     });
   }
+
+  showItemStructure = (name) => {
+    this.props.$objectDocument.showItemStructure(name, (Item) => {
+      this.setState({_value: Item})
+      this.props.onChangeFunc(Item);
+    });
+  }
+
 
 }

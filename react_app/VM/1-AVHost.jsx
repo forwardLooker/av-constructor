@@ -34,6 +34,8 @@ export class AVHost extends AVItem {
     dialogInputValue: '',
     _dialogResolveFunc: null,
 
+    dialogItemTreeStructure: null,
+
     isContextMenuOpened: false,
     contextMenuItems: [],
     contextMenuEvent: null,
@@ -185,6 +187,12 @@ export class AVHost extends AVItem {
               </input>
             </div>
           )}
+          {this.state.dialogItemTreeStructure && (
+            <AVTree
+              items={[this.state.dialogItemTreeStructure]}
+              onItemSelectFunc={(item) => this.setState({dialogInputValue: item})}
+            ></AVTree>
+          )}
           <div>
             <AVButton onClick={this._dialogSubmitted}>OK</AVButton>
             <AVButton onClick={this._dialogCanceled}>Отмена</AVButton>
@@ -311,13 +319,15 @@ export class AVHost extends AVItem {
     })
   }
 
-  async showDialog({text, inputLabel}) {
+  async showDialog({text, inputLabel, itemTreeStructure}) {
     return new Promise((resolve, reject) => {
       this.setState({
         isDialogOpened: true,
         dialogText: text,
         dialogInputLabel: inputLabel,
-        _dialogResolveFunc: resolve
+        _dialogResolveFunc: resolve,
+
+        dialogItemTreeStructure: itemTreeStructure
       })
     })
   }
@@ -330,7 +340,9 @@ export class AVHost extends AVItem {
       dialogText: '',
       dialogInputLabel: '',
       dialogInputValue: '',
-      _dialogResolveFunc: null
+      _dialogResolveFunc: null,
+
+      dialogItemTreeStructure: null
     });
     resolveFunc(resolveValue);
   }

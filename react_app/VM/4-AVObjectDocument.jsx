@@ -278,6 +278,12 @@ export class AVObjectDocument extends AVItem {
     })
   }
 
+  showItemStructure = async (name, onItemSelected) => {
+    const itemInConfigTree = this.findDeepObjInItemsBy({name: name}, {items: this.Host.config})
+    const selectedItem = await this.showDialog({text: 'Выберите item', itemTreeStructure: itemInConfigTree});
+    onItemSelected(selectedItem);
+  }
+
   _startVerticalResize = (msDownEvent, fieldItem, idx, containerElement) => {
     msDownEvent.preventDefault();
     const startResizePageY = msDownEvent.pageY;
