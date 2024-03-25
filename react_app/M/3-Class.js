@@ -68,4 +68,16 @@ export class Class extends Item {
     obj.Class = this;
     return obj;
   }
+
+  async deleteClass() {
+    await this.serverRef.delete();
+    // update config
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+    let targetDomainToDeleteClass = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});;
+    targetDomainToDeleteClass.items.splice(targetDomainToDeleteClass.items.findIndex(i => i.id === this.id), 1)
+    await workspaceDocRef.update({items: workspaceConfig.items});
+
+  }
 };

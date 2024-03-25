@@ -37,7 +37,6 @@ export class Domain extends Item {
     } else {
       targetDomainToAddNewClass = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
     }
-    console.log('суждения:', targetDomainToAddNewClass);
     if (Array.isArray(targetDomainToAddNewClass.items)) {
       targetDomainToAddNewClass.items.push(classInitData);
     } else {

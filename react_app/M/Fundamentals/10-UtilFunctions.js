@@ -29,6 +29,27 @@ export class UtilFunctions {
     return resultObj;
   };
 
+  static findDeepContainerInItemsBy(queryObj, dataObjWithItems) {
+    const keys = Object.keys(queryObj);
+    let resultObj;
+    if (this.notEmpty(dataObjWithItems.items)) {
+      resultObj = dataObjWithItems.items.find(i => {
+        return keys.every(key => i[key] === queryObj[key])
+      })
+      if (resultObj) {
+        resultObj = dataObjWithItems;
+      }
+    }
+    if (!resultObj && this.notEmpty(dataObjWithItems.items)) {
+      dataObjWithItems.items.forEach(i => {
+        if (!resultObj) {
+          resultObj = this.findDeepContainerInItemsBy(queryObj, i);
+        }
+      })
+    }
+    return resultObj;
+  }
+
   static isEmpty(val) {
     return !val || (Array.isArray(val) && val.length === 0)
   }

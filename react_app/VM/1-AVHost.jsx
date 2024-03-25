@@ -255,6 +255,15 @@ export class AVHost extends AVItem {
       }
     } else if (item.itemType === 'class') {
       const menuChoice = await this.showContextMenu(e, ['Переименовать класс', 'Удалить класс']);
+      if (menuChoice === 'Удалить класс') {
+        const confirm = await this.showDialog({text: `Хотите ливы удалить класс ${item.name}?` });
+        if (confirm) {
+          const classItem = this.Host.getClass(item.reference);
+          await classItem.deleteClass();
+          const config = await this.Host.getConfig();
+          this.setState({config});
+        }
+      }
     }
   }
 

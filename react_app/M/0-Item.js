@@ -36,6 +36,7 @@ export class Item {
   }
 
   findDeepObjInItemsBy = UtilFunctions.findDeepObjInItemsBy;
+  findDeepContainerInItemsBy = UtilFunctions.findDeepContainerInItemsBy;
   notEmpty = UtilFunctions.notEmpty;
 
 };
