@@ -20,10 +20,31 @@ export class AVClassConfigurator extends AVItem {
   }
   fieldDescriptorProperties = [
     {name: 'label'},
-    {name: 'dataType', dataType: 'string', variant: 'select', valuesList: 'string,number,boolean,array,object, link, include-link'},
-    {name: 'variant'},
-    {name: 'valuesList'},
-    {name: 'defaultValue'},
+    {name: 'dataType',
+      dataType: 'string',
+      variant: 'select',
+      valuesList: 'string,number,boolean,array,object',
+      expanded: true,
+      items: [
+        {name: 'variant', variant: 'select', valuesList: () => {
+          if (this.state.selectedFieldDescriptor.dataType === 'object') {
+            return [
+              'structured-object-field',
+              'link-on-object-in-class',
+              'link-on-object-in-class-included',
+              'link-on-class-in-domain'
+            ];
+          }
+          if (this.state.selectedFieldDescriptor.dataType === 'string') {
+            return ['select'];
+          }
+          return [];
+        }},
+        {name: 'variantItemReference'},
+        {name: 'valuesList'},
+        {name: 'defaultValue'},
+      ]
+    },
     {name: 'isHidden', dataType: 'boolean'},
     {name: 'isComputed', dataType: 'boolean'},
     {name: 'computeFunction'}

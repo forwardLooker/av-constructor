@@ -48,7 +48,7 @@ export class AVPropertyGrid extends AVElement {
       <div className={`flex-1 col ${nestingLevel > 0 ? 'margin-left-16' : ''}`}>
         {items.map((propertyItem, idx) => (
           <div className="col" key={propertyItem.name || idx}>
-            <AVPropertyGrid.styles.treeRow className={`tree-row row ${propertyItem.selected ? 'selected' : ''}`}>
+            <AVPropertyGrid.styles.treeRow className={`tree-row row align-center ${propertyItem.selected ? 'selected' : ''}`}>
               <AVPropertyGrid.styles.treeRowExpander className={`tree-row-expander ${propertyItem.expanded ? 'expanded' : ''} ${this.isEmpty(propertyItem.items) ? 'invisible': ''}`}
                 onClick={() => this._toggleExpand(propertyItem)}
               >{'>'}</AVPropertyGrid.styles.treeRowExpander>
@@ -70,7 +70,10 @@ export class AVPropertyGrid extends AVElement {
       <AVField
         fieldItem={propertyItem}
         value={this.props.inspectedItem[propertyItem.name]}
-        onChangeFunc={value => this.props.inspectedItem[propertyItem.name] = value}
+        onChangeFunc={value => {
+          this.props.inspectedItem[propertyItem.name] = value;
+          this.forceUpdate(); //чтобы выпадающие списки обновить
+        }}
         inspectedObject={this.props.inspectedItem}
       ></AVField>
     )

@@ -154,6 +154,8 @@ export class AVField extends AVItem {
         let valuesArr
         if (Array.isArray(fieldItem.valuesList)) {
           valuesArr = fieldItem.valuesList;
+        } else if (typeof fieldItem.valuesList === 'function') {
+          valuesArr = fieldItem.valuesList();
         } else {
           valuesArr = fieldItem.valuesList.split(',');
         }
@@ -221,7 +223,7 @@ export class AVField extends AVItem {
         </div>
       )
     }
-    if (fieldItem.dataType === 'link') {
+    if (fieldItem.dataType === 'object' && fieldItem.variant === 'link-on-object-in-class') {
       inputElement = (
         <div className="flex-1 row">
           <this.styles.input
