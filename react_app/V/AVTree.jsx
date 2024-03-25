@@ -78,8 +78,8 @@ export class AVTree extends AVElement {
     }
   }
 
-  _onRowContextMenu = (e, i) => {
-    const selectedItemOriginal = this.findDeepObjInItemsBy({name: i.name}, {items: this.props.items});
+  _onRowContextMenu = (e, newSelectedItem) => {
+    const selectedItemOriginal = newSelectedItem._originalItemRef;
     this.props.onItemContextMenuFunc(e, selectedItemOriginal);
   }
 

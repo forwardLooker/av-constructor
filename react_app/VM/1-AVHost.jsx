@@ -230,27 +230,31 @@ export class AVHost extends AVItem {
 
   _onTreeItemContextMenu = async (e, item) => {
     e.preventDefault();
-    if (item.itemType !== 'domain' || item.id === 'system') {
+    if (item.id === 'system') {
       return;
     }
-    const menuChoice = await this.showContextMenu(e, ['Создать вложенный класс', 'Создать вложенный домен']);
-    if (menuChoice === 'Создать вложенный класс') {
-      const className = await this.showDialog({text: 'Введите название класса', inputLabel: 'name'});
-      if (className) {
-        const domain = this.Host.getDomain(item.reference);
-        await domain.createClass(className);
-        const config = await this.Host.getConfig();
-        this.setState({config});
+    if (item.itemType === 'domain') {
+      const menuChoice = await this.showContextMenu(e, ['Создать вложенный класс', 'Создать вложенный домен']);
+      if (menuChoice === 'Создать вложенный класс') {
+        const className = await this.showDialog({text: 'Введите название класса', inputLabel: 'name'});
+        if (className) {
+          const domain = this.Host.getDomain(item.reference);
+          await domain.createClass(className);
+          const config = await this.Host.getConfig();
+          this.setState({config});
+        }
       }
-    }
-    if (menuChoice === 'Создать вложенный домен') {
-      const domainName = await this.showDialog({text: 'Введите название домена', inputLabel: 'name'});
-      if (domainName) {
-        const domain = this.Host.getDomain(item.reference);
-        await domain.createDomain(domainName);
-        const config = await this.Host.getConfig();
-        this.setState({config});
+      if (menuChoice === 'Создать вложенный домен') {
+        const domainName = await this.showDialog({text: 'Введите название домена', inputLabel: 'name'});
+        if (domainName) {
+          const domain = this.Host.getDomain(item.reference);
+          await domain.createDomain(domainName);
+          const config = await this.Host.getConfig();
+          this.setState({config});
+        }
       }
+    } else if (item.itemType === 'class') {
+      const menuChoice = await this.showContextMenu(e, ['Переименовать класс', 'Удалить класс']);
     }
   }
 
