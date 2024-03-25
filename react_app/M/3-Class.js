@@ -30,11 +30,26 @@ export class Class extends Item {
   async getFieldDescriptors() {
     const doc = await this.serverRef.get();
     this.data = doc.data();
-    return this.data.fieldDescriptors;
+    return this.data.fieldDescriptors || [];
+  }
+
+  async getConnectedServices() {
+    //TODO разрулить
+    // const doc = await this.serverRef.get();
+    // this.data = doc.data();
+    return this.data.connectedServices || [];
   }
 
   async saveFieldDescriptors(fieldDescriptors) {
-    this.serverRef.update({fieldDescriptors})
+    if (fieldDescriptors) {
+      await this.serverRef.update({fieldDescriptors})
+    }
+  }
+
+  async saveMetadata({fieldDescriptors, connectedServices}) {
+    if (fieldDescriptors || connectedServices) {
+      await this.serverRef.update({fieldDescriptors, connectedServices})
+    }
   }
 
   get objectDocumentDesignJson() {

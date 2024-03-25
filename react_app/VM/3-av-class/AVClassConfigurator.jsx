@@ -17,6 +17,11 @@ export class AVClassConfigurator extends AVItem {
     fieldDescriptors: [],
     _newFieldDescriptors: [],
     selectedFieldDescriptor: null,
+
+    availableServices: [],
+    connectedServices: [],
+    _newConnectedServices: [],
+    selectedItemService: null
   }
   fieldDescriptorProperties = [
     {name: 'label'},
@@ -55,6 +60,10 @@ export class AVClassConfigurator extends AVItem {
     {name: 'computeFunction'}
   ];
 
+  serviceConnectorProperties = [
+    {name: 'isServiceConnected', dataType: 'boolean'}
+  ]
+
   render() {
     return (
       <div className="flex-1 col space-between">
@@ -64,24 +73,59 @@ export class AVClassConfigurator extends AVItem {
           <div>
             <AVButton onClick={this._addField}>Добавить поле</AVButton>
           </div>
-          <div className="flex-1 row margin-top-8">
-            <div className="flex-0-200px row border">
-              <AVTree
-                items={this.state._newFieldDescriptors}
-                onItemSelectFunc={item => this.setState({selectedFieldDescriptor: item})}
-                onItemContextMenuFunc={this._onTreeItemContextMenu}
-              ></AVTree>
-            </div>
-            <div className="flex-1 row margin-left-8 border">
-              <AVPropertyGrid
-                inspectedItem={this.state.selectedFieldDescriptor}
-                propertyItems={this.fieldDescriptorProperties}
-              ></AVPropertyGrid>
-            </div>
-          </div>
+          {this._renderFields()}
+          <div>Сервисы:</div>
+          {this._renderServices()}
         </div>
         <div className="row justify-end">
-          <AVButton onClick={this._saveFieldDescriptors}>Сохранить</AVButton>
+          <AVButton onClick={this._saveMetadata}>Сохранить</AVButton>
+        </div>
+      </div>
+    )
+  }
+
+  _renderFields() {
+    return (
+      <div className="flex-1 row margin-top-8">
+        <div className="flex-0-200px row border">
+          <AVTree
+            items={this.state._newFieldDescriptors}
+            onItemSelectFunc={item => this.setState({selectedFieldDescriptor: item})}
+            onItemContextMenuFunc={this._onTreeItemContextMenu}
+          ></AVTree>
+        </div>
+        <div className="flex-1 row margin-left-8 border">
+          <AVPropertyGrid
+            inspectedItem={this.state.selectedFieldDescriptor}
+            propertyItems={this.fieldDescriptorProperties}
+          ></AVPropertyGrid>
+        </div>
+      </div>
+    )
+  }
+
+  _renderServices() {
+    return (
+      <div className="flex-1 row margin-top-8">
+        <div className="flex-0-200px row border">
+          <AVTree
+            items={this.state.availableServices}
+            onItemSelectFunc={itemService => {
+              let newConSrv = this.state._newConnectedServices.find(srv => srv.id === itemService.id);
+              let _newConnectedServices = this.state._newConnectedServices;
+              if (!newConSrv) {
+                newConSrv = this.deepClone(itemService);
+                _newConnectedServices = [...this.state._newConnectedServices, newConSrv]
+              }
+              this.setState({selectedItemService: newConSrv, _newConnectedServices})
+            }}
+          ></AVTree>
+        </div>
+        <div className="flex-1 row margin-left-8 border">
+          <AVPropertyGrid
+            inspectedItem={this.state.selectedItemService}
+            propertyItems={this.serviceConnectorProperties}
+          ></AVPropertyGrid>
         </div>
       </div>
     )
@@ -90,7 +134,21 @@ export class AVClassConfigurator extends AVItem {
   async componentDidMount() {
     if (this.props.classItem) {
       const fieldDescriptors = await this.props.classItem.getFieldDescriptors();
-      this.setState({fieldDescriptors, _newFieldDescriptors: this.deepClone(fieldDescriptors)});
+
+      const connectedServices = await this.props.classItem.getConnectedServices();
+      const servicesDomain = this.findDeepObjInItemsBy({name: 'Сервисы', itemType: 'domain'}, {items: this.Host.config});
+      let availableServices = this.deepClone(servicesDomain.items);
+      availableServices = availableServices.map(srv => ({...srv, items: null})); //TODO ?
+      const _newConnectedServices = this.deepClone(connectedServices)
+
+      this.setState({
+        fieldDescriptors,
+        _newFieldDescriptors: this.deepClone(fieldDescriptors),
+
+        availableServices,
+        connectedServices: connectedServices,
+        _newConnectedServices: _newConnectedServices
+      });
     }
   }
 
@@ -124,8 +182,11 @@ export class AVClassConfigurator extends AVItem {
     }
   }
 
-  _saveFieldDescriptors = async () => {
-    await this.props.classItem.saveFieldDescriptors(this.state._newFieldDescriptors);
+  _saveMetadata = async () => {
+    await this.props.classItem.saveMetadata({
+      fieldDescriptors: this.state._newFieldDescriptors,
+      connectedServices: this.state._newConnectedServices.filter(srv => srv.isServiceConnected)
+    })
     this.props.onSavedFunc();
   }
 }
