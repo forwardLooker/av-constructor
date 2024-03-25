@@ -34,10 +34,11 @@ export class Host extends Item {
   };
   db;
   auth;
+  config;
   async getConfig() {
     const rootDomainsSnap = await this.db.collection('Domains').get();
-    const config = rootDomainsSnap.docs.map(doc => doc.data());
-    return config;
+    this.config = rootDomainsSnap.docs.map(doc => doc.data());
+    return this.config;
   }
   getClass(clsRef) {
     const cls = new Class({serverRef: clsRef, Host: this});
@@ -49,19 +50,10 @@ export class Host extends Item {
   }
 
   async getClassByName(name) {
-    const clsInDictAndDocsSnapArr = await Promise.all(
-      [
-        this.db.collection('Domains/workspace/Domains/dictionaries/Classes').where('name', '==', name).get(),
-        this.db.collection('Domains/workspace/Domains/documents/Classes').where('name', '==', name).get()
-      ]
-    );
-    const clsInDictAndDocsArr = clsInDictAndDocsSnapArr.map(snap => snap.docs.map(d => d.data()));
-    const clsInDict = clsInDictAndDocsArr[0];
-    const clsInDocs = clsInDictAndDocsArr[1];
-    const clsData = clsInDict[0] || clsInDocs[0];
+    const classData = this.findDeepObjInItemsBy({name: name}, {items: this.config});
     let classItem;
-    if (clsData) {
-      classItem = new Class({serverRef: clsData.reference, Host: this});
+    if (classData) {
+      classItem = new Class({serverRef: classData.reference, Host: this});
     }
     return classItem;
   }
