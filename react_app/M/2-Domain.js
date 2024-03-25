@@ -79,6 +79,17 @@ export class Domain extends Item {
     await workspaceDocRef.update({items: workspaceConfig.items});
   }
 
+  async renameDomain(newDomainName) {
+    await this.serverRef.update({name: newDomainName});
+    // update config
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+    let targetClassToRename = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    targetClassToRename.name = newDomainName;
+    await workspaceDocRef.update({items: workspaceConfig.items});
+  }
+
   async deleteDomain() {
     this.serverRef.delete();
     // update config

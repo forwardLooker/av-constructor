@@ -234,7 +234,9 @@ export class AVHost extends AVItem {
       return;
     }
     if (item.itemType === 'domain') {
-      const menuChoice = await this.showContextMenu(e, ['Создать вложенный класс', 'Создать вложенный домен', 'Удалить домен']);
+      const menuChoice = await this.showContextMenu(e,
+        ['Создать вложенный класс',
+          'Создать вложенный домен', 'Переименовать домен', 'Удалить домен']);
       if (menuChoice === 'Создать вложенный класс') {
         const className = await this.showDialog({text: 'Введите название класса', inputLabel: 'name'});
         if (className) {
@@ -249,6 +251,15 @@ export class AVHost extends AVItem {
         if (domainName) {
           const domain = this.Host.getDomain(item.reference);
           await domain.createDomain(domainName);
+          const config = await this.Host.getConfig();
+          this.setState({config});
+        }
+      }
+      if (menuChoice === 'Переименовать домен') {
+        const newDomainName = await this.showDialog({text: 'Введите новое название домена', inputLabel: 'name'});
+        if (newDomainName) {
+          const classItem = this.Host.getDomain(item.reference);
+          await classItem.renameDomain(newDomainName);
           const config = await this.Host.getConfig();
           this.setState({config});
         }
