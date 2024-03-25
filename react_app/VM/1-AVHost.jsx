@@ -234,7 +234,7 @@ export class AVHost extends AVItem {
       return;
     }
     if (item.itemType === 'domain') {
-      const menuChoice = await this.showContextMenu(e, ['Создать вложенный класс', 'Создать вложенный домен']);
+      const menuChoice = await this.showContextMenu(e, ['Создать вложенный класс', 'Создать вложенный домен', 'Удалить домен']);
       if (menuChoice === 'Создать вложенный класс') {
         const className = await this.showDialog({text: 'Введите название класса', inputLabel: 'name'});
         if (className) {
@@ -253,6 +253,15 @@ export class AVHost extends AVItem {
           this.setState({config});
         }
       }
+      if (menuChoice === 'Удалить домен') {
+        const ok = await this.showDialog({text: `Хотите ли вы удалить домен ${item.name}?`});
+        if (ok) {
+          const domain = this.Host.getDomain(item.reference);
+          await domain.deleteDomain();
+          const config = await this.Host.getConfig();
+          this.setState({config});
+        }
+      }
     } else if (item.itemType === 'class') {
       const menuChoice = await this.showContextMenu(e, ['Переименовать класс', 'Удалить класс']);
       if (menuChoice === 'Переименовать класс') {
@@ -265,8 +274,8 @@ export class AVHost extends AVItem {
         }
       }
       if (menuChoice === 'Удалить класс') {
-        const confirm = await this.showDialog({text: `Хотите ливы удалить класс ${item.name}?`});
-        if (confirm) {
+        const ok = await this.showDialog({text: `Хотите ли вы удалить класс ${item.name}?`});
+        if (ok) {
           const classItem = this.Host.getClass(item.reference);
           await classItem.deleteClass();
           const config = await this.Host.getConfig();

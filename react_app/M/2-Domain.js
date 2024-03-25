@@ -79,4 +79,16 @@ export class Domain extends Item {
     await workspaceDocRef.update({items: workspaceConfig.items});
   }
 
+  async deleteDomain() {
+    this.serverRef.delete();
+    // update config
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+    let targetDomainToDeleteDomain = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});;
+    targetDomainToDeleteDomain.items.splice(targetDomainToDeleteDomain.items.findIndex(i => i.id === this.id), 1)
+    await workspaceDocRef.update({items: workspaceConfig.items});
+
+  }
+
 }
