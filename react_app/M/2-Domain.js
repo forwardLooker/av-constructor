@@ -91,6 +91,11 @@ export class Domain extends Item {
   }
 
   async deleteDomain() {
+    // for safe
+    if (this.serverRef.id === 'workspace') {
+      return;
+    }
+
     this.serverRef.delete();
     // update config
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');

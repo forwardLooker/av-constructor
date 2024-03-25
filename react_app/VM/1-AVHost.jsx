@@ -234,9 +234,11 @@ export class AVHost extends AVItem {
       return;
     }
     if (item.itemType === 'domain') {
-      const menuChoice = await this.showContextMenu(e,
-        ['Создать вложенный класс',
-          'Создать вложенный домен', 'Переименовать домен', 'Удалить домен']);
+      let menu = ['Создать вложенный класс', 'Создать вложенный домен', 'Переименовать домен'];
+      if (item.id !== 'workspace') {
+        menu.push('Удалить домен');
+      };
+      const menuChoice = await this.showContextMenu(e, menu);
       if (menuChoice === 'Создать вложенный класс') {
         const className = await this.showDialog({text: 'Введите название класса', inputLabel: 'name'});
         if (className) {
