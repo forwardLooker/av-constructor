@@ -117,7 +117,7 @@ export class AVClassConfigurator extends AVItem {
       <div className="flex-1 row margin-top-8">
         <div className="flex-0-200px row border">
           <AVTree
-            items={this.state.availableServices}
+            items={this.state._newConnectedServices}
             onItemSelectFunc={itemService => {this.setState({selectedItemService: itemService})
             }}
           ></AVTree>
