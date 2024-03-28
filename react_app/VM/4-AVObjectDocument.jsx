@@ -99,6 +99,7 @@ export class AVObjectDocument extends AVItem {
           </div>
           <div className="row justify-end">
             <div>
+              {this._renderButtonsByServices()}
               <AVButton onClick={this.saveAndClose}>OK</AVButton>
               <AVButton onClick={this.closeWithoutSave}>Отмена</AVButton>
               <AVButton onClick={this.toggleDesign}>Дизайнер</AVButton>
@@ -264,6 +265,25 @@ export class AVObjectDocument extends AVItem {
         </div>
       </div>
     )
+  }
+
+  _renderButtonsByServices() {
+    const connectedServices = this.props.objectDocument.Class.data.connectedServices;
+    const srvDefs = this.props.objectDocument.Class.classServiceDefinitions;
+    let ButtonsAddedByServices = [];
+    if (Array.isArray(connectedServices)) {
+      connectedServices.forEach(srv => {
+        const foundedService = srvDefs.find(srvDef => srvDef.name === srv.name);
+        foundedService.methods.forEach(m => {
+          if (m.target === 'objectDocument' && m.location === 'ok-cancel panel') {
+            ButtonsAddedByServices.push((
+              <AVButton key={m.name} onClick={()=> m.method(this)}>{m.name}</AVButton>
+            ))
+          }
+        })
+      })
+    }
+    return ButtonsAddedByServices;
   }
 
   showClass = async (name, onObjectDocumentSelected) => {

@@ -2,6 +2,9 @@ import {Item} from './0-Item.js'
 import {ObjectDocument} from './4-ObjectDocument.js';
 import usersClass from '../Classes/users.js';
 
+import {Accounting} from './Services/Accounting.js';
+
+
 export class Class extends Item {
   constructor({serverRef, Host}) {
     super();
@@ -11,6 +14,10 @@ export class Class extends Item {
     this.classModuleDefinitions.forEach(clsDef => {
       clsDef.Host = this.Host;
     })
+    this.classServiceDefinitions.forEach(srvDef => {
+      srvDef.Host = this.Host;
+    })
+
   }
   itemType = 'class';
   data = {};
@@ -18,6 +25,7 @@ export class Class extends Item {
   id;
   Host;
   classModuleDefinitions = [usersClass];
+  classServiceDefinitions = [Accounting];
   async getObjectDocuments() {
     if (this.serverRef) {
       const objectsSnap = await this.serverRef.collection('ObjectDocuments').get();
