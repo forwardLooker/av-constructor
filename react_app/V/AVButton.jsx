@@ -27,6 +27,9 @@ export class AVButton extends AVElement {
       &:hover {
         opacity: 0.90;
       }
+      &:disabled {
+        opacity: 0.20;
+      }
     `
   }
 

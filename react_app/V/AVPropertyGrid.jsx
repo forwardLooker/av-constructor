@@ -29,7 +29,9 @@ export class AVPropertyGrid extends AVElement {
   static defaultProps = {
     inspectedItem: null,
     propertyItems: [],
+    onChangeFunc: this.noop,
   }
+
 
   render(nestedItems, level) {
     if (!this.props.inspectedItem) {
@@ -74,6 +76,7 @@ export class AVPropertyGrid extends AVElement {
         onChangeFunc={value => {
           this.props.inspectedItem[propertyItem.name] = value;
           this.forceUpdate(); //чтобы выпадающие списки обновить
+          this.props.onChangeFunc(value, propertyItem, this.props.inspectedItem)
         }}
         inspectedObject={this.props.inspectedItem}
       ></AVField>
