@@ -176,7 +176,10 @@ export class AVClassConfigurator extends AVItem {
         if (this.isEmpty(item.items)) {
           item.items = [{name: fieldName, label: fieldName, dataType: 'string'}];
         }
-        this.setState({_newFieldDescriptors: [...this.state._newFieldDescriptors]});
+        this.setState(
+          {_newFieldDescriptors: [...this.state._newFieldDescriptors]},
+          this._calcMetadataChanges
+        );
       }
     }
   }
