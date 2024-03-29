@@ -40,6 +40,7 @@ export class AVClass extends AVItem {
           items={this.state.objectDocuments}
           columns={this.state.fieldDescriptors}
           onRowClickFunc={this._onGridRowClick}
+          onRowContextMenuFunc={this._onGridRowContextMenu}
         ></AVGrid>
         {this.state.selectedObjectDocument && (
           <div className="pos-abs trbl-0 col pad-4 z-index-10 bg-white">
@@ -85,11 +86,26 @@ export class AVClass extends AVItem {
   }
 
   _onGridRowClick = async (rowItem) => {
-    console.log('rowItem', rowItem);
-
     const selectedObjectDocument = await this.props.classItem.getObjectDocument(rowItem.reference);
     this.setState({selectedObjectDocument});
     this.props.onObjectDocumentSelectedFunc(selectedObjectDocument);
+  }
+
+  _onGridRowContextMenu = async (rowItem, cellName, e) => {
+    const menuChoice =  await this.showContextMenu(e , ['Удалить объект']);
+    if (menuChoice === 'Удалить объект') {
+      const ok = await this.showDialog({
+        text: 'Удалить объект?',
+        content: (<AVGrid items={[rowItem]} columns={this.state.fieldDescriptors}></AVGrid>)
+      })
+      if (ok) {
+        const selectedObjectDocument = await this.props.classItem.getObjectDocument(rowItem.reference);
+        if (selectedObjectDocument) {
+          await selectedObjectDocument.deleteObjectDocument();
+          await this._onObjectSaved()
+        }
+      }
+    }
   }
 
   _onObjectSaved = async () => {

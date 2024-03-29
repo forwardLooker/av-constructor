@@ -40,6 +40,7 @@ export class AVGrid extends AVElement {
     onDataInItemsChangedFunc: this.noop,
     onCellInputFunc: this.noop,
     onRowClickFunc: this.noop,
+    onRowContextMenuFunc: this.noop,
     $objectDocument: null
   }
 
@@ -52,6 +53,7 @@ export class AVGrid extends AVElement {
             {this.props.items.map((i, idx) => (
               <AVGrid.styles.gridCell className="pad-8" key={i.id || idx} row-item-id={i.id} column-name={c.name}
                 onClick={(e) => this._onCellClick(i, c.name, e)}
+                onContextMenu={e => this._onCellContextMenu(i, c.name, e)}
               >{this._renderCellContent(i, c)}</AVGrid.styles.gridCell>
               ))}
           </div>
@@ -87,6 +89,10 @@ export class AVGrid extends AVElement {
 
   _onCellClick(rowItem, cellName, e) {
     this.props.onRowClickFunc(rowItem);
+  }
+
+  _onCellContextMenu = (rowItem, cellName, e) =>  {
+    this.props.onRowContextMenuFunc(rowItem, cellName, e)
   }
 
 }

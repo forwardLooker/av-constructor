@@ -49,4 +49,8 @@ export class ObjectDocument extends Item {
   async saveDesignJson(designJson) {
     await this.Class.saveObjectDocumentDesignJson(designJson);
   }
+
+  async deleteObjectDocument() {
+    await this.serverRef.delete();
+  }
 };
