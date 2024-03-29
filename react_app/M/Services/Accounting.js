@@ -10,7 +10,55 @@ export class Accounting extends Item {
       target: 'objectDocument',
       location: 'ok-cancel panel',
       method: async ($objectDocument) => {
+        const operations = await this.Host.getClassByName('Проводки').getObjectDocuments();
+        const objectDocument = $objectDocument.props.objectDocument;
+        const operationObj = operations.find(pr => pr['Документ'].id === objectDocument.Class.serverRef.id);
 
+        await $objectDocument.save();
+        const objData = objectDocument.data;
+        await this.Host.getClassByName('Журнал').createObjectDocument({
+          'Название операции': operationObj['Название операции'],
+          'Класс документов': operationObj['Документ'],
+          'Объект документа': objData,
+          'Дата': objData[operationObj['Название поля даты']],
+          'Проводки': operationObj['Проводки'].map(pr => {
+            const analiticsOutOfTable = pr['Аналитические параметры'].filter(an => !an['Таблица источник']);
+            const analiticsOutOfTableFromDocument = analiticsOutOfTable.map(a => {
+              let analiticsObj = {};
+              analiticsObj[a['Название параметра']] = objData[a['Поле источник']];
+              return analiticsObj
+            });
+            const analiticsFromOfTable = pr['Аналитические параметры'].filter(an => an['Таблица источник']);
+            const tablesNames = analiticsFromOfTable.reduce((acc, param) => {
+              const currentTableName = param['Таблица источник'];
+              if (acc.findIndex(tblName => tblName === currentTableName) === -1) {
+                acc.push(currentTableName);
+              }
+              return acc;
+            }, []);
+            let gainedTableItemsWithAnaliticsFromAllTablesFromDocument = [];
+            tablesNames.forEach(tblName => {
+              let gainedTableItemsWithAnalitics = objData[tblName].map(tblItem => {
+                let analiticsObj = {};
+                analiticsFromOfTable.forEach(analitic => {
+                  if (analitic['Таблица источник'] === tblName) {
+                    analiticsObj[analitic['Название параметра']] = tblItem[analitic['Поле источник']]
+                  }
+                })
+                return analiticsObj;
+              });
+              gainedTableItemsWithAnaliticsFromAllTablesFromDocument.push({'table name': tblName, 'Аналитические парметры': gainedTableItemsWithAnalitics});
+            });
+
+            return {
+              'Название проводки': pr['Название проводки'],
+              'Дебет': pr['Дебет'],
+              'Кредит': pr['Кредит'],
+              'Аналитические параметры общие': analiticsOutOfTableFromDocument,
+              'Аналитические парметры табличные': gainedTableItemsWithAnaliticsFromAllTablesFromDocument
+            }
+          }),
+        })
       }
     }
   ];

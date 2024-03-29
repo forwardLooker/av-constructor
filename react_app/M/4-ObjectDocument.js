@@ -31,7 +31,7 @@ export class ObjectDocument extends Item {
     if (this.notExistOnServer) {
       this.serverRef = this.Class.serverRef.collection('ObjectDocuments').doc();
       await this.serverRef.set({
-        ...this.data,
+        ...data,
         id: this.serverRef.id,
         reference: this.serverRef,
         path: this.serverRef.path,

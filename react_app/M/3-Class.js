@@ -92,6 +92,14 @@ export class Class extends Item {
     return obj;
   }
 
+  async createObjectDocument(objDocData) {
+    console.log('createObjectDocument objDocData:', objDocData);
+    const obj = new ObjectDocument();
+    obj.notExistOnServer = true;
+    obj.Class = this;
+    await obj.saveData(objDocData);
+  }
+
   async renameClass(newClassName) {
     await this.serverRef.update({name: newClassName});
     // update config

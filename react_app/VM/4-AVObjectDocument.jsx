@@ -23,7 +23,7 @@ export class AVObjectDocument extends AVItem {
     onCloseFunc: this.noop,
   }
   state = {
-    _newData: this.props.objectDocument.data,
+    _newData: this.props.objectDocument.data, //TODO deepClone его реализация ломает reference
 
     designMode: false,
     designJson: null,
@@ -749,14 +749,18 @@ export class AVObjectDocument extends AVItem {
     this._removeDragBorder(e);
   }
 
-  saveAndClose = async () => {
+  save = async () => {
     await this.props.objectDocument.saveData(this.state._newData);
     this.props.onSavedFunc();
-    this.props.onCloseFunc();
+  }
+
+  saveAndClose = async () => {
+    await this.save();
     this.Host.$hostElement.setState(state => ({
       designMode: false,
       $designObjectDocument: null
     }));
+    this.props.onCloseFunc();
   }
 
   closeWithoutSave = () => {

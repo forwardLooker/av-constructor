@@ -49,7 +49,7 @@ export class Host extends Item {
     return domain
   }
 
-  async getClassByName(name) {
+  getClassByName(name) {
     const classData = this.findDeepObjInItemsBy({name: name}, {items: this.config});
     let classItem;
     if (classData) {
