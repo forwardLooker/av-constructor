@@ -231,6 +231,23 @@ export class AVField extends AVItem {
         </div>
       )
     }
+    if (fieldItem.dataType === 'object' && fieldItem.variant === 'structured-object-field') {
+      const innerFields = fieldItem.items || [];
+      inputElement = (
+        <div className="flex-1 col">
+          {innerFields.map(innerFieldItem => (
+            <AVField
+              value={this.state._value[innerFieldItem.name]}
+              fieldItem={innerFieldItem}
+              readOnly={this.props.readOnly}
+              onChangeFunc={(value) => onChangeFunc(value, {isInnerField: true, name: innerFieldItem.name})}
+              $objectDocument={this.props.$objectDocument}
+            ></AVField>
+          ))}
+        </div>
+      )
+    }
+
     if (fieldItem.dataType === 'object' && fieldItem.variant === 'link-on-object-in-class') {
       inputElement = (
         <div className="flex-1 row">
@@ -271,15 +288,26 @@ export class AVField extends AVItem {
     }
   }
 
-  _onChange = (e) => {
+  _onChange = (eOrValue, option) => {
     // e.persist();
     // console.log('onChange e', e);
-    let value = e.target.value;
-    if (e.target.type === 'checkbox') {
-      value = e.target.checked;
+    let value;
+    if (option) {
+      if (option.isInnerField) {
+        value = this.state_value;
+        if (!value) {
+          value = {};
+        }
+        value[option.name] = eOrValue;
+      }
+    } else {
+      value = eOrValue.target.value;
+      if (eOrValue.target.type === 'checkbox') {
+        value = e.target.checked;
+      }
     }
     this.setState({_value: value})
-    this.props.onChangeFunc(value, e)
+    this.props.onChangeFunc(value, eOrValue)
   }
 
   showClass = (name) => {
