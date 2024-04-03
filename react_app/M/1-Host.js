@@ -23,6 +23,9 @@ export class Host extends Item {
   itemType = 'host';
   $hostElement;
   firebase = firebase;
+  get FieldValue() {
+    return this.firebase.firestore.FieldValue;
+  }
   firebaseConfig = {
     apiKey: "AIzaSyCygBNBbRUdhXGIwsOnZiDKAGZx4PIDc6I",
     authDomain: "arta-vision-constructor.firebaseapp.com",

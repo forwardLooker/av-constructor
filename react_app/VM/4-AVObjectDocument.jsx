@@ -220,6 +220,7 @@ export class AVObjectDocument extends AVItem {
           refOnRootDiv={fieldDomElement => fieldItem.domElement = fieldDomElement}
           fieldItem={fieldItem}
           value={this.state._newData[fieldItem.name]}
+          readOnly={this.state._newData.readOnly}
           onChangeFunc={value => {this.state._newData[fieldItem.name] = value}}
           labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
           $objectDocument={this}
@@ -275,7 +276,7 @@ export class AVObjectDocument extends AVItem {
       connectedServices.forEach(srv => {
         const foundedService = srvDefs.find(srvDef => srvDef.name === srv.name);
         foundedService.methods.forEach(m => {
-          if (m.target === 'objectDocument' && m.location === 'ok-cancel panel') {
+          if (m.target === 'objectDocument' && m.location === 'ok-cancel panel' && (!m.condition || m.condition(this))) {
             ButtonsAddedByServices.push((
               <AVButton key={m.name} onClick={()=> m.method(this)}>{m.name}</AVButton>
             ))

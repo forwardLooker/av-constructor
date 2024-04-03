@@ -41,7 +41,8 @@ export class ObjectDocument extends Item {
         lastModifiedDateTime: new Date().toLocaleString(),
         lastModifiedAuthor: this.user.email,
         version: 1,
-      })
+      });
+      this.notExistOnServer = false;
     } else {
       await this.serverRef.update(data);
     }

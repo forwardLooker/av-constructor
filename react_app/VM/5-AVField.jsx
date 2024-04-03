@@ -43,6 +43,7 @@ export class AVField extends AVItem {
   static defaultProps = {
     fieldItem: null,
     value: '',
+    readOnly: false,
     isLabelHidden: false,
     labelPosition: 'left' , // enum: ['left', 'top']
     onChangeFunc: this.noop,
@@ -130,6 +131,7 @@ export class AVField extends AVItem {
         {this._renderInput(
           {
             value: this.state._value,
+            readOnly: this.props.readOnly,
             onChangeFunc: this._onChange,
             fieldItem: this.props.fieldItem,
           }
@@ -139,7 +141,7 @@ export class AVField extends AVItem {
     )
   }
 
-  _renderInput({value, onChangeFunc, fieldItem}) {
+  _renderInput({value, readOnly, onChangeFunc, fieldItem}) {
     let inputElement;
     if (!fieldItem.dataType || fieldItem.dataType === 'string') {
       inputElement = (
@@ -147,6 +149,7 @@ export class AVField extends AVItem {
           className="flex-1"
           autoComplete="off"
           value={(value === null || value === undefined) ? '' : value}
+          readOnly={readOnly}
           onChange={onChangeFunc}
         ></this.styles.input>
       )
@@ -165,6 +168,7 @@ export class AVField extends AVItem {
             className="flex-1"
             autoComplete="off"
             value={value}
+            readOnly={readOnly}
             onChange={onChangeFunc}
           >
             {!fieldItem.isEmptyOptionHidden && (
@@ -184,6 +188,7 @@ export class AVField extends AVItem {
           autoComplete="off"
           type={fieldItem.dataType}
           value={(value === null || value === undefined) ? '' : value}
+          readOnly={readOnly}
           onChange={onChangeFunc}
         ></this.styles.input>
       )
@@ -195,6 +200,7 @@ export class AVField extends AVItem {
           autoComplete="off"
           type="checkbox"
           checked={value}
+          readOnly={readOnly}
           onChange={onChangeFunc}
         ></this.styles.input>
       )
@@ -210,13 +216,14 @@ export class AVField extends AVItem {
               $gridRef.forceUpdate();
               this.props.onChangeFunc(gridItems);
             }}
+            disabled={readOnly}
           >+</AVButton>
           <AVGrid
             ref={el => $gridRef = el}
             items={gridItems}
             columns={fieldItem.items}
             isTypedColumns
-            isCellEditable
+            isCellEditable={!readOnly}
             onDataInItemsChangedFunc={this.props.onChangeFunc}
             $objectDocument={this.props.$objectDocument}
             >
@@ -233,7 +240,7 @@ export class AVField extends AVItem {
             value={value?.name}
             readOnly
           ></this.styles.input>
-          <AVButton onClick={() => this.showClass(fieldItem.variantItemReference)}>
+          <AVButton onClick={() => this.showClass(fieldItem.variantItemReference)} disabled={readOnly}>
             Выбрать
           </AVButton>
         </div>
@@ -248,7 +255,7 @@ export class AVField extends AVItem {
             value={value?.name}
             readOnly
           ></this.styles.input>
-          <AVButton onClick={() => this.showItemStructure(fieldItem.variantItemReference)}>
+          <AVButton onClick={() => this.showItemStructure(fieldItem.variantItemReference)} disabled={readOnly}>
             Выбрать
           </AVButton>
         </div>

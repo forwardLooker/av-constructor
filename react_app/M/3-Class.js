@@ -98,6 +98,7 @@ export class Class extends Item {
     obj.notExistOnServer = true;
     obj.Class = this;
     await obj.saveData(objDocData);
+    return obj;
   }
 
   async renameClass(newClassName) {
