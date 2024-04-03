@@ -82,6 +82,9 @@ export class AVGrid extends AVElement {
       return 'Табличное';
     }
     if (typeof value === 'object') {
+      if (item[column.name].name) {
+        return `${item[column.name].name} (Объектное)`
+      }
       return 'Объектное';
     }
     return value;
