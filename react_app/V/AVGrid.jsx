@@ -50,26 +50,48 @@ export class AVGrid extends AVElement {
         {this.props.columns.map(c => (
           <div className="grid-column col flex-1" key={c.name}>
             <AVGrid.styles.gridHeaderCell className="pad-8 text-center">{c.label || c.name}</AVGrid.styles.gridHeaderCell>
-            {this.props.items.map((i, idx) => (
-              <AVGrid.styles.gridCell className="pad-8" key={i.id || idx} row-item-id={i.id} column-name={c.name}
-                onClick={(e) => this._onCellClick(i, c.name, e)}
-                onContextMenu={e => this._onCellContextMenu(i, c.name, e)}
-              >{this._renderCellContent(i, c)}</AVGrid.styles.gridCell>
-              ))}
+            {this.notEmpty(c.items) && (
+              <div className="row">
+                {c.items.map((innerCol, innerColIndex) => (
+                  <div key={innerCol.name} className="flex-1">
+                    <AVGrid.styles.gridHeaderCell className="pad-8 text-center">{innerCol.label || innerCol.name}</AVGrid.styles.gridHeaderCell>
+                    {this._renderCells(c, innerColIndex)}
+                  </div>
+                ))}
+              </div>
+            )}
+            {this.isEmpty(c.items) && this._renderCells(c)}
           </div>
         ))}
       </div>
     )
   }
 
-  _renderCellContent(item, column) {
+  _renderCells(col, innerColIndex) {
+    let c = col;
+    // if (innerColIndex) {
+    //   c = col.items[innerColIndex];
+    // }
+    return this.props.items.map((i, idx) => (
+      <AVGrid.styles.gridCell className="pad-8" key={i.id || idx} row-item-id={i.id} column-name={c.name}
+                              onClick={(e) => this._onCellClick(i, c.name, e)}
+                              onContextMenu={e => this._onCellContextMenu(i, c.name, e)}
+      >{this._renderCellContent(i, c, innerColIndex)}</AVGrid.styles.gridCell>
+    ))
+  }
+
+  _renderCellContent(item, column, innerColIndex) {
+    let fieldValue = item[column.name];
+    if (typeof innerColIndex === 'number' && item[column.name]) {
+      fieldValue = item[column.name][column.items[innerColIndex].name];
+    }
     if (this.props.isTypedColumns && this.props.isCellEditable) {
       return (
         <AVField
-         value={item[column.name]}
+         value={fieldValue}
          fieldItem={column}
          isLabelHidden
-         onChangeFunc={value => {
+         onChangeFunc={value => { // TODO редактирование в гриде с вложенными колонками
           item[column.name] = value;
           this.props.onDataInItemsChangedFunc(this.props.items, item, column);
          }}
@@ -77,7 +99,7 @@ export class AVGrid extends AVElement {
         ></AVField>
       )
     }
-    const value = item[column.name];
+    const value = fieldValue;
     if (Array.isArray(value)) {
       return 'Табличное';
     }
