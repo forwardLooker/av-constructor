@@ -182,6 +182,20 @@ export class AVClassConfigurator extends AVItem {
         );
       }
     }
+    if (menuChoice === 'Удалить поле') {
+      const ok = await this.showDialog({text: `Удалить поле ${item.name} ?`});
+      if (ok) {
+        const containerObj = this.findDeepContainerInItemsBy({name: item.name}, {items: this.state._newFieldDescriptors});
+        const indexToDelete = containerObj.items.findIndex(i => i.name === item.name);
+        if (indexToDelete > -1) {
+          containerObj.items.splice(indexToDelete, 1);
+        }
+        this.setState(
+          {_newFieldDescriptors: [...this.state._newFieldDescriptors]},
+          this._calcMetadataChanges
+        );
+      }
+    }
   }
 
   _addField = async () => {

@@ -13,6 +13,7 @@ export class AVElement extends React.PureComponent {
   deepCloneArrayWithInnerRef = UtilFunctions.deepCloneArrayWithInnerRef;
   isDeepEqual = UtilFunctions.isDeepEqual;
   findDeepObjInItemsBy = UtilFunctions.findDeepObjInItemsBy;
+  findDeepContainerInItemsBy = UtilFunctions.findDeepContainerInItemsBy;;
   isEmpty = UtilFunctions.isEmpty;
   notEmpty = UtilFunctions.notEmpty;
   makeDebounced = UtilFunctions.makeDebounced;
