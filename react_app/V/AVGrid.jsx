@@ -50,7 +50,7 @@ export class AVGrid extends AVElement {
     return (
       <div className="flex-1 row">
         {this.props.columns.map(c => (
-          <div className="grid-column col flex-1" key={c.name}>
+          <div className="grid-column col flex-1" key={c.name + Object.keys(this.headerDomElements).toString()}>
             <AVGrid.styles.gridHeaderCell
               className="pad-8 text-center"
               ref={headerDomElement => this.headerDomElements[c.name] = headerDomElement}
