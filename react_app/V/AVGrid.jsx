@@ -169,24 +169,24 @@ export class AVGrid extends AVElement {
       const isColHeightsOfNestedIsEqual = colHeightsWhichHaveNestedArr.every(
         (i, idx, arr) => i.nestedColHeights.every(o => o.colHeight === arr[0].nestedColHeights[0].colHeight)
       )
-      if (!isColHeightsOfNestedIsEqual) {
-        const maxHeightObj = colHeightsWhichHaveNestedArr.reduce((acc, i) => {
-          let maxColHeightNestedItem = acc;
-          i.nestedColHeights.forEach(nestedItem => {
-            if (nestedItem.colHeight > maxColHeightNestedItem.colHeight) {
-              maxColHeightNestedItem = nestedItem;
-            }
-          });
-          return maxColHeightNestedItem;
-        }, {colHeight: 0});
+      const maxHeightObj = colHeightsWhichHaveNestedArr.reduce((acc, i) => {
+        let maxColHeightNestedItem = acc;
+        i.nestedColHeights.forEach(nestedItem => {
+          if (nestedItem.colHeight > maxColHeightNestedItem.colHeight) {
+            maxColHeightNestedItem = nestedItem;
+          }
+        });
+        return maxColHeightNestedItem;
+      }, {colHeight: 0});
 
+      if (!isColHeightsOfNestedIsEqual) {
         colHeightsWhichHaveNestedArr.forEach(i => {
           i.nestedColHeights.forEach(o => {
             this.headerDomElements.nestingLevel2[i.colName][o.nestedColName].style = `height: ${maxHeightObj.colHeight}px`
           })
         });
-        return maxHeightObj;
-      }
+      };
+      return maxHeightObj;
     };
     return null;
   }
@@ -198,27 +198,29 @@ export class AVGrid extends AVElement {
         return true;
       }
     });
+    if (this.isEmpty(colNamesArr)) {
+      return null;
+    }
     const colHeightsArr = colNamesArr.map(colName => {
       const colDomElement = this.headerDomElements[colName];
       const colHeight = colDomElement.getBoundingClientRect().height;
       return {colName, colHeight}
     });
     const isColHeightsIsEqual = colHeightsArr.every((i, idx, arr) => i.colHeight === arr[0].colHeight);
+    const maxHeightObj = colHeightsArr.reduce((acc, i) => {
+      if (i.colHeight > acc.colHeight) {
+        return i;
+      } else {
+        return acc;
+      };
+    }, {colHeight: 0});
     if (!isColHeightsIsEqual) {
-      const maxHeightObj = colHeightsArr.reduce((acc, i) => {
-        if (i.colHeight > acc.colHeight) {
-          return i;
-        } else {
-          return acc;
-        };
-      }, {colHeight: 0});
       colHeightsArr.forEach(col => {
         if (col.colName === maxHeightObj.colName) return;
         this.headerDomElements[col.colName].style = `height: ${maxHeightObj.colHeight}px`
       });
-      return maxHeightObj;
     };
-    return null;
+    return maxHeightObj;
   }
 
   _realignHeaderCellsNestingLevel1 = ({maxHeightObjLevel1WhichHaveLevel2, maxHeightObjLevel2}) => {
