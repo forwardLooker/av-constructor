@@ -44,12 +44,17 @@ export class AVGrid extends AVElement {
     $objectDocument: null
   }
 
+  headerDomElements = {};
+
   render() {
     return (
       <div className="flex-1 row">
         {this.props.columns.map(c => (
           <div className="grid-column col flex-1" key={c.name}>
-            <AVGrid.styles.gridHeaderCell className="pad-8 text-center">{c.label || c.name}</AVGrid.styles.gridHeaderCell>
+            <AVGrid.styles.gridHeaderCell
+              className="pad-8 text-center"
+              ref={headerDomElement => this.headerDomElements[c.name] = headerDomElement}
+            >{c.label || c.name}</AVGrid.styles.gridHeaderCell>
             {this.notEmpty(c.items) && (
               <div className="row">
                 {c.items.map((innerCol, innerColIndex) => (
@@ -110,6 +115,49 @@ export class AVGrid extends AVElement {
       return 'Объектное';
     }
     return value;
+  }
+
+  componentDidMount() {
+    this._realignHeaderCells();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.columns !== this.props.columns) {
+      prevProps.columns.forEach(c => {
+        if (this.props.columns.findIndex(newC => newC.name === c.name) === -1) {
+          delete this.headerDomElements[c.name];
+        }
+      });
+      this._realignHeaderCells();
+    }
+  }
+
+  _realignHeaderCells = () => {
+    const colNamesArr = Object.keys(this.headerDomElements);
+    console.log('colNamesArr', colNamesArr);
+    console.log('headerDomElements', this.headerDomElements);
+    const colHeightsArr = colNamesArr.map(colName => {
+      const colDomElement = this.headerDomElements[colName];
+      const colHeight = colDomElement.getBoundingClientRect().height;
+      return {colName, colHeight}
+    });
+    const isColHeightsIsEqual = colHeightsArr.every((i, idx, arr) => i.colHeight === arr[0].colHeight);
+    console.log('isColHeightsIsEqual', isColHeightsIsEqual);
+    console.log('colHeightsArr', colHeightsArr);
+    if (!isColHeightsIsEqual) {
+      const maxHeightObj = colHeightsArr.reduce((acc, i) => {
+        if (i.colHeight > acc.colHeight) {
+          return i;
+        } else {
+          return acc;
+        };
+      }, {colHeight: 0});
+      console.log('maxHeightObj:', maxHeightObj);
+      colHeightsArr.forEach(col => {
+        if (col.colName === maxHeightObj.colName) return;
+        this.headerDomElements[col.colName].style = `height: ${maxHeightObj.colHeight}px`
+      })
+    }
   }
 
   _onCellClick(rowItem, cellName, e) {
