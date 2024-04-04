@@ -7,7 +7,7 @@ import {AVButton} from "../V/AVButton.jsx";
 import {AVGrid} from "../V/AVGrid.jsx";
 
 export class AVField extends AVItem {
-  styles = {
+  static styles = {
     input: this.styled.input`
       position: relative;
       display: inline-block;
@@ -145,13 +145,13 @@ export class AVField extends AVItem {
     let inputElement;
     if (!fieldItem.dataType || fieldItem.dataType === 'string') {
       inputElement = (
-        <this.styles.input
+        <AVField.styles.input
           className="flex-1"
           autoComplete="off"
           value={(value === null || value === undefined) ? '' : value}
           readOnly={readOnly}
           onChange={onChangeFunc}
-        ></this.styles.input>
+        ></AVField.styles.input>
       )
       if (fieldItem.variant === 'select' && fieldItem.valuesList) {
         let valuesArr
@@ -164,7 +164,7 @@ export class AVField extends AVItem {
         }
         const trimedValuesArr = valuesArr.map(str => str.trim());
         inputElement = (
-          <this.styles.select
+          <AVField.styles.select
             className="flex-1"
             autoComplete="off"
             value={value}
@@ -177,32 +177,32 @@ export class AVField extends AVItem {
             {trimedValuesArr.map(str => (
               <option key={str} value={str}>{str}</option>
             ))}
-          </this.styles.select>
+          </AVField.styles.select>
         )
       }
     }
     if (fieldItem.dataType === 'number') {
       inputElement = (
-        <this.styles.input
+        <AVField.styles.input
           className="input-number flex-1"
           autoComplete="off"
           type={fieldItem.dataType}
           value={(value === null || value === undefined) ? '' : value}
           readOnly={readOnly}
           onChange={onChangeFunc}
-        ></this.styles.input>
+        ></AVField.styles.input>
       )
     }
     if (fieldItem.dataType === 'boolean') {
       inputElement = (
-        <this.styles.input
+        <AVField.styles.input
           className="checkbox flex-1"
           autoComplete="off"
           type="checkbox"
           checked={value}
           readOnly={readOnly}
           onChange={onChangeFunc}
-        ></this.styles.input>
+        ></AVField.styles.input>
       )
     }
     if (fieldItem.dataType === 'array') {
@@ -251,12 +251,12 @@ export class AVField extends AVItem {
     if (fieldItem.dataType === 'object' && fieldItem.variant === 'link-on-object-in-class') {
       inputElement = (
         <div className="flex-1 row">
-          <this.styles.input
+          <AVField.styles.input
             className="flex-1"
             autoComplete="off"
             value={value?.name}
             readOnly
-          ></this.styles.input>
+          ></AVField.styles.input>
           <AVButton onClick={() => this.showClass(fieldItem.variantItemReference)} disabled={readOnly}>
             Выбрать
           </AVButton>
@@ -266,12 +266,12 @@ export class AVField extends AVItem {
     if (fieldItem.dataType === 'object' && fieldItem.variant === 'link-on-class-in-domain') {
       inputElement = (
         <div className="flex-1 row">
-          <this.styles.input
+          <AVField.styles.input
             className="flex-1"
             autoComplete="off"
             value={value?.name}
             readOnly
-          ></this.styles.input>
+          ></AVField.styles.input>
           <AVButton onClick={() => this.showItemStructure(fieldItem.variantItemReference)} disabled={readOnly}>
             Выбрать
           </AVButton>
@@ -323,6 +323,4 @@ export class AVField extends AVItem {
       this.props.onChangeFunc(Item);
     });
   }
-
-
 }
