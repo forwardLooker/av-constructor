@@ -55,28 +55,32 @@ export class AVGrid extends AVElement {
               className="pad-8 text-center"
               ref={headerDomElement => this.headerDomElements[c.name] = headerDomElement}
             >{c.label || c.name}</AVGrid.styles.gridHeaderCell>
-            {this.notEmpty(c.items) && (
-              <div className="row">
-                {c.items.map((innerCol, innerColIndex) => (
-                  <div key={innerCol.name} className="flex-1">
-                    <AVGrid.styles.gridHeaderCell
-                      className="pad-8 text-center"
-                      ref={headerDomElement => {
-                        if (!this.headerDomElements.nestingLevel2) {
-                          this.headerDomElements.nestingLevel2 = {}
-                        }
-                        if (!this.headerDomElements.nestingLevel2[c.name]) {
-                          this.headerDomElements.nestingLevel2[c.name] = {}
-                        }
-                        this.headerDomElements.nestingLevel2[c.name][innerCol.name] = headerDomElement
-                      }}
-                    >{innerCol.label || innerCol.name}</AVGrid.styles.gridHeaderCell>
-                    {this._renderCells(c, innerColIndex)}
-                  </div>
-                ))}
-              </div>
-            )}
-            {this.isEmpty(c.items) && this._renderCells(c)}
+            {(this.notEmpty(c.items) && c.dataType !== 'array') && this._renderSubHeaderWithCells(c)}
+            {(this.isEmpty(c.items) || c.dataType === 'array') && this._renderCells(c)}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  _renderSubHeaderWithCells(c) {
+    return (
+      <div className="row">
+        {c.items.map((innerCol, innerColIndex) => (
+          <div key={innerCol.name} className="flex-1">
+            <AVGrid.styles.gridHeaderCell
+              className="pad-8 text-center"
+              ref={headerDomElement => {
+                if (!this.headerDomElements.nestingLevel2) {
+                  this.headerDomElements.nestingLevel2 = {}
+                }
+                if (!this.headerDomElements.nestingLevel2[c.name]) {
+                  this.headerDomElements.nestingLevel2[c.name] = {}
+                }
+                this.headerDomElements.nestingLevel2[c.name][innerCol.name] = headerDomElement
+              }}
+            >{innerCol.label || innerCol.name}</AVGrid.styles.gridHeaderCell>
+            {this._renderCells(c, innerColIndex)}
           </div>
         ))}
       </div>
@@ -194,7 +198,12 @@ export class AVGrid extends AVElement {
   _realignHeaderCellsNestingLevel1WhichHaveLevel2 = () => {
     const colNamesWithNestedArr = Object.keys(this.headerDomElements);
     const colNamesArr = colNamesWithNestedArr.filter(colName => {
-      if (colName !== 'nestingLevel2' && this.notEmpty(this.props.columns.find(c => c.name === colName).items)) {
+      const colItem = this.props.columns.find(c => c.name === colName);
+      if (
+        colName !== 'nestingLevel2' &&
+        this.notEmpty(colItem.items) &&
+        colItem.dataType !== 'array'
+      ) {
         return true;
       }
     });
