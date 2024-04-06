@@ -44,6 +44,8 @@ export class AVGrid extends AVElement {
     $objectDocument: null
   }
 
+  state = {_items: []}
+
   headerDomElements = {};
 
   render() {
@@ -80,15 +82,15 @@ export class AVGrid extends AVElement {
                 this.headerDomElements.nestingLevel2[c.name][innerCol.name] = headerDomElement
               }}
             >{innerCol.label || innerCol.name}</AVGrid.styles.gridHeaderCell>
-            {this._renderCells(c, innerColIndex)}
+            {this._renderCells(c, innerColIndex, innerCol)}
           </div>
         ))}
       </div>
     )
   }
 
-  _renderCells(col, innerColIndex) {
-    let c = col;
+  _renderCells(c, innerColIndex, innerCol) {
+    // let c = col;
     // if (innerColIndex) {
     //   c = col.items[innerColIndex];
     // }
@@ -96,6 +98,19 @@ export class AVGrid extends AVElement {
       <AVGrid.styles.gridCell className="pad-8" key={i.id || idx} row-item-id={i.id} column-name={c.name}
                               onClick={(e) => this._onCellClick(i, c.name, e)}
                               onContextMenu={e => this._onCellContextMenu(i, c.name, e)}
+                              style={innerCol ? (i[c.name] && i[c.name][innerCol.name + '_cellDomElement' + '_style']) : i[c.name + '_cellDomElement' + '_style']}
+                              ref={cellDomElement => {
+                                // this.state._items[idx].cellDomElements = cellDomElement;
+                                // this.headerDomElements[i[idx].name];
+                                if (innerCol) {
+                                  if (!i[c.name]) {
+                                    i[c.name] = {}
+                                  }
+                                  i[c.name][innerCol.name + '_cellDomElement'] = cellDomElement;
+                                } else {
+                                  i[c.name + '_cellDomElement'] = cellDomElement;
+                                }
+                              }}
       >{this._renderCellContent(i, c, innerColIndex)}</AVGrid.styles.gridCell>
     ))
   }
@@ -134,6 +149,7 @@ export class AVGrid extends AVElement {
 
   componentDidMount() {
     this._realignHeaderCells();
+    this._realignGridRows();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -147,6 +163,9 @@ export class AVGrid extends AVElement {
       // TODO верхнее оптимальней по рендеру, но заебешься отчищать nestingLevel2
       this.headerDomElements = {};
       this.forceUpdate(this._realignHeaderCells);
+    }
+    if (prevProps.items !== this.props.items) {
+      this._realignGridRows();
     }
   }
 
@@ -284,6 +303,41 @@ export class AVGrid extends AVElement {
         });
       }
     };
+  }
+
+  _realignGridRows = () => {
+    this.props.items.forEach(i => {
+      const maxColHeightOfItem = this.props.columns.reduce((acc, c) => {
+        if (this.notEmpty(c.items) && c.dataType !== 'array') {
+          return c.items.reduce((innerAcc, innerCol) => {
+            const cellElem = i[c.name][innerCol.name + '_cellDomElement'];
+            const cellElemHeight = cellElem.getBoundingClientRect().height;
+            if (cellElemHeight > innerAcc) {
+              return cellElemHeight
+            }
+            return innerAcc;
+          }, 0)
+        } else {
+          const cellElem = i[c.name + '_cellDomElement'];
+          const cellElemHeight = cellElem.getBoundingClientRect().height;
+
+          if (cellElemHeight > acc) {
+            return cellElemHeight
+          }
+          return acc;
+        }
+      }, 0);
+      this.props.columns.forEach(c => {
+        if (this.notEmpty(c.items) && c.dataType !== 'array') {
+          c.items.forEach(innerCol => {
+            i[c.name][innerCol.name + '_cellDomElement' + '_style'] = {minHeight: maxColHeightOfItem + 'px'};
+          })
+        } else {
+          i[c.name + '_cellDomElement' + '_style'] = {minHeight: maxColHeightOfItem + 'px'};
+        }
+      });
+    });
+    this.forceUpdate();
   }
 
   _onCellClick(rowItem, cellName, e) {
