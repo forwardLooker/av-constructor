@@ -237,6 +237,7 @@ export class AVField extends AVItem {
         <div className="flex-1 col">
           {innerFields.map(innerFieldItem => (
             <AVField
+              key={innerFieldItem.name}
               value={this.state._value[innerFieldItem.name]}
               fieldItem={innerFieldItem}
               readOnly={this.props.readOnly}
