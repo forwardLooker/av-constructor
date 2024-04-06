@@ -152,10 +152,11 @@ export class AVGrid extends AVElement {
         this._realignGridRows();
         this.forceUpdate();
       })
-    }
-    if (prevProps.items !== this.props.items) {
-      this._realignGridRows();
-      this.forceUpdate();
+    } else {
+      if (prevProps.items !== this.props.items) {
+        this._realignGridRows();
+        this.forceUpdate();
+      }
     }
   }
 
