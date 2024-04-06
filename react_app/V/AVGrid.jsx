@@ -44,18 +44,15 @@ export class AVGrid extends AVElement {
     $objectDocument: null
   }
 
-  state = {_items: []}
-
-  headerDomElements = {};
-
   render() {
     return (
       <div className="flex-1 row">
         {this.props.columns.map(c => (
-          <div className="grid-column col flex-1" key={c.name + Object.keys(this.headerDomElements).toString()}>
+          <div className="grid-column col flex-1" key={c.name + this.props.columns.map(cl => cl.name).toString()}>
             <AVGrid.styles.gridHeaderCell
               className="pad-8 text-center"
-              ref={headerDomElement => this.headerDomElements[c.name] = headerDomElement}
+              style={c.style}
+              ref={headerDomElement => c.headerCellDomElement = headerDomElement}
             >{c.label || c.name}</AVGrid.styles.gridHeaderCell>
             {(this.notEmpty(c.items) && c.dataType !== 'array') && this._renderSubHeaderWithCells(c)}
             {(this.isEmpty(c.items) || c.dataType === 'array') && this._renderCells(c)}
@@ -72,15 +69,8 @@ export class AVGrid extends AVElement {
           <div key={innerCol.name} className="flex-1">
             <AVGrid.styles.gridHeaderCell
               className="pad-8 text-center"
-              ref={headerDomElement => {
-                if (!this.headerDomElements.nestingLevel2) {
-                  this.headerDomElements.nestingLevel2 = {}
-                }
-                if (!this.headerDomElements.nestingLevel2[c.name]) {
-                  this.headerDomElements.nestingLevel2[c.name] = {}
-                }
-                this.headerDomElements.nestingLevel2[c.name][innerCol.name] = headerDomElement
-              }}
+              style={innerCol.style}
+              ref={headerDomElement => innerCol.headerCellDomElement = headerDomElement}
             >{innerCol.label || innerCol.name}</AVGrid.styles.gridHeaderCell>
             {this._renderCells(c, innerColIndex, innerCol)}
           </div>
@@ -100,8 +90,6 @@ export class AVGrid extends AVElement {
                               onContextMenu={e => this._onCellContextMenu(i, c.name, e)}
                               style={innerCol ? (i[c.name] && i[c.name][innerCol.name + '_cellDomElement' + '_style']) : i[c.name + '_cellDomElement' + '_style']}
                               ref={cellDomElement => {
-                                // this.state._items[idx].cellDomElements = cellDomElement;
-                                // this.headerDomElements[i[idx].name];
                                 if (innerCol) {
                                   if (!i[c.name]) {
                                     i[c.name] = {}
@@ -148,161 +136,89 @@ export class AVGrid extends AVElement {
   }
 
   componentDidMount() {
-    this._realignHeaderCells();
+    this._realignGridHeaderCells();
     this._realignGridRows();
+    this.forceUpdate();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.columns !== this.props.columns) {
-      // prevProps.columns.forEach(c => {
-      //   if (this.props.columns.findIndex(newC => newC.name === c.name) === -1) {
-      //     delete this.headerDomElements[c.name];
-      //   }
-      // });
-      // this._realignHeaderCells();
-      // TODO верхнее оптимальней по рендеру, но заебешься отчищать nestingLevel2
-      this.headerDomElements = {};
-      this.forceUpdate(this._realignHeaderCells);
+      this._realignGridHeaderCells();
+      this.forceUpdate();
     }
     if (prevProps.items !== this.props.items) {
       this._realignGridRows();
     }
   }
 
-  _realignHeaderCells = () => {
-    const maxHeightObjLevel2 = this._realignHeaderCellsNestingLevel2();
-    const maxHeightObjLevel1WhichHaveLevel2 = this._realignHeaderCellsNestingLevel1WhichHaveLevel2();
-    this._realignHeaderCellsNestingLevel1({maxHeightObjLevel1WhichHaveLevel2, maxHeightObjLevel2});
-  }
+  _realignGridHeaderCells = () => { // двухэтажное выравнивание по высоте
+    this.props.columns.forEach(colItem => {
+      const headerCellMaxHeight = this.props.columns.reduce((acc, c) => {
+        if (this.isEmpty(c.items) || c.dataType === 'array') {
+          const headerCellElem = c.headerCellDomElement;
+          const headerCellElemHeight = headerCellElem.getBoundingClientRect().height;
+          if (headerCellElemHeight > acc) {
+            return headerCellElemHeight
+          } else {
+            return acc
+          };
+        };
+        if (this.notEmpty(c.items) && c.dataType !== 'array')  {
+          const headerCellElemHeightLevel1 = c.headerCellDomElement.getBoundingClientRect().height;
+          const headerCellElemHeightLevel2 = c.items.reduce((innerAcc, innerCell) => {
+            const innerCellHeight = innerCell.headerCellDomElement.getBoundingClientRect().height;
+            if (innerCellHeight > innerAcc) {
+              return innerCellHeight
+            } else {
+              return innerAcc
+            }
+          }, 0);
 
-  _realignHeaderCellsNestingLevel2 = () => {
-    const nestingLevel2 = this.headerDomElements.nestingLevel2;
-    if (nestingLevel2) {
-      const colNamesWhichHaveNestedArr = Object.keys(nestingLevel2);
-      const colHeightsWhichHaveNestedArr = colNamesWhichHaveNestedArr.map(colName => {
-        const nestingLevel2ColNamesArr = Object.keys(nestingLevel2[colName]);
-        return {
-          colName,
-          nestedColHeights: nestingLevel2ColNamesArr.map(nestedColName => {
-            const colDomElement = nestingLevel2[colName][nestedColName];
-            const colHeight = colDomElement.getBoundingClientRect().height;
-            return {nestedColName, colHeight}
-          })}
-      });
-      const isColHeightsOfNestedIsEqual = colHeightsWhichHaveNestedArr.every(
-        (i, idx, arr) => i.nestedColHeights.every(o => o.colHeight === arr[0].nestedColHeights[0].colHeight)
-      )
-      const maxHeightObj = colHeightsWhichHaveNestedArr.reduce((acc, i) => {
-        let maxColHeightNestedItem = acc;
-        i.nestedColHeights.forEach(nestedItem => {
-          if (nestedItem.colHeight > maxColHeightNestedItem.colHeight) {
-            maxColHeightNestedItem = nestedItem;
+          const headerCellElemHeightSummarized = headerCellElemHeightLevel1 + headerCellElemHeightLevel2;
+          if (headerCellElemHeightSummarized > acc) {
+            return headerCellElemHeightSummarized
+          } else {
+            return acc
           }
-        });
-        return maxColHeightNestedItem;
-      }, {colHeight: 0});
+        }
+      }, 0);
 
-      if (!isColHeightsOfNestedIsEqual) {
-        colHeightsWhichHaveNestedArr.forEach(i => {
-          i.nestedColHeights.forEach(o => {
-            this.headerDomElements.nestingLevel2[i.colName][o.nestedColName].style = `height: ${maxHeightObj.colHeight}px`
-          })
-        });
-      };
-      return maxHeightObj;
-    };
-    return null;
-  }
-
-  _realignHeaderCellsNestingLevel1WhichHaveLevel2 = () => {
-    const colNamesWithNestedArr = Object.keys(this.headerDomElements);
-    const colNamesArr = colNamesWithNestedArr.filter(colName => {
-      const colItem = this.props.columns.find(c => c.name === colName);
-      if (
-        colName !== 'nestingLevel2' &&
-        this.notEmpty(colItem.items) &&
-        colItem.dataType !== 'array'
-      ) {
-        return true;
+      if (this.isEmpty(colItem.items) || colItem.dataType === 'array') {
+        if (headerCellMaxHeight > colItem.headerCellDomElement.getBoundingClientRect().height) {
+          colItem.style = {minHeight: headerCellMaxHeight + 'px'}
+        }
       }
-    });
-    if (this.isEmpty(colNamesArr)) {
-      return null;
-    }
-    const colHeightsArr = colNamesArr.map(colName => {
-      const colDomElement = this.headerDomElements[colName];
-      const colHeight = colDomElement.getBoundingClientRect().height;
-      return {colName, colHeight}
-    });
-    const isColHeightsIsEqual = colHeightsArr.every((i, idx, arr) => i.colHeight === arr[0].colHeight);
-    const maxHeightObj = colHeightsArr.reduce((acc, i) => {
-      if (i.colHeight > acc.colHeight) {
-        return i;
-      } else {
-        return acc;
-      };
-    }, {colHeight: 0});
-    if (!isColHeightsIsEqual) {
-      colHeightsArr.forEach(col => {
-        if (col.colName === maxHeightObj.colName) return;
-        this.headerDomElements[col.colName].style = `height: ${maxHeightObj.colHeight}px`
-      });
-    };
-    return maxHeightObj;
-  }
-
-  _realignHeaderCellsNestingLevel1 = ({maxHeightObjLevel1WhichHaveLevel2, maxHeightObjLevel2}) => {
-    const colNamesWithNestedArr = Object.keys(this.headerDomElements);
-    const colNamesArr = colNamesWithNestedArr.filter(colName => {
-      if (colName !== 'nestingLevel2' && this.isEmpty(this.props.columns.find(c => c.name === colName).items)) {
-        return true;
-      }
-    });
-    const colHeightsArr = colNamesArr.map(colName => {
-      const colDomElement = this.headerDomElements[colName];
-      const colHeight = colDomElement.getBoundingClientRect().height;
-      return {colName, colHeight}
-    });
-    const isColHeightsIsEqual = colHeightsArr.every((i, idx, arr) => i.colHeight === arr[0].colHeight);
-    const maxHeightObj = colHeightsArr.reduce((acc, i) => {
-      if (i.colHeight > acc.colHeight) {
-        return i;
-      } else {
-        return acc;
-      };
-    }, {colHeight: 0});
-    if (!maxHeightObjLevel1WhichHaveLevel2) {
-      if (!isColHeightsIsEqual) {
-        colHeightsArr.forEach(col => {
-          if (col.colName === maxHeightObj.colName) return;
-          this.headerDomElements[col.colName].style = `height: ${maxHeightObj.colHeight}px`
-        });
-      }
-    } else {
-      const colHeightLevel1PlusLevel2 = maxHeightObjLevel1WhichHaveLevel2.colHeight + maxHeightObjLevel2.colHeight;
-      if (maxHeightObj.colHeight < colHeightLevel1PlusLevel2) {
-        colHeightsArr.forEach(col => {
-          this.headerDomElements[col.colName].style = `height: ${colHeightLevel1PlusLevel2}px`
-        });
-      } else if (maxHeightObj.colHeight > colHeightLevel1PlusLevel2) {
-        colHeightsArr.forEach(col => {
-          if (col.colName === maxHeightObj.colName) return;
-          this.headerDomElements[col.colName].style = `height: ${maxHeightObj.colHeight}px`
-        });
-        // Растянуть первый ряд где есть вложенные
-        const colNamesArrWithLevel2 = colNamesWithNestedArr.filter(colName => {
-          if (colName !== 'nestingLevel2' && this.notEmpty(this.props.columns.find(c => c.name === colName).items)) {
-            return true;
+      if (this.notEmpty(colItem.items) && colItem.dataType !== 'array') {
+        const headerCellMaxHeightOfInnerCellsWithinAllCols = this.props.columns.filter(
+          c => this.notEmpty(c.items) && c.dataType !== 'array'
+        ).reduce((acc, c) => {
+          const maxHeightInInner = c.items.reduce((innerAcc, i) => {
+            const height = i.headerCellDomElement.getBoundingClientRect().height;
+            if (height > innerAcc) {
+              return height
+            } else {
+              return innerAcc
+            }
+          }, 0);
+          if (maxHeightInInner > acc) {
+            return maxHeightInInner
+          } else {
+            return acc
           }
-        });
-        const colHeightsObjsArrWithLevel2 = colNamesArrWithLevel2.map(colName => {
-          return {colName}
-        });
-        colHeightsObjsArrWithLevel2.forEach(col => {
-          this.headerDomElements[col.colName].style = `height: ${maxHeightObj.colHeight - maxHeightObjLevel2.colHeight}px`
-        });
+        }, 0);
+
+        colItem.items.forEach(innerColItem => {
+          if (headerCellMaxHeightOfInnerCellsWithinAllCols > innerColItem.headerCellDomElement.getBoundingClientRect().height) {
+            innerColItem.style = {minHeight: headerCellMaxHeightOfInnerCellsWithinAllCols + 'px'}
+          }
+        })
+
+        if ((headerCellMaxHeight - headerCellMaxHeightOfInnerCellsWithinAllCols) > colItem.headerCellDomElement.getBoundingClientRect().height) {
+          // за вычетом самого высокого элемента из всех вложенных элементов всех колонок с вложенными элементами
+          colItem.style = {minHeight: (headerCellMaxHeight - headerCellMaxHeightOfInnerCellsWithinAllCols) + 'px'};
+        }
       }
-    };
+    })
   }
 
   _realignGridRows = () => {
@@ -337,7 +253,7 @@ export class AVGrid extends AVElement {
         }
       });
     });
-    this.forceUpdate();
+    // this.forceUpdate();
   }
 
   _onCellClick(rowItem, cellName, e) {
