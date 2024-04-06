@@ -44,11 +44,15 @@ export class AVGrid extends AVElement {
     $objectDocument: null
   }
 
+  state = {
+    _columns: this.deepClone(this.props.columns)
+  }
+
   render() {
     return (
       <div className="flex-1 row">
-        {this.props.columns.map(c => (
-          <div className="grid-column col flex-1" key={c.name + this.props.columns.map(cl => cl.name).toString()}>
+        {this.state._columns.map(c => (
+          <div className="grid-column col flex-1" key={c.name + this.state._columns.map(cl => cl.name).toString()}>
             <AVGrid.styles.gridHeaderCell
               className="pad-8 text-center"
               style={c.style}
@@ -143,17 +147,21 @@ export class AVGrid extends AVElement {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.columns !== this.props.columns) {
-      this._realignGridHeaderCells();
-      this.forceUpdate();
+      this.setState({_columns: this.deepClone(this.props.columns)}, () => {
+        this._realignGridHeaderCells();
+        this._realignGridRows();
+        this.forceUpdate();
+      })
     }
     if (prevProps.items !== this.props.items) {
       this._realignGridRows();
+      this.forceUpdate();
     }
   }
 
   _realignGridHeaderCells = () => { // двухэтажное выравнивание по высоте
-    this.props.columns.forEach(colItem => {
-      const headerCellMaxHeight = this.props.columns.reduce((acc, c) => {
+    this.state._columns.forEach(colItem => {
+      const headerCellMaxHeight = this.state._columns.reduce((acc, c) => {
         if (this.isEmpty(c.items) || c.dataType === 'array') {
           const headerCellElem = c.headerCellDomElement;
           const headerCellElemHeight = headerCellElem.getBoundingClientRect().height;
@@ -189,7 +197,7 @@ export class AVGrid extends AVElement {
         }
       }
       if (this.notEmpty(colItem.items) && colItem.dataType !== 'array') {
-        const headerCellMaxHeightOfInnerCellsWithinAllCols = this.props.columns.filter(
+        const headerCellMaxHeightOfInnerCellsWithinAllCols = this.state._columns.filter(
           c => this.notEmpty(c.items) && c.dataType !== 'array'
         ).reduce((acc, c) => {
           const maxHeightInInner = c.items.reduce((innerAcc, i) => {
@@ -223,7 +231,7 @@ export class AVGrid extends AVElement {
 
   _realignGridRows = () => {
     this.props.items.forEach(i => {
-      const maxColHeightOfItem = this.props.columns.reduce((acc, c) => {
+      const maxColHeightOfItem = this.state._columns.reduce((acc, c) => {
         if (this.notEmpty(c.items) && c.dataType !== 'array') {
           return c.items.reduce((innerAcc, innerCol) => {
             const cellElem = i[c.name][innerCol.name + '_cellDomElement'];
@@ -243,7 +251,7 @@ export class AVGrid extends AVElement {
           return acc;
         }
       }, 0);
-      this.props.columns.forEach(c => {
+      this.state._columns.forEach(c => {
         if (this.notEmpty(c.items) && c.dataType !== 'array') {
           c.items.forEach(innerCol => {
             i[c.name][innerCol.name + '_cellDomElement' + '_style'] = {minHeight: maxColHeightOfItem + 'px'};
