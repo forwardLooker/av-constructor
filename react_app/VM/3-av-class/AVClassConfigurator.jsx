@@ -19,6 +19,11 @@ export class AVClassConfigurator extends AVItem {
     selectedFieldDescriptor: null,
     _newFieldDescriptorsBeforeUpdate: [],
 
+    viewsOptions: [],
+    _newViewsOptions: [],
+    _newViewsOptionsBeforeUpdate: [],
+    selectedViewsOption: null,
+
     availableServices: [],
     connectedServices: [],
     _newConnectedServices: [],
@@ -78,6 +83,8 @@ export class AVClassConfigurator extends AVItem {
             <AVButton onClick={this._addField}>Добавить поле</AVButton>
           </div>
           {this._renderFields()}
+          <div>Views:</div>
+          {this._renderViewsOptions()}
           <div>Сервисы:</div>
           {this._renderServices()}
         </div>
@@ -97,7 +104,7 @@ export class AVClassConfigurator extends AVItem {
         <div className="flex-0-200px row border">
           <AVTree
             items={this.state._newFieldDescriptors}
-            onItemSelectFunc={item => this.setState({selectedFieldDescriptor: item})}
+            onItemSelectFunc={selectedFieldDescriptor => this.setState({selectedFieldDescriptor})}
             onItemContextMenuFunc={this._onTreeItemContextMenu}
           ></AVTree>
         </div>
@@ -112,14 +119,42 @@ export class AVClassConfigurator extends AVItem {
     )
   }
 
+  _renderViewsOptions() {
+    return (
+        <div className="flex-0 row">
+          <div className="flex-0-200px row pad-4-0 border">
+            <AVTree
+              items={this.state._newViewsOptions}
+              onItemSelectFunc={selectedViewsOption => this.setState({selectedViewsOption})}
+            ></AVTree>
+          </div>
+          <div className="flex-1 row margin-left-8 border">
+            <AVPropertyGrid
+              inspectedItem={this.state.selectedViewsOption}
+              propertyItems={[
+                {
+                  name: 'value',
+                  dataType: 'string',
+                  variant: 'select',
+                  valuesList: this.props.classItem.getViewsList(),
+                  defaultValue: this.props.classItem.defaultViewName,
+                  isEmptyOptionHidden: true,
+                }
+              ]}
+              onChangeFunc={this._calcMetadataChanges}
+            ></AVPropertyGrid>
+          </div>
+        </div>
+    )
+  }
+
   _renderServices() {
     return (
-      <div className="flex-1 row margin-top-8">
-        <div className="flex-0-200px row border">
+      <div className="flex-0 row">
+        <div className="flex-0-200px row pad-4-0 border">
           <AVTree
             items={this.state._newConnectedServices}
-            onItemSelectFunc={itemService => {this.setState({selectedItemService: itemService})
-            }}
+            onItemSelectFunc={selectedItemService => this.setState({selectedItemService})}
           ></AVTree>
         </div>
         <div className="flex-1 row margin-left-8 border">
@@ -135,9 +170,13 @@ export class AVClassConfigurator extends AVItem {
 
   async componentDidMount() {
     if (this.props.classItem) {
+      // Fields
       const fieldDescriptors = await this.props.classItem.getFieldDescriptors();
       const _newFieldDescriptors = this.deepClone(fieldDescriptors);
-
+      // Views
+      const viewsOptions = await this.props.classItem.getViewsOptions();
+      const _newViewsOptions = this.deepClone(viewsOptions);
+      //Services
       const connectedServices = await this.props.classItem.getConnectedServices();
       const servicesDomain = this.findDeepObjInItemsBy({name: 'Сервисы', itemType: 'domain'}, {items: this.Host.config});
       let availableServices = this.deepClone(servicesDomain.items);
@@ -150,6 +189,10 @@ export class AVClassConfigurator extends AVItem {
         fieldDescriptors,
         _newFieldDescriptors,
         _newFieldDescriptorsBeforeUpdate: this.deepClone(_newFieldDescriptors),
+
+        viewsOptions,
+        _newViewsOptions,
+        __newViewsOptionsBeforeUpdate: this.deepClone(_newViewsOptions),
 
         availableServices,
         connectedServices: connectedServices,
@@ -212,10 +255,18 @@ export class AVClassConfigurator extends AVItem {
   _calcMetadataChanges = () => {
     const currentStateNewFields = JSON.stringify(this.state._newFieldDescriptors);
     const beforeUpdateNewFields = JSON.stringify(this.state._newFieldDescriptorsBeforeUpdate);
+
+    const currentStateNewViewsOptions = JSON.stringify(this.state._newViewsOptions);
+    const beforeUpdateNewViewsOptions = JSON.stringify(this.state._newViewsOptionsBeforeUpdate);
+
     const currentStateNewServices = JSON.stringify(this.state._newConnectedServices);
     const beforeUpdateNewServices = JSON.stringify(this.state._newConnectedServicesBeforeUpdate);
 
-    if (currentStateNewFields !== beforeUpdateNewFields || currentStateNewServices !== beforeUpdateNewServices) {
+    if (
+        currentStateNewFields !== beforeUpdateNewFields ||
+        currentStateNewServices !== beforeUpdateNewServices ||
+        currentStateNewViewsOptions !== beforeUpdateNewViewsOptions
+    ) {
       this.setState({_metadataChangeDetected: true});
     } else {
       this.setState({_metadataChangeDetected: false});
@@ -225,10 +276,12 @@ export class AVClassConfigurator extends AVItem {
   _saveMetadata = async () => {
     await this.props.classItem.saveMetadata({
       fieldDescriptors: this.state._newFieldDescriptors,
+      viewsOptions: this.state._newViewsOptions,
       connectedServices: this.state._newConnectedServices.filter(srv => srv.isServiceConnected)
     })
     this.setState({
       _newFieldDescriptorsBeforeUpdate: this.deepClone(this.state._newFieldDescriptors),
+      _newViewsOptionsBeforeUpdate: this.deepClone(this.state._newViewsOptions),
       _newConnectedServicesBeforeUpdate: this.deepClone(this.state._newConnectedServices),
       _metadataChangeDetected: false
     });

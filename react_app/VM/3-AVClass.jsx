@@ -13,7 +13,7 @@ export class AVClass extends AVItem {
     onObjectDocumentSelectedFunc: this.noop,
   }
   state = {
-    currentViewName: this.props.classItem?.defaultViewName,
+    currentViewName: '',
     fieldDescriptors: [],
     objectDocuments: [],
     selectedObjectDocument: null,
@@ -27,15 +27,19 @@ export class AVClass extends AVItem {
           onClassViewChangedFunc={viewName => this.setState({currentViewName: viewName})}
           onCreateFunc={(e) => {this.setState({selectedObjectDocument: this.props.classItem.getNewObjectDocument()})}}
         ></AVClassPanel>
-        {this.state.currentViewName === 'Grid' ? this._renderGrid() : ''}
-        {this.state.currentViewName === 'Configurator' ? this._renderConfigurator() : ''}
         {this._renderView()}
       </div>
     )
   }
   
   _renderView() {
-    return this.props.classItem.getViewByName(this.state.currentViewName);
+    if (this.state.currentViewName === 'Grid') {
+      return this._renderGrid()
+    }
+    if (this.state.currentViewName === 'Configurator') {
+      return this._renderConfigurator()
+    }
+    return this.props.classItem.getViewComponentByName(this.state.currentViewName);
   }
 
   _renderGrid() {
@@ -70,17 +74,17 @@ export class AVClass extends AVItem {
     )
   }
 
-  componentDidMount() {
-    if (this.props?.classItem) {
-      this._loadGridData();
+  async componentDidMount() {
+    if (this.props.classItem) {
+      await this._loadGridData();
+      this.setState({currentViewName: this.props.classItem.defaultViewName})
     }
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     if (this.props.classItem !== prevProps.classItem) {
+      await this._loadGridData();
       this.setState({currentViewName: this.props.classItem.defaultViewName})
-
-      this._loadGridData();
     }
   }
 

@@ -167,7 +167,7 @@ export class AVField extends AVItem {
           <AVField.styles.select
             className="flex-1"
             autoComplete="off"
-            value={value}
+            value={(value === null || value === undefined) ? (fieldItem.defaultValue || '') : value}
             readOnly={readOnly}
             onChange={onChangeFunc}
           >
@@ -213,8 +213,9 @@ export class AVField extends AVItem {
           <AVButton
             onClick={() => {
               gridItems.push({});
-              $gridRef.forceUpdate();
-              this.props.onChangeFunc(gridItems);
+              this.setState({_value: [...gridItems]}, () => {
+                this.props.onChangeFunc(this.state._value);
+              })
             }}
             disabled={readOnly}
           >+</AVButton>
@@ -304,7 +305,7 @@ export class AVField extends AVItem {
     } else {
       value = eOrValue.target.value;
       if (eOrValue.target.type === 'checkbox') {
-        value = e.target.checked;
+        value = eOrValue.target.checked;
       }
     }
     this.setState({_value: value})

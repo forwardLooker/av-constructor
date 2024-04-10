@@ -12,8 +12,8 @@ export class AVClassPanel extends AVItem {
     onClassViewChangedFunc: this.noop
   }
   state = {
-    currentViewName: this.props.classItem?.defaultViewName,
-    availableViewsList: this.props.classItem?.getViewsList(),
+    currentViewName: '',
+    availableViewsList: [],
   }
 
   render() {
@@ -45,8 +45,18 @@ export class AVClassPanel extends AVItem {
     )
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidMount() {
+    if (this.props.classItem) {
+      await this.props.classItem.getFieldDescriptors() // TODO ?
+      const currentViewName = this.props.classItem.defaultViewName;
+      const availableViewsList = this.props.classItem.getViewsList();
+      this.setState({currentViewName, availableViewsList});
+    }
+  }
+
+  async componentDidUpdate(prevProps) {
     if (this.props.classItem !== prevProps.classItem) {
+      await this.props.classItem.getFieldDescriptors() // TODO ?
       const currentViewName = this.props.classItem.defaultViewName;
       const availableViewsList = this.props.classItem.getViewsList();
       this.setState({currentViewName, availableViewsList});

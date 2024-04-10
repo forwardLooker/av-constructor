@@ -41,6 +41,11 @@ export class Class extends Item {
     return this.data.fieldDescriptors || [];
   }
 
+  async getViewsOptions() {
+    // TODO разрулить
+    return this.data.viewsOptions || [{name: 'defaultViewName'}]
+  }
+
   async getConnectedServices() {
     //TODO разрулить
     // const doc = await this.serverRef.get();
@@ -54,9 +59,9 @@ export class Class extends Item {
     }
   }
 
-  async saveMetadata({fieldDescriptors, connectedServices}) {
-    if (fieldDescriptors || connectedServices) {
-      await this.serverRef.update({fieldDescriptors, connectedServices})
+  async saveMetadata({fieldDescriptors, connectedServices, viewsOptions}) {
+    if (fieldDescriptors || connectedServices || viewsOptions) {
+      await this.serverRef.update({fieldDescriptors, connectedServices, viewsOptions})
     }
   }
 
@@ -82,20 +87,20 @@ export class Class extends Item {
     });
     return views;
   }
-  
-  getViewByName(viewName) {
-    let view;
+
+  getViewComponentByName(viewName) {
+    let viewComponent;
     this.classServiceDefinitions.forEach(srv => {
       if (srv.views) {
         srv.views.forEach(v => {
           if (v.classId === this.id && v.viewName === viewName) {
-            view = v.viewComponent
+            viewComponent = v.viewComponent
           }
         })
       }
     });
-    if (view) {
-      return view(this)
+    if (viewComponent) {
+      return viewComponent(this)
     } else {
       return null
     }
@@ -103,6 +108,12 @@ export class Class extends Item {
   }
 
   get defaultViewName() {
+    if (this.notEmpty(this.data.viewsOptions)) {
+      const defaultViewOption = this.data.viewsOptions.find(vOpt => vOpt.name === 'defaultViewName');
+      if (defaultViewOption && defaultViewOption.value) {
+        return defaultViewOption.value
+      }
+    }
     return 'Grid'
   }
 
