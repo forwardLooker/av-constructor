@@ -7,11 +7,12 @@ export class UtilFunctions {
     return arrayToClone.map(obj => {
       let propListWithClonedObjAndArr = {};
       Object.keys(obj).forEach(prop => {
-        if (typeof obj[prop] === 'object') {
+        if (typeof obj[prop] === 'object' && obj[prop] !== null) {
           if (Array.isArray(obj[prop])) {
             propListWithClonedObjAndArr[prop] = [...obj[prop]];
+          } else {
+            propListWithClonedObjAndArr[prop] = {...obj[prop]};
           }
-          propListWithClonedObjAndArr[prop] = {...obj[prop]};
         }
       });
       return {...obj, ...propListWithClonedObjAndArr, ...((Array.isArray(obj.items) && {items: this.deepCloneArrayWithInnerRef(obj.items)}) || {}), _originalItemRef: obj}
