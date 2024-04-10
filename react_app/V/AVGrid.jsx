@@ -77,14 +77,14 @@ export class AVGrid extends AVElement {
               style={innerCol.style}
               ref={headerDomElement => innerCol.headerCellDomElement = headerDomElement}
             >{innerCol.label || innerCol.name}</AVGrid.styles.gridHeaderCell>
-            {this._renderCells(c, innerColIndex, innerCol)}
+            {this._renderCells(c, innerCol)}
           </div>
         ))}
       </div>
     )
   }
 
-  _renderCells(c, innerColIndex, innerCol) {
+  _renderCells(c, innerCol) {
     // let c = col;
     // if (innerColIndex) {
     //   c = col.items[innerColIndex];
@@ -104,14 +104,14 @@ export class AVGrid extends AVElement {
                                   i[c.name + '_cellDomElement'] = cellDomElement;
                                 }
                               }}
-      >{this._renderCellContent(i, c, innerColIndex)}</AVGrid.styles.gridCell>
+      >{this._renderCellContent(i, c, innerCol)}</AVGrid.styles.gridCell>
     ))
   }
 
-  _renderCellContent(item, column, innerColIndex) {
+  _renderCellContent(item, column, innerCol) {
     let fieldValue = item[column.name];
-    if (typeof innerColIndex === 'number' && item[column.name]) {
-      fieldValue = item[column.name][column.items[innerColIndex].name];
+    if (innerCol && item[column.name]) {
+      fieldValue = item[column.name][innerCol.name];
     }
     if (this.props.isTypedColumns && this.props.isCellEditable) {
       return (
@@ -137,6 +137,12 @@ export class AVGrid extends AVElement {
         return `${item[column.name].name} (Объектное)`
       }
       return 'Объектное';
+    }
+    if (column.formatOutputInGrid) {
+      return column.formatOutputInGrid(value)
+    }
+    if (innerCol && innerCol.formatOutputInGrid) {
+      return innerCol.formatOutputInGrid(value)
     }
     return value;
   }

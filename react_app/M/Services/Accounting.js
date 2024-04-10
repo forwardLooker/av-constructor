@@ -149,12 +149,14 @@ class Journal extends AVItem {
         {
           "label": "Дебет",
           "dataType": "string",
-          "name": "Дебет"
+          "name": "Дебет",
+          formatOutputInGrid: value => value === 0 ? '' : value
         },
         {
           "name": "Кредит",
           "label": "Кредит",
-          "dataType": "string"
+          "dataType": "string",
+          formatOutputInGrid: value => value === 0 ? '' : value
         }
       ],
       "name": "Сальдо на начало периода",
@@ -169,12 +171,14 @@ class Journal extends AVItem {
         {
           "label": "Дебет",
           "dataType": "string",
-          "name": "Дебет"
+          "name": "Дебет",
+          formatOutputInGrid: value => value === 0 ? '' : value
         },
         {
           "label": "Кредит",
           "name": "Кредит",
-          "dataType": "string"
+          "dataType": "string",
+          formatOutputInGrid: value => value === 0 ? '' : value
         }
       ]
     },
@@ -184,12 +188,14 @@ class Journal extends AVItem {
         {
           "dataType": "string",
           "name": "Дебет",
-          "label": "Дебет"
+          "label": "Дебет",
+          formatOutputInGrid: value => value === 0 ? '' : value
         },
         {
           "dataType": "string",
           "name": "Кредит",
-          "label": "Кредит"
+          "label": "Кредит",
+          formatOutputInGrid: value => value === 0 ? '' : value
         }
       ],
       "dataType": "object",
@@ -213,9 +219,7 @@ class Journal extends AVItem {
   
   async componentDidMount() {
     const operations = await this.props.classItem.getObjectDocuments();
-    console.log('operations', operations);
     let accounts = operations.reduce((accAccs, op) => {
-      console.log('accAccs', accAccs);
       op['Проводки'].forEach(pr => {
         const additional = pr['Аналитические парметры табличные'].reduce((accAllTables, table) => {
           return accAllTables + table['Аналитические парметры'].reduce((accT, row) => {
@@ -231,9 +235,14 @@ class Journal extends AVItem {
         if (!accountForDebit) {
           accountForDebit = {
             'Счёт': debitAccName,
+            'Сальдо на начало периода': {
+              'Дебет': 0,
+              'Кредит': 0
+            },
             'Обороты за период': {
               'Дебет': additional
-            }
+            },
+            accountType: pr['Дебет'].accountType
           };
           accAccs.push(accountForDebit);
         } else {
@@ -244,9 +253,14 @@ class Journal extends AVItem {
         if (!accountForCredit) {
           accountForCredit = {
             'Счёт': creditAccName,
+            'Сальдо на начало периода': {
+              'Дебет': 0,
+              'Кредит': 0
+            },
             'Обороты за период': {
               'Кредит': additional
-            }
+            },
+            accountType: pr['Кредит'].accountType
           };
           accAccs.push(accountForCredit);
         } else {
@@ -256,7 +270,51 @@ class Journal extends AVItem {
 
       return accAccs;
     }, []);
-    console.log('accounts', accounts);
+    // accountsWithCalculatedBalance
+    accounts.forEach(acc => {
+      if (acc.accountType === 'Активный') {
+        acc['Сальдо на конец периода'] = {};
+        const debitAtStart = acc['Сальдо на начало периода']['Дебет'];
+        const diff = (acc['Обороты за период']['Дебет'] || 0) - (acc['Обороты за период']['Кредит'] || 0);
+        acc['Сальдо на конец периода']['Дебет'] = debitAtStart + diff
+      }
+      if (acc.accountType === 'Пассивный') {
+        acc['Сальдо на конец периода'] = {};
+        const creditAtStart = acc['Сальдо на начало периода']['Кредит'];
+        const diff = (acc['Обороты за период']['Дебет'] || 0) - (acc['Обороты за период']['Кредит'] || 0);
+        acc['Сальдо на конец периода']['Дебет'] = creditAtStart - diff
+      }
+      if (acc.accountType === 'Активно-Пассивный') {
+        acc['Сальдо на конец периода'] = {};
+        const debitAtStart = acc['Сальдо на начало периода']['Дебет'];
+        const creditAtStart = acc['Сальдо на начало периода']['Кредит'];
+        const diff = (acc['Обороты за период']['Дебет'] || 0) - (acc['Обороты за период']['Кредит'] || 0);
+        if (debitAtStart > 0) {
+          const balance = debitAtStart + diff;
+          if (balance > 0) {
+            acc['Сальдо на конец периода']['Дебет'] = balance;
+          }
+          if (balance < 0) {
+            acc['Сальдо на конец периода']['Кредит'] = Math.abs(balance)
+          }
+        } else if (creditAtStart > 0) {
+          const balance = creditAtStart - diff;
+          if (balance > 0) {
+            acc['Сальдо на конец периода']['Кредит'] = balance
+          }
+          if (balance < 0) {
+            acc['Сальдо на конец периода']['Дебет'] = Math.abs(balance);
+          }
+        } else {
+          if (diff > 0) {
+            acc['Сальдо на конец периода']['Дебет'] = diff;
+          }
+          if (diff < 0) {
+            acc['Сальдо на конец периода']['Кредит'] = Math.abs(diff);
+          }
+        }
+      }
+    })
     this.setState({ operations, accounts });
   }
 }
