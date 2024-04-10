@@ -5,7 +5,16 @@ export class UtilFunctions {
   static deepCloneArrayWithInnerRef(arrayToClone) {
     if (!arrayToClone) return;
     return arrayToClone.map(obj => {
-      return {...obj, ...((Array.isArray(obj.items) && {items: this.deepCloneArrayWithInnerRef(obj.items)}) || {}), _originalItemRef: obj}
+      let propListWithClonedObjAndArr = {};
+      Object.keys(obj).forEach(prop => {
+        if (typeof obj[prop] === 'object') {
+          if (Array.isArray(obj[prop])) {
+            propListWithClonedObjAndArr[prop] = [...obj[prop]];
+          }
+          propListWithClonedObjAndArr[prop] = {...obj[prop]};
+        }
+      });
+      return {...obj, ...propListWithClonedObjAndArr, ...((Array.isArray(obj.items) && {items: this.deepCloneArrayWithInnerRef(obj.items)}) || {}), _originalItemRef: obj}
     })
   }
 
