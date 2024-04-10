@@ -45,7 +45,8 @@ export class AVGrid extends AVElement {
   }
 
   state = {
-    _columns: this.deepClone(this.props.columns)
+    _items: this.deepCloneArrayWithInnerRef(this.props.items),
+    _columns: this.deepCloneArrayWithInnerRef(this.props.columns)
   }
 
   render() {
@@ -88,7 +89,7 @@ export class AVGrid extends AVElement {
     // if (innerColIndex) {
     //   c = col.items[innerColIndex];
     // }
-    return this.props.items.map((i, idx) => (
+    return this.state._items.map((i, idx) => (
       <AVGrid.styles.gridCell className="pad-8" key={i.id || idx} row-item-id={i.id} column-name={c.name}
                               onClick={(e) => this._onCellClick(i, c.name, e)}
                               onContextMenu={e => this._onCellContextMenu(i, c.name, e)}
@@ -120,7 +121,8 @@ export class AVGrid extends AVElement {
          isLabelHidden
          onChangeFunc={value => { // TODO редактирование в гриде с вложенными колонками
           item[column.name] = value;
-          this.props.onDataInItemsChangedFunc(this.props.items, item, column);
+          item._originalItemRef[column.name] = value
+          this.props.onDataInItemsChangedFunc(this.props.items, item._originalItemRef, column._originalItemRef);
          }}
          $objectDocument={this.props.$objectDocument}
         ></AVField>
@@ -147,17 +149,19 @@ export class AVGrid extends AVElement {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.columns !== this.props.columns) {
-      this.setState({_columns: this.deepClone(this.props.columns)}, () => {
+      this.setState({_columns: this.deepCloneArrayWithInnerRef(this.props.columns)}, () => {
         this._realignGridHeaderCells();
         this._realignGridRows();
         this.forceUpdate();
       })
-    } else {
-      if (prevProps.items !== this.props.items) {
+    }
+    if (prevProps.items !== this.props.items) {
+      this.setState({_items: this.deepCloneArrayWithInnerRef(this.props.items)}, () => {
         this._realignGridRows();
         this.forceUpdate();
-      }
+      })
     }
+
   }
 
   _realignGridHeaderCells = () => { // двухэтажное выравнивание по высоте
@@ -231,7 +235,7 @@ export class AVGrid extends AVElement {
   }
   // TODO исправить для вложенных
   _realignGridRows = () => {
-    this.props.items.forEach(i => {
+    this.state._items.forEach(i => {
       const maxCellHeightOfItem = this.state._columns.reduce((acc, c) => {
         if (this.notEmpty(c.items) && c.dataType !== 'array') {
           const maxHeightOfInnerCells = c.items.reduce((innerAcc, innerCol) => {
@@ -271,11 +275,11 @@ export class AVGrid extends AVElement {
   }
 
   _onCellClick(rowItem, cellName, e) {
-    this.props.onRowClickFunc(rowItem);
+    this.props.onRowClickFunc(rowItem._originalItemRef);
   }
 
   _onCellContextMenu = (rowItem, cellName, e) =>  {
-    this.props.onRowContextMenuFunc(rowItem, cellName, e)
+    this.props.onRowContextMenuFunc(rowItem._originalItemRef, cellName, e)
   }
 
 }

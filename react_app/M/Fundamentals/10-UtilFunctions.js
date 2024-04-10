@@ -5,7 +5,7 @@ export class UtilFunctions {
   static deepCloneArrayWithInnerRef(arrayToClone) {
     if (!arrayToClone) return;
     return arrayToClone.map(obj => {
-      return {...obj, ...(Array.isArray(obj.items) && {items: this.deepCloneArrayWithInnerRef(obj.items)}), _originalItemRef: obj}
+      return {...obj, ...((Array.isArray(obj.items) && {items: this.deepCloneArrayWithInnerRef(obj.items)}) || {}), _originalItemRef: obj}
     })
   }
 
