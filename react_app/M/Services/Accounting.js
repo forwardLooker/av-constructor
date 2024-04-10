@@ -1,9 +1,22 @@
-import {Item} from '../0-Item'
+import { Item } from '../0-Item'
+import React from 'react';
+import { AVItem } from '../../VM/0-AVItem.js';
+import { AVGrid } from "../../V/AVGrid.jsx";
+
 
 export class Accounting extends Item {
   static id = '2cE2ZCdfErMBg1serR3W';
-  static name = 'Журнал учёта';
-  static Host;
+	static name = 'Журнал учёта';
+	static itemType = 'domain';
+	static Host;
+	static views = [
+		{
+			className: 'Журнал',
+			classId: 'Y25mhmAmLcV9HklpR2Ad',
+			viewName: 'Журнал',
+      viewComponent: (classItem) => (<Journal classItem={classItem}></Journal>),
+		}
+	];
   static methods = [
     {
       name: 'Провести',
@@ -113,3 +126,139 @@ export class Accounting extends Item {
   ];
 
 };
+
+class Journal extends AVItem {
+  static defaultProps = {
+    classItem: null
+  }
+  
+  state = {
+    operations: [],
+    accounts: []
+  }
+
+  columns = [
+    {
+      "name": "Счёт",
+      "label": "Счёт",
+      "dataType": "string"
+    },
+    {
+      "dataType": "object",
+      "label": "Сальдо на начало периода",
+      "items": [
+        {
+          "label": "Дебет",
+          "dataType": "string",
+          "name": "Дебет"
+        },
+        {
+          "name": "Кредит",
+          "label": "Кредит",
+          "dataType": "string"
+        }
+      ],
+      "name": "Сальдо на начало периода",
+      "variant": "structured-object-field"
+    },
+    {
+      "label": "Обороты за период",
+      "dataType": "object",
+      "variant": "structured-object-field",
+      "name": "Обороты за период",
+      "items": [
+        {
+          "label": "Дебет",
+          "dataType": "string",
+          "name": "Дебет"
+        },
+        {
+          "label": "Кредит",
+          "name": "Кредит",
+          "dataType": "string"
+        }
+      ]
+    },
+    {
+      "label": "Сальдо на конец периода",
+      "items": [
+        {
+          "dataType": "string",
+          "name": "Дебет",
+          "label": "Дебет"
+        },
+        {
+          "dataType": "string",
+          "name": "Кредит",
+          "label": "Кредит"
+        }
+      ],
+      "dataType": "object",
+      "variant": "structured-object-field",
+      "name": "Сальдо на конец периода"
+    }
+  ]
+  
+  render() {
+    return (
+      <div className="margin-top-8">
+        <AVGrid
+          items={this.state.accounts}
+          columns={this.columns}
+          onRowClickFunc={this.noop}
+          onRowContextMenuFunc={this.noop}
+        ></AVGrid>
+      </div>
+    )
+  }
+  
+  async componentDidMount() {
+    const operations = await this.props.classItem.getObjectDocuments();
+    console.log('operations', operations);
+    let accounts = operations.reduce((accAccs, op) => {
+      console.log('accAccs', accAccs);
+      op['Проводки'].forEach(pr => {
+        const additional = pr['Аналитические парметры табличные'].reduce((accAllTables, table) => {
+          return accAllTables + table['Аналитические парметры'].reduce((accT, row) => {
+            if (row['Сумма']) {
+              return accT + Number(row['Сумма'])
+            }
+            return accT
+          }, 0)
+        }, 0);
+
+        const debitAccName = pr['Дебет'].name;
+        let accountForDebit = accAccs.find(acc => acc['Счёт'] === debitAccName);
+        if (!accountForDebit) {
+          accountForDebit = {
+            'Счёт': debitAccName,
+            'Обороты за период': {
+              'Дебет': additional
+            }
+          };
+          accAccs.push(accountForDebit);
+        } else {
+          accountForDebit['Обороты за период']['Дебет'] = accountForDebit['Обороты за период']['Дебет'] + additional;
+        }
+        const creditAccName = pr['Кредит'].name;
+        let accountForCredit = accAccs.find(acc => acc['Счёт'] === creditAccName);
+        if (!accountForCredit) {
+          accountForCredit = {
+            'Счёт': creditAccName,
+            'Обороты за период': {
+              'Кредит': additional
+            }
+          };
+          accAccs.push(accountForCredit);
+        } else {
+          accountForCredit['Обороты за период']['Кредит'] = accountForCredit['Обороты за период']['Кредит'] + additional;
+        }
+      });
+
+      return accAccs;
+    }, []);
+    console.log('accounts', accounts);
+    this.setState({ operations, accounts });
+  }
+}
+

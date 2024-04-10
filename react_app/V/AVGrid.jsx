@@ -154,6 +154,7 @@ export class AVGrid extends AVElement {
       })
     } else {
       if (prevProps.items !== this.props.items) {
+        console.log('this.props.items', this.props.items);
         this._realignGridRows();
         this.forceUpdate();
       }
@@ -229,19 +230,24 @@ export class AVGrid extends AVElement {
       }
     })
   }
-
+  // TODO исправить для вложенных
   _realignGridRows = () => {
     this.props.items.forEach(i => {
-      const maxColHeightOfItem = this.state._columns.reduce((acc, c) => {
+      const maxCellHeightOfItem = this.state._columns.reduce((acc, c) => {
         if (this.notEmpty(c.items) && c.dataType !== 'array') {
-          return c.items.reduce((innerAcc, innerCol) => {
+          const maxHeightOfInnerCells = c.items.reduce((innerAcc, innerCol) => {
             const cellElem = i[c.name][innerCol.name + '_cellDomElement'];
             const cellElemHeight = cellElem.getBoundingClientRect().height;
             if (cellElemHeight > innerAcc) {
               return cellElemHeight
             }
             return innerAcc;
-          }, 0)
+          }, 0);
+          if (maxHeightOfInnerCells > acc) {
+            return maxHeightOfInnerCells
+          } else {
+            return acc
+          }
         } else {
           const cellElem = i[c.name + '_cellDomElement'];
           const cellElemHeight = cellElem.getBoundingClientRect().height;
@@ -255,10 +261,10 @@ export class AVGrid extends AVElement {
       this.state._columns.forEach(c => {
         if (this.notEmpty(c.items) && c.dataType !== 'array') {
           c.items.forEach(innerCol => {
-            i[c.name][innerCol.name + '_cellDomElement' + '_style'] = {minHeight: maxColHeightOfItem + 'px'};
+            i[c.name][innerCol.name + '_cellDomElement' + '_style'] = {minHeight: maxCellHeightOfItem + 'px'};
           })
         } else {
-          i[c.name + '_cellDomElement' + '_style'] = {minHeight: maxColHeightOfItem + 'px'};
+          i[c.name + '_cellDomElement' + '_style'] = {minHeight: maxCellHeightOfItem + 'px'};
         }
       });
     });

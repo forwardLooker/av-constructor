@@ -29,8 +29,13 @@ export class AVClass extends AVItem {
         ></AVClassPanel>
         {this.state.currentViewName === 'Grid' ? this._renderGrid() : ''}
         {this.state.currentViewName === 'Configurator' ? this._renderConfigurator() : ''}
+        {this._renderView()}
       </div>
     )
+  }
+  
+  _renderView() {
+    return this.props.classItem.getViewByName(this.state.currentViewName);
   }
 
   _renderGrid() {

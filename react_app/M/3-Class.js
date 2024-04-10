@@ -70,7 +70,36 @@ export class Class extends Item {
   }
 
   getViewsList() {
-    return ['Grid', 'Configurator'];
+    let views = ['Grid', 'Configurator'];
+    this.classServiceDefinitions.forEach(srv => {
+      if (srv.views) {
+        srv.views.forEach(v => {
+          if (v.classId === this.id) {
+            views.push(v.viewName)
+          }
+        })
+      }
+    });
+    return views;
+  }
+  
+  getViewByName(viewName) {
+    let view;
+    this.classServiceDefinitions.forEach(srv => {
+      if (srv.views) {
+        srv.views.forEach(v => {
+          if (v.classId === this.id && v.viewName === viewName) {
+            view = v.viewComponent
+          }
+        })
+      }
+    });
+    if (view) {
+      return view(this)
+    } else {
+      return null
+    }
+    
   }
 
   get defaultViewName() {
