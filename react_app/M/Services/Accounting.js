@@ -3,19 +3,18 @@ import React from 'react';
 import { AVItem } from '../../VM/0-AVItem.js';
 import { AVGrid } from "../../V/AVGrid.jsx";
 
-
 export class Accounting extends Item {
   static id = '2cE2ZCdfErMBg1serR3W';
 	static name = 'Журнал учёта';
 	static itemType = 'domain';
 	static Host;
 	static views = [
-		{
-			className: 'Журнал',
-			classId: 'Y25mhmAmLcV9HklpR2Ad',
-			viewName: 'Журнал',
-      viewComponent: (classItem) => (<Journal classItem={classItem}></Journal>),
-		}
+      {
+        className: 'Журнал',
+        classId: 'Y25mhmAmLcV9HklpR2Ad',
+        viewName: 'Журнал',
+        viewComponent: (classItem) => (<Journal classItem={classItem}></Journal>),
+      }
 	];
   static methods = [
     {

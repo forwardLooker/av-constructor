@@ -154,7 +154,6 @@ export class AVGrid extends AVElement {
       })
     } else {
       if (prevProps.items !== this.props.items) {
-        console.log('this.props.items', this.props.items);
         this._realignGridRows();
         this.forceUpdate();
       }
