@@ -77,7 +77,7 @@ export class Accounting extends Item {
                 'Дебет': pr['Дебет'],
                 'Кредит': pr['Кредит'],
                 'Аналитические параметры общие': analiticsOutOfTableFromDocument,
-                'Аналитические парметры табличные': gainedTableItemsWithAnaliticsFromAllTablesFromDocument
+                'Аналитические параметры табличные': gainedTableItemsWithAnaliticsFromAllTablesFromDocument
               }
             }),
           });
@@ -136,7 +136,7 @@ class Journal extends AVItem {
     accounts: []
   }
 
-  columns = [
+  columns = [ // Скопировано из отладки
     {
       "name": "Счёт",
       "label": "Счёт",
@@ -210,6 +210,7 @@ class Journal extends AVItem {
         <AVGrid
           items={this.state.accounts}
           columns={this.columns}
+          isRowSelectable
           onRowClickFunc={this.noop}
           onRowContextMenuFunc={this.noop}
         ></AVGrid>

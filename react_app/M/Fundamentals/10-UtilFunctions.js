@@ -75,4 +75,8 @@ export class UtilFunctions {
     };
   }
 
+  static createArrFromObjFieldNamesContains(propNamePart, obj) {
+    return Object.keys(obj).filter(key => key.includes(propNamePart)).map(p => obj[p]);
+  }
+
 }

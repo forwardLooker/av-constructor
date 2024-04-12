@@ -17,14 +17,17 @@ export class AVGrid extends AVElement {
     `,
     gridCell: this.styled.div`
       min-height: 2.2em;
-      &:hover {
-        outline: 2px solid black;
-      }
+      background-color: ${props => props.rowItem._rowHover || props.rowItem.selected ? '#8080802b' : 'inherit'};
+      //&:hover {
+      //  outline: 2px solid black;
+      //}
+
       .grid-column:first-of-type & {
         border-right: 1px solid black;
         border-left: 1px solid black;
         border-bottom: 1px solid black;
       }
+
       .grid-column:not(:first-of-type) & {
         border-right: 1px solid black;
         border-bottom: 1px solid black;
@@ -35,6 +38,7 @@ export class AVGrid extends AVElement {
   static defaultProps = {
     items: [],
     columns: [],
+    isRowSelectable: false,
     isTypedColumns: false,
     isCellEditable: false,
     onDataInItemsChangedFunc: this.noop,
@@ -84,27 +88,91 @@ export class AVGrid extends AVElement {
     )
   }
 
+  CellComponent = class CellComponent extends AVElement {
+    static defaultProps = {
+      $grid: null,
+      rowItem: null,
+      column: null,
+      innerColumn: null
+    }
+    render() {
+      return (
+          <AVGrid.styles.gridCell className="pad-8"
+                                  style={this.props.style}
+                                  ref={this.props.refOnRootDiv}
+                                  rowItem={this.props.rowItem}
+                                  onClick={e => {
+                                    if (this.props.$grid.props.isRowSelectable) {
+                                      const previousSelected = this.props.$grid.state._items.filter(i => i.selected);
+                                      previousSelected.forEach(rowItem => {
+                                        rowItem.selected = false;
+                                        this.forceUpdateRowCellsInItem(rowItem);
+                                      })
+
+                                      this.props.rowItem.selected = true;
+                                      this.forceUpdateRowCellsInItem(this.props.rowItem);
+                                    }
+                                    this.props.onClick(e);
+                                  }}
+                                  onContextMenu={this.props.onContextMenu}
+                                  onMouseEnter={e => {
+                                    this.props.rowItem._rowHover = true;
+                                    this.forceUpdateRowCellsInItem(this.props.rowItem);
+                                  }}
+                                  onMouseLeave={e => {
+                                    this.props.rowItem._rowHover = false;
+                                    this.forceUpdateRowCellsInItem(this.props.rowItem);
+                                  }}
+          >{this.props.children}</AVGrid.styles.gridCell>
+      )
+    }
+
+    forceUpdateRowCellsInItem = (rowItem) => {
+      let itemCells = this.createArrFromObjFieldNamesContains('_cellVirtualDomComponent', rowItem);
+      const colsWithInner = this.props.$grid.props.columns.filter(c => this.notEmpty(c.items) && c.dataType !== 'array');
+      colsWithInner.forEach(c => {
+        const innerCells = this.createArrFromObjFieldNamesContains('_cellVirtualDomComponent', rowItem[c.name]);
+        itemCells = itemCells.concat(innerCells);
+      })
+      itemCells.forEach(CellComponent => CellComponent.forceUpdate())
+    }
+  }
+
   _renderCells(c, innerCol) {
     // let c = col;
     // if (innerColIndex) {
     //   c = col.items[innerColIndex];
     // }
     return this.state._items.map((i, idx) => (
-      <AVGrid.styles.gridCell className="pad-8" key={i.id || idx} row-item-id={i.id} column-name={c.name}
-                              onClick={(e) => this._onCellClick(i, c.name, e)}
-                              onContextMenu={e => this._onCellContextMenu(i, c.name, e)}
-                              style={innerCol ? (i[c.name] && i[c.name][innerCol.name + '_cellDomElement' + '_style']) : i[c.name + '_cellDomElement' + '_style']}
-                              ref={cellDomElement => {
-                                if (innerCol) {
-                                  if (!i[c.name]) {
-                                    i[c.name] = {}
-                                  }
-                                  i[c.name][innerCol.name + '_cellDomElement'] = cellDomElement;
-                                } else {
-                                  i[c.name + '_cellDomElement'] = cellDomElement;
-                                }
-                              }}
-      >{this._renderCellContent(i, c, innerCol)}</AVGrid.styles.gridCell>
+      <this.CellComponent className="pad-8" key={i.id || idx}
+                          $grid={this}
+                          rowItem={i}
+                          column={c}
+                          innerColumn={innerCol}
+                          onClick={(e) => this._onCellClick(i, c.name, e)}
+                          onContextMenu={e => this._onCellContextMenu(i, c.name, e)}
+                          style={innerCol ? (i[c.name] && i[c.name][innerCol.name + '_cellDomElement' + '_style']) : i[c.name + '_cellDomElement' + '_style']}
+                          ref={cellVirtualDomComponent => {
+                            if (innerCol) {
+                              if (!i[c.name]) {
+                                i[c.name] = {}
+                              }
+                              i[c.name][innerCol.name + '_cellVirtualDomComponent'] = cellVirtualDomComponent;
+                            } else {
+                              i[c.name + '_cellVirtualDomComponent'] = cellVirtualDomComponent;
+                            }
+                          }}
+                          refOnRootDiv={cellDomElement => {
+                            if (innerCol) {
+                              if (!i[c.name]) {
+                                i[c.name] = {}
+                              }
+                              i[c.name][innerCol.name + '_cellDomElement'] = cellDomElement;
+                            } else {
+                              i[c.name + '_cellDomElement'] = cellDomElement;
+                            }
+                          }}
+      >{this._renderCellContent(i, c, innerCol)}</this.CellComponent>
     ))
   }
 

@@ -17,4 +17,6 @@ export class AVElement extends React.PureComponent {
   isEmpty = UtilFunctions.isEmpty;
   notEmpty = UtilFunctions.notEmpty;
   makeDebounced = UtilFunctions.makeDebounced;
+
+  createArrFromObjFieldNamesContains = UtilFunctions.createArrFromObjFieldNamesContains;
 }
