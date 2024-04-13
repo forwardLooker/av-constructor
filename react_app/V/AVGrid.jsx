@@ -17,7 +17,7 @@ export class AVGrid extends AVElement {
     `,
     gridCell: this.styled.div`
       min-height: 2.2em;
-      background-color: ${props => props.rowItem._rowHover || props.rowItem.selected ? '#8080802b' : 'inherit'};
+      background-color: ${props => props.$rowItem._rowHover || props.$rowItem.selected ? '#8080802b' : 'inherit'};
       //&:hover {
       //  outline: 2px solid black;
       //}
@@ -100,7 +100,7 @@ export class AVGrid extends AVElement {
           <AVGrid.styles.gridCell className="pad-8"
                                   style={this.props.style}
                                   ref={this.props.refOnRootDiv}
-                                  rowItem={this.props.rowItem}
+                                  $rowItem={this.props.rowItem}
                                   onClick={e => {
                                     if (this.props.$grid.props.isRowSelectable) {
                                       const previousSelected = this.props.$grid.state._items.filter(i => i.selected);
