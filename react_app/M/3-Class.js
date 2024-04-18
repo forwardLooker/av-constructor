@@ -22,7 +22,7 @@ export class Class extends Item {
   itemType = 'class';
   data = {};
   serverRef;
-  id;
+  id; // TODO может сделать getter?
   Host;
   classModuleDefinitions = [usersClass];
   classServiceDefinitions = [Accounting];
@@ -88,7 +88,7 @@ export class Class extends Item {
     return views;
   }
 
-  getViewComponentByName(viewName) {
+  getViewComponentByName(viewName, $Class) {
     let viewComponent;
     this.classServiceDefinitions.forEach(srv => {
       if (srv.views) {
@@ -100,7 +100,7 @@ export class Class extends Item {
       }
     });
     if (viewComponent) {
-      return viewComponent(this)
+      return viewComponent(this, $Class)
     } else {
       return null
     }

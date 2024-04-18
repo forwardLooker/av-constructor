@@ -6,6 +6,9 @@ export class ObjectDocument extends Item {
   }
   itemType = 'objectDocument';
   serverRef;
+  get id() {
+    return this.serverRef.id;
+  }
   Class;
   data = {};
   innerFieldsInData = {

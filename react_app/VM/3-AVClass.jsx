@@ -17,6 +17,9 @@ export class AVClass extends AVItem {
     fieldDescriptors: [],
     objectDocuments: [],
     selectedObjectDocument: null,
+
+    isParametersPanelOpened: false,
+    ParametersPanelrender: this.noop
   }
 
   render() {
@@ -28,6 +31,7 @@ export class AVClass extends AVItem {
           onCreateFunc={(e) => {this.setState({selectedObjectDocument: this.props.classItem.getNewObjectDocument()})}}
         ></AVClassPanel>
         {this._renderView()}
+        {this.state.isParametersPanelOpened && this._renderParametersPanel(this.state.ParametersPanelrender)}
       </div>
     )
   }
@@ -39,7 +43,7 @@ export class AVClass extends AVItem {
     if (this.state.currentViewName === 'Configurator') {
       return this._renderConfigurator()
     }
-    return this.props.classItem.getViewComponentByName(this.state.currentViewName);
+    return this.props.classItem.getViewComponentByName(this.state.currentViewName, this);
   }
 
   _renderGrid() {
@@ -74,6 +78,14 @@ export class AVClass extends AVItem {
     )
   }
 
+  _renderParametersPanel(renderBody) {
+    return (
+        <div className="pos-abs rbl-0 height-35prc border scroll">
+          {renderBody()}
+        </div>
+    )
+  }
+
   async componentDidMount() {
     if (this.props.classItem) {
       await this._loadGridData();
@@ -86,6 +98,13 @@ export class AVClass extends AVItem {
       await this._loadGridData();
       this.setState({currentViewName: this.props.classItem.defaultViewName})
     }
+  }
+
+  showParametersPanel = (ParametersPanelrender) => {
+    this.setState({
+      isParametersPanelOpened: true,
+      ParametersPanelrender
+    });
   }
 
   _loadGridData = async () => {

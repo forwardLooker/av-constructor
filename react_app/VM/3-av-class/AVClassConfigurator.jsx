@@ -209,7 +209,7 @@ export class AVClassConfigurator extends AVItem {
   // }
 
   _onTreeItemContextMenu = async (e, item) => {
-    const menuChoice = await this.showContextMenu(e, ['Добавить вложенное поле', 'Удалить поле']);
+    const menuChoice = await this.showContextMenu(e, ['Переименовать', 'Добавить вложенное поле', 'Удалить поле']);
     if (menuChoice === 'Добавить вложенное поле') {
       const fieldName = await this.showDialog({text: 'Введите название поля', inputLabel: 'name'});
       if (fieldName) {
@@ -222,6 +222,16 @@ export class AVClassConfigurator extends AVItem {
         this.setState(
           {_newFieldDescriptors: [...this.state._newFieldDescriptors]},
           this._calcMetadataChanges
+        );
+      }
+    }
+    if (menuChoice === 'Переименовать') {
+      const fieldName = await this.showDialog({text: 'Введите название поля', inputLabel: 'name'});
+      if (fieldName) {
+        item.name = fieldName;
+        this.setState(
+            {_newFieldDescriptors: [...this.state._newFieldDescriptors]},
+            this._calcMetadataChanges
         );
       }
     }

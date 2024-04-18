@@ -259,7 +259,7 @@ export class AVObjectDocument extends AVItem {
               onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}
             ></AVObjectDocument.styles.horizontalResizer>
           </div>
-          <div className="width-100 height-2px cursor-row-resize"
+          <div className="width-100prc height-2px cursor-row-resize"
                hidden={this.state.designDragStarted}
                onMouseDown={(e) => this._startVerticalResize(e, fieldItem, idx, containerElement)}
           ></div>

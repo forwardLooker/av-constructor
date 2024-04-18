@@ -143,6 +143,11 @@ export class AVField extends AVItem {
 
   _renderInput({value, readOnly, onChangeFunc, fieldItem}) {
     let inputElement;
+    if (fieldItem.dataType === 'null') {
+      inputElement = (
+          <div className="flex-1"></div>
+      )
+    }
     if (!fieldItem.dataType || fieldItem.dataType === 'string') {
       inputElement = (
         <AVField.styles.input

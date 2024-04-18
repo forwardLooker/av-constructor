@@ -2,20 +2,21 @@ import { Item } from '../0-Item'
 import React from 'react';
 import { AVItem } from '../../VM/0-AVItem.js';
 import { AVGrid } from "../../V/AVGrid.jsx";
+import { AVPropertyGrid } from "../../V/AVPropertyGrid.jsx";
 
 export class Accounting extends Item {
   static id = '2cE2ZCdfErMBg1serR3W';
-	static name = 'Журнал учёта';
-	static itemType = 'domain';
-	static Host;
-	static views = [
-      {
-        className: 'Журнал',
-        classId: 'Y25mhmAmLcV9HklpR2Ad',
-        viewName: 'Журнал',
-        viewComponent: (classItem) => (<Journal classItem={classItem}></Journal>),
-      }
-	];
+  static name = 'Журнал учёта';
+  static itemType = 'domain';
+  static Host;
+  static views = [
+    {
+      className: 'Журнал',
+      classId: 'Y25mhmAmLcV9HklpR2Ad',
+      viewName: 'Журнал',
+      viewComponent: (classItem, $Class) => (<Journal classItem={classItem} $Class={$Class}></Journal>),
+    }
+  ];
   static methods = [
     {
       name: 'Провести',
@@ -23,7 +24,7 @@ export class Accounting extends Item {
       location: 'ok-cancel panel',
       condition: ($objectDocument) => {
         const serviceData = $objectDocument.state._newData[`service_${this.name}`];
-        if (serviceData && serviceData['Проведено']) {
+        if (serviceData && serviceData.transactionCompleted) {
           return false;
         }
         return true;
@@ -33,62 +34,63 @@ export class Accounting extends Item {
         if (ok) {
           const operations = await this.Host.getClassByName('Проводки').getObjectDocuments();
           const objectDocument = $objectDocument.props.objectDocument;
-          const operationObj = operations.find(pr => pr['Документ'].id === objectDocument.Class.serverRef.id);
+          const operationObj = operations.find(op => op.documentClassLink.id === objectDocument.Class.id);
 
           await $objectDocument.save();
           const objData = objectDocument.data;
           const recordObjInJournal = await this.Host.getClassByName('Журнал').createObjectDocument({
             readOnly: true,
-            'Название операции': operationObj['Название операции'],
-            'Класс документов': operationObj['Документ'],
-            'Объект документа': objData,
-            'Дата': objData[operationObj['Название поля даты']],
-            'Проводки': operationObj['Проводки'].map(pr => {
-              const analiticsOutOfTable = pr['Аналитические параметры'].filter(an => !an['Таблица источник']);
-              const analiticsOutOfTableFromDocument = analiticsOutOfTable.map(a => {
-                let analiticsObj = {};
-                analiticsObj[a['Название параметра']] = objData[a['Поле источник']];
-                return analiticsObj
+            name: operationObj.name,
+            documentClassLink: operationObj.documentClassLink,
+            documentLink: objData,
+            accountingDate: objData[operationObj.accountingDateFieldName],
+            transactions: operationObj.transactions.map(tr => {
+              const analyticsOutOfTable = tr.analytics.filter(an => !an.sourceTableFieldName);
+              const analyticsOutOfTableFromDocument = analyticsOutOfTable.map(a => {
+                let analyticsObj = {};
+                analyticsObj[a.name] = objData[a.sourceFieldName];
+                return analyticsObj
               });
-              const analiticsFromOfTable = pr['Аналитические параметры'].filter(an => an['Таблица источник']);
-              const tablesNames = analiticsFromOfTable.reduce((acc, param) => {
-                const currentTableName = param['Таблица источник'];
+              const analyticsFromOfTable = tr.analytics.filter(an => an.sourceTableFieldName);
+              const tablesNames = analyticsFromOfTable.reduce((acc, param) => {
+                const currentTableName = param.sourceTableFieldName;
                 if (acc.findIndex(tblName => tblName === currentTableName) === -1) {
                   acc.push(currentTableName);
                 }
                 return acc;
               }, []);
-              let gainedTableItemsWithAnaliticsFromAllTablesFromDocument = [];
+              let gainedTableItemsWithAnalyticsFromAllTablesFromDocument = [];
               tablesNames.forEach(tblName => {
                 let gainedTableItemsWithAnalitics = objData[tblName].map(tblItem => {
-                  let analiticsObj = {};
-                  analiticsFromOfTable.forEach(analitic => {
-                    if (analitic['Таблица источник'] === tblName) {
-                      analiticsObj[analitic['Название параметра']] = tblItem[analitic['Поле источник']]
+                  let analyticsObj = {};
+                  analyticsFromOfTable.forEach(analytic => {
+                    if (analytic.sourceTableFieldName === tblName) {
+                      analyticsObj[analytic.name] = tblItem[analytic.sourceFieldName]
                     }
                   })
-                  return analiticsObj;
+                  return analyticsObj;
                 });
-                gainedTableItemsWithAnaliticsFromAllTablesFromDocument.push({'table name': tblName, 'Аналитические парметры': gainedTableItemsWithAnalitics});
+                gainedTableItemsWithAnalyticsFromAllTablesFromDocument = gainedTableItemsWithAnalyticsFromAllTablesFromDocument.concat(gainedTableItemsWithAnalitics);
+                // gainedTableItemsWithAnalyticsFromAllTablesFromDocument.push({'table name': tblName, analytics: gainedTableItemsWithAnalitics});
               });
 
               return {
-                'Название проводки': pr['Название проводки'],
-                'Дебет': pr['Дебет'],
-                'Кредит': pr['Кредит'],
-                'Аналитические параметры общие': analiticsOutOfTableFromDocument,
-                'Аналитические параметры табличные': gainedTableItemsWithAnaliticsFromAllTablesFromDocument
+                name: tr.name,
+                debit: tr.debit,
+                credit: tr.credit,
+                commonAnalytics: analyticsOutOfTableFromDocument,
+                tableAnalytics: gainedTableItemsWithAnalyticsFromAllTablesFromDocument
               }
             }),
           });
 
           $objectDocument.state._newData.readOnly = true;
           $objectDocument.state._newData[`service_${this.name}`] = {
-            'Проведено': true,
-            'Дата осуществления проводки': new Date().toLocaleString(),
-            'Учётная дата': $objectDocument.state._newData[operationObj['Название поля даты']],
+            transactionCompleted: true,
+            transactionMadeDate: new Date().toLocaleString(),
+            accountingDate: $objectDocument.state._newData[operationObj.accountingDateFieldName],
             objectInJournal: {
-              id: recordObjInJournal.serverRef.id,
+              id: recordObjInJournal.id,
               reference: recordObjInJournal.serverRef
             }
           };
@@ -103,7 +105,7 @@ export class Accounting extends Item {
       location: 'ok-cancel panel',
       condition: ($objectDocument) => {
         const serviceData = $objectDocument.state._newData[`service_${this.name}`];
-        if (serviceData && serviceData['Проведено']) {
+        if (serviceData && serviceData.transactionCompleted) {
           return true;
         }
         return false;
@@ -128,7 +130,8 @@ export class Accounting extends Item {
 
 class Journal extends AVItem {
   static defaultProps = {
-    classItem: null
+    classItem: null,
+    $Class: null
   }
   
   state = {
@@ -138,69 +141,69 @@ class Journal extends AVItem {
 
   columns = [ // Скопировано из отладки
     {
-      "name": "Счёт",
-      "label": "Счёт",
-      "dataType": "string"
+      name: 'name',
+      label: "Счёт",
+      dataType: "string"
     },
     {
-      "dataType": "object",
-      "label": "Сальдо на начало периода",
-      "items": [
+      name: "balanceAtTheBeginningOfThePeriod",
+      label: "Сальдо на начало периода",
+      dataType: "object",
+      variant: "structured-object-field",
+      items: [
         {
-          "label": "Дебет",
-          "dataType": "string",
-          "name": "Дебет",
+          name: "debit",
+          label: "Дебет",
+          dataType: "string",
           formatOutputInGrid: value => value === 0 ? '' : value
         },
         {
-          "name": "Кредит",
-          "label": "Кредит",
-          "dataType": "string",
+          name: "credit",
+          label: "Кредит",
+          dataType: "string",
           formatOutputInGrid: value => value === 0 ? '' : value
         }
       ],
-      "name": "Сальдо на начало периода",
-      "variant": "structured-object-field"
     },
     {
-      "label": "Обороты за период",
-      "dataType": "object",
-      "variant": "structured-object-field",
-      "name": "Обороты за период",
-      "items": [
+      name: "turnoverForThePeriod",
+      label: "Обороты за период",
+      dataType: "object",
+      variant: "structured-object-field",
+      items: [
         {
-          "label": "Дебет",
-          "dataType": "string",
-          "name": "Дебет",
+          name: "debit",
+          label: "Дебет",
+          dataType: "string",
           formatOutputInGrid: value => value === 0 ? '' : value
         },
         {
-          "label": "Кредит",
-          "name": "Кредит",
-          "dataType": "string",
+          name: "credit",
+          label: "Кредит",
+          dataType: "string",
           formatOutputInGrid: value => value === 0 ? '' : value
         }
       ]
     },
     {
-      "label": "Сальдо на конец периода",
-      "items": [
+      name: "balanceAtTheEndOfThePeriod",
+      label: "Сальдо на конец периода",
+      dataType: "object",
+      variant: "structured-object-field",
+      items: [
         {
-          "dataType": "string",
-          "name": "Дебет",
-          "label": "Дебет",
+          name: "debit",
+          label: "Дебет",
+          dataType: "string",
           formatOutputInGrid: value => value === 0 ? '' : value
         },
         {
-          "dataType": "string",
-          "name": "Кредит",
-          "label": "Кредит",
+          name: "credit",
+          label: "Кредит",
+          dataType: "string",
           formatOutputInGrid: value => value === 0 ? '' : value
         }
       ],
-      "dataType": "object",
-      "variant": "structured-object-field",
-      "name": "Сальдо на конец периода"
     }
   ]
   
@@ -211,7 +214,31 @@ class Journal extends AVItem {
           items={this.state.accounts}
           columns={this.columns}
           isRowSelectable
-          onRowClickFunc={this.noop}
+          onRowClickFunc={(rowItem) => {
+            const propertyItems = rowItem.analyticsPossibleValues.map(item => {
+              const analyticName = Object.keys(item)[0];
+              return {
+                name: `${analyticName} (Все)`,
+                dataType: 'boolean',
+                expanded: true,
+                items: item[analyticName].map(anValue => ({
+                  name: typeof anValue === 'object' ? anValue.name : anValue,
+                  dataType: 'boolean'
+                }))
+              }
+            })
+            this.props.$Class.showParametersPanel(() => {
+              return (
+                <div>
+                  Аналитические параметры
+                  <AVPropertyGrid
+                      inspectedItem={rowItem}
+                      propertyItems={propertyItems}
+                  ></AVPropertyGrid>
+                </div>
+              )
+            })
+          }}
           onRowContextMenuFunc={this.noop}
         ></AVGrid>
       </div>
@@ -221,97 +248,205 @@ class Journal extends AVItem {
   async componentDidMount() {
     const operations = await this.props.classItem.getObjectDocuments();
     let accounts = operations.reduce((accAccs, op) => {
-      op['Проводки'].forEach(pr => {
-        const additional = pr['Аналитические парметры табличные'].reduce((accAllTables, table) => {
-          return accAllTables + table['Аналитические парметры'].reduce((accT, row) => {
-            if (row['Сумма']) {
-              return accT + Number(row['Сумма'])
-            }
-            return accT
-          }, 0)
+      op.transactions.forEach(tr => {
+        const additional = tr.tableAnalytics.reduce((accT, row) => {
+          if (row.amount) {
+            return accT + Number(row.amount)
+          }
+          return accT
         }, 0);
 
-        const debitAccName = pr['Дебет'].name;
-        let accountForDebit = accAccs.find(acc => acc['Счёт'] === debitAccName);
+        const debitAccName = tr.debit.name;
+        let accountForDebit = accAccs.find(acc => acc.name === debitAccName);
+        const analyticsPossibleValues = tr.commonAnalytics.map(commonParam => {
+          const paramName = Object.keys(commonParam)[0];
+          const paramValue = commonParam[paramName];
+          return {
+            [paramName]: [paramValue]
+          }
+        });
+        let analyticsFromTablePossibleValues = [];
+        tr.tableAnalytics.forEach(tableRowRecord => {
+          const analyticsPropsArr = Object.keys(tableRowRecord).filter(prop => prop !== 'count' && prop !== 'amount');
+          analyticsPropsArr.forEach(prop => {
+            const itemWithValues = analyticsFromTablePossibleValues.find(analyticsObj => Array.isArray(analyticsObj[prop]))
+            if (!itemWithValues) {
+              let item = {};
+              item[prop] = [tableRowRecord[prop]];
+              analyticsFromTablePossibleValues.push(item);
+            } else {
+              const existedValue = itemWithValues[prop].find(value => {
+                if (typeof value === 'object') {
+                  return value.id === tableRowRecord[prop].id
+                } else {
+                  return value === tableRowRecord[prop]
+                }
+              });
+              if (!existedValue) {
+                itemWithValues[prop].push(tableRowRecord[prop])
+              }
+            }
+          })
+        });
+        const tableAnalyticsPopulatedWithCommonAnalytics = tr.tableAnalytics.map(row => {
+          let newRow = row;
+          tr.commonAnalytics.forEach(an => {
+            newRow = {...an, ...newRow}
+          });
+          return newRow;
+        });
         if (!accountForDebit) {
           accountForDebit = {
-            'Счёт': debitAccName,
-            'Сальдо на начало периода': {
-              'Дебет': 0,
-              'Кредит': 0
+            name: debitAccName,
+            balanceAtTheBeginningOfThePeriod: {
+              debit: 0,
+              credit: 0
             },
-            'Обороты за период': {
-              'Дебет': additional
+            turnoverForThePeriod: {
+              debit: additional,
             },
-            accountType: pr['Дебет'].accountType
+            turnoverForThePeriodAggregatedData: {debit: tableAnalyticsPopulatedWithCommonAnalytics},
+            accountType: tr.debit.accountType,
+            analyticsPossibleValues,
           };
+          accountForDebit.analyticsPossibleValues = accountForDebit.analyticsPossibleValues.concat(analyticsFromTablePossibleValues);
           accAccs.push(accountForDebit);
         } else {
-          accountForDebit['Обороты за период']['Дебет'] = accountForDebit['Обороты за период']['Дебет'] + additional;
+          // Прибавить к общему Дебету счёта дельту от проводки
+          accountForDebit.turnoverForThePeriod.debit = accountForDebit.turnoverForThePeriod.debit + additional;
+          // Добавить список возможных общих аналитик
+          tr.commonAnalytics.forEach(commonParam => {
+            const paramName = Object.keys(commonParam)[0];
+            const paramValue = commonParam[paramName];
+            const analyticValuesObj = accountForDebit.analyticsPossibleValues.find(possibleParam => Object.keys(possibleParam)[0] === paramName);
+            if (analyticValuesObj[paramName].findIndex(value => {
+              if (typeof value === 'object') {
+                return value.id === paramValue.id
+              }
+              return value === paramValue
+            }) === -1) {
+              analyticValuesObj[paramName].push(paramValue);
+            }
+          });
+          // Добавить список возможных аналитик из таблиц
+          accountForDebit.analyticsPossibleValues.forEach(i => {
+            const analyticName = Object.keys(i)[0];
+            const analyticsItemFromTable = analyticsFromTablePossibleValues.find(iFromTable => Array.isArray(iFromTable[analyticName]));
+            if (analyticsItemFromTable) {
+              const uniqueValuesFromTableArr = analyticsItemFromTable[analyticName].filter(value => {
+                if (typeof value === 'object') {
+                  return i[analyticName].every(v => v.id !== value.id)
+                } else {
+                  return i[analyticName].every(v => v !== value)
+                }
+              });
+              i[analyticName] = i[analyticName].concat(uniqueValuesFromTableArr);
+            }
+          });
+          const uniqueAnalyticItems = analyticsFromTablePossibleValues.filter(iFromTable => {
+            const name = Object.keys(iFromTable)[0];
+            return accountForDebit.analyticsPossibleValues.findIndex(obj => Array.isArray(obj[name])) === -1
+          });
+          accountForDebit.analyticsPossibleValues = accountForDebit.analyticsPossibleValues.concat(uniqueAnalyticItems);
+          // Добавление табличных данных в одну таблицу
+          accountForDebit.turnoverForThePeriodAggregatedData.debit = accountForDebit.turnoverForThePeriodAggregatedData.debit.concat(tableAnalyticsPopulatedWithCommonAnalytics);
         }
-        const creditAccName = pr['Кредит'].name;
-        let accountForCredit = accAccs.find(acc => acc['Счёт'] === creditAccName);
+        const creditAccName = tr.credit.name;
+        let accountForCredit = accAccs.find(acc => acc.name=== creditAccName);
         if (!accountForCredit) {
           accountForCredit = {
-            'Счёт': creditAccName,
-            'Сальдо на начало периода': {
-              'Дебет': 0,
-              'Кредит': 0
+            name: creditAccName,
+            balanceAtTheBeginningOfThePeriod: {
+              debit: 0,
+              credit: 0
             },
-            'Обороты за период': {
-              'Кредит': additional
+            turnoverForThePeriod: {
+              credit: additional,
             },
-            accountType: pr['Кредит'].accountType
+            turnoverForThePeriodAggregatedData: {credit: tableAnalyticsPopulatedWithCommonAnalytics},
+            accountType: tr.credit.accountType,
+            analyticsPossibleValues,
           };
+          accountForCredit.analyticsPossibleValues = accountForCredit.analyticsPossibleValues.concat(analyticsFromTablePossibleValues);
           accAccs.push(accountForCredit);
         } else {
-          accountForCredit['Обороты за период']['Кредит'] = accountForCredit['Обороты за период']['Кредит'] + additional;
+          // Прибавить к общему Кредиту счёта дельту от проводки
+          accountForCredit.turnoverForThePeriod.credit = accountForCredit.turnoverForThePeriod.credit + additional;
+          // Добавить список возможных общих аналитик
+          tr.commonAnalytics.forEach(commonParam => {
+            const paramName = Object.keys(commonParam)[0];
+            const paramValue = commonParam[paramName];
+            const analyticValuesObj = accountForCredit.analyticsPossibleValues.find(possibleParam => Object.keys(possibleParam)[0] === paramName);
+            if (analyticValuesObj[paramName].findIndex(value => {
+              if (typeof value === 'object') {
+                return value.id === paramValue.id
+              }
+              return value === paramValue
+            }) === -1) {
+              analyticValuesObj[paramName].push(paramValue);
+            }
+          });
+          // Добавить список возможных аналитик из таблиц
+          accountForCredit.analyticsPossibleValues.forEach(i => {
+            const analyticName = Object.keys(i)[0];
+            const analyticsItemFromTable = analyticsFromTablePossibleValues.find(iFromTable => Array.isArray(iFromTable[analyticName]));
+            if (analyticsItemFromTable) {
+              const uniqueValuesFromTableArr = analyticsItemFromTable[analyticName].filter(value => {
+                if (typeof value === 'object') {
+                  return i[analyticName].every(v => v.id !== value.id)
+                } else {
+                  return i[analyticName].every(v => v !== value)
+                }
+              });
+              i[analyticName] = i[analyticName].concat(uniqueValuesFromTableArr);
+            }
+          });
+          const uniqueAnalyticItems = analyticsFromTablePossibleValues.filter(iFromTable => {
+            const name = Object.keys(iFromTable)[0];
+            return accountForCredit.analyticsPossibleValues.findIndex(obj => Array.isArray(obj[name])) === -1
+          });
+          accountForCredit.analyticsPossibleValues = accountForCredit.analyticsPossibleValues.concat(uniqueAnalyticItems);
+          // Добавление табличных данных в одну таблицу
+          accountForCredit.turnoverForThePeriodAggregatedData.credit = accountForCredit.turnoverForThePeriodAggregatedData.credit.concat(tableAnalyticsPopulatedWithCommonAnalytics);
         }
       });
-
       return accAccs;
     }, []);
-    // accountsWithCalculatedBalance
+    // accountsWithCalculatedBalance - сальдо на конец периода
     accounts.forEach(acc => {
+      acc.balanceAtTheEndOfThePeriod = {};
+      const debitAtStart = acc.balanceAtTheBeginningOfThePeriod.debit;
+      const creditAtStart = acc.balanceAtTheBeginningOfThePeriod.credit;
+      const diff = (acc.turnoverForThePeriod.debit || 0) - (acc.turnoverForThePeriod.credit || 0);
       if (acc.accountType === 'Активный') {
-        acc['Сальдо на конец периода'] = {};
-        const debitAtStart = acc['Сальдо на начало периода']['Дебет'];
-        const diff = (acc['Обороты за период']['Дебет'] || 0) - (acc['Обороты за период']['Кредит'] || 0);
-        acc['Сальдо на конец периода']['Дебет'] = debitAtStart + diff
+        acc.balanceAtTheEndOfThePeriod.debit = debitAtStart + diff
       }
       if (acc.accountType === 'Пассивный') {
-        acc['Сальдо на конец периода'] = {};
-        const creditAtStart = acc['Сальдо на начало периода']['Кредит'];
-        const diff = (acc['Обороты за период']['Дебет'] || 0) - (acc['Обороты за период']['Кредит'] || 0);
-        acc['Сальдо на конец периода']['Дебет'] = creditAtStart - diff
+        acc.balanceAtTheEndOfThePeriod.credit = creditAtStart - diff
       }
       if (acc.accountType === 'Активно-Пассивный') {
-        acc['Сальдо на конец периода'] = {};
-        const debitAtStart = acc['Сальдо на начало периода']['Дебет'];
-        const creditAtStart = acc['Сальдо на начало периода']['Кредит'];
-        const diff = (acc['Обороты за период']['Дебет'] || 0) - (acc['Обороты за период']['Кредит'] || 0);
         if (debitAtStart > 0) {
           const balance = debitAtStart + diff;
           if (balance > 0) {
-            acc['Сальдо на конец периода']['Дебет'] = balance;
+            acc.balanceAtTheEndOfThePeriod.debit = balance;
           }
           if (balance < 0) {
-            acc['Сальдо на конец периода']['Кредит'] = Math.abs(balance)
+            acc.balanceAtTheEndOfThePeriod.credit = Math.abs(balance)
           }
         } else if (creditAtStart > 0) {
           const balance = creditAtStart - diff;
           if (balance > 0) {
-            acc['Сальдо на конец периода']['Кредит'] = balance
+            acc.balanceAtTheEndOfThePeriod.credit = balance
           }
           if (balance < 0) {
-            acc['Сальдо на конец периода']['Дебет'] = Math.abs(balance);
+            acc.balanceAtTheEndOfThePeriod.debit = Math.abs(balance);
           }
         } else {
           if (diff > 0) {
-            acc['Сальдо на конец периода']['Дебет'] = diff;
+            acc.balanceAtTheEndOfThePeriod.debit = diff;
           }
           if (diff < 0) {
-            acc['Сальдо на конец периода']['Кредит'] = Math.abs(diff);
+            acc.balanceAtTheEndOfThePeriod.credit = Math.abs(diff);
           }
         }
       }
