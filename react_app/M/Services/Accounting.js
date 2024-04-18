@@ -215,25 +215,68 @@ class Journal extends AVItem {
           columns={this.columns}
           isRowSelectable
           onRowClickFunc={(rowItem) => {
-            const propertyItems = rowItem.analyticsPossibleValues.map(item => {
-              const analyticName = Object.keys(item)[0];
+            const propertyItems = rowItem.analyticsPossibleValues.map(anItem => {
+              const analyticName = Object.keys(anItem)[0];
               return {
-                name: `${analyticName} (Все)`,
-                dataType: 'boolean',
+                name: `${analyticName}`,
+                dataType: "null",
                 expanded: true,
-                items: item[analyticName].map(anValue => ({
+                items: anItem[analyticName].map(anValue => ({
                   name: typeof anValue === 'object' ? anValue.name : anValue,
                   dataType: 'boolean'
                 }))
               }
+            });
+            let inspectedItem = {};
+            rowItem.analyticsPossibleValues.forEach(anItem => {
+              const analyticName = Object.keys(anItem)[0];
+              anItem[analyticName].forEach(anValue => {
+                if (typeof inspectedItem[analyticName] !== 'object') {
+                  inspectedItem[analyticName] = {}
+                }
+                if (typeof anValue === 'object') {
+                  inspectedItem[analyticName][anValue.name] = true;
+                } else {
+                  inspectedItem[analyticName][anValue] = true;
+                }
+              })
             })
+            // запомнить изначальный rowItem debit credit, чтобы вернуть его после закрытия панели
             this.props.$Class.showParametersPanel(() => {
               return (
                 <div>
                   Аналитические параметры
                   <AVPropertyGrid
-                      inspectedItem={rowItem}
+                      inspectedItem={inspectedItem}
                       propertyItems={propertyItems}
+                      isStructuredFillingOfInspectedItem
+                      onChangeFunc={(value, propItem, inspectedItem) => {
+                        if (Array.isArray(rowItem.turnoverForThePeriodAggregatedData.debit)) {
+                          const debitAggrDataFiltered = rowItem.turnoverForThePeriodAggregatedData.debit.filter(row => {
+                            return Object.keys(row).filter(analyticName => analyticName !== 'count' && analyticName !== 'amount').every(analyticName => {
+                              let analyticValue = typeof row[analyticName] === 'object' ? row[analyticName].name : row[analyticName];
+                              return inspectedItem[analyticName][analyticValue] === true
+                            })
+                          });
+                          const debitSum = debitAggrDataFiltered.reduce((acc, row) => {
+                            return acc + Number(row.amount)
+                          }, 0);
+                          rowItem.turnoverForThePeriod.debit = debitSum;
+                        }
+                        if (Array.isArray(rowItem.turnoverForThePeriodAggregatedData.credit)) {
+                          const creditAggrDataFiltered = rowItem.turnoverForThePeriodAggregatedData.credit.filter(row => {
+                            return Object.key(row).filter(analyticName => analyticName !== 'count' && analyticName !== 'amount').every(analyticName => {
+                              let analyticValue = typeof row[analyticName] === 'object' ? row[analyticName].name : row[analyticName];
+                              return inspectedItem[analyticName][analyticValue] === true
+                            })
+                          });
+                          const creditSum = creditAggrDataFiltered.reduce((acc, row) => {
+                            return acc + Number(row.amount)
+                          }, 0);
+                          rowItem.turnoverForThePeriod.credit = creditSum;
+                        }
+                        this.setState(state => ({accounts: [...state.accounts]}));
+                      }}
                   ></AVPropertyGrid>
                 </div>
               )

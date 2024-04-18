@@ -29,11 +29,12 @@ export class AVPropertyGrid extends AVElement {
   static defaultProps = {
     inspectedItem: null,
     propertyItems: [],
+    isStructuredFillingOfInspectedItem: false, // Пока не рекурсивно на только на 1 уровень вложенности
     onChangeFunc: this.noop,
   }
 
 
-  render(nestedItems, level) {
+  render(nestedItems, level, parentItem) {
     if (!this.props.inspectedItem) {
       return '';
     }
@@ -55,11 +56,11 @@ export class AVPropertyGrid extends AVElement {
               <AVPropertyGrid.styles.treeRowExpander className={`tree-row-expander ${propertyItem.expanded ? 'expanded' : ''} ${this.isEmpty(propertyItem.items) ? 'invisible': ''}`}
                 onClick={() => this._toggleExpand(propertyItem)}
               >{'>'}</AVPropertyGrid.styles.treeRowExpander>
-              {this._renderPropGridField(propertyItem)}
+              {this._renderPropGridField(propertyItem, parentItem)}
             </AVPropertyGrid.styles.treeRow>
             {propertyItem.expanded && (
               <div>
-                {this.render(propertyItem.items, nestingLevel + 1)}
+                {this.render(propertyItem.items, nestingLevel + 1, propertyItem)}
               </div>
             )}
           </div>
@@ -68,15 +69,31 @@ export class AVPropertyGrid extends AVElement {
     )
   }
 
-  _renderPropGridField = (propertyItem) => {
+  _renderPropGridField = (propertyItem, parentItem) => {
+    let value;
+    if (this.props.isStructuredFillingOfInspectedItem && parentItem) {
+      if (typeof this.props.inspectedItem[parentItem.name] === 'object') {
+        value = this.props.inspectedItem[parentItem.name][propertyItem.name];
+      }
+    } else {
+      value = this.props.inspectedItem[propertyItem.name];
+    }
     return (
       <AVField
         fieldItem={propertyItem}
-        value={this.props.inspectedItem[propertyItem.name]}
+        value={value}
         onChangeFunc={value => {
-          this.props.inspectedItem[propertyItem.name] = value;
+          // работает токо на 1 уровень вложенности, не рекурсивно
+          if (this.props.isStructuredFillingOfInspectedItem && parentItem) {
+            if (typeof this.props.inspectedItem[parentItem.name] !== 'object') {
+              this.props.inspectedItem[parentItem.name] = {};
+            }
+            this.props.inspectedItem[parentItem.name][propertyItem.name] = value;
+          } else {
+            this.props.inspectedItem[propertyItem.name] = value;
+          }
           this.forceUpdate(); //чтобы выпадающие списки обновить
-          this.props.onChangeFunc(value, propertyItem, this.props.inspectedItem)
+          this.props.onChangeFunc(value, propertyItem, this.props.inspectedItem, parentItem)
         }}
         inspectedObject={this.props.inspectedItem}
       ></AVField>
