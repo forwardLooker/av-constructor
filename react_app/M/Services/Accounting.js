@@ -265,7 +265,7 @@ class Journal extends AVItem {
                         }
                         if (Array.isArray(rowItem.turnoverForThePeriodAggregatedData.credit)) {
                           const creditAggrDataFiltered = rowItem.turnoverForThePeriodAggregatedData.credit.filter(row => {
-                            return Object.key(row).filter(analyticName => analyticName !== 'count' && analyticName !== 'amount').every(analyticName => {
+                            return Object.keys(row).filter(analyticName => analyticName !== 'count' && analyticName !== 'amount').every(analyticName => {
                               let analyticValue = typeof row[analyticName] === 'object' ? row[analyticName].name : row[analyticName];
                               return inspectedItem[analyticName][analyticValue] === true
                             })
