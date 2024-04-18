@@ -50,7 +50,7 @@ export class AVClassConfigurator extends AVItem {
             ];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'string') {
-            return ['select'];
+            return ['select', 'date'];
           }
           return [];
         }},

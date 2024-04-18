@@ -185,6 +185,18 @@ export class AVField extends AVItem {
           </AVField.styles.select>
         )
       }
+      if (fieldItem.variant === 'date') {
+        inputElement = (
+            <AVField.styles.input
+                className="flex-1"
+                autoComplete="off"
+                type="date"
+                value={(value === null || value === undefined) ? '' : value}
+                readOnly={readOnly}
+                onChange={onChangeFunc}
+            ></AVField.styles.input>
+        )
+      }
     }
     if (fieldItem.dataType === 'number') {
       inputElement = (
