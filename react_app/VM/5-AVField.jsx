@@ -23,7 +23,7 @@ export class AVField extends AVItem {
         text-align: end;
       }
       &.checkbox {
-        height: 26px
+        height: 20px
       }
     `,
     select: this.styled.select`
@@ -131,7 +131,7 @@ export class AVField extends AVItem {
         {this._renderInput(
           {
             value: this.state._value,
-            readOnly: this.props.readOnly,
+            readOnly: this.props.readOnly || this.props.fieldItem.isReadOnly,
             onChangeFunc: this._onChange,
             fieldItem: this.props.fieldItem,
           }
@@ -217,7 +217,7 @@ export class AVField extends AVItem {
           autoComplete="off"
           type="checkbox"
           checked={value}
-          readOnly={readOnly}
+          disabled={readOnly}
           onChange={onChangeFunc}
         ></AVField.styles.input>
       )

@@ -104,7 +104,7 @@ export class AVGrid extends AVElement {
     }
     render() {
       return (
-          <AVGrid.styles.gridCell className="pad-8"
+          <AVGrid.styles.gridCell className="row pad-8"
                                   style={this.props.style}
                                   ref={this.props.refOnRootDiv}
                                   $rowItem={this.props.rowItem}
@@ -151,7 +151,7 @@ export class AVGrid extends AVElement {
     //   c = col.items[innerColIndex];
     // }
     return this.state._items.map((i, idx) => (
-      <this.CellComponent className="pad-8" key={i.id || idx}
+      <this.CellComponent key={i.id || idx}
                           $grid={this}
                           rowItem={i}
                           column={c}
@@ -206,23 +206,35 @@ export class AVGrid extends AVElement {
         ></AVField>
       )
     }
-    const value = fieldValue;
-    if (Array.isArray(value)) {
+    if (column.dataType === 'boolean') {
+      return (
+        <AVField
+          value={fieldValue}
+          fieldItem={column}
+          readOnly
+          isLabelHidden
+        ></AVField>
+      )
+    }
+    if (column.variant === 'date') {
+      return new Date(fieldValue).toLocaleDateString();
+    }
+    if (Array.isArray(fieldValue)) {
       return 'Табличное';
     }
-    if (typeof value === 'object') {
+    if (typeof fieldValue === 'object') {
       if (item[column.name].name) {
         return `${item[column.name].name} (Объектное)`
       }
       return 'Объектное';
     }
     if (column.formatOutputInGrid) {
-      return column.formatOutputInGrid(value)
+      return column.formatOutputInGrid(fieldValue)
     }
     if (innerCol && innerCol.formatOutputInGrid) {
-      return innerCol.formatOutputInGrid(value)
+      return innerCol.formatOutputInGrid(fieldValue)
     }
-    return value;
+    return fieldValue;
   }
 
   componentDidMount() {
