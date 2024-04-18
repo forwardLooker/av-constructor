@@ -96,7 +96,7 @@ export class Domain extends Item {
       return;
     }
 
-    this.serverRef.delete();
+    await this.serverRef.delete();
     // update config
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
     const workspaceDoc = await workspaceDocRef.get();

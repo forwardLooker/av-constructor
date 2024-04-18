@@ -349,7 +349,6 @@ export class AVGrid extends AVElement {
   }
 
   _onCellClick(rowItem, cellName, e) {
-    console.log('rowItem', rowItem);
     this.props.onRowClickFunc(rowItem._originalItemRef);
   }
 
