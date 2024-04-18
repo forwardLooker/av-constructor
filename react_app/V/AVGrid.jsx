@@ -57,18 +57,25 @@ export class AVGrid extends AVElement {
     return (
       <div className="flex-1 row">
         {this.state._columns.map(c => (
-          <div className="grid-column col flex-1" key={c.name + this.state._columns.map(cl => cl.name).toString()}>
+          <div className={`grid-column col ${c.widthMode ? c.widthMode : 'flex-1'}`} key={c.name + this.state._columns.map(cl => cl.name).toString()}>
             <AVGrid.styles.gridHeaderCell
               className="pad-8 text-center"
               style={c.style}
               ref={headerDomElement => c.headerCellDomElement = headerDomElement}
-            >{c.label || c.name}</AVGrid.styles.gridHeaderCell>
+            >{this._renderHeaderCellContent(c)}</AVGrid.styles.gridHeaderCell>
             {(this.notEmpty(c.items) && c.dataType !== 'array') && this._renderSubHeaderWithCells(c)}
             {(this.isEmpty(c.items) || c.dataType === 'array') && this._renderCells(c)}
           </div>
         ))}
       </div>
     )
+  }
+
+  _renderHeaderCellContent(column) {
+    if (column.renderHeaderCellButton) {
+      return column.renderHeaderCellButton()
+    }
+    return column.label || column.name
   }
 
   _renderSubHeaderWithCells(c) {
@@ -177,6 +184,9 @@ export class AVGrid extends AVElement {
   }
 
   _renderCellContent(item, column, innerCol) {
+    if (column.renderCellButton) {
+      return column.renderCellButton(item._originalItemRef)
+    }
     let fieldValue = item[column.name];
     if (innerCol && item[column.name]) {
       fieldValue = item[column.name][innerCol.name];

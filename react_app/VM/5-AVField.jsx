@@ -213,21 +213,41 @@ export class AVField extends AVItem {
     if (fieldItem.dataType === 'array') {
       const gridItems = value || [];
       let $gridRef;
+      const addDeleteColumnItem = {
+        name: 'addDelete', // даже не используется
+        dataType: 'button', // даже не используется
+        widthMode: 'flex-0',
+        renderHeaderCellButton: () => (
+            <AVButton
+                onClick={() => {
+                  gridItems.push({});
+                  this.setState({_value: [...gridItems]}, () => {
+                    this.props.onChangeFunc(this.state._value);
+                  })
+                }}
+                disabled={readOnly}
+            >+</AVButton>
+        ),
+        renderCellButton: (rowItem)  => (
+            <AVButton
+                onClick={() => {
+                  const idxToDelete = gridItems.findIndex(i => i === rowItem);
+                  gridItems.splice(idxToDelete, 1);
+                  this.setState({_value: [...gridItems]}, () => {
+                    this.props.onChangeFunc(this.state._value);
+                  })
+                }}
+                disabled={readOnly}
+            >-</AVButton>
+        ),
+      };
+      const columns = [addDeleteColumnItem, ...fieldItem.items];
       inputElement = (
         <div className="flex-1 row align-start">
-          <AVButton
-            onClick={() => {
-              gridItems.push({});
-              this.setState({_value: [...gridItems]}, () => {
-                this.props.onChangeFunc(this.state._value);
-              })
-            }}
-            disabled={readOnly}
-          >+</AVButton>
           <AVGrid
             ref={el => $gridRef = el}
             items={gridItems}
-            columns={fieldItem.items}
+            columns={columns}
             isTypedColumns
             isCellEditable={!readOnly}
             onDataInItemsChangedFunc={this.props.onChangeFunc}
