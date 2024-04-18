@@ -7,11 +7,9 @@ export class AVGrid extends AVElement {
   static styles = {
     gridHeaderCell: this.styled.div`
       background-color: #c5c5c5;
-
       .grid-column:first-of-type & {
         border: 1px solid black;
       }
-
       .grid-column:not(:first-of-type) & {
         border-right: 1px solid black;
         border-top: 1px solid black;
@@ -24,13 +22,11 @@ export class AVGrid extends AVElement {
       //&:hover {
       //  outline: 2px solid black;
       //}
-
       .grid-column:first-of-type & {
         border-right: 1px solid black;
         border-left: 1px solid black;
         border-bottom: 1px solid black;
       }
-
       .grid-column:not(:first-of-type) & {
         border-right: 1px solid black;
         border-bottom: 1px solid black;
