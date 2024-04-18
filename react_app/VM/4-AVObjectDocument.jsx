@@ -656,6 +656,7 @@ export class AVObjectDocument extends AVItem {
   _drop = (e, dropFieldItem, dropElementIndex, dropContainer) => {
     if (this.state.designDragElement === dropFieldItem) {
       this._removeDragBorder(e);
+      this.setState({designDragStarted: false});
       return;
     }
 
@@ -745,9 +746,10 @@ export class AVObjectDocument extends AVItem {
       this._removeEmptyContainers(this.state.designDragContainer);
     }
 
-    this.forceUpdate();
-    // this.designJson = newDesign;
     this._removeDragBorder(e);
+    this.setState({designDragStarted: false});
+    // this.forceUpdate();
+    // this.designJson = newDesign;
   }
 
   save = async () => {
