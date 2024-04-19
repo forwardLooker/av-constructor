@@ -3,6 +3,13 @@ import React from 'react';
 import {AVElement} from './0-AVElement.js';
 
 export class AVContextMenu extends AVElement {
+  static styles = {
+    contextMenuItem: this.styled.div`
+      &:hover {
+        background: #98acc1;
+      }
+    `
+  }
   static defaultProps = {
     items: [],
     contextMenuEvent: null,
@@ -13,20 +20,20 @@ export class AVContextMenu extends AVElement {
   render() {
     return (
       <div
-        className="pos-abs flex-1 col z-index-10000 bg-gainsboro cursor-default"
+        className="pos-abs flex-1 col pad-2-0 z-index-10000 font-size-14px bg-context-menu cursor-default"
         style={{
           top: this.props.contextMenuEvent.pageY + 'px',
           left: this.props.contextMenuEvent.pageX + 'px'
         }}
       >
         {this.props.items.map(meniItem => (
-          <div
-            className="contextMenuItem pad-4"
+          <this.constructor.styles.contextMenuItem
+            className="contextMenuItem pad-4-12"
             key={meniItem}
             onClick={e => this.props.onItemSelectFunc(meniItem)}
           >
             {meniItem}
-          </div>
+          </this.constructor.styles.contextMenuItem>
         ))}
       </div>
     )

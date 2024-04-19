@@ -79,26 +79,32 @@
 .pos-fixed {
     position: fixed;
 }
+.pad-2-0 {
+    padding: 2px 0
+}
+.pad-bottom-2 {
+    padding-bottom: 2px;
+}
 .pad-4 {
     padding: 4px;
-}
-.pad-8 {
-    padding: 8px;
 }
 .pad-4-0 {
     padding: 4px 0;
 }
-.pad-8-0 {
-    padding: 8px 0;
-}
 .pad-0-4 {
     padding: 0 4px;
 }
+.pad-4-12 {
+    padding: 4px 12px;
+}
+.pad-8 {
+    padding: 8px;
+}
+.pad-8-0 {
+    padding: 8px 0;
+}
 .pad-0-8 {
     padding: 0 8px;
-}
-.pad-bottom-2 {
-    padding-bottom: 2px;
 }
 .border {
     border: 0.5px solid black;
@@ -204,6 +210,9 @@
 .bg-gainsboro {
     background: gainsboro;
 }
+.bg-context-menu {
+    background: #dedfe1;
+}
 .bg-transparent-45 {
     background-color: rgba(0,0,0,0.45);
 }
@@ -218,6 +227,9 @@
 }
 .font-size-20px {
     font-size: 20px;
+}
+.font-size-14px {
+    font-size: 14px;
 }
 .font-bold {
     font-weight: bold;
