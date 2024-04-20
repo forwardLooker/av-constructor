@@ -21,7 +21,7 @@ export class AVButton extends AVElement {
       cursor: pointer;
       user-select: none;
       border: 1px solid;
-      border-radius: 6px;
+      border-radius: 8px;
       appearance: none;
       
       &:hover {

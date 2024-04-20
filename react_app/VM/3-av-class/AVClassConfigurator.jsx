@@ -102,7 +102,7 @@ export class AVClassConfigurator extends AVItem {
   _renderFields() {
     return (
       <div className="flex-1 row margin-top-8">
-        <div className="flex-0-200px row border">
+        <div className="flex-0-200px row bg-tree border">
           <AVTree
             items={this.state._newFieldDescriptors}
             onItemSelectFunc={selectedFieldDescriptor => this.setState({selectedFieldDescriptor})}
@@ -123,7 +123,7 @@ export class AVClassConfigurator extends AVItem {
   _renderViewsOptions() {
     return (
         <div className="flex-0 row">
-          <div className="flex-0-200px row pad-4-0 border">
+          <div className="flex-0-200px row pad-4-0 bg-tree border">
             <AVTree
               items={this.state._newViewsOptions}
               onItemSelectFunc={selectedViewsOption => this.setState({selectedViewsOption})}
@@ -152,7 +152,7 @@ export class AVClassConfigurator extends AVItem {
   _renderServices() {
     return (
       <div className="flex-0 row">
-        <div className="flex-0-200px row pad-4-0 border">
+        <div className="flex-0-200px row pad-4-0 bg-tree border">
           <AVTree
             items={this.state._newConnectedServices}
             onItemSelectFunc={selectedItemService => this.setState({selectedItemService})}

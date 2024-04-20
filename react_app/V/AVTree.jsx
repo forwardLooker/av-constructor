@@ -8,19 +8,41 @@ export class AVTree extends AVElement {
       cursor: pointer;
       overflow: hidden;
       &:hover {
-        border: 1px solid black;
+        background: #acbfd2;
       }
       &.selected {
-        border: 1px solid black;
+        background: #686767;
+        color: white;
+        border-radius: 4px;
       }
     `,
     treeRowExpander: this.styled.div`
       font-weight: 600;
       user-select: none;
       &.expanded {
-        transform: rotate(45deg);
+        transform: rotate(90deg);
         transition: transform .2s ease-in-out;
       }
+    `,
+    iconContainer: this.styled.div`
+      width: 16px;
+      display: flex;
+      flex-shrink: 0;
+      justify-content: center;
+      &.expanded {
+        transform: rotate(90deg);
+        transition: transform .2s ease-in-out;
+      }
+    `,
+    iconSVG: this.styled.svg`
+      font-size: 18px;
+      user-select: none;
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      fill: currentColor;
+      flex-shrink: 0;
+      transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     `
   };
 
@@ -49,11 +71,16 @@ export class AVTree extends AVElement {
         {items.map((i,idx) => (
           <div className="col" key={i.name || idx}>
             <AVTree.styles.treeRow className={`row ${i.selected ? 'selected' : ''}`}>
-              <AVTree.styles.treeRowExpander className={`tree-row-expander ${i.expanded ? 'expanded' : ''} ${this.isEmpty(i.items) ? 'invisible': ''}`}
-                onClick={() => this._toggleExpand(i)}
-              >{'>'}</AVTree.styles.treeRowExpander>
+              <this.constructor.styles.iconContainer className={`tree-row-expander ${i.expanded ? 'expanded' : ''} ${this.isEmpty(i.items) ? 'invisible': ''}`}
+                                                     onClick={() => this._toggleExpand(i)}
+              >
+                <this.constructor.styles.iconSVG focusable="false"
+                     aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+                </this.constructor.styles.iconSVG>
+              </this.constructor.styles.iconContainer>
               <div
-                className="flex-1 margin-left-4"
+                className="flex-1"
                 onClick={(e) => this._toggleSelect(e, i)}
                 onContextMenu={(e) => this._onRowContextMenu(e, i)}
               >{i.name}</div>

@@ -17,7 +17,7 @@ export class AVHost extends AVItem {
   static styles = {
     header: this.styled.div`
       padding: 0 1.5em;
-      box-shadow: 0 5px 10px 0 rgb(0 0 0 / 20%);
+      //box-shadow: 0 5px 5px 0 rgb(3 5 10 / 66%);
     `,
     leftSidebar: this.styled.div`
       width: 20%;
@@ -53,9 +53,9 @@ export class AVHost extends AVItem {
 
   render() {
     return (
-        <div className="flex-1 col">
+        <div className="_avhost-root flex-1 col">
           {this._renderHeader()}
-          <div className="flex-1 row pad-8 border">
+          <div className="flex-1 row border">
             {this.user ?  this._renderMain() : <AVAuth></AVAuth>}
           </div>
           {this.state.isDialogOpened && this._renderDialog()}
@@ -81,7 +81,7 @@ export class AVHost extends AVItem {
   _renderMain() {
     return (
       <div className="flex-1 row">
-        <AVHost.styles.leftSidebar className="col pad-8 border">
+        <AVHost.styles.leftSidebar className="col pad-8 bg-tree border">
           {this.state.designMode && this._renderInstrumentPanel()}
           {!this.state.designMode && (
             <AVTree
@@ -92,7 +92,7 @@ export class AVHost extends AVItem {
             ></AVTree>
           )}
         </AVHost.styles.leftSidebar>
-        <div className="pos-rel flex-1 col margin-left-8 pad-8 border scroll-y">
+        <div className="pos-rel flex-1 col pad-8 border scroll-y">
           {this.state.selectedTreeItem?.itemType === 'class' ?
             (<AVClass classItem={this.state.selectedTreeItem}></AVClass>) : ''}
           {this.state.selectedTreeItem?.itemType === 'domain' ?

@@ -210,8 +210,14 @@
 .bg-gainsboro {
     background: gainsboro;
 }
+.bg-header {
+    background: #a2a2b9;
+}
 .bg-context-menu {
     background: #dedfe1;
+}
+.bg-tree {
+    background: #ebedf0;
 }
 .bg-transparent-45 {
     background-color: rgba(0,0,0,0.45);
