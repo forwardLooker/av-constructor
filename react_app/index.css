@@ -94,6 +94,9 @@
 .pad-0-4 {
     padding: 0 4px;
 }
+.pad-0-4-0-0 {
+    padding: 0 4px 0 0;
+}
 .pad-4-12 {
     padding: 4px 12px;
 }

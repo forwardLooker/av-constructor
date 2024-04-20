@@ -9,20 +9,32 @@ export class AVPropertyGrid extends AVElement {
     treeRow: this.styled.div`
       cursor: pointer;
       overflow: hidden;
-      &:hover {
-        border: 1px solid black;
-      }
+      //&:hover {
+      //  border: 1px solid black;
+      //}
       &.selected {
         border: 1px solid black;
       }
     `,
-    treeRowExpander: this.styled.div`
-      font-weight: 600;
-      user-select: none;
+    iconContainer: this.styled.div`
+      width: 16px;
+      display: flex;
+      flex-shrink: 0;
+      justify-content: center;
       &.expanded {
-        transform: rotate(45deg);
+        transform: rotate(90deg);
         transition: transform .2s ease-in-out;
       }
+    `,
+    iconSVG: this.styled.svg`
+      font-size: 18px;
+      user-select: none;
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      fill: currentColor;
+      flex-shrink: 0;
+      transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     `
   };
 
@@ -49,13 +61,21 @@ export class AVPropertyGrid extends AVElement {
     }
     items = items.filter(i => !(typeof i.hideIfFunc === 'function' && i.hideIfFunc()));
     return (
-      <div className={`flex-1 col ${nestingLevel > 0 ? 'margin-left-16' : ''}`}>
+      <div className={`_av-property-grid-root flex-1 col ${nestingLevel > 0 ? 'margin-left-16' : ''}`}>
         {items.map((propertyItem, idx) => (
           <div className="col" key={propertyItem.name || idx}>
-            <AVPropertyGrid.styles.treeRow className={`tree-row row align-center ${propertyItem.selected ? 'selected' : ''}`}>
-              <AVPropertyGrid.styles.treeRowExpander className={`tree-row-expander ${propertyItem.expanded ? 'expanded' : ''} ${this.isEmpty(propertyItem.items) ? 'invisible': ''}`}
-                onClick={() => this._toggleExpand(propertyItem)}
-              >{'>'}</AVPropertyGrid.styles.treeRowExpander>
+            <AVPropertyGrid.styles.treeRow className={`tree-row row align-center margin-top-2 ${propertyItem.selected ? 'selected' : ''}`}>
+              {/*<AVPropertyGrid.styles.treeRowExpander className={`tree-row-expander ${propertyItem.expanded ? 'expanded' : ''} ${this.isEmpty(propertyItem.items) ? 'invisible': ''}`}*/}
+              {/*  onClick={() => this._toggleExpand(propertyItem)}*/}
+              {/*>{'>'}</AVPropertyGrid.styles.treeRowExpander>*/}
+              <AVPropertyGrid.styles.iconContainer className={`tree-row-expander ${propertyItem.expanded ? 'expanded' : ''} ${this.isEmpty(propertyItem.items) ? 'invisible': ''}`}
+                                                     onClick={() => this._toggleExpand(propertyItem)}
+              >
+                <AVPropertyGrid.styles.iconSVG focusable="false"
+                                                 aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+                </AVPropertyGrid.styles.iconSVG>
+              </AVPropertyGrid.styles.iconContainer>
               {this._renderPropGridField(propertyItem, parentItem)}
             </AVPropertyGrid.styles.treeRow>
             {propertyItem.expanded && (

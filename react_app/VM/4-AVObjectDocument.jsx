@@ -92,7 +92,7 @@ export class AVObjectDocument extends AVItem {
 
   render() {
     return (
-      <div className="flex-1 col">
+      <div className="_av-object-document-root flex-1 col">
         <div className="flex-1 col space-between line-height-1-5">
           <div>
             {this._renderVerticalLayout(this.state.designJson)}

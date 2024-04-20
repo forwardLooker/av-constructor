@@ -53,7 +53,7 @@ export class AVHost extends AVItem {
 
   render() {
     return (
-        <div className="_avhost-root flex-1 col">
+        <div className="_av-host-root flex-1 col">
           {this._renderHeader()}
           <div className="flex-1 row border">
             {this.user ?  this._renderMain() : <AVAuth></AVAuth>}

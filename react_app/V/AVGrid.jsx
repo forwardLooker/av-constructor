@@ -55,7 +55,7 @@ export class AVGrid extends AVElement {
 
   render() {
     return (
-      <div className="flex-1 row">
+      <div className="_av-grid-root flex-1 row">
         {this.state._columns.map(c => (
           <div className={`grid-column col ${c.widthMode ? c.widthMode : 'flex-1'}`} key={c.name + this.state._columns.map(cl => cl.name).toString()}>
             <AVGrid.styles.gridHeaderCell

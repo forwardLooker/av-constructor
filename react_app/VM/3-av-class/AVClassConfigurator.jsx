@@ -76,7 +76,7 @@ export class AVClassConfigurator extends AVItem {
 
   render() {
     return (
-      <div className="flex-1 col space-between">
+      <div className="_av-class-configurator-root flex-1 col space-between">
         <div className="flex-1 col">
           <AVLabel>id:{this.props.classItem.id}</AVLabel>
           <AVLabel>name:{this.props.classItem.data.name}</AVLabel>
@@ -101,8 +101,8 @@ export class AVClassConfigurator extends AVItem {
 
   _renderFields() {
     return (
-      <div className="flex-1 row margin-top-8">
-        <div className="flex-0-200px row bg-tree border">
+      <div className="flex-1 row margin-top-2">
+        <div className="flex-0-200px row border">
           <AVTree
             items={this.state._newFieldDescriptors}
             onItemSelectFunc={selectedFieldDescriptor => this.setState({selectedFieldDescriptor})}

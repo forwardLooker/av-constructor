@@ -16,14 +16,6 @@ export class AVTree extends AVElement {
         border-radius: 4px;
       }
     `,
-    treeRowExpander: this.styled.div`
-      font-weight: 600;
-      user-select: none;
-      &.expanded {
-        transform: rotate(90deg);
-        transition: transform .2s ease-in-out;
-      }
-    `,
     iconContainer: this.styled.div`
       width: 16px;
       display: flex;
@@ -67,18 +59,18 @@ export class AVTree extends AVElement {
       return '';
     }
     return (
-      <div className={`flex-1 col ${nestingLevel > 0 ? 'margin-left-16' : ''}`}>
+      <div className={`_av-tree-root flex-1 col bg-tree ${nestingLevel > 0 ? 'margin-left-16' : ''}`}>
         {items.map((i,idx) => (
           <div className="col" key={i.name || idx}>
             <AVTree.styles.treeRow className={`row ${i.selected ? 'selected' : ''}`}>
-              <this.constructor.styles.iconContainer className={`tree-row-expander ${i.expanded ? 'expanded' : ''} ${this.isEmpty(i.items) ? 'invisible': ''}`}
+              <AVTree.styles.iconContainer className={`tree-row-expander ${i.expanded ? 'expanded' : ''} ${this.isEmpty(i.items) ? 'invisible': ''}`}
                                                      onClick={() => this._toggleExpand(i)}
               >
-                <this.constructor.styles.iconSVG focusable="false"
+                <AVTree.styles.iconSVG focusable="false"
                      aria-hidden="true" viewBox="0 0 24 24">
                   <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
-                </this.constructor.styles.iconSVG>
-              </this.constructor.styles.iconContainer>
+                </AVTree.styles.iconSVG>
+              </AVTree.styles.iconContainer>
               <div
                 className="flex-1"
                 onClick={(e) => this._toggleSelect(e, i)}

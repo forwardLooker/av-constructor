@@ -121,7 +121,7 @@ export class AVField extends AVItem {
     //   )
     // }
     return (
-      <div className={`flex-1 ${this.props.labelPosition === 'top'? 'column' : 'row'} align-center`}
+      <div className={`_av-field-root flex-1 ${this.props.labelPosition === 'top'? 'column' : 'row'} align-center`}
          style={this.props.style}
          ref={this.props.refOnRootDiv}
       >

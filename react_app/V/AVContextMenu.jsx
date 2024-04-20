@@ -27,13 +27,13 @@ export class AVContextMenu extends AVElement {
         }}
       >
         {this.props.items.map(meniItem => (
-          <this.constructor.styles.contextMenuItem
+          <AVContextMenu.styles.contextMenuItem
             className="contextMenuItem pad-4-12"
             key={meniItem}
             onClick={e => this.props.onItemSelectFunc(meniItem)}
           >
             {meniItem}
-          </this.constructor.styles.contextMenuItem>
+          </AVContextMenu.styles.contextMenuItem>
         ))}
       </div>
     )

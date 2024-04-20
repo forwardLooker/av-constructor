@@ -18,7 +18,7 @@ export class AVClassPanel extends AVItem {
 
   render() {
     return (
-      <div className="row pad-bottom-2 border-bottom-2">
+      <div className="_av-class-panel-root row pad-bottom-2 border-bottom-2">
         {this.state.currentViewName === 'Grid' ? this._renderGridButtons() : ''}
         <div className="flex-1 row justify-end">
           <div>
