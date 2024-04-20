@@ -213,6 +213,9 @@
 .bg-gainsboro {
     background: gainsboro;
 }
+.bg-app-back {
+    background: #c6cbc9;
+}
 .bg-header {
     background: #a2a2b9;
 }

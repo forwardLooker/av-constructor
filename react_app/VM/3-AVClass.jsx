@@ -56,7 +56,7 @@ export class AVClass extends AVItem {
           onRowContextMenuFunc={this._onGridRowContextMenu}
         ></AVGrid>
         {this.state.selectedObjectDocument && (
-          <div className="pos-abs trbl-0 col pad-4 z-index-10 bg-white">
+          <div className="pos-abs trbl-0 col pad-4 z-index-10 bg-app-back">
             <AVObjectDocument
               fieldDescriptors={this.state.fieldDescriptors}
               objectDocument={this.state.selectedObjectDocument}

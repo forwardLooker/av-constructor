@@ -92,7 +92,7 @@ export class AVObjectDocument extends AVItem {
 
   render() {
     return (
-      <div className="_av-object-document-root flex-1 col">
+      <div className="_av-object-document-root flex-1 col bg-app-back">
         <div className="flex-1 col space-between line-height-1-5">
           <div>
             {this._renderVerticalLayout(this.state.designJson)}
@@ -107,7 +107,7 @@ export class AVObjectDocument extends AVItem {
           </div>
         </div>
         {this.state.isClassItemOpened && (
-          <div className="pos-abs trbl-0 z-index-100 bg-white">
+          <div className="pos-abs trbl-0 z-index-100 bg-app-back">
             <AVClass
               classItem={this.state.openedClassItem}
               onObjectDocumentSelectedFunc={this.state.onObjectDocumentSelectedInOpenedClassItem}
