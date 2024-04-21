@@ -12,6 +12,7 @@ import {AVLabel} from "../V/AVLabel.jsx";
 import {AVContextMenu} from "../V/AVContextMenu.jsx";
 
 import {Host} from '../M/1-Host.js';
+import {AVIcon} from "../V/icons/AVIcon.jsx";
 
 export class AVHost extends AVItem {
   static styles = {
@@ -67,7 +68,12 @@ export class AVHost extends AVItem {
   _renderHeader() {
     return (
       <AVHost.styles.header className="row space-between">
-        <h3>Хост тест</h3>
+        <div className="row align-center">
+          <div className="pad-0-4">
+            <AVIcon name="globe"></AVIcon>
+          </div>
+          <h3>Хост тест</h3>
+        </div>
         {this.user && (
           <div className="col align-center justify-center">
             <div>{this.user?.email}</div>
@@ -86,7 +92,7 @@ export class AVHost extends AVItem {
           {!this.state.designMode && (
             <AVTree
               items={this.state.config}
-              expandAllRowsNestedLevel={1}
+              expandAllRowsNestedLevel={3}
               onItemSelectFunc={this._onTreeItemSelect}
               onItemContextMenuFunc={this._onTreeItemContextMenu}
             ></AVTree>
