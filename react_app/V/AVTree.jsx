@@ -74,7 +74,7 @@ export class AVTree extends AVElement {
               </AVTree.styles.iconContainer>
               {i.itemType && (
                 <div className="pad-0-2">
-                  <AVIcon name={i.itemType === 'domain'? 'briefcase' : 'browser'}></AVIcon>
+                  <AVIcon name={i.itemType === 'domain'? 'folder' : 'fileDocument'}></AVIcon>
                 </div>)
               }
               <div
