@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {AVElement} from './0-AVElement.js';
+import {AVIcon} from './icons/AVIcon.jsx';
 
 export class AVTree extends AVElement {
   static styles = {
@@ -71,6 +72,11 @@ export class AVTree extends AVElement {
                   <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
                 </AVTree.styles.iconSVG>
               </AVTree.styles.iconContainer>
+              {i.itemType && (
+                <div className="pad-0-2">
+                  <AVIcon name={i.itemType === 'domain'? 'briefcase' : 'browser'}></AVIcon>
+                </div>)
+              }
               <div
                 className="flex-1"
                 onClick={(e) => this._toggleSelect(e, i)}
