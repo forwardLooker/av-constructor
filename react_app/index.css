@@ -228,6 +228,12 @@
 .bg-tree {
   background: #ebedf0;
 }
+.bg-folder {
+  background: #f1e7a7;
+}
+.bg-icon-file-document {
+  background: #e7e1e1;
+}
 .bg-transparent-45 {
   background-color: rgba(0,0,0,0.45);
 }
