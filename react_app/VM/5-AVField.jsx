@@ -26,6 +26,17 @@ export class AVField extends AVItem {
         height: 20px
       }
     `,
+    textarea: this.styled.textarea`
+      position: relative;
+      display: inline-block;
+      padding: 5px 10px;
+      line-height: 20px;
+      background-color: #fff;
+      transition: all .2s;
+      border: 1px solid black;
+      border-radius: 6px;
+      vertical-align: middle;
+    `,
     select: this.styled.select`
       position: relative;
       display: inline-block;
@@ -157,7 +168,19 @@ export class AVField extends AVItem {
           readOnly={readOnly}
           onChange={onChangeFunc}
         ></AVField.styles.input>
-      )
+      );
+      if (fieldItem.variant === 'textarea') {
+        inputElement = (
+          <AVField.styles.textarea
+            className="flex-1"
+            autoComplete="off"
+            rows={16}
+            value={(value === null || value === undefined) ? '' : value}
+            readOnly={readOnly}
+            onChange={onChangeFunc}
+          ></AVField.styles.textarea>
+        );
+      }
       if (fieldItem.variant === 'select' && fieldItem.valuesList) {
         let valuesArr
         if (Array.isArray(fieldItem.valuesList)) {

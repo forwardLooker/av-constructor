@@ -2,9 +2,9 @@ export class UtilFunctions {
   static noop = () => {};
 
   static deepClone = (objectToClone) => {
-    console.log(objectToClone);
     return JSON.parse(JSON.stringify(objectToClone))
   };
+
   static deepCloneArrayWithInnerRef(arrayToClone) {
     if (!arrayToClone) return;
     return arrayToClone.map(obj => {
