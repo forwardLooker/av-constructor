@@ -61,7 +61,7 @@ export class AVGrid extends AVElement {
         {this.state._columns.map(c => (
           <div className={`grid-column col ${c.widthMode ? c.widthMode : 'flex-1'}`} key={c.name + this.state._columns.map(cl => cl.name).toString()}>
             <AVGrid.styles.gridHeaderCell
-              className="pad-8 text-center"
+              className="row space-around pad-8"
               style={c.style}
               ref={headerDomElement => c.headerCellDomElement = headerDomElement}
             >{this._renderHeaderCellContent(c)}</AVGrid.styles.gridHeaderCell>
