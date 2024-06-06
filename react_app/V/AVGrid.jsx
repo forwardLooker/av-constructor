@@ -2,6 +2,7 @@ import React from 'react';
 
 import {AVElement} from './0-AVElement.js';
 import {AVField} from "../VM/5-AVField.jsx";
+import {AVIcon} from './icons/AVIcon.jsx';
 
 export class AVGrid extends AVElement {
   static styles = {
@@ -50,7 +51,8 @@ export class AVGrid extends AVElement {
 
   state = {
     _items: this.deepCloneArrayWithInnerRef(this.props.items),
-    _columns: this.deepCloneArrayWithInnerRef(this.props.columns)
+    _columns: this.deepCloneArrayWithInnerRef(this.props.columns),
+    sortingType: 'ascend'
   }
 
   render() {
@@ -75,7 +77,32 @@ export class AVGrid extends AVElement {
     if (column.renderHeaderCellButton) {
       return column.renderHeaderCellButton()
     }
-    return column.label || column.name
+    let sortingIcon;
+    return (
+      <div className="row align-center justify-center"
+           onMouseEnter={() => sortingIcon.removeAttribute('hidden')}
+           onMouseLeave={() => sortingIcon.setAttribute('hidden', '')}
+           onClick={() => {
+             const sortAscend = this.R.sortWith([this.R.ascend(this.R.prop(column.name))]);
+             const sortDescend = this.R.sortWith([this.R.descend(this.R.prop(column.name))]);
+             if (this.state.sortingType === 'ascend') {
+               this.setState({
+                 _items: sortAscend(this.state._items),
+                 sortingType: 'descend'
+               });
+             } else {
+               this.setState({
+                 _items: sortDescend(this.state._items),
+                 sortingType: 'ascend'
+               });
+             }
+           }}
+      >
+        {column.label || column.name}
+        <div hidden className="pad-0-2" ref={el => sortingIcon = el}><AVIcon name="arrowSquareDown"></AVIcon></div>
+      </div>
+    )
+    // return column.label || column.name
   }
 
   _renderSubHeaderWithCells(c) {

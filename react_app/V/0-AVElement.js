@@ -6,6 +6,8 @@ import {UtilFunctions} from '../M/Fundamentals/10-UtilFunctions.js'
 export class AVElement extends React.PureComponent {
   static styled = styled;
   styled = styled;
+  static R = UtilFunctions.R;
+  R = UtilFunctions.R;
 
   static noop = UtilFunctions.noop;
   noop = UtilFunctions.noop;

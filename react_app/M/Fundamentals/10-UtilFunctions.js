@@ -1,11 +1,13 @@
-import {clone, equals} from 'ramda'
+// import {clone, equals, sortWith, descend, ascend, prop} from 'ramda'
+import * as R from 'ramda'
 
 export class UtilFunctions {
   static noop = () => {};
+  static R = R;
 
   static deepClone = (objectToClone) => {
     // return JSON.parse(JSON.stringify(objectToClone))
-    return clone(objectToClone)
+    return this.R.clone(objectToClone)
   };
 
   static deepCloneArrayWithInnerRef(arrayToClone) {
@@ -27,7 +29,7 @@ export class UtilFunctions {
 
   static isDeepEqual = (obj1, obj2) => {
     // JSON.stringify(obj1) === JSON.stringify(obj2)
-    return equals(obj1, obj2);
+    return this.R.equals(obj1, obj2);
   };
 
   static findDeepObjInItemsBy(queryObj, dataObjWithItems) {
