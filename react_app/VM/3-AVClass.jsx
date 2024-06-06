@@ -49,12 +49,14 @@ export class AVClass extends AVItem {
   _renderGrid() {
     return (
       <div className="margin-top-8">
-        <AVGrid
-          items={this.state.objectDocuments}
-          columns={this.state.fieldDescriptors}
-          onRowClickFunc={this._onGridRowClick}
-          onRowContextMenuFunc={this._onGridRowContextMenu}
-        ></AVGrid>
+        <div hidden={!!this.state.selectedObjectDocument}>
+          <AVGrid
+            items={this.state.objectDocuments}
+            columns={this.state.fieldDescriptors}
+            onRowClickFunc={this._onGridRowClick}
+            onRowContextMenuFunc={this._onGridRowContextMenu}
+          ></AVGrid>
+        </div>
         {this.state.selectedObjectDocument && (
           <div className="pos-abs trbl-0 col pad-4 z-index-10 bg-app-back">
             <AVObjectDocument
