@@ -6,6 +6,8 @@ import {AVClass} from './3-AVClass.jsx';
 import {AVField} from './5-AVField.jsx';
 
 import {AVButton} from "../V/AVButton.jsx";
+import {AVIcon} from '../V/icons/AVIcon.jsx';
+
 
 export class AVObjectDocument extends AVItem {
   static styles = {
@@ -22,8 +24,16 @@ export class AVObjectDocument extends AVItem {
     onSavedFunc: this.noop,
     onCloseFunc: this.noop,
   }
+  // componentDidMount() {
+  //   this.setState({
+  //     _newData: this.deepClone(this.props.objectDocument.data),
+  //     _newDataBeforeUpdate: this.deepClone(this.props.objectDocument.data),
+  //   })
+  // }
+
   state = {
-    _newData: this.props.objectDocument.data, //TODO deepClone его реализация ломает reference
+    _newData: this.deepClone(this.props.objectDocument.data),
+    _newDataBeforeUpdate: this.deepClone(this.props.objectDocument.data),
 
     designMode: false,
     designJson: null,
@@ -98,10 +108,17 @@ export class AVObjectDocument extends AVItem {
             {this._renderVerticalLayout(this.state.designJson)}
           </div>
           <div className="row justify-end">
-            <div>
+            <div className="row align-center justify-center">
               {this._renderButtonsByServices()}
               <AVButton onClick={this.saveAndClose}>OK</AVButton>
               <AVButton onClick={this.closeWithoutSave}>Отмена</AVButton>
+              <div className="row align-center pad-0-2">
+                {this.isDeepEqual(this.state._newData, this.state._newDataBeforeUpdate) ? (
+                  <AVIcon name="saveDisabled"></AVIcon>
+                ) : (
+                  <AVIcon name="saveActive" onClick={this.save}></AVIcon>
+                )}
+              </div>
               <AVButton onClick={this.toggleDesign}>Дизайнер</AVButton>
             </div>
           </div>
@@ -221,7 +238,10 @@ export class AVObjectDocument extends AVItem {
           fieldItem={fieldItem}
           value={this.state._newData[fieldItem.name]}
           readOnly={this.state._newData.readOnly}
-          onChangeFunc={value => {this.state._newData[fieldItem.name] = value}}
+          onChangeFunc={value => {
+            this.state._newData[fieldItem.name] = value;
+            this._forceUpdateDebounced1Sec() // для подсветки кнопки сохранить
+          }}
           labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
           $objectDocument={this}
         >
@@ -754,6 +774,7 @@ export class AVObjectDocument extends AVItem {
 
   save = async () => {
     await this.props.objectDocument.saveData(this.state._newData);
+    this.setState(state => ({_newDataBeforeUpdate: this.deepClone(state._newData)}));
     this.props.onSavedFunc();
   }
 
@@ -860,4 +881,6 @@ export class AVObjectDocument extends AVItem {
       })
     }
   }
+
+  _forceUpdateDebounced1Sec = this.makeDebounced(() => this.forceUpdate(), 1000)
 }
