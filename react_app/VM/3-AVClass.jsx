@@ -6,6 +6,7 @@ import {AVClassPanel} from "./3-av-class/AVClassPanel.jsx";
 import {AVGrid} from "../V/AVGrid.jsx";
 import {AVObjectDocument} from './4-AVObjectDocument.jsx';
 import {AVClassConfigurator} from "./3-av-class/AVClassConfigurator.jsx";
+import {AVButton} from "../V/AVButton.jsx";
 
 export class AVClass extends AVItem {
   static defaultProps = {
@@ -87,9 +88,24 @@ export class AVClass extends AVItem {
 
   _renderParametersPanel(renderBody) {
     return (
-        <div className="pos-abs rbl-0 height-35prc border scroll">
+      <div className="pos-abs rbl-0 height-35prc scroll">
+        <div className="row justify-end">
+          <div>
+            <AVButton
+              onClick={() => {
+                this.setState({
+                  isParametersPanelOpened: false,
+                });
+              }}
+            >
+              Закрыть
+            </AVButton>
+          </div>
+        </div>
+        <div className="border">
           {renderBody()}
         </div>
+      </div>
     )
   }
 
