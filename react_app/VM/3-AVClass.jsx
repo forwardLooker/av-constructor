@@ -55,6 +55,11 @@ export class AVClass extends AVItem {
             columns={this.state.fieldDescriptors}
             onRowClickFunc={this._onGridRowClick}
             onRowContextMenuFunc={this._onGridRowContextMenu}
+            isColumnsReorderable
+            onColumnsReorderFunc={async (newColumns) => {
+              this.setState({fieldDescriptors: newColumns})
+              await this.props.classItem.saveFieldDescriptors(newColumns);
+            }}
           ></AVGrid>
         </div>
         {this.state.selectedObjectDocument && (

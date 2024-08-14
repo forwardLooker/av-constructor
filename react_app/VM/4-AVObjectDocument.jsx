@@ -257,7 +257,7 @@ export class AVObjectDocument extends AVItem {
         <div className="flex-1 col">
           <div className="flex-1 row">
             <div className="flex-1 z-index-10000"
-                 draggable="true"
+                 draggable
                  onDragStart={(e) => this.dragstart(
                    e,
                    {

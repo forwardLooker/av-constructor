@@ -46,24 +46,95 @@ export class AVGrid extends AVElement {
     onCellInputFunc: this.noop,
     onRowClickFunc: this.noop,
     onRowContextMenuFunc: this.noop,
-    $objectDocument: null
+    $objectDocument: null,
+
+    isColumnsReorderable: false,
+    onColumnsReorderFunc: this.noop
   }
 
   state = {
     _items: this.deepCloneArrayWithInnerRef(this.props.items),
     _columns: this.deepCloneArrayWithInnerRef(this.props.columns),
-    sortingType: 'ascend'
+    sortingType: 'ascend',
+
+    designDragStarted: false,
+    designDragElementIndex: null,
+    designDragElement: null,
+    designDropSide: 'none', // enum: ['top', 'bottom', 'left', 'right', 'none']
   }
 
   render() {
     return (
       <div className="_av-grid-root flex-1 row bg-white">
-        {this.state._columns.map(c => (
+        {this.state._columns.map((c, idx) => (
           <div className={`grid-column col ${c.widthMode ? c.widthMode : 'flex-1'}`} key={c.name + this.state._columns.map(cl => cl.name).toString()}>
             <AVGrid.styles.gridHeaderCell
               className="row space-around pad-8"
               style={c.style}
               ref={headerDomElement => c.headerCellDomElement = headerDomElement}
+              draggable={this.props.isColumnsReorderable}
+              onDragStart={() => {
+                this.setState({
+                  designDragStarted: true,
+                  designDragElement: this.props.columns[idx],
+                  designDragElementIndex: idx,
+                })
+              }}
+              onDragOver={
+                (e) => {
+                  e.preventDefault();
+                  const fieldOverlay = this._findFieldOverlay(e);
+                  const elemRect = fieldOverlay.getBoundingClientRect();
+
+                  if (elemRect.left + elemRect.width/10 > e.pageX) {
+                    fieldOverlay.classList.add('border-left-4');
+                    this.setState({designDropSide: 'left'});
+                  } else {
+                    fieldOverlay.classList.remove('border-left-4');
+
+                    if (elemRect.right - elemRect.width/10 <= e.pageX) {
+                      fieldOverlay.classList.add('border-right-4');
+                      this.setState({designDropSide: 'right'});
+                    } else {
+                      fieldOverlay.classList.remove('border-right-4');
+                    }
+                  }
+                }
+              }
+              onDragLeave={
+                (e) => {
+                  this._removeDragBorder(e);
+                }
+              }
+              onDrop={
+                (e) => {
+                  if (this.state.designDragElement === c) {
+                    this._removeDragBorder(e);
+                    this.setState({designDragStarted: false});
+                    return;
+                  }
+                  let insertIndex = idx;
+                  let cutIndex = this.state.designDragElementIndex;
+
+                  if (this.state.designDropSide === 'right') {
+                    insertIndex = insertIndex + 1
+                  }
+                  let columns = this.deepClone(this.props.columns);
+                  columns.splice(insertIndex, 0, this.state.designDragElement);
+                  if (idx < this.state.designDragElementIndex) {
+                    cutIndex = cutIndex + 1;
+                  }
+                  columns.splice(cutIndex, 1);
+                  this.props.onColumnsReorderFunc(columns);
+                  this._removeDragBorder(e);
+                  this.setState({
+                    designDragStarted: false,
+                    designDragElement: null,
+                    designDragElementIndex: null,
+                  });
+                }
+              }
+              onDragEnd={e => this.setState({designDragStarted: false})}
             >{this._renderHeaderCellContent(c)}</AVGrid.styles.gridHeaderCell>
             {(this.notEmpty(c.items) && c.dataType !== 'array') && this._renderSubHeaderWithCells(c)}
             {(this.isEmpty(c.items) || c.dataType === 'array') && this._renderCells(c)}
@@ -285,6 +356,17 @@ export class AVGrid extends AVElement {
       })
     }
 
+  }
+
+  _removeDragBorder = (e) => {
+    const fieldOverlay = this._findFieldOverlay(e);
+    fieldOverlay.classList.remove('border-left-4');
+    fieldOverlay.classList.remove('border-right-4');
+  }
+
+  _findFieldOverlay = (e) => {
+    // return e.target;
+    return e.target.closest(".grid-column");
   }
 
   _realignGridHeaderCells = () => { // двухэтажное выравнивание по высоте
