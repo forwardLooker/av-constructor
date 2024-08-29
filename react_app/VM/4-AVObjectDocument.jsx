@@ -206,21 +206,28 @@ export class AVObjectDocument extends AVItem {
                          ].join(' ')}
                          key={tab.label}
                          onClick={() => {
-                           fieldItem.selectedTabLabel = tab.label;
-                           this.forceUpdate();
+                           if (tab.redirectToUrl) {
+                             window.open(tab.redirectToUrl);
+                             // window.open(tab.redirectToUrl , '_blank');
+                           } else {
+                             fieldItem.selectedTabLabel = tab.label;
+                             this.forceUpdate();
+                           }
                          }}
                          onContextMenu={e => this._onTabContextMenu(e, tab, fieldItem, idx, containerElement)}
                     >{tab.label || 'tab1'}</div>
                 ))}
                 <div className='flex-1'></div>
               </div>
-              <div className='_tabs-body-container pad-8 border'>
-                {fieldItem.items.map(tab => (
+              {fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl) ? null : (
+                <div className='_tabs-body-container pad-8 border'>
+                  {fieldItem.items.map(tab => (
                     <div className="_tab-body" key={tab.label} hidden={fieldItem.selectedTabLabel !== tab.label}>
                       {this._renderVerticalLayout(tab.items[0])}
                     </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
             {(this.state.designMode && fieldItem.fullOverlayMode) && this._renderDesignFieldOverlay(fieldItem, idx, containerElement)}
           </div>
@@ -535,7 +542,8 @@ export class AVObjectDocument extends AVItem {
           'Расформировать вкладку',
           'Переместить правее',
           'Переместить левее',
-          'Экранировать'
+          'Экранировать',
+          'Сделать ссылкой'
         ]
     );
     if (menuResult === 'Добавить вкладку') {
@@ -599,7 +607,13 @@ export class AVObjectDocument extends AVItem {
       tabsFieldItem.fullOverlayMode = true;
       this.forceUpdate();
     }
-
+    if (menuResult === 'Сделать ссылкой') {
+      const newUrl = await this.showDialog({text: 'Введите url ссылки', inputLabel: 'url'});
+      if (newUrl) {
+        tab.redirectToUrl = newUrl
+        this.forceUpdate();
+      }
+    }
   }
 
   dragstart = (e, {
