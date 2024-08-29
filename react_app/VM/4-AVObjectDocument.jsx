@@ -219,7 +219,7 @@ export class AVObjectDocument extends AVItem {
                 ))}
                 <div className='flex-1'></div>
               </div>
-              {fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl) ? null : (
+              {this.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl) ) ? null : (
                 <div className='_tabs-body-container pad-8 border'>
                   {fieldItem.items.map(tab => (
                     <div className="_tab-body" key={tab.label} hidden={fieldItem.selectedTabLabel !== tab.label}>
