@@ -54,7 +54,7 @@ export class AVGrid extends AVElement {
 
   state = {
     _items: this.deepCloneArrayWithInnerRef(this.props.items),
-    _columns: this.deepCloneArrayWithInnerRef(this.props.columns),
+    _columns: this.deepCloneArrayWithInnerRef(this.props.columns.filter(c => !c.isHiddenInGrid)),
     sortingType: 'ascend',
 
     designDragStarted: false,
