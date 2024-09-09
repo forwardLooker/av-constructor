@@ -86,35 +86,35 @@ export class AVGrid extends AVElement {
                   const fieldOverlay = this._findFieldOverlay(e);
                   const elemRect = fieldOverlay.getBoundingClientRect();
 
-                  if (elemRect.left + elemRect.width/10 > e.pageX) {
-                    fieldOverlay.classList.add('border-left-4');
-                    this.setState({designDropSide: 'left'});
-                  } else {
-                    fieldOverlay.classList.remove('border-left-4');
-
-                    if (elemRect.right - elemRect.width/10 <= e.pageX) {
-                      fieldOverlay.classList.add('border-right-4');
-                      this.setState({designDropSide: 'right'});
+                    if (elemRect.left + elemRect.width/10 > e.pageX) {
+                      fieldOverlay.classList.add('border-left-4');
+                      this.setState({designDropSide: 'left'});
                     } else {
-                      fieldOverlay.classList.remove('border-right-4');
+                      fieldOverlay.classList.remove('border-left-4');
+
+                      if (elemRect.right - elemRect.width/10 <= e.pageX) {
+                        fieldOverlay.classList.add('border-right-4');
+                        this.setState({designDropSide: 'right'});
+                      } else {
+                        fieldOverlay.classList.remove('border-right-4');
+                      }
                     }
                   }
                 }
-              }
-              onDragLeave={
-                (e) => {
-                  this._removeDragBorder(e);
-                }
-              }
-              onDrop={
-                (e) => {
-                  if (this.state.designDragElement === c) {
+                onDragLeave={
+                  (e) => {
                     this._removeDragBorder(e);
-                    this.setState({designDragStarted: false});
-                    return;
                   }
-                  let insertIndex = idx;
-                  let cutIndex = this.state.designDragElementIndex;
+                }
+                onDrop={
+                  (e) => {
+                    if (this.state.designDragElement === c) {
+                      this._removeDragBorder(e);
+                      this.setState({designDragStarted: false});
+                      return;
+                    }
+                    let insertIndex = idx;
+                    let cutIndex = this.state.designDragElementIndex;
 
                   if (this.state.designDropSide === 'right') {
                     insertIndex = insertIndex + 1
@@ -336,6 +336,7 @@ export class AVGrid extends AVElement {
   }
 
   componentDidMount() {
+    this._hideHiddenColumnsWithoutUpdate()
     this._realignGridHeaderCells();
     this._realignGridRows();
     this.forceUpdate();
@@ -344,6 +345,7 @@ export class AVGrid extends AVElement {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.columns !== this.props.columns) {
       this.setState({_columns: this.deepCloneArrayWithInnerRef(this.props.columns)}, () => {
+        this._hideHiddenColumnsWithoutUpdate()
         this._realignGridHeaderCells();
         this._realignGridRows();
         this.forceUpdate();
@@ -356,6 +358,10 @@ export class AVGrid extends AVElement {
       })
     }
 
+  }
+
+  _hideHiddenColumnsWithoutUpdate = () => {
+    this.state._columns = this.state._columns.filter(c => !c.isHiddenInGrid);
   }
 
   _removeDragBorder = (e) => {

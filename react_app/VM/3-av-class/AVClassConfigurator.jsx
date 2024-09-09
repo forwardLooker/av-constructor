@@ -65,7 +65,8 @@ export class AVClassConfigurator extends AVItem {
       ]
     },
     {name: 'isReadOnly', dataType: 'boolean'},
-    {name: 'isHidden', dataType: 'boolean'},
+    {name: 'isHiddenInObjectDocument', dataType: 'boolean'},
+    {name: 'isHiddenInGrid', dataType: 'boolean'},
     {name: 'isComputed', dataType: 'boolean'},
     {name: 'computeFunction'}
   ];

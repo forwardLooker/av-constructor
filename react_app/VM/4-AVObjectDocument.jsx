@@ -172,6 +172,9 @@ export class AVObjectDocument extends AVItem {
   }
 
   _renderField(fieldItem, idx, containerElement) {
+    if (fieldItem.isHiddenInObjectDocument) {
+      return null
+    }
     if (fieldItem.viewItemType === 'tabs') {
       if (!fieldItem.items) {
         fieldItem.items = [
@@ -201,8 +204,8 @@ export class AVObjectDocument extends AVItem {
                 {fieldItem.items.map(tab => (
                     <div
                          className={['_tab-head-item', 'pad-0-4',
-                           fieldItem.selectedTabLabel === tab.label ? 'border-2' : 'border',
-                           fieldItem.selectedTabLabel === tab.label ? 'font-bold' : ''
+                           (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'border-2' : 'border',
+                           (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'font-bold' : ''
                          ].join(' ')}
                          key={tab.label}
                          onClick={() => {
@@ -493,7 +496,7 @@ export class AVObjectDocument extends AVItem {
 
   _onDesignFieldContextMenu = async (e, fieldItem, idx, containerElement) => {
     e.preventDefault();
-    let menu = [];
+    let menu = [`Установить font-size`];
     if (fieldItem.viewItemType !== 'tabs') {
       menu.push('Убрать элемент')
     }
@@ -526,6 +529,14 @@ export class AVObjectDocument extends AVItem {
       delete fieldItem.fullOverlayMode;
       this.forceUpdate();
     }
+    if (menuResult === 'Установить font-size') {
+      const px = await this.showDialog({text: 'Введите число px', inputLabel: 'px'});
+      if (px) {
+        if (!fieldItem.style) fieldItem.style = {};
+        fieldItem.style = {...fieldItem.style, fontSize: px+'px'};
+        this.forceUpdate();
+      }
+    }
   }
 
   _onTabContextMenu = async (e, tab, tabsFieldItem, idx, containerElement) => {
@@ -543,7 +554,8 @@ export class AVObjectDocument extends AVItem {
           'Переместить правее',
           'Переместить левее',
           'Экранировать',
-          'Сделать ссылкой'
+          'Сделать ссылкой',
+          'Установить font-size',
         ]
     );
     if (menuResult === 'Добавить вкладку') {
@@ -611,6 +623,14 @@ export class AVObjectDocument extends AVItem {
       const newUrl = await this.showDialog({text: 'Введите url ссылки', inputLabel: 'url'});
       if (newUrl) {
         tab.redirectToUrl = newUrl
+        this.forceUpdate();
+      }
+    }
+    if (menuResult === 'Установить font-size') {
+      const px = await this.showDialog({text: 'Введите число px', inputLabel: 'px'});
+      if (px) {
+        if (!tabsFieldItem.style) tabsFieldItem.style = {};
+        tabsFieldItem.style = {...tabsFieldItem.style, fontSize: px+'px'};
         this.forceUpdate();
       }
     }
