@@ -53,7 +53,7 @@ export class AVField extends AVItem {
   }
   static defaultProps = {
     fieldItem: null,
-    value: '',
+    value: null,
     readOnly: false,
     isLabelHidden: false,
     labelPosition: 'left' , // enum: ['left', 'top']
@@ -153,7 +153,7 @@ export class AVField extends AVItem {
   }
 
   _renderInput({_value, readOnly, onChangeFunc, fieldItem}) {
-    let value = _value;
+    let value = _value === null ? (fieldItem.defaultValue || null) : _value
     if (fieldItem.isComputed && fieldItem.computeFunction) {
       let f = new Function(fieldItem.computeFunction);
       f = f.bind(this.props.$objectDocument.state._newData);

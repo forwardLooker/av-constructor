@@ -61,7 +61,7 @@ export class AVClassConfigurator extends AVItem {
           return false
         }},
         {name: 'valuesList'},
-        // {name: 'defaultValue'},
+        {name: 'defaultValue'},
       ]
     },
     {name: 'isReadOnly', dataType: 'boolean'},
