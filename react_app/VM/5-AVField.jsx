@@ -141,7 +141,7 @@ export class AVField extends AVItem {
         )}
         {this._renderInput(
           {
-            value: this.state._value,
+            _value: this.state._value,
             readOnly: this.props.readOnly || this.props.fieldItem.isReadOnly,
             onChangeFunc: this._onChange,
             fieldItem: this.props.fieldItem,
@@ -152,7 +152,13 @@ export class AVField extends AVItem {
     )
   }
 
-  _renderInput({value, readOnly, onChangeFunc, fieldItem}) {
+  _renderInput({_value, readOnly, onChangeFunc, fieldItem}) {
+    let value = _value;
+    if (fieldItem.isComputed && fieldItem.computeFunction) {
+      let f = new Function(fieldItem.computeFunction);
+      f = f.bind(this.props.$objectDocument.state._newData);
+      value = f();
+    }
     let inputElement;
     if (fieldItem.dataType === 'null') {
       inputElement = (
