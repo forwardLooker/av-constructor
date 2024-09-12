@@ -8,6 +8,8 @@ import {AVObjectDocument} from './4-AVObjectDocument.jsx';
 import {AVClassConfigurator} from "./3-av-class/AVClassConfigurator.jsx";
 import {AVButton} from "../V/AVButton.jsx";
 
+import { JSONTree } from 'react-json-tree';
+
 export class AVClass extends AVItem {
   static defaultProps = {
     classItem: null,
@@ -43,6 +45,9 @@ export class AVClass extends AVItem {
     }
     if (this.state.currentViewName === 'Configurator') {
       return this._renderConfigurator()
+    }
+    if (this.state.currentViewName === 'JSON') {
+      return this._renderJSON()
     }
     return this.props.classItem.getViewComponentByName(this.state.currentViewName, this);
   }
@@ -84,6 +89,12 @@ export class AVClass extends AVItem {
         onSavedFunc={this._onFieldDescriptorsChanged}
       ></AVClassConfigurator>
     )
+  }
+
+  _renderJSON() {
+    return (
+      <JSONTree data={this.props.classItem.data}/>
+    );
   }
 
   _renderParametersPanel(renderBody) {

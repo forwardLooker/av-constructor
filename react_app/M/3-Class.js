@@ -76,7 +76,7 @@ export class Class extends Item {
   }
 
   getViewsList() {
-    let views = ['Grid', 'Configurator'];
+    let views = ['Grid', 'Configurator', 'JSON'];
     this.classServiceDefinitions.forEach(srv => {
       if (srv.views) {
         srv.views.forEach(v => {
