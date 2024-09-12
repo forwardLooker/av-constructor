@@ -24,6 +24,7 @@ export class Class extends Item {
   serverRef;
   id; // TODO может сделать getter?
   Host;
+  Domain;
   classModuleDefinitions = [usersClass];
   classServiceDefinitions = [Accounting];
   async getObjectDocuments() {
@@ -121,6 +122,7 @@ export class Class extends Item {
     const obj = new ObjectDocument();
     obj.serverRef = objectServerRef;
     obj.Class = this;
+    obj.Domain = this.Domain;
     await obj.getData();
     return obj;
   }
@@ -129,6 +131,7 @@ export class Class extends Item {
     const obj = new ObjectDocument();
     obj.notExistOnServer = true;
     obj.Class = this;
+    obj.Domain = this.Domain;
     return obj;
   }
 

@@ -44,7 +44,7 @@ export class Host extends Item {
     return this.config;
   }
   getClass(clsRef) {
-    const cls = new Class({serverRef: clsRef, Host: this});
+    const cls = new Class({serverRef: clsRef, Host: this, Domain: null});
     return cls
   }
   getDomain(dmnRef) {
@@ -60,4 +60,14 @@ export class Host extends Item {
     }
     return classItem;
   }
+
+  getClassById(id) {
+    const classData = this.findDeepObjInItemsBy({id: id}, {items: this.config});
+    let classItem;
+    if (classData) {
+      classItem = new Class({serverRef: classData.reference, Host: this});
+    }
+    return classItem;
+  }
+
 };

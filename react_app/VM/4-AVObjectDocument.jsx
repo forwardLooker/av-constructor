@@ -317,8 +317,8 @@ export class AVObjectDocument extends AVItem {
     return ButtonsAddedByServices;
   }
 
-  showClass = async (name, onObjectDocumentSelected) => {
-    const openedClassItem = await this.Host.getClassByName(name);
+  showClass = async (id, onObjectDocumentSelected) => {
+    const openedClassItem = await this.Host.getClassById(id);
     this.setState({
       isClassItemOpened: true,
       openedClassItem,

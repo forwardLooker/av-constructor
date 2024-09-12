@@ -16,6 +16,7 @@ export class Domain extends Item {
     const newClass = this.serverRef.collection('Classes').doc();
     const classInitData = {
       id: newClass.id,
+      domainId: this.id,
       name: className,
       reference: newClass,
       path: newClass.path,
@@ -50,6 +51,7 @@ export class Domain extends Item {
     const newDomain = this.serverRef.collection('Domains').doc();
     const domainInitData = {
       id: newDomain.id,
+      domainId: this.id,
       name: domain,
       reference: newDomain,
       path: newDomain.path,

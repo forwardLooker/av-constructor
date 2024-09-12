@@ -378,8 +378,8 @@ export class AVField extends AVItem {
     this.props.onChangeFunc(value, eOrValue)
   }
 
-  showClass = (name) => {
-    this.props.$objectDocument.showClass(name, (objDocItem) => {
+  showClass = (id) => {
+    this.props.$objectDocument.showClass(id, (objDocItem) => {
       this.setState({_value: objDocItem.data})
       this.props.onChangeFunc(objDocItem.data);
     });
