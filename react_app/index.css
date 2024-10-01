@@ -4,6 +4,12 @@
 .inline-block {
   display: inline-block;
 }
+.height-10vh {
+  height: 10vh;
+}
+.height-90vh {
+  height: 90vh;
+}
 .height-100prc {
   height: 100%;
 }

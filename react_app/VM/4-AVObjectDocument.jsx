@@ -550,7 +550,7 @@ export class AVObjectDocument extends AVItem {
     }
     if (menuResult === 'Установить style') {
       const style = await this.showDialog({
-        text: ['Введите объект style,пример {"background": "inherit"}',
+        text: ['Введите объект style,пример: {"background": "inherit"}',
           <br></br>,
           `Текущий style: ${JSON.stringify(fieldItem.style)}`
         ],

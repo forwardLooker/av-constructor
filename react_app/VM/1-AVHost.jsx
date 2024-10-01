@@ -67,7 +67,7 @@ export class AVHost extends AVItem {
 
   _renderHeader() {
     return (
-      <AVHost.styles.header className="row space-between">
+      <AVHost.styles.header className="row space-between height-10vh">
         <div className="row align-center">
           <div className="pad-0-4">
             <AVIcon name="globe"></AVIcon>
@@ -87,7 +87,7 @@ export class AVHost extends AVItem {
   _renderMain() {
     return (
       <div className="flex-1 row">
-        <AVHost.styles.leftSidebar className="col pad-8 bg-tree border">
+        <AVHost.styles.leftSidebar className="col font-size-14px pad-8 bg-tree border height-90vh scroll-y">
           {this.state.designMode && this._renderInstrumentPanel()}
           {!this.state.designMode && (
             <AVTree
