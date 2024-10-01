@@ -504,7 +504,10 @@ export class AVObjectDocument extends AVItem {
 
   _onDesignFieldContextMenu = async (e, fieldItem, idx, containerElement) => {
     e.preventDefault();
-    let menu = [`Установить font-size`];
+    let menu = [
+      `Установить font-size`,
+      'Установить style'
+    ];
     if (fieldItem.viewItemType !== 'tabs') {
       menu.push('Убрать элемент')
     }
@@ -542,6 +545,15 @@ export class AVObjectDocument extends AVItem {
       if (px) {
         if (!fieldItem.style) fieldItem.style = {};
         fieldItem.style = {...fieldItem.style, fontSize: px+'px'};
+        this.forceUpdate();
+      }
+    }
+    if (menuResult === 'Установить style') {
+      const style = await this.showDialog({text: 'Введите объект style, пример {"background": "inherit"}', inputLabel: 'style object'});
+      if (style) {
+        if (!fieldItem.style) fieldItem.style = {};
+        const styleObj = JSON.parse(style);
+        fieldItem.style = {...fieldItem.style, ...styleObj};
         this.forceUpdate();
       }
     }
