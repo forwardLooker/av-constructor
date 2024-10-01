@@ -8,6 +8,7 @@ import {AVField} from './5-AVField.jsx';
 import {AVButton} from "../V/AVButton.jsx";
 import {AVIcon} from '../V/icons/AVIcon.jsx';
 
+import { JSONTree } from 'react-json-tree';
 
 export class AVObjectDocument extends AVItem {
   static styles = {
@@ -34,6 +35,8 @@ export class AVObjectDocument extends AVItem {
   state = {
     _newData: this.deepClone(this.props.objectDocument.data),
     _newDataBeforeUpdate: this.deepClone(this.props.objectDocument.data),
+
+    isJSONshowed: false,
 
     designMode: false,
     designJson: null,
@@ -104,9 +107,13 @@ export class AVObjectDocument extends AVItem {
     return (
       <div className={`_av-object-document-root flex-1 col ${this.state.designMode ?  'bg-white' : 'bg-app-back'}`}>
         <div className="flex-1 col space-between line-height-1-5">
-          <div>
-            {this._renderVerticalLayout(this.state.designJson)}
-          </div>
+          {this.state.isJSONshowed ? (
+            <JSONTree data={this.state._newData}/>
+          ) : (
+            <div>
+              {this._renderVerticalLayout(this.state.designJson)}
+            </div>
+          )}
           <div className="row justify-end">
             <div className="row align-center justify-center">
               {this._renderButtonsByServices()}
@@ -120,6 +127,7 @@ export class AVObjectDocument extends AVItem {
                 )}
               </div>
               <AVButton onClick={this.toggleDesign}>Дизайнер</AVButton>
+              <AVButton onClick={this.toggleToJSON}>JSON</AVButton>
             </div>
           </div>
         </div>
@@ -846,6 +854,10 @@ export class AVObjectDocument extends AVItem {
       designMode: !state.designMode,
       $designObjectDocument: this
     }));
+  }
+
+  toggleToJSON = () => {
+    this.setState(state => ({isJSONshowed: !state.isJSONshowed}));
   }
 
   saveDesign = async () => {
