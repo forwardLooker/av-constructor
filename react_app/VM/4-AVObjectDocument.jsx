@@ -202,7 +202,7 @@ export class AVObjectDocument extends AVItem {
         fieldItem.selectedTabLabel = fieldItem.items[0].label;
       }
       return (
-          <div className='pos-rel flex-1 pad-8'
+          <div className='_av-field-viewItem-root pos-rel flex-1 pad-8'
                style={fieldItem.style}
                key={fieldItem.name || fieldItem.label || idx}
                ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
@@ -247,7 +247,7 @@ export class AVObjectDocument extends AVItem {
 
     return (
       <div
-        className="pos-rel col flex-1 margin-top-2"
+        className="_av-field-wrapper pos-rel col flex-1 margin-top-2"
         style={fieldItem.style}
         key={fieldItem.name || idx}
       >

@@ -69,7 +69,7 @@ export class AVField extends AVItem {
   render() {
     if (this.props.fieldItem.viewItemType === 'space div') {
       return (
-        <div className='flex-1 pad-8'
+        <div className='_av-field-viewItem-root flex-1 pad-8'
              style={this.props.style}
              ref={this.props.refOnRootDiv}
         >
@@ -79,7 +79,7 @@ export class AVField extends AVItem {
     }
     if (this.props.fieldItem.viewItemType === 'label') {
       return (
-          <div className='flex-1 pad-8'
+          <div className='_av-field-viewItem-root flex-1 pad-8'
                style={this.props.style}
                ref={this.props.refOnRootDiv}
           >
@@ -90,7 +90,7 @@ export class AVField extends AVItem {
     }
     if (this.props.fieldItem.viewItemType === 'button') {
       return (
-        <div className='flex-1 pad-8'
+        <div className='_av-field-viewItem-root flex-1 pad-8'
              style={this.props.style}
              ref={this.props.refOnRootDiv}
         >
