@@ -347,8 +347,9 @@ class Journal extends AVItem {
             },
             turnoverForThePeriod: {
               debit: additional,
+              credit: 0
             },
-            turnoverForThePeriodAggregatedData: {debit: tableAnalyticsPopulatedWithCommonAnalytics},
+            turnoverForThePeriodAggregatedData: {debit: tableAnalyticsPopulatedWithCommonAnalytics, credit: []},
             accountType: tr.debit.accountType,
             analyticsPossibleValues,
           };
@@ -404,9 +405,10 @@ class Journal extends AVItem {
               credit: 0
             },
             turnoverForThePeriod: {
+              debit: 0,
               credit: additional,
             },
-            turnoverForThePeriodAggregatedData: {credit: tableAnalyticsPopulatedWithCommonAnalytics},
+            turnoverForThePeriodAggregatedData: {debit: [], credit: tableAnalyticsPopulatedWithCommonAnalytics},
             accountType: tr.credit.accountType,
             analyticsPossibleValues,
           };
