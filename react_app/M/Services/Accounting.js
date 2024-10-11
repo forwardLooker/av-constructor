@@ -695,9 +695,48 @@ class Journal extends AVItem {
       if (accTurnoverfinded) {
         accAtBeginning.turnoverForThePeriod = accTurnoverfinded.turnoverForThePeriod;
         accAtBeginning.turnoverForThePeriodAggregatedData = accTurnoverfinded.turnoverForThePeriodAggregatedData;
+        // слияние analyticsPossibleValues
+        // сначала недостающие виды аналитик
+        const analyticTypeNamesArray = accTurnoverfinded.analyticsPossibleValues.map(anObj => {
+          return Object.keys(anObj)[0]
+        });
+        const analyticTypeNamesArrayUniq = analyticTypeNamesArray.filter(anName => {
+          const isUniq = accAtBeginning.analyticsPossibleValues.every(anObjBeginning => {
+            return !Array.isArray(anObjBeginning[anName])
+          })
+          if (isUniq) {
+            return true
+          }
+        });
+        // фильтрация уникальных под слияние
+        const accTurnoverfindedForMerging = accTurnoverfinded.analyticsPossibleValues.filter(anObj => {
+          return analyticTypeNamesArrayUniq.some(anName => Array.isArray(anObj[anName]))
+        });
+        // слияние уникальных типов аналитик
+        accAtBeginning.analyticsPossibleValues = accAtBeginning.analyticsPossibleValues.concat(accTurnoverfindedForMerging);
+
+
+        // слияние недостающих значений аналитик
+        accAtBeginning.analyticsPossibleValues.forEach(anObjBeginning => {
+          const anName = Object.keys(anObjBeginning)[0];
+          const anObjTurnoverFinded = accTurnoverfinded.analyticsPossibleValues.find(anObjTurnover => {
+            return Array.isArray(anObjTurnover[anName])
+          });
+          const anArrTurnoverFindedFiltered = anObjTurnoverFinded[anName].filter(valueTurnoverFinded => {
+            return anObjBeginning[anName].every(anObjArrValueBeginnig => {
+              if (typeof anObjArrValueBeginnig === 'string') {
+                return valueTurnoverFinded !== anObjArrValueBeginnig
+              } else {
+                return valueTurnoverFinded.name !== anObjArrValueBeginnig.name
+              }
+            })
+          });
+          anObjBeginning[anName] = anObjBeginning[anName].concat(anArrTurnoverFindedFiltered)
+        })
       }
       return accAtBeginning;
-    })
+    });
+
     // отфильтровать аккаунты оборотов о которых нет информации к началу пирода
     let accountsForTurnoverFiltered = accountsForTurnover.filter(accTurnover => {
       const idx = accountsForBalanceAtTheBeginningOfThePeriod.findIndex(accAtBeginning => accAtBeginning.name === accTurnover.name);
