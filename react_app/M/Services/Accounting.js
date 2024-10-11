@@ -323,7 +323,9 @@ class Journal extends AVItem {
 
   makeFilteredBalance = async () => {
     const operations = await this.props.classItem.getObjectDocuments();
-    const operationsFilteredByPeriod = operations.filter(item => {
+
+    // Операции отфильтрованные за период для оборотов
+    const operationsFilteredByPeriodForTurnover = operations.filter(item => {
       const accountingDateObj = new Date(item.accountingDate);
       const periodStartDateObj = new Date(this.state.periodStartDate);
       const periodEndDateObj = new Date(this.state.periodEndDate);
@@ -332,8 +334,193 @@ class Journal extends AVItem {
       } else {
         return false
       }
-    })
-    let accounts = operationsFilteredByPeriod.reduce((accAccs, op) => {
+    });
+
+    // Операции отфильтрованные за период для Сальдо на начало периода
+    const operationsFilteredByPeriodForBalanceAtTheBeginningOfThePeriod = operations.filter(item => {
+      const accountingDateObj = new Date(item.accountingDate);
+      const periodStartDateObj = new Date(this.state.periodStartDate);
+      if (accountingDateObj < periodStartDateObj) {
+        return true
+      } else {
+        return false
+      }
+    });
+
+    // Счета для которых посчитаны суммарный дебит и кредит, и сформирован массив-таблица с аналитиками
+    // для Сальдо на начало периода
+    let accountsForBalanceAtTheBeginningOfThePeriod = operationsFilteredByPeriodForBalanceAtTheBeginningOfThePeriod.reduce((accAccs, op) => {
+      op.transactions.forEach(tr => {
+        const additional = tr.tableAnalytics.reduce((accT, row) => {
+          if (row.amount) {
+            return accT + Number(row.amount)
+          }
+          return accT
+        }, 0);
+
+        const debitAccName = tr.debit.name;
+        let accountForDebit = accAccs.find(acc => acc.name === debitAccName);
+        const analyticsPossibleValues = tr.commonAnalytics.map(commonParam => {
+          const paramName = Object.keys(commonParam)[0];
+          const paramValue = commonParam[paramName];
+          return {
+            [paramName]: [paramValue]
+          }
+        });
+        let analyticsFromTablePossibleValues = [];
+        tr.tableAnalytics.forEach(tableRowRecord => {
+          const analyticsPropsArr = Object.keys(tableRowRecord).filter(prop => prop !== 'count' && prop !== 'amount');
+          analyticsPropsArr.forEach(prop => {
+            const itemWithValues = analyticsFromTablePossibleValues.find(analyticsObj => Array.isArray(analyticsObj[prop]))
+            if (!itemWithValues) {
+              let item = {};
+              item[prop] = [tableRowRecord[prop]];
+              analyticsFromTablePossibleValues.push(item);
+            } else {
+              const existedValue = itemWithValues[prop].find(value => {
+                if (typeof value === 'object') {
+                  return value.id === tableRowRecord[prop].id
+                } else {
+                  return value === tableRowRecord[prop]
+                }
+              });
+              if (!existedValue) {
+                itemWithValues[prop].push(tableRowRecord[prop])
+              }
+            }
+          })
+        });
+        const tableAnalyticsPopulatedWithCommonAnalytics = tr.tableAnalytics.map(row => {
+          let newRow = row;
+          tr.commonAnalytics.forEach(an => {
+            newRow = {...an, ...newRow}
+          });
+          return newRow;
+        });
+        if (!accountForDebit) {
+          accountForDebit = {
+            name: debitAccName,
+            balanceAtTheBeginningOfThePeriod: {
+              debit: additional,
+              credit: 0
+            },
+            turnoverForThePeriod: {
+              debit: 0,
+              credit: 0
+            },
+            balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData: {debit: tableAnalyticsPopulatedWithCommonAnalytics, credit: []},
+            accountType: tr.debit.accountType,
+            analyticsPossibleValues,
+          };
+          accountForDebit.analyticsPossibleValues = accountForDebit.analyticsPossibleValues.concat(analyticsFromTablePossibleValues);
+          accAccs.push(accountForDebit);
+        } else {
+          // Прибавить к общему Дебету счёта дельту от проводки
+          accountForDebit.balanceAtTheBeginningOfThePeriod.debit = accountForDebit.balanceAtTheBeginningOfThePeriod.debit + additional;
+          // Добавить список возможных общих аналитик
+          tr.commonAnalytics.forEach(commonParam => {
+            const paramName = Object.keys(commonParam)[0];
+            const paramValue = commonParam[paramName];
+            const analyticValuesObj = accountForDebit.analyticsPossibleValues.find(possibleParam => Object.keys(possibleParam)[0] === paramName);
+            if (analyticValuesObj[paramName].findIndex(value => {
+              if (typeof value === 'object') {
+                return value.id === paramValue.id
+              }
+              return value === paramValue
+            }) === -1) {
+              analyticValuesObj[paramName].push(paramValue);
+            }
+          });
+          // Добавить список возможных аналитик из таблиц
+          accountForDebit.analyticsPossibleValues.forEach(i => {
+            const analyticName = Object.keys(i)[0];
+            const analyticsItemFromTable = analyticsFromTablePossibleValues.find(iFromTable => Array.isArray(iFromTable[analyticName]));
+            if (analyticsItemFromTable) {
+              const uniqueValuesFromTableArr = analyticsItemFromTable[analyticName].filter(value => {
+                if (typeof value === 'object') {
+                  return i[analyticName].every(v => v.id !== value.id)
+                } else {
+                  return i[analyticName].every(v => v !== value)
+                }
+              });
+              i[analyticName] = i[analyticName].concat(uniqueValuesFromTableArr);
+            }
+          });
+          const uniqueAnalyticItems = analyticsFromTablePossibleValues.filter(iFromTable => {
+            const name = Object.keys(iFromTable)[0];
+            return accountForDebit.analyticsPossibleValues.findIndex(obj => Array.isArray(obj[name])) === -1
+          });
+          accountForDebit.analyticsPossibleValues = accountForDebit.analyticsPossibleValues.concat(uniqueAnalyticItems);
+          // Добавление табличных данных в одну таблицу
+          accountForDebit.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData.debit = accountForDebit.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData.debit.concat(tableAnalyticsPopulatedWithCommonAnalytics);
+        }
+        const creditAccName = tr.credit.name;
+        let accountForCredit = accAccs.find(acc => acc.name=== creditAccName);
+        if (!accountForCredit) {
+          accountForCredit = {
+            name: creditAccName,
+            balanceAtTheBeginningOfThePeriod: {
+              debit: 0,
+              credit: additional
+            },
+            turnoverForThePeriod: {
+              debit: 0,
+              credit: 0,
+            },
+            balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData: {debit: [], credit: tableAnalyticsPopulatedWithCommonAnalytics},
+            accountType: tr.credit.accountType,
+            analyticsPossibleValues,
+          };
+          accountForCredit.analyticsPossibleValues = accountForCredit.analyticsPossibleValues.concat(analyticsFromTablePossibleValues);
+          accAccs.push(accountForCredit);
+        } else {
+          // Прибавить к общему Кредиту счёта дельту от проводки
+          accountForCredit.balanceAtTheBeginningOfThePeriod.credit = accountForCredit.balanceAtTheBeginningOfThePeriod.credit + additional;
+          // Добавить список возможных общих аналитик
+          tr.commonAnalytics.forEach(commonParam => {
+            const paramName = Object.keys(commonParam)[0];
+            const paramValue = commonParam[paramName];
+            const analyticValuesObj = accountForCredit.analyticsPossibleValues.find(possibleParam => Object.keys(possibleParam)[0] === paramName);
+            if (analyticValuesObj[paramName].findIndex(value => {
+              if (typeof value === 'object') {
+                return value.id === paramValue.id
+              }
+              return value === paramValue
+            }) === -1) {
+              analyticValuesObj[paramName].push(paramValue);
+            }
+          });
+          // Добавить список возможных аналитик из таблиц
+          accountForCredit.analyticsPossibleValues.forEach(i => {
+            const analyticName = Object.keys(i)[0];
+            const analyticsItemFromTable = analyticsFromTablePossibleValues.find(iFromTable => Array.isArray(iFromTable[analyticName]));
+            if (analyticsItemFromTable) {
+              const uniqueValuesFromTableArr = analyticsItemFromTable[analyticName].filter(value => {
+                if (typeof value === 'object') {
+                  return i[analyticName].every(v => v.id !== value.id)
+                } else {
+                  return i[analyticName].every(v => v !== value)
+                }
+              });
+              i[analyticName] = i[analyticName].concat(uniqueValuesFromTableArr);
+            }
+          });
+          const uniqueAnalyticItems = analyticsFromTablePossibleValues.filter(iFromTable => {
+            const name = Object.keys(iFromTable)[0];
+            return accountForCredit.analyticsPossibleValues.findIndex(obj => Array.isArray(obj[name])) === -1
+          });
+          accountForCredit.analyticsPossibleValues = accountForCredit.analyticsPossibleValues.concat(uniqueAnalyticItems);
+          // Добавление табличных данных в одну таблицу
+          accountForCredit.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData.credit = accountForCredit.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData.credit.concat(tableAnalyticsPopulatedWithCommonAnalytics);
+        }
+      });
+      return accAccs;
+    }, []);
+
+
+    // Счета для которых посчитаны суммарный дебит и кредит, и сформирован массив-таблица с аналитиками
+    // для оборотов за период
+    let accountsForTurnover = operationsFilteredByPeriodForTurnover.reduce((accAccs, op) => {
       op.transactions.forEach(tr => {
         const additional = tr.tableAnalytics.reduce((accT, row) => {
           if (row.amount) {
@@ -500,6 +687,29 @@ class Journal extends AVItem {
       });
       return accAccs;
     }, []);
+
+    let accounts;
+    // добавление к началу периода информации об оборотах за период если есть
+    accounts = accountsForBalanceAtTheBeginningOfThePeriod.map(accAtBeginning => {
+      let accTurnoverfinded = accountsForTurnover.find(accTurnover => accTurnover.name === accAtBeginning.name);
+      if (accTurnoverfinded) {
+        accAtBeginning.turnoverForThePeriod = accTurnoverfinded.turnoverForThePeriod;
+        accAtBeginning.turnoverForThePeriodAggregatedData = accTurnoverfinded.turnoverForThePeriodAggregatedData;
+      }
+      return accAtBeginning;
+    })
+    // отфильтровать аккаунты оборотов о которых нет информации к началу пирода
+    let accountsForTurnoverFiltered = accountsForTurnover.filter(accTurnover => {
+      const idx = accountsForBalanceAtTheBeginningOfThePeriod.findIndex(accAtBeginning => accAtBeginning.name === accTurnover.name);
+      if (idx === -1) {
+        return true
+      } else {
+        return false
+      }
+    });
+    // слияние массивов
+    accounts = accounts.concat(accountsForTurnoverFiltered);
+
     // accountsWithCalculatedBalance - сальдо на конец периода
     accounts.forEach(acc => {
       acc.balanceAtTheEndOfThePeriod = {};
@@ -539,7 +749,7 @@ class Journal extends AVItem {
         }
       }
     })
-    this.setState({ operations: operationsFilteredByPeriod, accounts });
+    this.setState({ operations: operationsFilteredByPeriodForTurnover, accounts });
   }
 }
 
