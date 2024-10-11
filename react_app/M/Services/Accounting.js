@@ -3,6 +3,9 @@ import React from 'react';
 import { AVItem } from '../../VM/0-AVItem.js';
 import { AVGrid } from "../../V/AVGrid.jsx";
 import { AVPropertyGrid } from "../../V/AVPropertyGrid.jsx";
+import {AVLabel} from "../../V/AVLabel.jsx";
+import {AVField} from "../../VM/5-AVField.jsx";
+import {AVButton} from "../../V/AVButton.jsx";
 
 export class Accounting extends Item {
   static id = '2cE2ZCdfErMBg1serR3W';
@@ -136,7 +139,10 @@ class Journal extends AVItem {
   
   state = {
     operations: [],
-    accounts: []
+    accounts: [],
+
+    periodStartDate: null,
+    periodEndDate: null
   }
 
   columns = [ // Скопировано из отладки
@@ -209,7 +215,31 @@ class Journal extends AVItem {
   
   render() {
     return (
-      <div className="margin-top-8">
+      <div className="col margin-top-8">
+        <div className="row margin-bottom-8">
+          <div className="row width-50prc">
+            <AVLabel>Период</AVLabel>
+            <AVField
+              fieldItem={{
+                label: 'с',
+                dataType: 'string',
+                variant: 'date'
+              }}
+              value={this.state.periodStartDate}
+              onChangeFunc={(value) => this.setState({periodStartDate: value})}
+            ></AVField>
+            <AVField
+              fieldItem={{
+                label: 'по',
+                dataType: 'string',
+                variant: 'date'
+              }}
+              value={this.state.periodEndDate}
+              onChangeFunc={(value) => this.setState({periodEndDate: value})}
+            ></AVField>
+          </div>
+          <AVButton onClick={this.makeFilteredBalance}>Сформировать</AVButton>
+        </div>
         <AVGrid
           items={this.state.accounts}
           columns={this.columns}
@@ -289,8 +319,21 @@ class Journal extends AVItem {
   }
   
   async componentDidMount() {
+  }
+
+  makeFilteredBalance = async () => {
     const operations = await this.props.classItem.getObjectDocuments();
-    let accounts = operations.reduce((accAccs, op) => {
+    const operationsFilteredByPeriod = operations.filter(item => {
+      const accountingDateObj = new Date(item.accountingDate);
+      const periodStartDateObj = new Date(this.state.periodStartDate);
+      const periodEndDateObj = new Date(this.state.periodEndDate);
+      if ((accountingDateObj >= periodStartDateObj) && (accountingDateObj <= periodEndDateObj)) {
+        return true
+      } else {
+        return false
+      }
+    })
+    let accounts = operationsFilteredByPeriod.reduce((accAccs, op) => {
       op.transactions.forEach(tr => {
         const additional = tr.tableAnalytics.reduce((accT, row) => {
           if (row.amount) {
@@ -496,7 +539,7 @@ class Journal extends AVItem {
         }
       }
     })
-    this.setState({ operations, accounts });
+    this.setState({ operations: operationsFilteredByPeriod, accounts });
   }
 }
 

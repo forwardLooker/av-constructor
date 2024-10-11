@@ -22,6 +22,9 @@
 .width-100prc {
   width: 100%
 }
+.width-50prc {
+  width: 50%
+}
 .height-2px {
   height: 2px;
 }
@@ -159,6 +162,9 @@
 }
 .margin-top-8 {
   margin-top: 8px;
+}
+.margin-bottom-8 {
+  margin-bottom: 8px;
 }
 .no-display {
   display: none;
