@@ -281,7 +281,7 @@ class Journal extends AVItem {
                       propertyItems={propertyItems}
                       isStructuredFillingOfInspectedItem
                       onChangeFunc={(value, propItem, inspectedItem) => {
-                        if (Array.isArray(rowItem.turnoverForThePeriodAggregatedData.debit)) {
+                        if (rowItem.turnoverForThePeriodAggregatedData && Array.isArray(rowItem.turnoverForThePeriodAggregatedData.debit)) {
                           const debitAggrDataFiltered = rowItem.turnoverForThePeriodAggregatedData.debit.filter(row => {
                             return Object.keys(row).filter(analyticName => analyticName !== 'count' && analyticName !== 'amount').every(analyticName => {
                               let analyticValue = typeof row[analyticName] === 'object' ? row[analyticName].name : row[analyticName];
@@ -293,7 +293,7 @@ class Journal extends AVItem {
                           }, 0);
                           rowItem.turnoverForThePeriod.debit = debitSum;
                         }
-                        if (Array.isArray(rowItem.turnoverForThePeriodAggregatedData.credit)) {
+                        if (rowItem.turnoverForThePeriodAggregatedData && Array.isArray(rowItem.turnoverForThePeriodAggregatedData.credit)) {
                           const creditAggrDataFiltered = rowItem.turnoverForThePeriodAggregatedData.credit.filter(row => {
                             return Object.keys(row).filter(analyticName => analyticName !== 'count' && analyticName !== 'amount').every(analyticName => {
                               let analyticValue = typeof row[analyticName] === 'object' ? row[analyticName].name : row[analyticName];
@@ -305,6 +305,73 @@ class Journal extends AVItem {
                           }, 0);
                           rowItem.turnoverForThePeriod.credit = creditSum;
                         }
+
+                        // --
+
+                        if (rowItem.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData && Array.isArray(rowItem.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData.debit)) {
+                          const debitAggrDataFiltered = rowItem.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData.debit.filter(row => {
+                            return Object.keys(row).filter(analyticName => analyticName !== 'count' && analyticName !== 'amount').every(analyticName => {
+                              let analyticValue = typeof row[analyticName] === 'object' ? row[analyticName].name : row[analyticName];
+                              return inspectedItem[analyticName][analyticValue] === true
+                            })
+                          });
+                          const debitSum = debitAggrDataFiltered.reduce((acc, row) => {
+                            return acc + Number(row.amount)
+                          }, 0);
+                          rowItem.balanceAtTheBeginningOfThePeriod.debit = debitSum;
+                        }
+                        if (rowItem.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData && Array.isArray(rowItem.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData.credit)) {
+                          const creditAggrDataFiltered = rowItem.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData.credit.filter(row => {
+                            return Object.keys(row).filter(analyticName => analyticName !== 'count' && analyticName !== 'amount').every(analyticName => {
+                              let analyticValue = typeof row[analyticName] === 'object' ? row[analyticName].name : row[analyticName];
+                              return inspectedItem[analyticName][analyticValue] === true
+                            })
+                          });
+                          const creditSum = creditAggrDataFiltered.reduce((acc, row) => {
+                            return acc + Number(row.amount)
+                          }, 0);
+                          rowItem.balanceAtTheBeginningOfThePeriod.credit = creditSum;
+                        }
+
+                        // --
+
+                        const debitAtStart = rowItem.balanceAtTheBeginningOfThePeriod.debit;
+                        const creditAtStart = rowItem.balanceAtTheBeginningOfThePeriod.credit;
+                        const diff = (rowItem.turnoverForThePeriod.debit || 0) - (rowItem.turnoverForThePeriod.credit || 0);
+                        if (rowItem.accountType === 'Активный') {
+                          rowItem.balanceAtTheEndOfThePeriod.debit = debitAtStart + diff
+                        }
+                        if (rowItem.accountType === 'Пассивный') {
+                          rowItem.balanceAtTheEndOfThePeriod.credit = creditAtStart - diff
+                        }
+                        if (rowItem.accountType === 'Активно-Пассивный') {
+                          if (debitAtStart > 0) {
+                            const balance = debitAtStart + diff;
+                            if (balance > 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.debit = balance;
+                            }
+                            if (balance < 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.credit = Math.abs(balance)
+                            }
+                          } else if (creditAtStart > 0) {
+                            const balance = creditAtStart - diff;
+                            if (balance > 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.credit = balance
+                            }
+                            if (balance < 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.debit = Math.abs(balance);
+                            }
+                          } else {
+                            if (diff > 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.debit = diff;
+                            }
+                            if (diff < 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.credit = Math.abs(diff);
+                            }
+                          }
+                        }
+
+
                         this.setState(state => ({accounts: [...state.accounts]}));
                       }}
                   ></AVPropertyGrid>
