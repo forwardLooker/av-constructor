@@ -160,14 +160,28 @@ class Journal extends AVItem {
         {
           name: "debit",
           label: "Дебет",
-          dataType: "string",
-          formatOutputInGrid: value => value === 0 ? '' : value
+          dataType: "object",
+          formatOutputInGrid: ({amount, count}) => {
+            return (
+              <div>
+                <div>Сумма {amount === 0 ? '' : amount}</div>
+                <div>Кол-во {count === 0 ? '' : count}</div>
+              </div>
+            )
+          }
         },
         {
           name: "credit",
           label: "Кредит",
-          dataType: "string",
-          formatOutputInGrid: value => value === 0 ? '' : value
+          dataType: "object",
+          formatOutputInGrid: ({amount, count}) => {
+            return (
+              <div>
+                <div>Сумма {amount === 0 ? '' : amount}</div>
+                <div>Кол-во {count === 0 ? '' : count}</div>
+              </div>
+            )
+          }
         }
       ],
     },
@@ -180,14 +194,28 @@ class Journal extends AVItem {
         {
           name: "debit",
           label: "Дебет",
-          dataType: "string",
-          formatOutputInGrid: value => value === 0 ? '' : value
+          dataType: "object",
+          formatOutputInGrid: ({amount, count}) => {
+            return (
+              <div>
+                <div>Сумма {amount === 0 ? '' : amount}</div>
+                <div>Кол-во {count === 0 ? '' : count}</div>
+              </div>
+            )
+          }
         },
         {
           name: "credit",
           label: "Кредит",
-          dataType: "string",
-          formatOutputInGrid: value => value === 0 ? '' : value
+          dataType: "object",
+          formatOutputInGrid: ({amount, count}) => {
+            return (
+              <div>
+                <div>Сумма {amount === 0 ? '' : amount}</div>
+                <div>Кол-во {count === 0 ? '' : count}</div>
+              </div>
+            )
+          }
         }
       ]
     },
@@ -200,14 +228,28 @@ class Journal extends AVItem {
         {
           name: "debit",
           label: "Дебет",
-          dataType: "string",
-          formatOutputInGrid: value => value === 0 ? '' : value
+          dataType: "object",
+          formatOutputInGrid: ({amount, count}) => {
+            return (
+              <div>
+                <div>Сумма {amount === 0 ? '' : amount}</div>
+                <div>Кол-во {count === 0 ? '' : count}</div>
+              </div>
+            )
+          }
         },
         {
           name: "credit",
           label: "Кредит",
-          dataType: "string",
-          formatOutputInGrid: value => value === 0 ? '' : value
+          dataType: "object",
+          formatOutputInGrid: ({amount, count}) => {
+            return (
+              <div>
+                <div>Сумма {amount === 0 ? '' : amount}</div>
+                <div>Кол-во {count === 0 ? '' : count}</div>
+              </div>
+            )
+          }
         }
       ],
     }
@@ -288,10 +330,14 @@ class Journal extends AVItem {
                               return inspectedItem[analyticName][analyticValue] === true
                             })
                           });
-                          const debitSum = debitAggrDataFiltered.reduce((acc, row) => {
+                          const debitSumAmount = debitAggrDataFiltered.reduce((acc, row) => {
                             return acc + Number(row.amount)
                           }, 0);
-                          rowItem.turnoverForThePeriod.debit = debitSum;
+                          const debitSumCount = debitAggrDataFiltered.reduce((acc, row) => {
+                            return acc + Number(row.count)
+                          }, 0);
+                          rowItem.turnoverForThePeriod.debit.amount = debitSumAmount;
+                          rowItem.turnoverForThePeriod.debit.count = debitSumCount;
                         }
                         if (rowItem.turnoverForThePeriodAggregatedData && Array.isArray(rowItem.turnoverForThePeriodAggregatedData.credit)) {
                           const creditAggrDataFiltered = rowItem.turnoverForThePeriodAggregatedData.credit.filter(row => {
@@ -300,10 +346,14 @@ class Journal extends AVItem {
                               return inspectedItem[analyticName][analyticValue] === true
                             })
                           });
-                          const creditSum = creditAggrDataFiltered.reduce((acc, row) => {
+                          const creditSumAmount = creditAggrDataFiltered.reduce((acc, row) => {
                             return acc + Number(row.amount)
                           }, 0);
-                          rowItem.turnoverForThePeriod.credit = creditSum;
+                          const creditSumCount = creditAggrDataFiltered.reduce((acc, row) => {
+                            return acc + Number(row.count)
+                          }, 0);
+                          rowItem.turnoverForThePeriod.credit.amount = creditSumAmount;
+                          rowItem.turnoverForThePeriod.credit.count = creditSumCount;
                         }
 
                         // --
@@ -315,10 +365,14 @@ class Journal extends AVItem {
                               return inspectedItem[analyticName][analyticValue] === true
                             })
                           });
-                          const debitSum = debitAggrDataFiltered.reduce((acc, row) => {
+                          const debitSumAmount = debitAggrDataFiltered.reduce((acc, row) => {
                             return acc + Number(row.amount)
                           }, 0);
-                          rowItem.balanceAtTheBeginningOfThePeriod.debit = debitSum;
+                          const debitSumCount = debitAggrDataFiltered.reduce((acc, row) => {
+                            return acc + Number(row.count)
+                          }, 0);
+                          rowItem.balanceAtTheBeginningOfThePeriod.debit.amount = debitSumAmount;
+                          rowItem.balanceAtTheBeginningOfThePeriod.debit.count = debitSumCount;
                         }
                         if (rowItem.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData && Array.isArray(rowItem.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData.credit)) {
                           const creditAggrDataFiltered = rowItem.balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData.credit.filter(row => {
@@ -327,46 +381,62 @@ class Journal extends AVItem {
                               return inspectedItem[analyticName][analyticValue] === true
                             })
                           });
-                          const creditSum = creditAggrDataFiltered.reduce((acc, row) => {
+                          const creditSumAmount = creditAggrDataFiltered.reduce((acc, row) => {
                             return acc + Number(row.amount)
                           }, 0);
-                          rowItem.balanceAtTheBeginningOfThePeriod.credit = creditSum;
+                          const creditSumCount = creditAggrDataFiltered.reduce((acc, row) => {
+                            return acc + Number(row.count)
+                          }, 0);
+                          rowItem.balanceAtTheBeginningOfThePeriod.credit.amount = creditSumAmount;
+                          rowItem.balanceAtTheBeginningOfThePeriod.credit.count = creditSumCount;
                         }
 
                         // --
 
-                        const debitAtStart = rowItem.balanceAtTheBeginningOfThePeriod.debit;
-                        const creditAtStart = rowItem.balanceAtTheBeginningOfThePeriod.credit;
-                        const diff = (rowItem.turnoverForThePeriod.debit || 0) - (rowItem.turnoverForThePeriod.credit || 0);
+                        const debitAmountAtStart = rowItem.balanceAtTheBeginningOfThePeriod.debit.amount;
+                        const creditAmountAtStart = rowItem.balanceAtTheBeginningOfThePeriod.credit.amount;
+                        const diffAmount = (rowItem.turnoverForThePeriod.debit.amount || 0) - (rowItem.turnoverForThePeriod.credit.amount || 0);
+
+                        const debitCountAtStart = rowItem.balanceAtTheBeginningOfThePeriod.debit.count;
+                        const creditCountAtStart = rowItem.balanceAtTheBeginningOfThePeriod.credit.count;
+                        const diffCount = (rowItem.turnoverForThePeriod.debit.count || 0) - (rowItem.turnoverForThePeriod.credit.count || 0);
+
                         if (rowItem.accountType === 'Активный') {
-                          rowItem.balanceAtTheEndOfThePeriod.debit = debitAtStart + diff
+                          rowItem.balanceAtTheEndOfThePeriod.debit.amount = debitAmountAtStart + diffAmount;
+                          rowItem.balanceAtTheEndOfThePeriod.debit.count = debitCountAtStart + diffCount;
                         }
                         if (rowItem.accountType === 'Пассивный') {
-                          rowItem.balanceAtTheEndOfThePeriod.credit = creditAtStart - diff
+                          rowItem.balanceAtTheEndOfThePeriod.credit.amount = creditAmountAtStart - diffAmount;
+                          rowItem.balanceAtTheEndOfThePeriod.credit.count = creditCountAtStart - diffCount;
                         }
                         if (rowItem.accountType === 'Активно-Пассивный') {
-                          if (debitAtStart > 0) {
-                            const balance = debitAtStart + diff;
+                          if (debitAmountAtStart > 0) {
+                            const balance = debitAmountAtStart + diffAmount;
                             if (balance > 0) {
-                              rowItem.balanceAtTheEndOfThePeriod.debit = balance;
+                              rowItem.balanceAtTheEndOfThePeriod.debit.amount = balance;
                             }
                             if (balance < 0) {
-                              rowItem.balanceAtTheEndOfThePeriod.credit = Math.abs(balance)
+                              rowItem.balanceAtTheEndOfThePeriod.credit.amount = Math.abs(balance)
                             }
-                          } else if (creditAtStart > 0) {
-                            const balance = creditAtStart - diff;
-                            if (balance > 0) {
-                              rowItem.balanceAtTheEndOfThePeriod.credit = balance
+                          } else if (creditAmountAtStart > 0) {
+                            const balanceAmount = creditAmountAtStart - diffAmount;
+                            const balamceCount = creditCountAtStart - diffCount;
+                            if (balanceAmount > 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.credit.amount = balanceAmount;
+                              rowItem.balanceAtTheEndOfThePeriod.credit.count = balamceCount;
                             }
-                            if (balance < 0) {
-                              rowItem.balanceAtTheEndOfThePeriod.debit = Math.abs(balance);
+                            if (balanceAmount < 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.debit.amount = Math.abs(balanceAmount);
+                              rowItem.balanceAtTheEndOfThePeriod.debit.count = Math.abs(balamceCount);
                             }
                           } else {
-                            if (diff > 0) {
-                              rowItem.balanceAtTheEndOfThePeriod.debit = diff;
+                            if (diffAmount > 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.debit.amount = diffAmount;
+                              rowItem.balanceAtTheEndOfThePeriod.debit.count = diffCount;
                             }
-                            if (diff < 0) {
-                              rowItem.balanceAtTheEndOfThePeriod.credit = Math.abs(diff);
+                            if (diffAmount < 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.credit.amount = Math.abs(diffAmount);
+                              rowItem.balanceAtTheEndOfThePeriod.credit.count = Math.abs(diffCount);
                             }
                           }
                         }
@@ -418,12 +488,19 @@ class Journal extends AVItem {
     // для Сальдо на начало периода
     let accountsForBalanceAtTheBeginningOfThePeriod = operationsFilteredByPeriodForBalanceAtTheBeginningOfThePeriod.reduce((accAccs, op) => {
       op.transactions.forEach(tr => {
-        const additional = tr.tableAnalytics.reduce((accT, row) => {
+        const additionalAmount = tr.tableAnalytics.reduce((accT, row) => {
           if (row.amount) {
             return accT + Number(row.amount)
           }
           return accT
         }, 0);
+        const additionalCount = tr.tableAnalytics.reduce((accT, row) => {
+          if (row.count) {
+            return accT + Number(row.count)
+          }
+          return accT
+        }, 0);
+
 
         const debitAccName = tr.debit.name;
         let accountForDebit = accAccs.find(acc => acc.name === debitAccName);
@@ -468,12 +545,12 @@ class Journal extends AVItem {
           accountForDebit = {
             name: debitAccName,
             balanceAtTheBeginningOfThePeriod: {
-              debit: additional,
-              credit: 0
+              debit: {amount: additionalAmount, count: additionalCount},
+              credit: {amount: 0, count: 0}
             },
             turnoverForThePeriod: {
-              debit: 0,
-              credit: 0
+              debit: {amount: 0, count: 0},
+              credit: {amount: 0, count: 0}
             },
             balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData: {debit: tableAnalyticsPopulatedWithCommonAnalytics, credit: []},
             accountType: tr.debit.accountType,
@@ -483,7 +560,8 @@ class Journal extends AVItem {
           accAccs.push(accountForDebit);
         } else {
           // Прибавить к общему Дебету счёта дельту от проводки
-          accountForDebit.balanceAtTheBeginningOfThePeriod.debit = accountForDebit.balanceAtTheBeginningOfThePeriod.debit + additional;
+          accountForDebit.balanceAtTheBeginningOfThePeriod.debit.amount = accountForDebit.balanceAtTheBeginningOfThePeriod.debit.amount + additionalAmount;
+          accountForDebit.balanceAtTheBeginningOfThePeriod.debit.count = accountForDebit.balanceAtTheBeginningOfThePeriod.debit.count + additionalCount;
           // Добавить список возможных общих аналитик
           tr.commonAnalytics.forEach(commonParam => {
             const paramName = Object.keys(commonParam)[0];
@@ -527,12 +605,12 @@ class Journal extends AVItem {
           accountForCredit = {
             name: creditAccName,
             balanceAtTheBeginningOfThePeriod: {
-              debit: 0,
-              credit: additional
+              debit: {amount: 0, count: 0},
+              credit: {amount: additionalAmount, count: additionalCount}
             },
             turnoverForThePeriod: {
-              debit: 0,
-              credit: 0,
+              debit: {amount: 0, count: 0},
+              credit: {amount: 0, count: 0},
             },
             balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData: {debit: [], credit: tableAnalyticsPopulatedWithCommonAnalytics},
             accountType: tr.credit.accountType,
@@ -542,7 +620,8 @@ class Journal extends AVItem {
           accAccs.push(accountForCredit);
         } else {
           // Прибавить к общему Кредиту счёта дельту от проводки
-          accountForCredit.balanceAtTheBeginningOfThePeriod.credit = accountForCredit.balanceAtTheBeginningOfThePeriod.credit + additional;
+          accountForCredit.balanceAtTheBeginningOfThePeriod.credit.amount = accountForCredit.balanceAtTheBeginningOfThePeriod.credit.amount + additionalAmount;
+          accountForCredit.balanceAtTheBeginningOfThePeriod.credit.count = accountForCredit.balanceAtTheBeginningOfThePeriod.credit.count + additionalCount;
           // Добавить список возможных общих аналитик
           tr.commonAnalytics.forEach(commonParam => {
             const paramName = Object.keys(commonParam)[0];
@@ -589,9 +668,15 @@ class Journal extends AVItem {
     // для оборотов за период
     let accountsForTurnover = operationsFilteredByPeriodForTurnover.reduce((accAccs, op) => {
       op.transactions.forEach(tr => {
-        const additional = tr.tableAnalytics.reduce((accT, row) => {
+        const additionalAmount = tr.tableAnalytics.reduce((accT, row) => {
           if (row.amount) {
             return accT + Number(row.amount)
+          }
+          return accT
+        }, 0);
+        const additionalCount = tr.tableAnalytics.reduce((accT, row) => {
+          if (row.count) {
+            return accT + Number(row.count)
           }
           return accT
         }, 0);
@@ -639,12 +724,12 @@ class Journal extends AVItem {
           accountForDebit = {
             name: debitAccName,
             balanceAtTheBeginningOfThePeriod: {
-              debit: 0,
-              credit: 0
+              debit: {amount: 0, count: 0},
+              credit: {amount: 0, count: 0}
             },
             turnoverForThePeriod: {
-              debit: additional,
-              credit: 0
+              debit: {amount: additionalAmount, count: additionalCount},
+              credit: {amount: 0, count: 0}
             },
             turnoverForThePeriodAggregatedData: {debit: tableAnalyticsPopulatedWithCommonAnalytics, credit: []},
             accountType: tr.debit.accountType,
@@ -654,7 +739,8 @@ class Journal extends AVItem {
           accAccs.push(accountForDebit);
         } else {
           // Прибавить к общему Дебету счёта дельту от проводки
-          accountForDebit.turnoverForThePeriod.debit = accountForDebit.turnoverForThePeriod.debit + additional;
+          accountForDebit.turnoverForThePeriod.debit.amount = accountForDebit.turnoverForThePeriod.debit.amount + additionalAmount;
+          accountForDebit.turnoverForThePeriod.debit.count = accountForDebit.turnoverForThePeriod.debit.count + additionalCount;
           // Добавить список возможных общих аналитик
           tr.commonAnalytics.forEach(commonParam => {
             const paramName = Object.keys(commonParam)[0];
@@ -698,12 +784,12 @@ class Journal extends AVItem {
           accountForCredit = {
             name: creditAccName,
             balanceAtTheBeginningOfThePeriod: {
-              debit: 0,
-              credit: 0
+              debit: {amount: 0, count: 0},
+              credit: {amount: 0, count: 0}
             },
             turnoverForThePeriod: {
-              debit: 0,
-              credit: additional,
+              debit: {amount: 0, count: 0},
+              credit: {amount: additionalAmount, count: additionalCount},
             },
             turnoverForThePeriodAggregatedData: {debit: [], credit: tableAnalyticsPopulatedWithCommonAnalytics},
             accountType: tr.credit.accountType,
@@ -713,7 +799,8 @@ class Journal extends AVItem {
           accAccs.push(accountForCredit);
         } else {
           // Прибавить к общему Кредиту счёта дельту от проводки
-          accountForCredit.turnoverForThePeriod.credit = accountForCredit.turnoverForThePeriod.credit + additional;
+          accountForCredit.turnoverForThePeriod.credit.amount = accountForCredit.turnoverForThePeriod.credit.amount + additionalAmount;
+          accountForCredit.turnoverForThePeriod.credit.count = accountForCredit.turnoverForThePeriod.credit.count + additionalCount;
           // Добавить список возможных общих аналитик
           tr.commonAnalytics.forEach(commonParam => {
             const paramName = Object.keys(commonParam)[0];
@@ -818,39 +905,55 @@ class Journal extends AVItem {
 
     // accountsWithCalculatedBalance - сальдо на конец периода
     accounts.forEach(acc => {
-      acc.balanceAtTheEndOfThePeriod = {};
-      const debitAtStart = acc.balanceAtTheBeginningOfThePeriod.debit;
-      const creditAtStart = acc.balanceAtTheBeginningOfThePeriod.credit;
-      const diff = (acc.turnoverForThePeriod.debit || 0) - (acc.turnoverForThePeriod.credit || 0);
+      acc.balanceAtTheEndOfThePeriod = {debit: {amount: 0, count: 0}, credit: {amount: 0, count: 0}};
+
+      const debitAmountAtStart = acc.balanceAtTheBeginningOfThePeriod.debit.amount;
+      const creditAmountAtStart = acc.balanceAtTheBeginningOfThePeriod.credit.amount;
+      const diffAmount = (acc.turnoverForThePeriod.debit.amount || 0) - (acc.turnoverForThePeriod.credit.amount || 0);
+
+      const debitCountAtStart = acc.balanceAtTheBeginningOfThePeriod.debit.count;
+      const creditCountAtStart = acc.balanceAtTheBeginningOfThePeriod.credit.count;
+      const diffCount = (acc.turnoverForThePeriod.debit.count || 0) - (acc.turnoverForThePeriod.credit.count || 0);
+
       if (acc.accountType === 'Активный') {
-        acc.balanceAtTheEndOfThePeriod.debit = debitAtStart + diff
+        acc.balanceAtTheEndOfThePeriod.debit.amount = debitAmountAtStart + diffAmount;
+        acc.balanceAtTheEndOfThePeriod.debit.count = debitCountAtStart + diffCount;
       }
       if (acc.accountType === 'Пассивный') {
-        acc.balanceAtTheEndOfThePeriod.credit = creditAtStart - diff
+        acc.balanceAtTheEndOfThePeriod.credit.amount = creditAmountAtStart - diffAmount;
+        acc.balanceAtTheEndOfThePeriod.credit.count = creditCountAtStart - diffCount;
       }
       if (acc.accountType === 'Активно-Пассивный') {
-        if (debitAtStart > 0) {
-          const balance = debitAtStart + diff;
-          if (balance > 0) {
-            acc.balanceAtTheEndOfThePeriod.debit = balance;
+        if (debitAmountAtStart > 0) {
+          const balanceAmount = debitAmountAtStart + diffAmount;
+          const balanceCount = debitCountAtStart + diffCount;
+          if (balanceAmount > 0) {
+            acc.balanceAtTheEndOfThePeriod.debit.amount = balanceAmount;
+            acc.balanceAtTheEndOfThePeriod.debit.count = balanceCount;
           }
-          if (balance < 0) {
-            acc.balanceAtTheEndOfThePeriod.credit = Math.abs(balance)
+          if (balanceAmount < 0) {
+            acc.balanceAtTheEndOfThePeriod.credit.amount = Math.abs(balanceAmount);
+            acc.balanceAtTheEndOfThePeriod.credit.count = Math.abs(balanceCount)
           }
-        } else if (creditAtStart > 0) {
-          const balance = creditAtStart - diff;
-          if (balance > 0) {
-            acc.balanceAtTheEndOfThePeriod.credit = balance
+        } else if (creditAmountAtStart > 0) {
+          const balanceAmount = creditAmountAtStart - diffAmount;
+          const balanceCount = creditCountAtStart - diffCount;
+          if (balanceAmount > 0) {
+            acc.balanceAtTheEndOfThePeriod.credit.amount = balanceAmount;
+            acc.balanceAtTheEndOfThePeriod.credit.count = balanceCount
           }
-          if (balance < 0) {
-            acc.balanceAtTheEndOfThePeriod.debit = Math.abs(balance);
+          if (balanceAmount < 0) {
+            acc.balanceAtTheEndOfThePeriod.debit.amount = Math.abs(balanceAmount);
+            acc.balanceAtTheEndOfThePeriod.debit.count = Math.abs(balanceCount);
           }
         } else {
-          if (diff > 0) {
-            acc.balanceAtTheEndOfThePeriod.debit = diff;
+          if (diffAmount > 0) {
+            acc.balanceAtTheEndOfThePeriod.debit.amount = diffAmount;
+            acc.balanceAtTheEndOfThePeriod.debit.count = diffCount;
           }
-          if (diff < 0) {
-            acc.balanceAtTheEndOfThePeriod.credit = Math.abs(diff);
+          if (diffAmount < 0) {
+            acc.balanceAtTheEndOfThePeriod.credit.amount = Math.abs(diffAmount);
+            acc.balanceAtTheEndOfThePeriod.credit.count = Math.abs(diffCount);
           }
         }
       }

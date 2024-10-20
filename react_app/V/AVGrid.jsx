@@ -289,6 +289,14 @@ export class AVGrid extends AVElement {
     if (innerCol && item[column.name]) {
       fieldValue = item[column.name][innerCol.name];
     }
+
+    if (column.formatOutputInGrid) {
+      return column.formatOutputInGrid(fieldValue)
+    }
+    if (innerCol && innerCol.formatOutputInGrid) {
+      return innerCol.formatOutputInGrid(fieldValue)
+    }
+
     if (this.props.isTypedColumns && this.props.isCellEditable) {
       return (
         <AVField
@@ -325,12 +333,6 @@ export class AVGrid extends AVElement {
         return `${item[column.name].name} (Объектное)`
       }
       return 'Объектное';
-    }
-    if (column.formatOutputInGrid) {
-      return column.formatOutputInGrid(fieldValue)
-    }
-    if (innerCol && innerCol.formatOutputInGrid) {
-      return innerCol.formatOutputInGrid(fieldValue)
     }
     return fieldValue;
   }
