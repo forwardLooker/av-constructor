@@ -164,8 +164,8 @@ class Journal extends AVItem {
           formatOutputInGrid: ({amount, count}) => {
             return (
               <div>
-                <div>Сумма {amount === 0 ? '' : amount}</div>
-                <div>Кол-во {count === 0 ? '' : count}</div>
+                {amount !== 0 ? (<div>{amount}</div>) : ''}
+                {count !== 0 ? (<div className="color-text-secondary">{count}</div>) : ""}
               </div>
             )
           }
@@ -177,8 +177,8 @@ class Journal extends AVItem {
           formatOutputInGrid: ({amount, count}) => {
             return (
               <div>
-                <div>Сумма {amount === 0 ? '' : amount}</div>
-                <div>Кол-во {count === 0 ? '' : count}</div>
+                {amount !== 0 ? (<div>{amount}</div>) : ''}
+                {count !== 0 ? (<div className="color-text-secondary">{count}</div>) : ""}
               </div>
             )
           }
@@ -198,8 +198,8 @@ class Journal extends AVItem {
           formatOutputInGrid: ({amount, count}) => {
             return (
               <div>
-                <div>Сумма {amount === 0 ? '' : amount}</div>
-                <div>Кол-во {count === 0 ? '' : count}</div>
+                {amount !== 0 ? (<div>{amount}</div>) : ''}
+                {count !== 0 ? (<div className="color-text-secondary">{count}</div>) : ""}
               </div>
             )
           }
@@ -211,8 +211,8 @@ class Journal extends AVItem {
           formatOutputInGrid: ({amount, count}) => {
             return (
               <div>
-                <div>Сумма {amount === 0 ? '' : amount}</div>
-                <div>Кол-во {count === 0 ? '' : count}</div>
+                {amount !== 0 ? (<div>{amount}</div>) : ''}
+                {count !== 0 ? (<div className="color-text-secondary">{count}</div>) : ""}
               </div>
             )
           }
@@ -232,8 +232,8 @@ class Journal extends AVItem {
           formatOutputInGrid: ({amount, count}) => {
             return (
               <div>
-                <div>Сумма {amount === 0 ? '' : amount}</div>
-                <div>Кол-во {count === 0 ? '' : count}</div>
+                {amount !== 0 ? (<div>{amount}</div>) : ''}
+                {count !== 0 ? (<div className="color-text-secondary">{count}</div>) : ""}
               </div>
             )
           }
@@ -245,8 +245,8 @@ class Journal extends AVItem {
           formatOutputInGrid: ({amount, count}) => {
             return (
               <div>
-                <div>Сумма {amount === 0 ? '' : amount}</div>
-                <div>Кол-во {count === 0 ? '' : count}</div>
+                {amount !== 0 ? (<div>{amount}</div>) : ''}
+                {count !== 0 ? (<div className="color-text-secondary">{count}</div>) : ""}
               </div>
             )
           }
