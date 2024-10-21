@@ -158,6 +158,7 @@ export class AVField extends AVItem {
       let f = new Function(fieldItem.computeFunction);
       f = f.bind(this.props.$objectDocument.state._newData);
       value = f();
+      this.props.onChangeFunc(value);
     }
     let inputElement;
     if (fieldItem.dataType === 'null') {
