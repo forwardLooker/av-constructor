@@ -117,8 +117,9 @@ export class Accounting extends Item {
         const ok = await $objectDocument.showDialog({text: 'Отменить проводку в Журнале?'});
         if (ok) {
           const serviceData = $objectDocument.state._newData[`service_${this.name}`];
-          const objectDocument = await $objectDocument.props.objectDocument.Class.getObjectDocument(serviceData.objectInJournal.reference);
-          await objectDocument.deleteObjectDocument();
+          // const objectDocument = await $objectDocument.props.objectDocument.Class.getObjectDocument(serviceData.objectInJournal.reference);
+          // await objectDocument.deleteObjectDocument();
+          await serviceData.objectInJournal.reference.delete();
           $objectDocument.state._newData[`service_${this.name}`] = this.Host.FieldValue.delete();
           $objectDocument.state._newData.readOnly = this.Host.FieldValue.delete();
           await $objectDocument.save();
@@ -316,7 +317,7 @@ class Journal extends AVItem {
             // запомнить изначальный rowItem debit credit, чтобы вернуть его после закрытия панели
             this.props.$Class.showParametersPanel(() => {
               return (
-                <div>
+                <div className="bg-app-back">
                   Аналитические параметры
                   <AVPropertyGrid
                       inspectedItem={inspectedItem}
