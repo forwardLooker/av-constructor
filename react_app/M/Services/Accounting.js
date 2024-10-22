@@ -317,7 +317,7 @@ class Journal extends AVItem {
             // запомнить изначальный rowItem debit credit, чтобы вернуть его после закрытия панели
             this.props.$Class.showParametersPanel(() => {
               return (
-                <div className="bg-app-back">
+                <div>
                   Аналитические параметры
                   <AVPropertyGrid
                       inspectedItem={inspectedItem}
