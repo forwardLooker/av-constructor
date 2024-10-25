@@ -439,9 +439,14 @@ class Journal extends AVItem {
                               rowItem.balanceAtTheEndOfThePeriod.credit.amount = Math.abs(diffAmount);
                               rowItem.balanceAtTheEndOfThePeriod.credit.count = Math.abs(diffCount);
                             }
+                            if (diffAmount === 0) {
+                              rowItem.balanceAtTheEndOfThePeriod.debit.amount = 0;
+                              rowItem.balanceAtTheEndOfThePeriod.debit.count = 0;
+                              rowItem.balanceAtTheEndOfThePeriod.credit.amount = 0;
+                              rowItem.balanceAtTheEndOfThePeriod.credit.count = 0;
+                            }
                           }
                         }
-
 
                         this.setState(state => ({accounts: [...state.accounts]}));
                       }}
@@ -489,6 +494,23 @@ class Journal extends AVItem {
     // для Сальдо на начало периода
     let accountsForBalanceAtTheBeginningOfThePeriod = operationsFilteredByPeriodForBalanceAtTheBeginningOfThePeriod.reduce((accAccs, op) => {
       op.transactions.forEach(tr => {
+
+        // приведение аналитик объектных к строковому виду
+        tr.commonAnalytics = tr.commonAnalytics.map(commonParam => {
+          const paramName = Object.keys(commonParam)[0];
+          const paramValue = commonParam[paramName];
+          return {
+            [paramName]: typeof paramValue === 'object' ? paramValue.name : paramValue
+          }
+        });
+        tr.tableAnalytics = tr.tableAnalytics.map(tableRowRecord => {
+          const analyticsObjectPropsArr = Object.keys(tableRowRecord).filter(prop => typeof tableRowRecord[prop] === 'object');
+          analyticsObjectPropsArr.forEach(objPropName => {
+            tableRowRecord[objPropName] = tableRowRecord[objPropName].name
+          });
+          return tableRowRecord;
+        });
+
         const additionalAmount = tr.tableAnalytics.reduce((accT, row) => {
           if (row.amount) {
             return accT + Number(row.amount)
@@ -555,9 +577,9 @@ class Journal extends AVItem {
             },
             balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData: {debit: tableAnalyticsPopulatedWithCommonAnalytics, credit: []},
             accountType: tr.debit.accountType,
-            analyticsPossibleValues,
+            analyticsPossibleValues: this.deepClone(analyticsPossibleValues),
           };
-          accountForDebit.analyticsPossibleValues = accountForDebit.analyticsPossibleValues.concat(analyticsFromTablePossibleValues);
+          accountForDebit.analyticsPossibleValues = accountForDebit.analyticsPossibleValues.concat(this.deepClone(analyticsFromTablePossibleValues));
           accAccs.push(accountForDebit);
         } else {
           // Прибавить к общему Дебету счёта дельту от проводки
@@ -568,6 +590,14 @@ class Journal extends AVItem {
             const paramName = Object.keys(commonParam)[0];
             const paramValue = commonParam[paramName];
             const analyticValuesObj = accountForDebit.analyticsPossibleValues.find(possibleParam => Object.keys(possibleParam)[0] === paramName);
+
+            if (!analyticValuesObj) {
+              accountForDebit.analyticsPossibleValues.push({
+                [paramName]: [paramValue]
+              });
+              return;
+            }
+
             if (analyticValuesObj[paramName].findIndex(value => {
               if (typeof value === 'object') {
                 return value.id === paramValue.id
@@ -615,9 +645,9 @@ class Journal extends AVItem {
             },
             balanceAtTheBeginningOfThePeriodForThePeriodAggregatedData: {debit: [], credit: tableAnalyticsPopulatedWithCommonAnalytics},
             accountType: tr.credit.accountType,
-            analyticsPossibleValues,
+            analyticsPossibleValues: this.deepClone(analyticsPossibleValues),
           };
-          accountForCredit.analyticsPossibleValues = accountForCredit.analyticsPossibleValues.concat(analyticsFromTablePossibleValues);
+          accountForCredit.analyticsPossibleValues = accountForCredit.analyticsPossibleValues.concat(this.deepClone(analyticsFromTablePossibleValues));
           accAccs.push(accountForCredit);
         } else {
           // Прибавить к общему Кредиту счёта дельту от проводки
@@ -628,6 +658,14 @@ class Journal extends AVItem {
             const paramName = Object.keys(commonParam)[0];
             const paramValue = commonParam[paramName];
             const analyticValuesObj = accountForCredit.analyticsPossibleValues.find(possibleParam => Object.keys(possibleParam)[0] === paramName);
+
+            if (!analyticValuesObj) {
+              accountForCredit.analyticsPossibleValues.push({
+                [paramName]: [paramValue]
+              });
+              return;
+            }
+
             if (analyticValuesObj[paramName].findIndex(value => {
               if (typeof value === 'object') {
                 return value.id === paramValue.id
@@ -669,6 +707,23 @@ class Journal extends AVItem {
     // для оборотов за период
     let accountsForTurnover = operationsFilteredByPeriodForTurnover.reduce((accAccs, op) => {
       op.transactions.forEach(tr => {
+
+        // приведение аналитик объектных к строковому виду
+        tr.commonAnalytics = tr.commonAnalytics.map(commonParam => {
+          const paramName = Object.keys(commonParam)[0];
+          const paramValue = commonParam[paramName];
+          return {
+            [paramName]: typeof paramValue === 'object' ? paramValue.name : paramValue
+          }
+        });
+        tr.tableAnalytics = tr.tableAnalytics.map(tableRowRecord => {
+          const analyticsObjectPropsArr = Object.keys(tableRowRecord).filter(prop => typeof tableRowRecord[prop] === 'object');
+          analyticsObjectPropsArr.forEach(objPropName => {
+            tableRowRecord[objPropName] = tableRowRecord[objPropName].name
+          });
+          return tableRowRecord;
+        });
+
         const additionalAmount = tr.tableAnalytics.reduce((accT, row) => {
           if (row.amount) {
             return accT + Number(row.amount)
@@ -695,7 +750,7 @@ class Journal extends AVItem {
         tr.tableAnalytics.forEach(tableRowRecord => {
           const analyticsPropsArr = Object.keys(tableRowRecord).filter(prop => prop !== 'count' && prop !== 'amount');
           analyticsPropsArr.forEach(prop => {
-            const itemWithValues = analyticsFromTablePossibleValues.find(analyticsObj => Array.isArray(analyticsObj[prop]))
+            const itemWithValues = analyticsFromTablePossibleValues.find(analyticsObj => Array.isArray(analyticsObj[prop]));
             if (!itemWithValues) {
               let item = {};
               item[prop] = [tableRowRecord[prop]];
@@ -714,6 +769,7 @@ class Journal extends AVItem {
             }
           })
         });
+
         const tableAnalyticsPopulatedWithCommonAnalytics = tr.tableAnalytics.map(row => {
           let newRow = row;
           tr.commonAnalytics.forEach(an => {
@@ -734,9 +790,9 @@ class Journal extends AVItem {
             },
             turnoverForThePeriodAggregatedData: {debit: tableAnalyticsPopulatedWithCommonAnalytics, credit: []},
             accountType: tr.debit.accountType,
-            analyticsPossibleValues,
+            analyticsPossibleValues: this.deepClone(analyticsPossibleValues),
           };
-          accountForDebit.analyticsPossibleValues = accountForDebit.analyticsPossibleValues.concat(analyticsFromTablePossibleValues);
+          accountForDebit.analyticsPossibleValues = accountForDebit.analyticsPossibleValues.concat(this.deepClone(analyticsFromTablePossibleValues));
           accAccs.push(accountForDebit);
         } else {
           // Прибавить к общему Дебету счёта дельту от проводки
@@ -747,6 +803,14 @@ class Journal extends AVItem {
             const paramName = Object.keys(commonParam)[0];
             const paramValue = commonParam[paramName];
             const analyticValuesObj = accountForDebit.analyticsPossibleValues.find(possibleParam => Object.keys(possibleParam)[0] === paramName);
+
+            if (!analyticValuesObj) {
+              accountForDebit.analyticsPossibleValues.push({
+                [paramName]: [paramValue]
+              });
+              return;
+            }
+
             if (analyticValuesObj[paramName].findIndex(value => {
               if (typeof value === 'object') {
                 return value.id === paramValue.id
@@ -794,9 +858,9 @@ class Journal extends AVItem {
             },
             turnoverForThePeriodAggregatedData: {debit: [], credit: tableAnalyticsPopulatedWithCommonAnalytics},
             accountType: tr.credit.accountType,
-            analyticsPossibleValues,
+            analyticsPossibleValues: this.deepClone(analyticsPossibleValues),
           };
-          accountForCredit.analyticsPossibleValues = accountForCredit.analyticsPossibleValues.concat(analyticsFromTablePossibleValues);
+          accountForCredit.analyticsPossibleValues = accountForCredit.analyticsPossibleValues.concat(this.deepClone(analyticsFromTablePossibleValues));
           accAccs.push(accountForCredit);
         } else {
           // Прибавить к общему Кредиту счёта дельту от проводки
@@ -807,6 +871,14 @@ class Journal extends AVItem {
             const paramName = Object.keys(commonParam)[0];
             const paramValue = commonParam[paramName];
             const analyticValuesObj = accountForCredit.analyticsPossibleValues.find(possibleParam => Object.keys(possibleParam)[0] === paramName);
+
+            if (!analyticValuesObj) {
+              accountForCredit.analyticsPossibleValues.push({
+                [paramName]: [paramValue]
+              });
+              return;
+            }
+
             if (analyticValuesObj[paramName].findIndex(value => {
               if (typeof value === 'object') {
                 return value.id === paramValue.id
@@ -904,6 +976,8 @@ class Journal extends AVItem {
     // слияние массивов
     accounts = accounts.concat(accountsForTurnoverFiltered);
 
+    console.log('accounts:', accounts);
+
     // accountsWithCalculatedBalance - сальдо на конец периода
     accounts.forEach(acc => {
       acc.balanceAtTheEndOfThePeriod = {debit: {amount: 0, count: 0}, credit: {amount: 0, count: 0}};
@@ -959,7 +1033,7 @@ class Journal extends AVItem {
         }
       }
     })
-    this.setState({ operations: operationsFilteredByPeriodForTurnover, accounts });
+    this.setState({ operations, accounts });
   }
 }
 

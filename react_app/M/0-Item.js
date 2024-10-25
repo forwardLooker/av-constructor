@@ -35,6 +35,10 @@ export class Item {
     }
   }
 
+  static R = UtilFunctions.R;
+  R = UtilFunctions.R;
+
+  deepClone = UtilFunctions.deepClone;
   findDeepObjInItemsBy = UtilFunctions.findDeepObjInItemsBy;
   findDeepContainerInItemsBy = UtilFunctions.findDeepContainerInItemsBy;
   notEmpty = UtilFunctions.notEmpty;
