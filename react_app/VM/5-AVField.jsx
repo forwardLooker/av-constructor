@@ -255,7 +255,7 @@ export class AVField extends AVItem {
           className="checkbox flex-1"
           autoComplete="off"
           type="checkbox"
-          checked={value}
+          checked={value === null ? false : value}
           disabled={readOnly}
           onChange={onChangeFunc}
         ></AVField.styles.input>
