@@ -68,7 +68,7 @@ export class AVClassConfigurator extends AVItem {
     {name: 'isHiddenInObjectDocument', dataType: 'boolean'},
     {name: 'isHiddenInGrid', dataType: 'boolean'},
     {name: 'isComputed', dataType: 'boolean'},
-    {name: 'computeFunction'}
+    {name: 'computeFunction', dataType: 'string', variant: 'textarea'}
   ];
 
   serviceConnectorProperties = [

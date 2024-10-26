@@ -277,11 +277,11 @@ export class AVGrid extends AVElement {
                               i[c.name + '_cellDomElement'] = cellDomElement;
                             }
                           }}
-      >{this._renderCellContent(i, c, innerCol)}</this.CellComponent>
+      >{this._renderCellContent(i, c, innerCol, idx)}</this.CellComponent>
     ))
   }
 
-  _renderCellContent(item, column, innerCol) {
+  _renderCellContent(item, column, innerCol, rowIdx) {
     if (column.renderCellButton) {
       return column.renderCellButton(item._originalItemRef)
     }
@@ -309,6 +309,7 @@ export class AVGrid extends AVElement {
           this.props.onDataInItemsChangedFunc(this.props.items, item._originalItemRef, column._originalItemRef);
          }}
          $objectDocument={this.props.$objectDocument}
+         rowIdxInGrid={rowIdx}
         ></AVField>
       )
     }

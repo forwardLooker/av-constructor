@@ -61,7 +61,9 @@ export class AVField extends AVItem {
 
     style: null,
     $objectDocument: null,
-    inspectedObject: null
+    inspectedObject: null,
+
+    rowIdxInGrid: null
   }
   state = {
     _value: this.props.value
@@ -142,7 +144,7 @@ export class AVField extends AVItem {
         {this._renderInput(
           {
             _value: this.state._value,
-            readOnly: this.props.readOnly || this.props.fieldItem.isReadOnly,
+            readOnly: this.props.readOnly || this.props.fieldItem.isReadOnly || this.props.fieldItem.isComputed,
             onChangeFunc: this._onChange,
             fieldItem: this.props.fieldItem,
           }
@@ -152,13 +154,20 @@ export class AVField extends AVItem {
     )
   }
 
+  _computedValueNotified;
+
   _renderInput({_value, readOnly, onChangeFunc, fieldItem}) {
     let value = _value === null ? (fieldItem.defaultValue || null) : _value
     if (fieldItem.isComputed && fieldItem.computeFunction) {
-      let f = new Function(fieldItem.computeFunction);
+      let f = new Function('rowIdx', fieldItem.computeFunction);
       f = f.bind(this.props.$objectDocument.state._newData);
-      value = f();
-      this.props.onChangeFunc(value);
+      // console.log('fieldItem.isComputed rowIdxInGrid', this.props.rowIdxInGrid);
+      value = f(this.props.rowIdxInGrid);
+      // console.log('fieldItem.isComputed value', value);
+      if (value !== this._computedValueNotified) {
+        this.props.onChangeFunc(value);
+        this._computedValueNotified = value;
+      }
     }
     let inputElement;
     if (fieldItem.dataType === 'null') {
