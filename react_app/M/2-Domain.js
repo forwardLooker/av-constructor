@@ -83,6 +83,52 @@ export class Domain extends Item {
 
   }
 
+  async createClassCopyFromReferenceWithData(reference) {
+    const classItemDoc = await reference.get();
+    const classItemData = classItemDoc.data();
+    const newClass = this.serverRef.collection('Classes').doc();
+    const classInitData = {
+      ...classItemData,
+      id: newClass.id,
+      domainId: this.id,
+      reference: newClass,
+      path: newClass.path,
+      itemType: 'class',
+      createdDateTime: new Date().toLocaleString(), //TODO даты сделать
+      author: this.user.email,
+      lastModifiedDateTime: new Date().toLocaleString(),
+      lastModifiedAuthor: this.user.email,
+    };
+    await newClass.set(classInitData);
+
+    // Скопировать данные
+    const objectsSnap = await reference.collection('ObjectDocuments').get();
+    const sourceObjectsArray = objectsSnap.docs.map(doc => {
+      return doc.data();
+    });
+    const newClassItem = this.Host.getClass(newClass);
+    sourceObjectsArray.forEach(obj => {
+      newClassItem.createObjectDocument(obj);
+    })
+
+    // update config
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+    let targetDomainToAddNewClass;
+    if (workspaceDocRef.id === this.id) {
+      targetDomainToAddNewClass = workspaceConfig
+    } else {
+      targetDomainToAddNewClass = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    }
+    if (Array.isArray(targetDomainToAddNewClass.items)) {
+      targetDomainToAddNewClass.items.push(classInitData);
+    } else {
+      targetDomainToAddNewClass.items = [classInitData]
+    }
+    await workspaceDocRef.update({items: workspaceConfig.items});
+
+  }
 
   async createDomain(domain) {
     const newDomain = this.serverRef.collection('Domains').doc();

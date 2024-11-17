@@ -44,6 +44,7 @@ export class AVHost extends AVItem {
     _contextMenuResolveFunc: null,
 
     toCopyClassReference: null,
+    toCopyClassWithData: false,
 
     designMode: false,
     $designObjectDocument: null
@@ -300,13 +301,21 @@ export class AVHost extends AVItem {
       }
       if (menuChoice === 'Вставить скопированный класс') {
         const domain = this.Host.getDomain(item.reference);
-        await domain.createClassCopyFromReference(this.state.toCopyClassReference);
+        if (this.state.toCopyClassWithData) {
+          await domain.createClassCopyFromReferenceWithData(this.state.toCopyClassReference);
+        } else {
+          await domain.createClassCopyFromReference(this.state.toCopyClassReference);
+        }
         const config = await this.Host.getConfig();
-        this.setState({config});
+        this.setState({
+          config,
+          toCopyClassReference: null,
+          toCopyClassWithData: false
+        });
       }
 
     } else if (item.itemType === 'class') {
-      const menuChoice = await this.showContextMenu(e, ['Переименовать класс', 'Копировать класс', 'Удалить класс']);
+      const menuChoice = await this.showContextMenu(e, ['Переименовать класс', 'Копировать класс', 'Копировать класс и данные', 'Удалить класс']);
       if (menuChoice === 'Переименовать класс') {
         const newClassName = await this.showDialog({text: 'Введите новое название класса', inputLabel: 'name'});
         if (newClassName) {
@@ -327,6 +336,12 @@ export class AVHost extends AVItem {
       }
       if (menuChoice === 'Копировать класс') {
         this.setState({toCopyClassReference: item.reference})
+      }
+      if (menuChoice === 'Копировать класс и данные') {
+        this.setState({
+          toCopyClassReference: item.reference,
+          toCopyClassWithData: true
+        })
       }
     }
   }
