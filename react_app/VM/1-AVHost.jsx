@@ -43,6 +43,8 @@ export class AVHost extends AVItem {
     contextMenuEvent: null,
     _contextMenuResolveFunc: null,
 
+    toCopyClassReference: null,
+
     designMode: false,
     $designObjectDocument: null
   }
@@ -256,6 +258,9 @@ export class AVHost extends AVItem {
       if (item.id !== 'workspace') {
         menu.push('Удалить домен');
       };
+      if (this.state.toCopyClassReference) {
+        menu.push('Вставить скопированный класс');
+      }
       const menuChoice = await this.showContextMenu(e, menu);
       if (menuChoice === 'Создать вложенный класс') {
         const className = await this.showDialog({text: 'Введите название класса', inputLabel: 'name'});
@@ -293,8 +298,15 @@ export class AVHost extends AVItem {
           this.setState({config});
         }
       }
+      if (menuChoice === 'Вставить скопированный класс') {
+        const domain = this.Host.getDomain(item.reference);
+        await domain.createClassCopyFromReference(this.state.toCopyClassReference);
+        const config = await this.Host.getConfig();
+        this.setState({config});
+      }
+
     } else if (item.itemType === 'class') {
-      const menuChoice = await this.showContextMenu(e, ['Переименовать класс', 'Удалить класс']);
+      const menuChoice = await this.showContextMenu(e, ['Переименовать класс', 'Копировать класс', 'Удалить класс']);
       if (menuChoice === 'Переименовать класс') {
         const newClassName = await this.showDialog({text: 'Введите новое название класса', inputLabel: 'name'});
         if (newClassName) {
@@ -312,6 +324,9 @@ export class AVHost extends AVItem {
           const config = await this.Host.getConfig();
           this.setState({config});
         }
+      }
+      if (menuChoice === 'Копировать класс') {
+        this.setState({toCopyClassReference: item.reference})
       }
     }
   }
