@@ -164,6 +164,30 @@ export class Domain extends Item {
     await workspaceDocRef.update({items: workspaceConfig.items});
   }
 
+  async createFolderInConfig(folderName) {
+    const folderInitData = {
+      domainId: this.id,
+      name: folderName,
+      itemType: 'classFolder',
+    };
+
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+    let targetDomainToAddNewDomain;
+    if (workspaceDocRef.id === this.id) {
+      targetDomainToAddNewDomain = workspaceConfig
+    } else {
+      targetDomainToAddNewDomain = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    }
+    if (Array.isArray(targetDomainToAddNewDomain.items)) {
+      targetDomainToAddNewDomain.items.push(folderInitData);
+    } else {
+      targetDomainToAddNewDomain.items = [folderInitData]
+    }
+    await workspaceDocRef.update({items: workspaceConfig.items});
+  }
+
   async renameDomain(newDomainName) {
     await this.serverRef.update({name: newDomainName});
     // update config

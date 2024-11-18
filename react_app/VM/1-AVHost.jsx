@@ -255,7 +255,7 @@ export class AVHost extends AVItem {
       return;
     }
     if (item.itemType === 'domain') {
-      let menu = ['Создать вложенный класс', 'Создать вложенный домен', 'Переименовать домен'];
+      let menu = ['Создать вложенный класс', 'Создать вложенный домен', 'Создать вложенную папку', 'Переименовать домен'];
       if (item.id !== 'workspace') {
         menu.push('Удалить домен');
       };
@@ -277,6 +277,15 @@ export class AVHost extends AVItem {
         if (domainName) {
           const domain = this.Host.getDomain(item.reference);
           await domain.createDomain(domainName);
+          const config = await this.Host.getConfig();
+          this.setState({config});
+        }
+      }
+      if (menuChoice === 'Создать вложенную папку') {
+        const folderName = await this.showDialog({text: 'Введите название папки', inputLabel: 'name'});
+        if (folderName) {
+          const domain = this.Host.getDomain(item.reference);
+          await domain.createFolderInConfig(folderName);
           const config = await this.Host.getConfig();
           this.setState({config});
         }
@@ -315,7 +324,7 @@ export class AVHost extends AVItem {
       }
 
     } else if (item.itemType === 'class') {
-      const menuChoice = await this.showContextMenu(e, ['Переименовать класс', 'Копировать класс', 'Копировать класс и данные', 'Удалить класс']);
+      const menuChoice = await this.showContextMenu(e, ['Переименовать класс', 'Копировать класс', 'Копировать класс и данные', 'Отобразить внутри папки', 'Удалить класс']);
       if (menuChoice === 'Переименовать класс') {
         const newClassName = await this.showDialog({text: 'Введите новое название класса', inputLabel: 'name'});
         if (newClassName) {
@@ -342,6 +351,15 @@ export class AVHost extends AVItem {
           toCopyClassReference: item.reference,
           toCopyClassWithData: true
         })
+      }
+      if (menuChoice === 'Отобразить внутри папки') {
+        const folderName = await this.showDialog({text: 'Введите название папки', inputLabel: 'name'});
+        if (folderName) {
+          const classItem = this.Host.getClass(item.reference);
+          await classItem.moveClassInFolderInConfig(folderName);
+          const config = await this.Host.getConfig();
+          this.setState({config});
+        }
       }
     }
   }

@@ -166,4 +166,26 @@ export class Class extends Item {
     await workspaceDocRef.update({items: workspaceConfig.items});
 
   }
+
+  async moveClassInFolderInConfig(folderName) {
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+
+    const targetClassItemInConfig = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    const targetDomainItemInConfig = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    const targetFolderItemInConfig = this.findDeepObjInItemsBy({name: folderName, itemType: 'classFolder'}, {items: targetDomainItemInConfig.items});
+    if (targetFolderItemInConfig) {
+      if (Array.isArray(targetFolderItemInConfig.items)) {
+        targetFolderItemInConfig.items.push(targetClassItemInConfig);
+      } else {
+        targetFolderItemInConfig.items = [targetClassItemInConfig]
+      }
+      const indexToCut = targetDomainItemInConfig.items.findIndex(i => i === targetClassItemInConfig);
+      targetDomainItemInConfig.items.splice(indexToCut, 1);
+    }
+    await workspaceDocRef.update({items: workspaceConfig.items});
+
+  }
+
 };
