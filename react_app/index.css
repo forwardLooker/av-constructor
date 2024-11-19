@@ -243,6 +243,9 @@
 .bg-folder {
   background: #f1e7a7;
 }
+.bg-domain-icon {
+  background: #e09c73;
+}
 .bg-icon-file-document {
   background: #e7e1e1;
 }
