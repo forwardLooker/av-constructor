@@ -164,6 +164,35 @@ export class Domain extends Item {
     await workspaceDocRef.update({items: workspaceConfig.items});
   }
 
+
+  async renameDomain(newDomainName) {
+    await this.serverRef.update({name: newDomainName});
+    // update config
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+    let targetClassToRename = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    targetClassToRename.name = newDomainName;
+    await workspaceDocRef.update({items: workspaceConfig.items});
+  }
+
+  async deleteDomain() {
+    // for safe
+    if (this.serverRef.id === 'workspace') {
+      return;
+    }
+
+    await this.serverRef.delete();
+    // update config
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+    let targetDomainToDeleteDomain = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});;
+    targetDomainToDeleteDomain.items.splice(targetDomainToDeleteDomain.items.findIndex(i => i.id === this.id), 1)
+    await workspaceDocRef.update({items: workspaceConfig.items});
+
+  }
+
   async createFolderInConfig(folderName) {
     const folderInitData = {
       domainId: this.id,
@@ -188,17 +217,6 @@ export class Domain extends Item {
     await workspaceDocRef.update({items: workspaceConfig.items});
   }
 
-  async renameDomain(newDomainName) {
-    await this.serverRef.update({name: newDomainName});
-    // update config
-    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
-    const workspaceDoc = await workspaceDocRef.get();
-    const workspaceConfig = workspaceDoc.data();
-    let targetClassToRename = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
-    targetClassToRename.name = newDomainName;
-    await workspaceDocRef.update({items: workspaceConfig.items});
-  }
-
   async renameFolderInConfig(oldFolderName, newFolderName) {
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
     const workspaceDoc = await workspaceDocRef.get();
@@ -217,21 +235,25 @@ export class Domain extends Item {
 
   }
 
-  async deleteDomain() {
-    // for safe
-    if (this.serverRef.id === 'workspace') {
-      return;
-    }
-
-    await this.serverRef.delete();
-    // update config
+  async disbandFolderInConfig(name) {
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
     const workspaceDoc = await workspaceDocRef.get();
     const workspaceConfig = workspaceDoc.data();
-    let targetDomainToDeleteDomain = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});;
-    targetDomainToDeleteDomain.items.splice(targetDomainToDeleteDomain.items.findIndex(i => i.id === this.id), 1)
+    let targetDomainToDisbandFolder;
+    if (workspaceDocRef.id === this.id) {
+      targetDomainToDisbandFolder = workspaceConfig
+    } else {
+      targetDomainToDisbandFolder = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    }
+    if (Array.isArray(targetDomainToDisbandFolder.items)) {
+      const folderItem = this.findDeepObjInItemsBy({name: name}, {items: targetDomainToDisbandFolder.items});
+      folderItem.items.forEach(classItem => targetDomainToDisbandFolder.items.push(classItem));
+      const indexToCut = targetDomainToDisbandFolder.items.findIndex(i => i === folderItem);
+      targetDomainToDisbandFolder.items.splice(indexToCut, 1);
+    }
     await workspaceDocRef.update({items: workspaceConfig.items});
 
   }
+
 
 }

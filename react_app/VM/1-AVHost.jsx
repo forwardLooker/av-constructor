@@ -373,6 +373,15 @@ export class AVHost extends AVItem {
           this.setState({config});
         }
       }
+      if (menuChoice === 'Расформировать папку') {
+        const ok = await this.showDialog({text: `Хотите ли вы расформировать папку ${item.name}?`});
+        if (ok) {
+          const domain = this.Host.getDomain(null, item.domainId); //TODO у айтема папки должен быть референс на домен, а не только id
+          await domain.disbandFolderInConfig(item.name);
+          const config = await this.Host.getConfig();
+          this.setState({config});
+        }
+      }
 
     }
   }
