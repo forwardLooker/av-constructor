@@ -17,6 +17,7 @@ export class Domain extends Item {
     const classInitData = {
       id: newClass.id,
       domainId: this.id,
+      domainReference: this.serverRef,
       name: className,
       reference: newClass,
       path: newClass.path,
@@ -55,6 +56,7 @@ export class Domain extends Item {
       ...classItemData,
       id: newClass.id,
       domainId: this.id,
+      domainReference: this.serverRef,
       reference: newClass,
       path: newClass.path,
       itemType: 'class',
@@ -91,6 +93,7 @@ export class Domain extends Item {
       ...classItemData,
       id: newClass.id,
       domainId: this.id,
+      domainReference: this.serverRef,
       reference: newClass,
       path: newClass.path,
       itemType: 'class',
@@ -135,6 +138,7 @@ export class Domain extends Item {
     const domainInitData = {
       id: newDomain.id,
       domainId: this.id,
+      domainReference: this.serverRef,
       name: domain,
       reference: newDomain,
       path: newDomain.path,
@@ -196,6 +200,7 @@ export class Domain extends Item {
   async createFolderInConfig(folderName) {
     const folderInitData = {
       domainId: this.id,
+      domainReference: this.serverRef,
       name: folderName,
       itemType: 'classFolder',
     };

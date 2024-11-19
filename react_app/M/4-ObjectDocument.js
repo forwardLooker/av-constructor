@@ -15,6 +15,8 @@ export class ObjectDocument extends Item {
   innerFieldsInData = {
     itemType: 'objectDocument',
     id: '',
+    classId: '',
+    classReference: '',
     createdDateTime: '',
     author: '',
     lastModifiedDateTime: '',
@@ -38,6 +40,8 @@ export class ObjectDocument extends Item {
         ...data,
         id: this.serverRef.id,
         reference: this.serverRef,
+        classId: this.Class.id,
+        classReference: this.Class.serverRef,
         path: this.serverRef.path,
         itemType: 'objectDocument',
         createdDateTime: new Date().toLocaleString(), //TODO даты сделать
