@@ -47,8 +47,8 @@ export class Host extends Item {
     const cls = new Class({serverRef: clsRef, Host: this, Domain: null});
     return cls
   }
-  getDomain(dmnRef) {
-    const domain = new Domain({serverRef: dmnRef, Host: this});
+  getDomain(dmnRef, id) {
+    const domain = new Domain({serverRef: dmnRef, Host: this, id});
     return domain
   }
 

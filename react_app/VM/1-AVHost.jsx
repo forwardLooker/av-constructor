@@ -362,6 +362,19 @@ export class AVHost extends AVItem {
         }
       }
     }
+    if (item.itemType === 'classFolder') {
+      const menuChoice = await this.showContextMenu(e, ['Переименовать папку', 'Расформировать папку']);
+      if (menuChoice === 'Переименовать папку') {
+        const newFolderName = await this.showDialog({text: 'Введите новое название папки', inputLabel: 'name'});
+        if (newFolderName) {
+          const domain = this.Host.getDomain(null, item.domainId); //TODO у айтема папки должен быть референс на домен, а не только id
+          await domain.renameFolderInConfig(item.name, newFolderName);
+          const config = await this.Host.getConfig();
+          this.setState({config});
+        }
+      }
+
+    }
   }
 
   async showContextMenu(e, menuItems) {

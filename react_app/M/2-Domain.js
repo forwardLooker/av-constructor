@@ -1,10 +1,10 @@
 import {Item} from './0-Item.js'
 
 export class Domain extends Item {
-  constructor({serverRef, Host}) {
+  constructor({serverRef, Host, id}) {
     super();
     this.serverRef = serverRef;
-    this.id = serverRef.id;
+    this.id = id || serverRef.id;
     this.Host = Host;
   }
   itemType = 'domain'
@@ -197,6 +197,24 @@ export class Domain extends Item {
     let targetClassToRename = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
     targetClassToRename.name = newDomainName;
     await workspaceDocRef.update({items: workspaceConfig.items});
+  }
+
+  async renameFolderInConfig(oldFolderName, newFolderName) {
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+    let targetDomainToRenameFolder;
+    if (workspaceDocRef.id === this.id) {
+      targetDomainToRenameFolder = workspaceConfig
+    } else {
+      targetDomainToRenameFolder = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    }
+    if (Array.isArray(targetDomainToRenameFolder.items)) {
+      const folderItem = this.findDeepObjInItemsBy({name: oldFolderName}, {items: targetDomainToRenameFolder.items});
+      folderItem.name = newFolderName;
+    }
+    await workspaceDocRef.update({items: workspaceConfig.items});
+
   }
 
   async deleteDomain() {
