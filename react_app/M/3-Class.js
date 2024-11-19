@@ -173,17 +173,34 @@ export class Class extends Item {
     const workspaceConfig = workspaceDoc.data();
 
     const targetClassItemInConfig = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
-    const targetDomainItemInConfig = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});
-    const targetFolderItemInConfig = this.findDeepObjInItemsBy({name: folderName, itemType: 'classFolder'}, {items: targetDomainItemInConfig.items});
-    if (targetFolderItemInConfig) {
-      if (Array.isArray(targetFolderItemInConfig.items)) {
-        targetFolderItemInConfig.items.push(targetClassItemInConfig);
-      } else {
-        targetFolderItemInConfig.items = [targetClassItemInConfig]
+    const targetDomainOrFolderItemInConfig = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    let targetDomainInConfig;
+    if (targetDomainOrFolderItemInConfig.itemType === 'classFolder') {
+      targetDomainInConfig = this.findDeepObjInItemsBy({id: targetDomainOrFolderItemInConfig.domainId}, {items: workspaceConfig.items});
+      const targetFolderItemInConfig = this.findDeepObjInItemsBy({name: folderName, itemType: 'classFolder'}, {items: targetDomainInConfig.items});
+      if (targetFolderItemInConfig) {
+        if (Array.isArray(targetFolderItemInConfig.items)) {
+          targetFolderItemInConfig.items.push(targetClassItemInConfig);
+        } else {
+          targetFolderItemInConfig.items = [targetClassItemInConfig]
+        }
+        const indexToCut = targetDomainOrFolderItemInConfig.items.findIndex(i => i === targetClassItemInConfig);
+        targetDomainOrFolderItemInConfig.items.splice(indexToCut, 1);
       }
-      const indexToCut = targetDomainItemInConfig.items.findIndex(i => i === targetClassItemInConfig);
-      targetDomainItemInConfig.items.splice(indexToCut, 1);
+    } else {
+      targetDomainInConfig = targetDomainOrFolderItemInConfig;
+      const targetFolderItemInConfig = this.findDeepObjInItemsBy({name: folderName, itemType: 'classFolder'}, {items: targetDomainInConfig.items});
+      if (targetFolderItemInConfig) {
+        if (Array.isArray(targetFolderItemInConfig.items)) {
+          targetFolderItemInConfig.items.push(targetClassItemInConfig);
+        } else {
+          targetFolderItemInConfig.items = [targetClassItemInConfig]
+        }
+        const indexToCut = targetDomainInConfig.items.findIndex(i => i === targetClassItemInConfig);
+        targetDomainInConfig.items.splice(indexToCut, 1);
+      }
     }
+
     await workspaceDocRef.update({items: workspaceConfig.items});
 
   }
