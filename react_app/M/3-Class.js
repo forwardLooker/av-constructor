@@ -205,4 +205,36 @@ export class Class extends Item {
 
   }
 
+  async moveClassUpInConfig() {
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+
+    const targetClassItemInConfig = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    const targetDomainOrFolderItemInConfig = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});
+
+    const currentIndex = targetDomainOrFolderItemInConfig.items.findIndex(i => i === targetClassItemInConfig);
+    if (currentIndex !== 0) {
+      targetDomainOrFolderItemInConfig.items.splice(currentIndex, 1);
+      targetDomainOrFolderItemInConfig.items.splice((currentIndex-1), 0, targetClassItemInConfig);
+      await workspaceDocRef.update({items: workspaceConfig.items});
+    }
+  }
+
+  async moveClassDownInConfig() {
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+
+    const targetClassItemInConfig = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    const targetDomainOrFolderItemInConfig = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});
+
+    const currentIndex = targetDomainOrFolderItemInConfig.items.findIndex(i => i === targetClassItemInConfig);
+    if (currentIndex !== targetDomainOrFolderItemInConfig.items.length) {
+      targetDomainOrFolderItemInConfig.items.splice(currentIndex, 1);
+      targetDomainOrFolderItemInConfig.items.splice((currentIndex+1), 0, targetClassItemInConfig);
+      await workspaceDocRef.update({items: workspaceConfig.items});
+    }
+  }
+
 };

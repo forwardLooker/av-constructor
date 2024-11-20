@@ -197,6 +197,42 @@ export class Domain extends Item {
 
   }
 
+  async moveDomainUpInConfig() {
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+
+    const targetDomainToMoveDomain = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    if (Array.isArray(targetDomainToMoveDomain.items)) {
+      const domainItem = this.findDeepObjInItemsBy({id: this.id}, {items: targetDomainToMoveDomain.items});
+      const currentIndex = targetDomainToMoveDomain.items.findIndex(i => i === domainItem);
+      if (currentIndex !== 0) {
+        targetDomainToMoveDomain.items.splice(currentIndex, 1);
+        targetDomainToMoveDomain.items.splice((currentIndex-1), 0, domainItem);
+        await workspaceDocRef.update({items: workspaceConfig.items});
+      }
+    }
+  }
+
+  async moveDomainDownInConfig() {
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+
+    const targetDomainToMoveDomain = this.findDeepContainerInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    if (Array.isArray(targetDomainToMoveDomain.items)) {
+      const domainItem = this.findDeepObjInItemsBy({id: this.id}, {items: targetDomainToMoveDomain.items});
+      const currentIndex = targetDomainToMoveDomain.items.findIndex(i => i === domainItem);
+      if (currentIndex !== targetDomainToMoveDomain.items.length) {
+        targetDomainToMoveDomain.items.splice(currentIndex, 1);
+        targetDomainToMoveDomain.items.splice((currentIndex+1), 0, domainItem);
+        await workspaceDocRef.update({items: workspaceConfig.items});
+      }
+    }
+  }
+
+
+
   async createFolderInConfig(folderName) {
     const folderInitData = {
       domainId: this.id,
@@ -260,5 +296,47 @@ export class Domain extends Item {
 
   }
 
+  async moveFolderUpInConfig(name) {
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
 
+    let targetDomainToMoveFolder;
+    if (workspaceDocRef.id === this.id) {
+      targetDomainToMoveFolder = workspaceConfig
+    } else {
+      targetDomainToMoveFolder = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    }
+    if (Array.isArray(targetDomainToMoveFolder.items)) {
+      const folderItem = this.findDeepObjInItemsBy({name: name}, {items: targetDomainToMoveFolder.items});
+      const currentIndex = targetDomainToMoveFolder.items.findIndex(i => i === folderItem);
+      if (currentIndex !== 0) {
+        targetDomainToMoveFolder.items.splice(currentIndex, 1);
+        targetDomainToMoveFolder.items.splice((currentIndex-1), 0, folderItem);
+        await workspaceDocRef.update({items: workspaceConfig.items});
+      }
+    }
+  }
+
+  async moveFolderDownInConfig(name) {
+    const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
+    const workspaceDoc = await workspaceDocRef.get();
+    const workspaceConfig = workspaceDoc.data();
+
+    let targetDomainToMoveFolder;
+    if (workspaceDocRef.id === this.id) {
+      targetDomainToMoveFolder = workspaceConfig
+    } else {
+      targetDomainToMoveFolder = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
+    }
+    if (Array.isArray(targetDomainToMoveFolder.items)) {
+      const folderItem = this.findDeepObjInItemsBy({name: name}, {items: targetDomainToMoveFolder.items});
+      const currentIndex = targetDomainToMoveFolder.items.findIndex(i => i === folderItem);
+      if (currentIndex !== targetDomainToMoveFolder.items.length) {
+        targetDomainToMoveFolder.items.splice(currentIndex, 1);
+        targetDomainToMoveFolder.items.splice((currentIndex+1), 0, folderItem);
+        await workspaceDocRef.update({items: workspaceConfig.items});
+      }
+    }
+  }
 }

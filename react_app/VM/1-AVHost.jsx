@@ -255,7 +255,14 @@ export class AVHost extends AVItem {
       return;
     }
     if (item.itemType === 'domain') {
-      let menu = ['Создать вложенный класс', 'Создать вложенный домен', 'Создать вложенную папку', 'Переименовать домен'];
+      let menu = [
+        'Создать вложенный класс',
+        'Создать вложенный домен',
+        'Создать вложенную папку',
+        'Переименовать домен',
+        'Переместить в дереве вверх',
+        'Переместить в дереве вниз',
+      ];
       if (item.id !== 'workspace') {
         menu.push('Удалить домен');
       };
@@ -293,11 +300,23 @@ export class AVHost extends AVItem {
       if (menuChoice === 'Переименовать домен') {
         const newDomainName = await this.showDialog({text: 'Введите новое название домена', inputLabel: 'name'});
         if (newDomainName) {
-          const classItem = this.Host.getDomain(item.reference);
-          await classItem.renameDomain(newDomainName);
+          const domain = this.Host.getDomain(item.reference);
+          await domain.renameDomain(newDomainName);
           const config = await this.Host.getConfig();
           this.setState({config});
         }
+      }
+      if (menuChoice === 'Переместить в дереве вверх') {
+        const domain = this.Host.getDomain(item.reference);
+        await domain.moveDomainUpInConfig();
+        const config = await this.Host.getConfig();
+        this.setState({config});
+      }
+      if (menuChoice === 'Переместить в дереве вниз') {
+        const domain = this.Host.getDomain(item.reference);
+        await domain.moveDomainDownInConfig();
+        const config = await this.Host.getConfig();
+        this.setState({config});
       }
       if (menuChoice === 'Удалить домен') {
         const ok = await this.showDialog({text: `Хотите ли вы удалить домен ${item.name}?`});
@@ -324,7 +343,15 @@ export class AVHost extends AVItem {
       }
 
     } else if (item.itemType === 'class') {
-      const menuChoice = await this.showContextMenu(e, ['Переименовать класс', 'Копировать класс', 'Копировать класс и данные', 'Отобразить внутри папки', 'Удалить класс']);
+      const menuChoice = await this.showContextMenu(e, [
+        'Переименовать класс',
+        'Копировать класс',
+        'Копировать класс и данные',
+        'Отобразить внутри папки',
+        'Переместить в дереве вверх',
+        'Переместить в дереве вниз',
+        'Удалить класс'
+      ]);
       if (menuChoice === 'Переименовать класс') {
         const newClassName = await this.showDialog({text: 'Введите новое название класса', inputLabel: 'name'});
         if (newClassName) {
@@ -361,9 +388,26 @@ export class AVHost extends AVItem {
           this.setState({config});
         }
       }
+      if (menuChoice === 'Переместить в дереве вверх') {
+        const classItem = this.Host.getClass(item.reference);
+        await classItem.moveClassUpInConfig();
+        const config = await this.Host.getConfig();
+        this.setState({config});
+      }
+      if (menuChoice === 'Переместить в дереве вниз') {
+        const classItem = this.Host.getClass(item.reference);
+        await classItem.moveClassDownInConfig();
+        const config = await this.Host.getConfig();
+        this.setState({config});
+      }
     }
     if (item.itemType === 'classFolder') {
-      const menuChoice = await this.showContextMenu(e, ['Переименовать папку', 'Расформировать папку']);
+      const menuChoice = await this.showContextMenu(e, [
+        'Переименовать папку',
+        'Расформировать папку',
+        'Переместить в дереве вверх',
+        'Переместить в дереве вниз',
+      ]);
       if (menuChoice === 'Переименовать папку') {
         const newFolderName = await this.showDialog({text: 'Введите новое название папки', inputLabel: 'name'});
         if (newFolderName) {
@@ -381,6 +425,18 @@ export class AVHost extends AVItem {
           const config = await this.Host.getConfig();
           this.setState({config});
         }
+      }
+      if (menuChoice === 'Переместить в дереве вверх') {
+        const domain = this.Host.getDomain(null, item.domainId);
+        await domain.moveFolderUpInConfig(item.name);
+        const config = await this.Host.getConfig();
+        this.setState({config});
+      }
+      if (menuChoice === 'Переместить в дереве вниз') {
+        const domain = this.Host.getDomain(null, item.domainId);
+        await domain.moveFolderDownInConfig(item.name);
+        const config = await this.Host.getConfig();
+        this.setState({config});
       }
 
     }
