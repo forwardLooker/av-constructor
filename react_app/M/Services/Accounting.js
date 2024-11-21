@@ -8,14 +8,14 @@ import {AVField} from "../../VM/5-AVField.jsx";
 import {AVButton} from "../../V/AVButton.jsx";
 
 export class Accounting extends Item {
-  static id = '2cE2ZCdfErMBg1serR3W';
-  static name = 'Журнал учёта';
+  // static id = '2cE2ZCdfErMBg1serR3W';
+  static name = 'Журнал учёта'; // используется для отображения доп кнопок в объекте в любом случае даже если проводки нет, их поведение здесь в методах
   static itemType = 'domain';
   static Host;
   static views = [
     {
-      className: 'Журнал',
-      classId: 'Y25mhmAmLcV9HklpR2Ad',
+      className: 'Журнал', // Действует для всех классов в конфиге с этим именем
+      // classId: 'Y25mhmAmLcV9HklpR2Ad',
       viewName: 'Журнал',
       viewComponent: (classItem, $Class) => (<Journal classItem={classItem} $Class={$Class}></Journal>),
     }
@@ -35,13 +35,29 @@ export class Accounting extends Item {
       method: async ($objectDocument) => {
         const ok = await $objectDocument.showDialog({text: 'Осуществить проводку в Журнал?'});
         if (ok) {
-          const operations = await this.Host.getClassByName('Проводки').getObjectDocuments();
           const objectDocument = $objectDocument.props.objectDocument;
+          let targetDomainOrganizationItemInConfig;
+          const targetDomainOrFolderItemInConfig = this.Host.findDeepContainerInItemsBy({id: objectDocument.Class.id}, {items: this.Host.config});
+          if (targetDomainOrFolderItemInConfig.itemType !== 'domain') {
+            targetDomainOrganizationItemInConfig = this.Host.findDeepObjInItemsBy({id: targetDomainOrFolderItemInConfig.domainId}, {items: this.Host.config});
+          } else {
+            targetDomainOrganizationItemInConfig = targetDomainOrFolderItemInConfig;
+          }
+
+          const targetDomainService = this.Host.findDeepObjInItemsBy({name: 'Журнал учёта', itemType: 'domain'}, {items: targetDomainOrganizationItemInConfig.items});
+
+          const operationsClassItemInConfig = this.Host.findDeepObjInItemsBy({name: 'Проводки'}, {items: targetDomainService.items});
+          const journalClassItemInConfig = this.Host.findDeepObjInItemsBy({name: 'Журнал'}, {items: targetDomainService.items});
+
+          const operationsClassItem = this.Host.getClass(operationsClassItemInConfig.reference);
+          const journalClassItem = this.Host.getClass(journalClassItemInConfig.reference);
+
+          const operations = await operationsClassItem.getObjectDocuments();
           const operationObj = operations.find(op => op.documentClassLink.id === objectDocument.Class.id);
 
           await $objectDocument.save();
           const objData = objectDocument.data;
-          const recordObjInJournal = await this.Host.getClassByName('Журнал').createObjectDocument({
+          const recordObjInJournal = await journalClassItem.createObjectDocument({
             readOnly: true,
             name: operationObj.name,
             documentClassLink: operationObj.documentClassLink,

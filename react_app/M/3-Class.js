@@ -80,7 +80,7 @@ export class Class extends Item {
     this.classServiceDefinitions.forEach(srv => {
       if (srv.views) {
         srv.views.forEach(v => {
-          if (v.classId === this.id) {
+          if (v.className === this.data.name) {
             views.push(v.viewName)
           }
         })
@@ -94,7 +94,7 @@ export class Class extends Item {
     this.classServiceDefinitions.forEach(srv => {
       if (srv.views) {
         srv.views.forEach(v => {
-          if (v.classId === this.id && v.viewName === viewName) {
+          if (v.viewName === viewName) {
             viewComponent = v.viewComponent
           }
         })
