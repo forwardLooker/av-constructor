@@ -49,7 +49,12 @@ export class AVGrid extends AVElement {
     $objectDocument: null,
 
     isColumnsReorderable: false,
-    onColumnsReorderFunc: this.noop
+    onColumnsReorderFunc: this.noop,
+
+    isUnderRowPanelRendered: false,
+    underRowPanelIndex: null,
+    underRowPanelRenderFunc: this.noop,
+    underRowPanelContainerHeight: 0
   }
 
   state = {
@@ -63,10 +68,12 @@ export class AVGrid extends AVElement {
     designDropSide: 'none', // enum: ['top', 'bottom', 'left', 'right', 'none']
   }
 
+  $underRowPanelContainer;
+
   render() {
     return (
       <div className="_av-grid-root flex-1 row bg-white">
-        {this.state._columns.map((c, idx) => (
+        {this.state._columns.map((c, colIdx) => (
           <div className={`grid-column col ${c.widthMode ? c.widthMode : 'flex-1'}`} key={c.name + this.state._columns.map(cl => cl.name).toString()}>
             <AVGrid.styles.gridHeaderCell
               className="row space-around pad-8"
@@ -76,8 +83,8 @@ export class AVGrid extends AVElement {
               onDragStart={() => {
                 this.setState({
                   designDragStarted: true,
-                  designDragElement: this.props.columns[idx],
-                  designDragElementIndex: idx,
+                  designDragElement: this.props.columns[colIdx],
+                  designDragElementIndex: colIdx,
                 })
               }}
               onDragOver={
@@ -113,7 +120,7 @@ export class AVGrid extends AVElement {
                       this.setState({designDragStarted: false});
                       return;
                     }
-                    let insertIndex = idx;
+                    let insertIndex = colIdx;
                     let cutIndex = this.state.designDragElementIndex;
 
                   if (this.state.designDropSide === 'right') {
@@ -121,7 +128,7 @@ export class AVGrid extends AVElement {
                   }
                   let columns = this.deepClone(this.props.columns);
                   columns.splice(insertIndex, 0, this.state.designDragElement);
-                  if (idx < this.state.designDragElementIndex) {
+                  if (colIdx < this.state.designDragElementIndex) {
                     cutIndex = cutIndex + 1;
                   }
                   columns.splice(cutIndex, 1);
@@ -136,8 +143,8 @@ export class AVGrid extends AVElement {
               }
               onDragEnd={e => this.setState({designDragStarted: false})}
             >{this._renderHeaderCellContent(c)}</AVGrid.styles.gridHeaderCell>
-            {(this.notEmpty(c.items) && c.dataType !== 'array') && this._renderSubHeaderWithCells(c)}
-            {(this.isEmpty(c.items) || c.dataType === 'array') && this._renderCells(c)}
+            {(this.notEmpty(c.items) && c.dataType !== 'array') && this._renderSubHeaderWithCells(c, colIdx)}
+            {(this.isEmpty(c.items) || c.dataType === 'array') && this._renderCells(c, colIdx)}
           </div>
         ))}
       </div>
@@ -176,7 +183,7 @@ export class AVGrid extends AVElement {
     // return column.label || column.name
   }
 
-  _renderSubHeaderWithCells(c) {
+  _renderSubHeaderWithCells(c, colIdx) {
     return (
       <div className="row">
         {c.items.map((innerCol, innerColIndex) => (
@@ -186,7 +193,7 @@ export class AVGrid extends AVElement {
               style={innerCol.style}
               ref={headerDomElement => innerCol.headerCellDomElement = headerDomElement}
             >{innerCol.label || innerCol.name}</AVGrid.styles.gridHeaderCell>
-            {this._renderCells(c, innerCol)}
+            {this._renderCells(c, colIdx, innerCol)}
           </div>
         ))}
       </div>
@@ -243,41 +250,53 @@ export class AVGrid extends AVElement {
     }
   }
 
-  _renderCells(c, innerCol) {
+  _renderCells(c, colIdx, innerCol) {
     // let c = col;
     // if (innerColIndex) {
     //   c = col.items[innerColIndex];
     // }
     return this.state._items.map((i, idx) => (
-      <this.CellComponent key={i.id || idx}
-                          $grid={this}
-                          rowItem={i}
-                          column={c}
-                          innerColumn={innerCol}
-                          onClick={(e) => this._onCellClick(i, c.name, e)}
-                          onContextMenu={e => this._onCellContextMenu(i, c.name, e)}
-                          style={innerCol ? (i[c.name] && i[c.name][innerCol.name + '_cellDomElement' + '_style']) : i[c.name + '_cellDomElement' + '_style']}
-                          ref={cellVirtualDomComponent => {
-                            if (innerCol) {
-                              if (!i[c.name]) {
-                                i[c.name] = {}
+      <div key={i.id || idx} style={{
+        marginBottom: this.state.underRowPanelIndex === idx ? (this.state.underRowPanelContainerHeight + 'px') : 0
+      }}>
+        <this.CellComponent
+                            $grid={this}
+                            rowItem={i}
+                            column={c}
+                            innerColumn={innerCol}
+                            onClick={(e) => this._onCellClick(i, idx, c.name, e)}
+                            onContextMenu={e => this._onCellContextMenu(i, c.name, e)}
+                            style={innerCol ? (i[c.name] && i[c.name][innerCol.name + '_cellDomElement' + '_style']) : i[c.name + '_cellDomElement' + '_style']}
+                            ref={cellVirtualDomComponent => {
+                              if (innerCol) {
+                                if (!i[c.name]) {
+                                  i[c.name] = {}
+                                }
+                                i[c.name][innerCol.name + '_cellVirtualDomComponent'] = cellVirtualDomComponent;
+                              } else {
+                                i[c.name + '_cellVirtualDomComponent'] = cellVirtualDomComponent;
                               }
-                              i[c.name][innerCol.name + '_cellVirtualDomComponent'] = cellVirtualDomComponent;
-                            } else {
-                              i[c.name + '_cellVirtualDomComponent'] = cellVirtualDomComponent;
-                            }
-                          }}
-                          refOnRootDiv={cellDomElement => {
-                            if (innerCol) {
-                              if (!i[c.name]) {
-                                i[c.name] = {}
+                            }}
+                            refOnRootDiv={cellDomElement => {
+                              if (innerCol) {
+                                if (!i[c.name]) {
+                                  i[c.name] = {}
+                                }
+                                i[c.name][innerCol.name + '_cellDomElement'] = cellDomElement;
+                              } else {
+                                i[c.name + '_cellDomElement'] = cellDomElement;
                               }
-                              i[c.name][innerCol.name + '_cellDomElement'] = cellDomElement;
-                            } else {
-                              i[c.name + '_cellDomElement'] = cellDomElement;
-                            }
-                          }}
-      >{this._renderCellContent(i, c, innerCol, idx)}</this.CellComponent>
+                            }}
+        >{this._renderCellContent(i, c, innerCol, idx)}</this.CellComponent>
+        {(this.state.isUnderRowPanelRendered && this.state.underRowPanelIndex ===  idx && colIdx === 0) && (
+          <div
+            ref={el => this.$underRowPanelContainer = el}
+            className="pos-abs width-100prc border-bottom-1"
+          >
+            {this.state.underRowPanelRenderFunc()}
+          </div>
+        )}
+      </div>
     ))
   }
 
@@ -336,6 +355,17 @@ export class AVGrid extends AVElement {
       return 'Объектное';
     }
     return fieldValue;
+  }
+
+  renderUnderRowPanel = (rowIndex, underRowPanelRenderFunc) => {
+    this.setState({
+      isUnderRowPanelRendered: true,
+      underRowPanelIndex: rowIndex,
+      underRowPanelRenderFunc
+    }, () => {
+      const underRowPanelContainerHeight = this.$underRowPanelContainer.getBoundingClientRect().height;
+      this.setState({underRowPanelContainerHeight});
+    })
   }
 
   componentDidMount() {
@@ -488,8 +518,8 @@ export class AVGrid extends AVElement {
     // this.forceUpdate();
   }
 
-  _onCellClick(rowItem, cellName, e) {
-    this.props.onRowClickFunc(rowItem._originalItemRef);
+  _onCellClick(rowItem, rowIndex, cellName, e) {
+    this.props.onRowClickFunc(rowItem._originalItemRef, rowIndex);
   }
 
   _onCellContextMenu = (rowItem, cellName, e) =>  {
