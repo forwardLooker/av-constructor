@@ -190,8 +190,13 @@ export class AVClassConfigurator extends AVItem {
       }
 
       const servicesDomain = this.findDeepObjInItemsBy({name: 'Сервисы', itemType: 'domain'}, {items: targetDomainOrganizationItemInConfig.items});
-      let availableServices = this.deepClone(servicesDomain.items);
-      availableServices = availableServices.map(srv => ({...srv, items: null})); //TODO ?
+      let availableServices;
+      if (servicesDomain) {
+        availableServices = this.deepClone(servicesDomain.items);
+        availableServices = availableServices.map(srv => ({...srv, items: null})); //TODO ?
+      } else {
+        availableServices = []
+      }
       const _newConnectedServices = this.deepClone(connectedServices.concat(
         availableServices.filter(avS => connectedServices.every(conS => conS.id !== avS.id))
       ))
