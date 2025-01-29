@@ -8,6 +8,7 @@ export class Host extends Item {
     this.$hostElement = hostElement;
     this.firebase.initializeApp(this.firebaseConfig);
     this.db = this.firebase.firestore();
+    this.storageRoot = this.firebase.storage().ref();
     this.auth = this.firebase.auth()
     this.auth.onAuthStateChanged((user) => {
       if (user) {
@@ -36,6 +37,7 @@ export class Host extends Item {
     measurementId: "G-ZRVD2Z59JF"
   };
   db;
+  storageRoot;
   auth;
   config;
   async getConfig() {

@@ -19,14 +19,17 @@
 .height-20prc {
   height: 20%;
 }
+.height-2px {
+  height: 2px;
+}
+.min-height-200px {
+  min-height: 200px;
+}
 .width-100prc {
   width: 100%
 }
 .width-50prc {
   width: 50%
-}
-.height-2px {
-  height: 2px;
 }
 .row {
   display: flex;

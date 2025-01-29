@@ -356,6 +356,54 @@ export class AVField extends AVItem {
         </div>
       )
     }
+    if (fieldItem.dataType === 'image') {
+      // let fileInput;
+      inputElement = (
+        <div className="flex-1 row border">
+          <div className="flex-1 row align-center justify-center min-height-200px"
+            onClick={async () => {
+              const imgUrl = await this.showDialog({ text: 'Введите url картинки', inputLabel: 'url' });
+              if (imgUrl) {
+                this.setState({ _value: imgUrl })
+                this.props.onChangeFunc(imgUrl);
+              }
+            }}
+          >
+            {this.state._value ? (
+              <img src={this.state._value}></img>
+            ) : (
+              <div>Загрузить картинку</div>
+            )}
+            {/* <input
+              hidden
+              type="file"
+              accept="image/*"
+              ref={el => fileInput = el}
+              onChange={async () => {
+                if (fileInput.files.length == 1) {
+                  console.log("File selected: ", fileInput.files[0]);
+                  // this.setState({_value: fileInput.value})
+                  const storagePath = this.Host.storageRoot.child(
+                    'classes/' + this.props.$objectDocument.props.objectDocument.Class.id + '/' + this.props.$objectDocument.props.objectDocument.id + '/' + fileInput.files[0].name
+                  );
+                  await storagePath.put(fileInput.files[0]);
+                  // storagePath.put(fileInput.files[0]).on('state_changed',
+                  //   () => {},
+                  //   (err) => { console.log('ошибка загрузки файла' + fileInput.files[0].name) },
+                  //   async () => {
+                  //     const url = await storagePath.getDouwnloadURL()
+                  //     this.setState({ _value: url });
+                  //     this.props.onChangeFunc(url);
+                  //   }
+                  // )
+                }
+              }}
+            /> */}
+          </div>
+        </div>
+      )
+    }
+
 
     return inputElement;
   }

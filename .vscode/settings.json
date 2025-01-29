@@ -1,0 +1,8 @@
+{
+    "editor.autoClosingOvertype": "always",
+    "editor.autoClosingDelete": "always",
+    "editor.autoIndent": "none",
+    "editor.detectIndentation": false,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true
+}
