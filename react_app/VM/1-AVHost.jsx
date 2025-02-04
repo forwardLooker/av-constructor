@@ -252,7 +252,7 @@ export class AVHost extends AVItem {
   _onTreeItemContextMenu = async (e, item) => {
     e.preventDefault();
     if (item.id === 'system') {
-      return;
+      // return;
     }
     if (item.itemType === 'domain') {
       let menu = [
@@ -263,7 +263,7 @@ export class AVHost extends AVItem {
         'Переместить в дереве вверх',
         'Переместить в дереве вниз',
       ];
-      if (item.id !== 'workspace') {
+      if (item.id !== 'workspace' && item.id !== 'system') {
         menu.push('Удалить домен');
       };
       if (this.state.toCopyClassReference) {

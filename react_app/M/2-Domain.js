@@ -30,6 +30,13 @@ export class Domain extends Item {
     };
     await newClass.set(classInitData);
     // update config
+    if (this.serverRef.id === 'system') {
+      const systemDoc = await this.serverRef.get();
+      const systemConfig = systemDoc.data();
+      systemConfig.items.push(classInitData);
+      await this.serverRef.update({ items: systemConfig.items });
+      return;
+    }
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
     const workspaceDoc = await workspaceDocRef.get();
     const workspaceConfig = workspaceDoc.data();
