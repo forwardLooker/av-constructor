@@ -1,6 +1,8 @@
 import {Item} from './0-Item.js';
 import {Class} from './3-Class.js';
-import {Domain} from './2-Domain.js';
+import { Domain } from './2-Domain.js';
+import { ObjectDocument } from './4-ObjectDocument.js';
+
 
 export class Host extends Item {
   constructor(hostElement) {
@@ -53,6 +55,12 @@ export class Host extends Item {
     const domain = new Domain({serverRef: dmnRef, Host: this, id});
     return domain
   }
+    
+  getClassByPath(path) {
+    const clsRef = this.db.doc(path);
+    const classItem = new Class({ serverRef: clsRef, Host: this });
+    return classItem;
+  }
 
   getClassByName(name) {
     const classData = this.findDeepObjInItemsBy({name: name}, {items: this.config});
@@ -70,6 +78,13 @@ export class Host extends Item {
       classItem = new Class({serverRef: classData.reference, Host: this});
     }
     return classItem;
+  }
+
+  getObjectDocumentByPath(path) {
+    const objRef = this.db.doc(path);
+    const objectDocument = new ObjectDocument({ serverRef: objRef, Host: this });
+    return objectDocument;
+
   }
 
 };

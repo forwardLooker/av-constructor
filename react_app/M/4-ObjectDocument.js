@@ -1,8 +1,12 @@
 import {Item} from './0-Item.js'
 
 export class ObjectDocument extends Item {
-  constructor() {
+  constructor(initObj) {
     super();
+    if (initObj) {
+      this.serverRef = initObj.serverRef;
+      this.Host = initObj.Host;
+    }
   }
   itemType = 'objectDocument';
   serverRef;

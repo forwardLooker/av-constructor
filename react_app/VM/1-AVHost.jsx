@@ -5,14 +5,18 @@ import {AVItem} from './0-AVItem.js';
 import {AVAuth} from "./1-av-host/AVAuth.jsx";
 import {AVTree} from '../V/AVTree.jsx'
 import {AVDomain} from './2-AVDomain.jsx';
-import {AVClass} from './3-AVClass.jsx';
+import { AVClass } from './3-AVClass.jsx';
+import {AVObjectDocument} from './4-AVObjectDocument.jsx';
 
 import {AVButton} from "../V/AVButton.jsx";
 import {AVLabel} from "../V/AVLabel.jsx";
 import {AVContextMenu} from "../V/AVContextMenu.jsx";
 
 import {Host} from '../M/1-Host.js';
-import {AVIcon} from "../V/icons/AVIcon.jsx";
+import { AVIcon } from "../V/icons/AVIcon.jsx";
+import {
+  createBrowserRouter,
+} from "react-router-dom";
 
 export class AVHost extends AVItem {
   static styles = {
@@ -24,6 +28,10 @@ export class AVHost extends AVItem {
       width: 20%;
     `,
   };
+  
+  static defaultProps = {
+    appRef: null
+  }
 
   state = {
     config: [],
@@ -56,15 +64,18 @@ export class AVHost extends AVItem {
   }
 
   render() {
+    if (!this.props.appRef.state.router) {
+      return null
+    }
     return (
-        <div className="_av-host-root flex-1 col">
-          {this._renderHeader()}
-          <div className="flex-1 row border">
-            {this.user ?  this._renderMain() : <AVAuth></AVAuth>}
-          </div>
-          {this.state.isDialogOpened && this._renderDialog()}
-          {this.state.isContextMenuOpened && this._renderContextMenu()}
+      <div className="_av-host-root flex-1 col">
+        {this._renderHeader()}
+        <div className="flex-1 row border">
+          {this.user ? this._renderMain() : <AVAuth></AVAuth>}
         </div>
+        {this.state.isDialogOpened && this._renderDialog()}
+        {this.state.isContextMenuOpened && this._renderContextMenu()}
+      </div>
     )
   }
 
@@ -235,8 +246,38 @@ export class AVHost extends AVItem {
   }
 
   async componentDidMount() {
-    const config = await this.Host.getConfig();
-    this.setState({config});
+    if (!this.props.appRef.state.router) {
+      const config = await this.Host.getConfig();
+      const classItemRoutes = this.Host.getClassByName('Роуты');
+      const routesArr = await classItemRoutes.getObjectDocuments();
+      let routesConfigArr = [
+        {
+          path: "/",
+          element: <AVHost appRef={this.props.appRef}></AVHost>,
+        },
+      ];
+      routesArr.forEach(async routeObjDoc => {
+        console.log('routeObjDoc', routeObjDoc);
+        // const classItem = this.Host.getClassByPath(routeObjDoc.targetClassPath);
+        // const fieldDescriptors = await classItem.getFieldDescriptors();
+        // const objectDocument = this.Host.getObjectDocumentByPath(routeObjDoc.targetObjectDocumentPath);
+        // await objectDocument.getData();
+        routesConfigArr.push({
+          path: routeObjDoc.routeRelativePath,
+          // element: <div>{routeObjDoc.routeRelativePath}</div>
+          element: (<AVObjectDocument
+            objectDocumentPath={routeObjDoc.targetObjectDocumentPath}
+          ></AVObjectDocument>)
+        })
+      });
+      console.log('routesConfigArr:', routesConfigArr);
+      this.props.appRef.setState({
+        router: createBrowserRouter(routesConfigArr)
+      })
+    } else {
+      const config = await this.Host.getConfig();
+      this.setState({ config });
+    }
   }
 
   _onTreeItemSelect = async (item) => {

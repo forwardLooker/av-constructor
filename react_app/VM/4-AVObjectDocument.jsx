@@ -22,6 +22,7 @@ export class AVObjectDocument extends AVItem {
   static defaultProps = {
     fieldDescriptors: [],
     objectDocument: null,
+    objectDocumentPath: '',
     onSavedFunc: this.noop,
     onCloseFunc: this.noop,
   }
@@ -33,8 +34,10 @@ export class AVObjectDocument extends AVItem {
   // }
 
   state = {
-    _newData: this.deepClone(this.props.objectDocument.data),
-    _newDataBeforeUpdate: this.deepClone(this.props.objectDocument.data),
+    _newData: this.deepClone(this.props.objectDocument && this.props.objectDocument.data),
+    _newDataBeforeUpdate: this.deepClone(this.props.objectDocument && this.props.objectDocument.data),
+    _objectDocument: this.props.objectDocument,
+    _fieldDescriptors: this.props.fieldDescriptors,
 
     isJSONshowed: false,
 
@@ -59,10 +62,10 @@ export class AVObjectDocument extends AVItem {
   }
 
   _prepareDesignJson = () => {
-    if (this.props.objectDocument) {
-      if (this.props.objectDocument.designJson) {
-        const designJson = this.deepClone(this.props.objectDocument.designJson);
-        const fieldDescriptors = this.deepClone(this.props.fieldDescriptors);
+    if (this.state._objectDocument) {
+      if (this.state._objectDocument.designJson) {
+        const designJson = this.deepClone(this.state._objectDocument.designJson);
+        const fieldDescriptors = this.deepClone(this.state._fieldDescriptors);
 
         // upgrade metadata
         fieldDescriptors.forEach(fD => {
@@ -96,14 +99,17 @@ export class AVObjectDocument extends AVItem {
       } else {
         this.state.designJson = {
           viewItemType: 'vertical-layout',
-          items: this.deepClone(this.props.fieldDescriptors),
-          originalItems: this.deepClone(this.props.fieldDescriptors)
+          items: this.deepClone(this.state._fieldDescriptors),
+          originalItems: this.deepClone(this.state._fieldDescriptors)
         };
       }
     }
   }
 
   render() {
+    if (!this.state.designJson) {
+      return null
+    }
     return (
       <div className={`_av-object-document-root flex-1 col ${this.state.designMode ?  'bg-white' : 'bg-app-back'}`}>
         <div className="flex-1 col space-between line-height-1-5">
@@ -307,8 +313,8 @@ export class AVObjectDocument extends AVItem {
   }
 
   _renderButtonsByServices() {
-    const connectedServices = this.props.objectDocument.Class.data.connectedServices;
-    const srvDefs = this.props.objectDocument.Class.classServiceDefinitions;
+    const connectedServices = this.state._objectDocument.Class.data.connectedServices;
+    const srvDefs = this.state._objectDocument.Class.classServiceDefinitions;
     let ButtonsAddedByServices = [];
     if (Array.isArray(connectedServices)) {
       connectedServices.forEach(srv => {
@@ -323,6 +329,30 @@ export class AVObjectDocument extends AVItem {
       })
     }
     return ButtonsAddedByServices;
+  }
+
+  async componentDidMount() {
+    if (this.props.objectDocumentPath) {
+      const objectDocument = this.Host.getObjectDocumentByPath(this.props.objectDocumentPath);
+      await objectDocument.getData();
+      const classItem = this.Host.getClass(objectDocument.data.classReference);
+      const fieldDescriptors = await classItem.getFieldDescriptors();
+      objectDocument.Class = classItem;
+      
+      this.setState({
+        _newData: this.deepClone(objectDocument.data),
+        _newDataBeforeUpdate: this.deepClone(objectDocument.data),
+        _objectDocument: objectDocument,
+        _fieldDescriptors: fieldDescriptors
+      }, () => {
+        this._prepareDesignJson();
+        this.forceUpdate();
+      })
+    }
+    // this.setState({
+    //   _newData: this.deepClone(this.props.objectDocument.data),
+    //   _newDataBeforeUpdate: this.deepClone(this.props.objectDocument.data),
+    // })
   }
 
   showClass = async (id, onObjectDocumentSelected) => {
