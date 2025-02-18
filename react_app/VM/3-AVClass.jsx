@@ -69,7 +69,7 @@ export class AVClass extends AVItem {
           ></AVGrid>
         </div>
         {this.state.selectedObjectDocument && (
-          <div className="pos-abs trbl-0 col pad-4 z-index-10 bg-app-back">
+          <div className={`pos-abs trbl-0 col ${this.props.itemFullScreenMode ? '' : 'pad-4'} z-index-10 bg-app-back`}>
             <AVObjectDocument
               fieldDescriptors={this.state.fieldDescriptors}
               objectDocument={this.state.selectedObjectDocument}

@@ -55,7 +55,9 @@ export class AVHost extends AVItem {
     toCopyClassWithData: false,
 
     designMode: false,
-    $designObjectDocument: null
+    $designObjectDocument: null,
+    
+    itemFullScreenMode: false
   }
 
   constructor() {
@@ -70,7 +72,7 @@ export class AVHost extends AVItem {
     return (
       <div className="_av-host-root flex-1 col">
         {this._renderHeader()}
-        <div className="flex-1 row border">
+        <div className={`flex-1 row ${this.state.itemFullScreenMode ? '' : 'border'}`}>
           {this.user ? this._renderMain() : <AVAuth></AVAuth>}
         </div>
         {this.state.isDialogOpened && this._renderDialog()}
@@ -80,6 +82,9 @@ export class AVHost extends AVItem {
   }
 
   _renderHeader() {
+    if (this.state.itemFullScreenMode) {
+      return null
+    }
     return (
       <AVHost.styles.header className="row space-between height-10vh">
         <div className="row align-center">
@@ -101,24 +106,33 @@ export class AVHost extends AVItem {
   _renderMain() {
     return (
       <div className="flex-1 row">
-        <AVHost.styles.leftSidebar className="col font-size-14px pad-8 bg-tree border height-90vh scroll-y">
-          {this.state.designMode && this._renderInstrumentPanel()}
-          {!this.state.designMode && (
-            <AVTree
-              items={this.state.config}
-              expandAllRowsNestedLevel={3}
-              onItemSelectFunc={this._onTreeItemSelect}
-              onItemContextMenuFunc={this._onTreeItemContextMenu}
-            ></AVTree>
-          )}
-        </AVHost.styles.leftSidebar>
-        <div className="pos-rel flex-1 col pad-8 border scroll-y">
+        {this._renderLeftSidebar()}
+        <div className={`pos-rel flex-1 col ${this.state.itemFullScreenMode ? '' : 'pad-8 border'} scroll-y`}>
           {this.state.selectedTreeItem?.itemType === 'class' ?
-            (<AVClass classItem={this.state.selectedTreeItem}></AVClass>) : ''}
+            (<AVClass classItem={this.state.selectedTreeItem} itemFullScreenMode={this.state.itemFullScreenMode}></AVClass>) : ''}
           {this.state.selectedTreeItem?.itemType === 'domain' ?
             (<AVDomain domainItem={this.state.selectedTreeItem}></AVDomain>)  : ''}
         </div>
       </div>
+    )
+  }
+
+  _renderLeftSidebar() {
+    if (this.state.itemFullScreenMode) {
+      return null
+    }
+    return (
+      <AVHost.styles.leftSidebar className="col font-size-14px pad-8 bg-tree border height-90vh scroll-y">
+        {this.state.designMode && this._renderInstrumentPanel()}
+        {!this.state.designMode && (
+          <AVTree
+            items={this.state.config}
+            expandAllRowsNestedLevel={3}
+            onItemSelectFunc={this._onTreeItemSelect}
+            onItemContextMenuFunc={this._onTreeItemContextMenu}
+          ></AVTree>
+        )}
+      </AVHost.styles.leftSidebar>
     )
   }
 
@@ -277,6 +291,17 @@ export class AVHost extends AVItem {
     } else {
       const config = await this.Host.getConfig();
       this.setState({ config });
+      
+      // const bodyElem = window.document.getElementsByTagName('body');
+      // console.log('bodyElem', bodyElem);
+      window.document.addEventListener('keydown', e => {
+        console.log('didMountKeyDown', e);
+        if (e.key === 'F7') {
+          e.preventDefault();
+          this.setState(state => ({ itemFullScreenMode: !state.itemFullScreenMode }));
+        }
+      });
+      // bodyElem.focus();
     }
   }
 

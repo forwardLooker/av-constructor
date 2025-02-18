@@ -863,7 +863,7 @@ export class AVObjectDocument extends AVItem {
   }
 
   save = async () => {
-    await this.props.objectDocument.saveData(this.state._newData);
+    await this.state._objectDocument.saveData(this.state._newData);
     this.setState(state => ({_newDataBeforeUpdate: this.deepClone(state._newData)}));
     this.props.onSavedFunc();
   }
@@ -911,7 +911,7 @@ export class AVObjectDocument extends AVItem {
   saveDesign = async () => {
     this._removeContainerReference(this.state.designJson);
     this._removeDomElementReference(this.state.designJson);
-    await this.props.objectDocument.saveDesignJson(this.deepClone(this.state.designJson));
+    await this.state._objectDocument.saveDesignJson(this.deepClone(this.state.designJson));
     this._addContainerReference(this.state.designJson);
   }
 
