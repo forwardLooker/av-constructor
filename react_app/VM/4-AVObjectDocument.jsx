@@ -536,8 +536,13 @@ export class AVObjectDocument extends AVItem {
     e.preventDefault();
     let menu = [
       `Установить font-size`,
-      'Установить style'
+      'Установить style',
+      'Сбросить style'
     ];
+    if (fieldItem.viewItemType === 'button') {
+      menu.push('Установить buttonStyle');
+      menu.push('Сбросить buttonStyle');
+    }
     if (fieldItem.viewItemType !== 'tabs') {
       menu.push('Убрать элемент')
     }
@@ -582,6 +587,8 @@ export class AVObjectDocument extends AVItem {
       const style = await this.showDialog({
         text: ['Введите объект style,пример: {"background": "inherit"}',
           <br></br>,
+          'Происходит мерджинг объекта, а не замена',
+          <br></br>,
           `Текущий style: ${JSON.stringify(fieldItem.style)}`
         ],
         inputLabel: 'style object'
@@ -592,6 +599,31 @@ export class AVObjectDocument extends AVItem {
         fieldItem.style = {...fieldItem.style, ...styleObj};
         this.forceUpdate();
       }
+    }
+    if (menuResult === 'Сбросить style') {
+        fieldItem.style = null;
+        this.forceUpdate();
+    }
+    if (menuResult === 'Установить buttonStyle') {
+      const style = await this.showDialog({
+        text: ['Введите объект style,пример: {"background": "inherit"}',
+          <br></br>,
+          'Происходит мерджинг объекта, а не замена',
+          <br></br>,
+          `Текущий style: ${JSON.stringify(fieldItem.buttonStyle)}`
+        ],
+        inputLabel: 'style object'
+      });
+      if (style) {
+        if (!fieldItem.buttonStyle) fieldItem.buttonStyle = {};
+        const styleObj = JSON.parse(style);
+        fieldItem.buttonStyle = { ...fieldItem.buttonStyle, ...styleObj };
+        this.forceUpdate();
+      }
+    }
+    if (menuResult === 'Сбросить buttonStyle') {
+      fieldItem.buttonStyle = null;
+      this.forceUpdate();
     }
   }
 

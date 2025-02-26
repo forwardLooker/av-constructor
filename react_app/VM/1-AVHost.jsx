@@ -216,12 +216,14 @@ export class AVHost extends AVItem {
           <div>{this.state.dialogText}</div>
           {this.state.dialogContent}
           {this.state.dialogInputLabel && (
-            <div>
+            <div className='row'>
               <AVLabel>{this.state.dialogInputLabel}</AVLabel>
-              <input
+              <textarea
+                className='flex-1'
+                rows={8}
                 value={this.state.dialogInputValue}
                 onChange={e => this.setState({dialogInputValue: e.target.value})}>
-              </input>
+              </textarea>
             </div>
           )}
           {this.state.dialogItemTreeStructure && (

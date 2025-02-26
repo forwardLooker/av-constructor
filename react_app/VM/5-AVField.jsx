@@ -97,6 +97,7 @@ export class AVField extends AVItem {
              ref={this.props.refOnRootDiv}
         >
           <AVButton
+            style={this.props.fieldItem.buttonStyle}
             onClick={() => {
               if (this.props.$objectDocument) {
                 const classInstance = this.props.$objectDocument.props.objectDocument.Class;
