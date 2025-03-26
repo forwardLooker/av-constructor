@@ -189,6 +189,21 @@ export class AVObjectDocument extends AVItem {
     if (fieldItem.isHiddenInObjectDocument) {
       return null
     }
+    if (fieldItem.viewItemType === 'items-container') {
+      return (
+        <div className='_av-field-wrapper pos-rel col flex-1 margin-top-2'
+          style={fieldItem.style}
+          key={fieldItem.name || fieldItem.label || idx}
+          ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
+        >
+          <img className='pos-abs trbl-0' src={fieldItem.imgSrc}></img>
+          <div className='_av-field-viewItem-root flex-1 pad-8'>
+            {fieldItem.items && this._renderVerticalLayout(fieldItem.items[0])}
+          </div>
+          {(this.state.designMode) && this._renderDesignFieldOverlay(fieldItem, idx, containerElement)}
+        </div>
+      )
+    }
     if (fieldItem.viewItemType === 'tabs') {
       if (!fieldItem.items) {
         fieldItem.items = [
@@ -208,12 +223,12 @@ export class AVObjectDocument extends AVItem {
         fieldItem.selectedTabLabel = fieldItem.items[0].label;
       }
       return (
-          <div className='_av-field-viewItem-root pos-rel flex-1 pad-8'
+        <div className='_av-field-wrapper pos-rel col flex-1 margin-top-2'
                style={fieldItem.style}
                key={fieldItem.name || fieldItem.label || idx}
                ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
           >
-            <div className='_tab-container flex-1'>
+          <div className='_av-field-viewItem-root flex-1 pad-8'>
               <div className='_tab-head row'>
                 {fieldItem.items.map(tab => (
                     <div
@@ -280,7 +295,7 @@ export class AVObjectDocument extends AVItem {
       <div className="field-overlay pos-abs trbl-0 row border-1 bg-transparent-25">
         <div className="flex-1 col">
           <div className="flex-1 row">
-            <div className="flex-1 z-index-10000"
+            <div className={`flex-1 ${fieldItem.viewItemType === 'items-container' ? 'z-index-9900' : 'z-index-10000' } `}
                  draggable
                  onDragStart={(e) => this.dragstart(
                    e,
@@ -292,7 +307,7 @@ export class AVObjectDocument extends AVItem {
                      designDragElementOrigin: 'objectDocument'
                    },
                  )}
-                 onDragOver={this._dragover}
+                 onDragOver={e => this._dragover(e, fieldItem, idx, containerElement)}
                  onDragLeave={this._dragleave}
                  onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
                  onDragEnd={e => this.setState({designDragStarted: false})}
@@ -539,6 +554,12 @@ export class AVObjectDocument extends AVItem {
       'Установить style',
       'Сбросить style'
     ];
+    if (fieldItem.viewItemType === 'space div') {
+      menu.push('Сделать контейнером');
+    }
+    if (fieldItem.viewItemType === 'items-container') {
+      menu.push('Задать url фоновой картинки');
+    }
     if (fieldItem.viewItemType === 'button') {
       menu.push('Установить buttonStyle');
       menu.push('Сбросить buttonStyle');
@@ -549,6 +570,8 @@ export class AVObjectDocument extends AVItem {
     if (fieldItem.fullOverlayMode) {
       menu.push('Убрать экранирование');
     }
+
+    
     let menuResult;
     if (fieldItem.viewItemType === 'label' || fieldItem.viewItemType === 'button') {
       menu.push('Изменить label');
@@ -562,6 +585,17 @@ export class AVObjectDocument extends AVItem {
       }
     } else {
       menuResult = await this.showContextMenu(e, menu);
+    }
+    if (menuResult === 'Сделать контейнером') {
+      fieldItem.viewItemType = 'items-container'
+      this.forceUpdate()
+    }
+    if (menuResult === 'Задать url фоновой картинки') {
+      const imgSrc = await this.showDialog({ text: 'Введите url картинки', inputLabel: 'src' });
+      if (imgSrc) {
+        fieldItem.imgSrc = imgSrc;
+        this.forceUpdate();
+      }
     }
     if (menuResult === 'Убрать элемент') {
       if (!fieldItem.viewItemType || fieldItem.viewItemType === 'field') {
@@ -745,7 +779,7 @@ export class AVObjectDocument extends AVItem {
     // return e.target.closest('.field-overlay');
   }
 
-  _dragover = (e) => {
+  _dragover = (e, dropFieldItem, dropElementIndex, dropContainer) => {
     e.preventDefault();
     const fieldOverlay = this._findFieldOverlay(e);
     const elemRect = fieldOverlay.getBoundingClientRect();
@@ -806,6 +840,24 @@ export class AVObjectDocument extends AVItem {
       // delete this.state.designDragElement.style.flexBasis;
       // delete this.state.designDragElement.style.flexGrow;
       this.state.designDragElement.style = {};
+    }
+
+    if (dropFieldItem.viewItemType === 'items-container') {
+      dropFieldItem.items = [
+        {
+          viewItemType: 'vertical-layout',
+          items: [this.state.designDragElement],
+          container: dropFieldItem
+        }
+      ]
+      let cutIndex = this.state.designDragElementIndex;
+      if (this.state.designDragElementOrigin !== 'instrument panel') {
+        this.state.designDragContainer.items.splice(cutIndex, 1);
+        this._removeEmptyContainers(this.state.designDragContainer);
+      }
+      this._removeDragBorder(e);
+      this.setState({ designDragStarted: false });
+      return;
     }
 
     // const newDesign = [...this.designJson];
@@ -965,13 +1017,14 @@ export class AVObjectDocument extends AVItem {
     })
   }
   _removeContainerReference = (layoutElement) => {
+    if (!layoutElement.items) return;
     layoutElement.items.forEach(i => {
       if (i.viewItemType === 'horizontal-layout' || i.viewItemType === 'vertical-layout') {
         if (i.container) {
           delete i.container;
         }
-        this._removeContainerReference(i)
       }
+      this._removeContainerReference(i)
     })
   }
   _removeEmptyContainers = (cont) => {
