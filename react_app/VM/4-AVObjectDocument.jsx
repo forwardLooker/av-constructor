@@ -938,11 +938,14 @@ export class AVObjectDocument extends AVItem {
           }
         } else if (dropContainer.viewItemType === 'horizontal-layout') {
           if (this.state.designDropSide === 'left') {
-            if (dropContainer === this.state.designDragContainer) {
+            if (dropContainer === this.state.designDragContainer && cutIndex > insertIndex) {
               cutIndex = cutIndex + 1;
             }
           }
           if (this.state.designDropSide === 'right') {
+            if (dropContainer === this.state.designDragContainer && cutIndex > insertIndex) {
+              cutIndex = cutIndex + 1;
+            }
             insertIndex = insertIndex + 1;
           }
           dropContainer.items.splice(insertIndex, 0, this.state.designDragElement);
