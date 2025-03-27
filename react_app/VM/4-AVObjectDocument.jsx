@@ -49,6 +49,7 @@ export class AVObjectDocument extends AVItem {
     designDragContainer: null,
     designDragElementOrigin: '', // enum ['instrument panel', 'objectDocument']
     designDropSide: 'none', // enum: ['top', 'bottom', 'left', 'right', 'none']
+    designDropTargetLevel2: null, // horizontal or vertical
 
     isClassItemOpened: false,
     openedClassItem: null,
@@ -308,7 +309,7 @@ export class AVObjectDocument extends AVItem {
                    },
                  )}
                  onDragOver={e => this._dragover(e, fieldItem, idx, containerElement)}
-                 onDragLeave={this._dragleave}
+                 onDragLeave={e => this._dragleave(e, fieldItem, idx, containerElement)}
                  onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
                  onDragEnd={e => this.setState({designDragStarted: false})}
                  onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
@@ -783,35 +784,69 @@ export class AVObjectDocument extends AVItem {
     e.preventDefault();
     const fieldOverlay = this._findFieldOverlay(e);
     const elemRect = fieldOverlay.getBoundingClientRect();
+    
+    this._removeDragBorder(e);
+    this._removeDragBorderFromDomELement(dropContainer.domElement);
+    if (dropContainer.container) {
+      this._removeDragBorderFromDomELement(dropContainer.container.domElement)
+    }
+    this.state.designDropTargetLevel2 = null;
 
-    if (elemRect.left + elemRect.width/10 > e.pageX) {
-      fieldOverlay.classList.remove('border-top-4');
-      fieldOverlay.classList.remove('border-bottom-4');
-      fieldOverlay.classList.add('border-left-4');
-      this.setState({designDropSide: 'left'});
-    } else {
-      fieldOverlay.classList.remove('border-left-4');
-
-      if (elemRect.right - elemRect.width/10 <= e.pageX) {
-        fieldOverlay.classList.remove('border-top-4');
-        fieldOverlay.classList.remove('border-bottom-4');
-        fieldOverlay.classList.add('border-right-4');
-        this.setState({designDropSide: 'right'});
+    if (elemRect.left + elemRect.width / 10 > e.pageX) {
+      if (elemRect.left + elemRect.width * 0.05 > e.pageX) {
+        if (dropContainer.viewItemType === 'vertical-layout' && dropContainer.container) {
+          dropContainer.domElement.classList.add('border-left-4');
+          this.state.designDropTargetLevel2 = dropContainer;
+        } else if (dropContainer.viewItemType === 'horizontal-layout' && dropElementIndex === 0 && dropContainer.container) {
+          dropContainer.container.domElement.classList.add('border-left-4');
+          this.state.designDropTargetLevel2 = dropContainer.container;
+        } else { fieldOverlay.classList.add('border-left-4'); }
       } else {
-        fieldOverlay.classList.remove('border-right-4');
-
-        if (elemRect.top + elemRect.height/2 > e.pageY) {
-          fieldOverlay.classList.add('border-top-4');
-          this.setState({designDropSide: 'top'});
+        fieldOverlay.classList.add('border-left-4');
+      }
+      this.state.designDropSide = 'left';
+    } else {
+      if (elemRect.right - elemRect.width / 10 <= e.pageX) {
+        if (elemRect.right - elemRect.width * 0.05 <= e.pageX) {
+          if (dropContainer.viewItemType === 'vertical-layout' && dropContainer.container) {
+            dropContainer.domElement.classList.add('border-right-4');
+            this.state.designDropTargetLevel2 = dropContainer;
+          } else if (dropContainer.viewItemType === 'horizontal-layout' && dropElementIndex === (dropContainer.items.length - 1) && dropContainer.container) {
+            dropContainer.container.domElement.classList.add('border-right-4');
+            this.state.designDropTargetLevel2 = dropContainer.container;
+          } else { fieldOverlay.classList.add('border-right-4'); }
         } else {
-          fieldOverlay.classList.remove('border-top-4');
+          fieldOverlay.classList.add('border-right-4');
         }
-
-        if (elemRect.top + elemRect.height/2 <= e.pageY) {
-          fieldOverlay.classList.add('border-bottom-4');
-          this.setState({designDropSide: 'bottom'});
-        } else {
-          fieldOverlay.classList.remove('border-bottom-4');
+        this.state.designDropSide = 'right';
+      } else {
+        if (elemRect.top + elemRect.height / 2 > e.pageY) {
+          if (elemRect.top + elemRect.height / 4 > e.pageY) {
+            if (dropContainer.viewItemType === 'vertical-layout' && dropElementIndex === 0 && dropContainer.container) {
+              dropContainer.container.domElement.classList.add('border-top-4');
+              this.state.designDropTargetLevel2 = dropContainer.container;
+            } else if (dropContainer.viewItemType === 'horizontal-layout') {
+              dropContainer.domElement.classList.add('border-top-4');
+              this.state.designDropTargetLevel2 = dropContainer;
+            } else { fieldOverlay.classList.add('border-top-4'); }
+          } else {
+            fieldOverlay.classList.add('border-top-4');
+          }
+          this.state.designDropSide = 'top';
+        }
+        if (elemRect.top + elemRect.height / 2 <= e.pageY) {
+          if (elemRect.top + elemRect.height * 0.75 <= e.pageY) {
+            if (dropContainer.viewItemType === 'vertical-layout' && dropElementIndex === (dropContainer.items.length - 1) && dropContainer.container) {
+              dropContainer.container.domElement.classList.add('border-bottom-4');
+              this.state.designDropTargetLevel2 = dropContainer.container;
+            } else if (dropContainer.viewItemType === 'horizontal-layout') {
+              dropContainer.domElement.classList.add('border-bottom-4');
+              this.state.designDropTargetLevel2 = dropContainer;
+            } else { fieldOverlay.classList.add('border-bottom-4'); }
+          } else {
+            fieldOverlay.classList.add('border-bottom-4');
+          }
+          this.state.designDropSide = 'bottom';
         }
       }
     }
@@ -824,13 +859,24 @@ export class AVObjectDocument extends AVItem {
     fieldOverlay.classList.remove('border-left-4');
     fieldOverlay.classList.remove('border-right-4');
   }
+  
+  _removeDragBorderFromDomELement = (domELement) => {
+    domELement.classList.remove('border-top-4');
+    domELement.classList.remove('border-bottom-4');
+    domELement.classList.remove('border-left-4');
+    domELement.classList.remove('border-right-4');
+  }
 
-  _dragleave = (e) => {
+  _dragleave = (e, dropFieldItem, dropElementIndex, dropContainer) => {
     this._removeDragBorder(e);
+    this._removeDragBorderFromDomELement(dropContainer.domElement);
+    if (dropContainer.container) {
+      this._removeDragBorderFromDomELement(dropContainer.container.domElement)
+    }
   }
 
   _drop = (e, dropFieldItem, dropElementIndex, dropContainer) => {
-    if (this.state.designDragElement === dropFieldItem) {
+    if (this.state.designDragElement === dropFieldItem && !this.state.designDropTargetLevel2) {
       this._removeDragBorder(e);
       this.setState({designDragStarted: false});
       return;
@@ -863,77 +909,90 @@ export class AVObjectDocument extends AVItem {
     // const newDesign = [...this.designJson];
     let insertIndex = dropElementIndex;
     let cutIndex = this.state.designDragElementIndex;
+    
+    if (this.state.designDropTargetLevel2) {
+      if (this.state.designDropSide === 'top' || this.state.designDropSide === 'left') {
+        insertIndex = this.state.designDropTargetLevel2.container.items.findIndex(i => i === this.state.designDropTargetLevel2)
+      }
+      if (this.state.designDropSide === 'bottom' || this.state.designDropSide === 'right') {
+        insertIndex = 1 + this.state.designDropTargetLevel2.container.items.findIndex(i => i === this.state.designDropTargetLevel2)
+      }
+      this.state.designDropTargetLevel2.container.items.splice(insertIndex, 0, this.state.designDragElement);
+      
+    } else {
+      if (this.state.designDropSide === 'left' || this.state.designDropSide === 'right') {
+        if (dropContainer.viewItemType === 'vertical-layout') {
+          if (this.state.designDropSide === 'left') {
+            dropContainer.items[dropElementIndex] = {
+              container: dropContainer,
+              viewItemType: 'horizontal-layout',
+              items: [this.state.designDragElement, dropFieldItem]
+            }
+          }
+          if (this.state.designDropSide === 'right') {
+            dropContainer.items[dropElementIndex] = {
+              container: dropContainer,
+              viewItemType: 'horizontal-layout',
+              items: [dropFieldItem, this.state.designDragElement]
+            }
+          }
+        } else if (dropContainer.viewItemType === 'horizontal-layout') {
+          if (this.state.designDropSide === 'left') {
+            if (dropContainer === this.state.designDragContainer) {
+              cutIndex = cutIndex + 1;
+            }
+          }
+          if (this.state.designDropSide === 'right') {
+            insertIndex = insertIndex + 1;
+          }
+          dropContainer.items.splice(insertIndex, 0, this.state.designDragElement);
+        }
+      }
 
-    if (this.state.designDropSide === 'left' || this.state.designDropSide === 'right') {
-      if (dropContainer.viewItemType === 'vertical-layout') {
-        if (this.state.designDropSide === 'left') {
-          dropContainer.items[dropElementIndex] = {
-            container: dropContainer,
-            viewItemType: 'horizontal-layout',
-            items: [this.state.designDragElement, dropFieldItem]
+      if (this.state.designDropSide === 'top' || this.state.designDropSide === 'bottom') {
+        if (dropContainer.viewItemType === 'horizontal-layout') {
+          let vrtElement;
+          if (this.state.designDropSide === 'top') {
+            vrtElement = {
+              container: dropContainer,
+              viewItemType: 'vertical-layout',
+              items: [this.state.designDragElement, dropFieldItem]
+            }
           }
-        }
-        if (this.state.designDropSide === 'right') {
-          dropContainer.items[dropElementIndex] = {
-            container: dropContainer,
-            viewItemType: 'horizontal-layout',
-            items: [dropFieldItem, this.state.designDragElement]
+          if (this.state.designDropSide === 'bottom') {
+            vrtElement = {
+              container: dropContainer,
+              viewItemType: 'vertical-layout',
+              items: [dropFieldItem, this.state.designDragElement]
+            }
           }
-        }
-      } else if (dropContainer.viewItemType === 'horizontal-layout') {
-        if (this.state.designDropSide === 'left') {
-          if (dropContainer === this.state.designDragContainer) {
+
+          if (dropFieldItem.style) {
+            vrtElement.style = {
+              flexBasis: dropFieldItem.style.flexBasis,
+              flexGrow: dropFieldItem.style.flexGrow,
+            }
+            // delete dropContainer.items[dropElementIndex].style.flexBasis;
+            // delete dropContainer.items[dropElementIndex].style.flexGrow;
+            dropFieldItem.style = {};
+          }
+
+          dropContainer.items.splice(insertIndex, 1)
+          dropContainer.items.splice(insertIndex, 0, vrtElement);
+
+        } else if (dropContainer.viewItemType === 'vertical-layout') {
+          if (this.state.designDropSide === 'bottom') {
+            insertIndex = insertIndex + 1;
+          }
+          if (dropContainer === this.state.designDragContainer && this.state.designDragElementIndex > dropElementIndex) {
             cutIndex = cutIndex + 1;
           }
+          dropContainer.items.splice(insertIndex, 0, this.state.designDragElement);
         }
-        if (this.state.designDropSide === 'right') {
-          insertIndex = insertIndex + 1;
-        }
-        dropContainer.items.splice(insertIndex, 0, this.state.designDragElement);
       }
+
     }
 
-    if (this.state.designDropSide === 'top' || this.state.designDropSide === 'bottom') {
-      if (dropContainer.viewItemType === 'horizontal-layout') {
-        let vrtElement;
-        if (this.state.designDropSide === 'top') {
-          vrtElement = {
-            container: dropContainer,
-            viewItemType: 'vertical-layout',
-            items: [this.state.designDragElement, dropFieldItem]
-          }
-        }
-        if (this.state.designDropSide === 'bottom') {
-          vrtElement = {
-            container: dropContainer,
-            viewItemType: 'vertical-layout',
-            items: [dropFieldItem, this.state.designDragElement]
-          }
-        }
-
-        if (dropFieldItem.style) {
-          vrtElement.style = {
-            flexBasis: dropFieldItem.style.flexBasis,
-            flexGrow: dropFieldItem.style.flexGrow,
-          }
-          // delete dropContainer.items[dropElementIndex].style.flexBasis;
-          // delete dropContainer.items[dropElementIndex].style.flexGrow;
-          dropFieldItem.style = {};
-        }
-
-        dropContainer.items.splice(insertIndex, 1)
-        dropContainer.items.splice(insertIndex, 0, vrtElement);
-
-      } else if (dropContainer.viewItemType === 'vertical-layout') {
-        if (this.state.designDropSide === 'bottom') {
-          insertIndex = insertIndex + 1;
-        }
-        if (dropContainer === this.state.designDragContainer && this.state.designDragElementIndex > dropElementIndex) {
-          cutIndex = cutIndex + 1;
-        }
-        dropContainer.items.splice(insertIndex, 0, this.state.designDragElement);
-      }
-    }
 
     if (this.state.designDragElementOrigin !== 'instrument panel') {
       this.state.designDragContainer.items.splice(cutIndex, 1);
@@ -941,6 +1000,12 @@ export class AVObjectDocument extends AVItem {
     }
 
     this._removeDragBorder(e);
+    this._removeDragBorderFromDomELement(dropContainer.domElement);
+    if (dropContainer.container) {
+      this._removeDragBorderFromDomELement(dropContainer.container.domElement)
+    }
+    this.state.designDropTargetLevel2 = null;
+
     this.setState({designDragStarted: false});
     // this.forceUpdate();
     // this.designJson = newDesign;
