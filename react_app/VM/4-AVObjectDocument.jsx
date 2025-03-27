@@ -797,7 +797,7 @@ export class AVObjectDocument extends AVItem {
         if (dropContainer.viewItemType === 'vertical-layout' && dropContainer.container) {
           dropContainer.domElement.classList.add('border-left-4');
           this.state.designDropTargetLevel2 = dropContainer;
-        } else if (dropContainer.viewItemType === 'horizontal-layout' && dropElementIndex === 0 && dropContainer.container) {
+        } else if (dropContainer.viewItemType === 'horizontal-layout' && dropElementIndex === 0 && dropContainer.container && dropContainer.container.container) {
           dropContainer.container.domElement.classList.add('border-left-4');
           this.state.designDropTargetLevel2 = dropContainer.container;
         } else { fieldOverlay.classList.add('border-left-4'); }
@@ -811,7 +811,7 @@ export class AVObjectDocument extends AVItem {
           if (dropContainer.viewItemType === 'vertical-layout' && dropContainer.container) {
             dropContainer.domElement.classList.add('border-right-4');
             this.state.designDropTargetLevel2 = dropContainer;
-          } else if (dropContainer.viewItemType === 'horizontal-layout' && dropElementIndex === (dropContainer.items.length - 1) && dropContainer.container) {
+          } else if (dropContainer.viewItemType === 'horizontal-layout' && dropElementIndex === (dropContainer.items.length - 1) && dropContainer.container && dropContainer.container.container) {
             dropContainer.container.domElement.classList.add('border-right-4');
             this.state.designDropTargetLevel2 = dropContainer.container;
           } else { fieldOverlay.classList.add('border-right-4'); }
