@@ -1076,12 +1076,13 @@ export class AVObjectDocument extends AVItem {
     }
   }
 
-  _addContainerReference = (layoutElememt) => {
-    layoutElememt.items.forEach((i) => {
+  _addContainerReference = (layoutElement) => {
+    if (!layoutElement.items) return;
+    layoutElement.items.forEach((i) => {
       if (i.viewItemType === 'horizontal-layout' || i.viewItemType === 'vertical-layout') {
-        i.container = layoutElememt;
-        this._addContainerReference(i)
+        i.container = layoutElement;
       }
+      this._addContainerReference(i) // Вынесено чтоб внутрь табов и айтемс контейнеров ходил
     })
   }
   _removeContainerReference = (layoutElement) => {
