@@ -885,7 +885,7 @@ export class AVObjectDocument extends AVItem {
     if (this.state.designDragElement.style) {
       // delete this.state.designDragElement.style.flexBasis;
       // delete this.state.designDragElement.style.flexGrow;
-      this.state.designDragElement.style = {};
+      this.state.designDragElement.style = { ...this.state.designDragElement.style, flexBasis: 0, flexGrow: 1 };
     }
 
     if (dropFieldItem.viewItemType === 'items-container') {
