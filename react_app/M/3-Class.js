@@ -20,7 +20,7 @@ export class Class extends Item {
 
   }
   itemType = 'class';
-  data = {};
+  metadata = {};
   serverRef;
   id; // TODO может сделать getter?
   Host;
@@ -38,49 +38,16 @@ export class Class extends Item {
 
   async getFieldDescriptors() {
     const doc = await this.serverRef.get();
-    this.data = doc.data();
-    return this.data.fieldDescriptors || [];
+    this.metadata = doc.data();
+    return this.metadata.fieldDescriptors || [];
   }
-
-  async getViewsOptions() {
-    // TODO разрулить
-    return this.data.viewsOptions || [{name: 'defaultViewName'}]
-  }
-
-  async getConnectedServices() {
-    //TODO разрулить
-    // const doc = await this.serverRef.get();
-    // this.data = doc.data();
-    return this.data.connectedServices || [];
-  }
-
-  async saveFieldDescriptors(fieldDescriptors) {
-    if (fieldDescriptors) {
-      await this.serverRef.update({fieldDescriptors})
-    }
-  }
-
-  async saveMetadata({fieldDescriptors, connectedServices, viewsOptions}) {
-    if (fieldDescriptors || connectedServices || viewsOptions) {
-      await this.serverRef.update({fieldDescriptors, connectedServices, viewsOptions})
-    }
-  }
-
-  get objectDocumentDesignJson() {
-    return this.data.objectDocumentDesignJson;
-  }
-
-  async saveObjectDocumentDesignJson(objectDocumentDesignJson) {
-    await this.serverRef.update({objectDocumentDesignJson});
-    this.data.objectDocumentDesignJson = objectDocumentDesignJson;
-  }
-
+  
   getViewsList() {
     let views = ['Grid', 'Configurator', 'JSON'];
     this.classServiceDefinitions.forEach(srv => {
       if (srv.views) {
         srv.views.forEach(v => {
-          if (v.className === this.data.name) {
+          if (v.className === this.metadata.name) {
             views.push(v.viewName)
           }
         })
@@ -88,7 +55,17 @@ export class Class extends Item {
     });
     return views;
   }
-
+  
+  get defaultViewName() {
+    if (this.notEmpty(this.metadata.viewsOptions)) {
+      const defaultViewOption = this.metadata.viewsOptions.find(vOpt => vOpt.name === 'defaultViewName');
+      if (defaultViewOption && defaultViewOption.value) {
+        return defaultViewOption.value
+      }
+    }
+    return 'Grid'
+  }
+  
   getViewComponentByName(viewName, $Class) {
     let viewComponent;
     this.classServiceDefinitions.forEach(srv => {
@@ -105,19 +82,13 @@ export class Class extends Item {
     } else {
       return null
     }
-    
   }
 
-  get defaultViewName() {
-    if (this.notEmpty(this.data.viewsOptions)) {
-      const defaultViewOption = this.data.viewsOptions.find(vOpt => vOpt.name === 'defaultViewName');
-      if (defaultViewOption && defaultViewOption.value) {
-        return defaultViewOption.value
-      }
-    }
-    return 'Grid'
+  async getViewsOptions() {
+    // TODO разрулить
+    return this.metadata.viewsOptions || [{name: 'defaultViewName'}]
   }
-
+  
   async getObjectDocument(objectServerRef) {
     const obj = new ObjectDocument();
     obj.serverRef = objectServerRef;
@@ -135,13 +106,41 @@ export class Class extends Item {
     return obj;
   }
 
-  async createObjectDocument(objDocData) {
+  async createObjectDocument(objDocData) { // для создания не с вьюхи Грида, а программно с других сервисов
     console.log('createObjectDocument objDocData:', objDocData);
     const obj = new ObjectDocument();
     obj.notExistOnServer = true;
     obj.Class = this;
     await obj.saveData(objDocData);
     return obj;
+  }
+  
+  get objectDocumentDesignJson() {
+    return this.metadata.objectDocumentDesignJson;
+  }
+
+  async saveObjectDocumentDesignJson(objectDocumentDesignJson) {
+    await this.serverRef.update({ objectDocumentDesignJson });
+    this.metadata.objectDocumentDesignJson = objectDocumentDesignJson;
+  }
+
+  async getConnectedServices() {
+    //TODO разрулить
+    // const doc = await this.serverRef.get();
+    // this.data = doc.data();
+    return this.metadata.connectedServices || [];
+  }
+
+  async saveFieldDescriptors(fieldDescriptors) {
+    if (fieldDescriptors) {
+      await this.serverRef.update({fieldDescriptors})
+    }
+  }
+
+  async saveMetadata({fieldDescriptors, connectedServices, viewsOptions}) {
+    if (fieldDescriptors || connectedServices || viewsOptions) {
+      await this.serverRef.update({fieldDescriptors, connectedServices, viewsOptions})
+    }
   }
 
   async renameClass(newClassName) {

@@ -16,19 +16,6 @@ export class ObjectDocument extends Item {
   Class;
   Domain;
   data = {};
-  innerFieldsInData = {
-    itemType: 'objectDocument',
-    id: '',
-    classId: '',
-    classReference: '',
-    createdDateTime: '',
-    author: '',
-    lastModifiedDateTime: '',
-    lastModifiedAuthor: '',
-    version: '',
-    reference: '',
-    path: ''
-  }
   notExistOnServer;
   async getData() {
     const doc = await this.serverRef.get();

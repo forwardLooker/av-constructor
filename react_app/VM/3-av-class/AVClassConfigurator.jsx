@@ -80,7 +80,7 @@ export class AVClassConfigurator extends AVItem {
       <div className="_av-class-configurator-root flex-1 col space-between">
         <div className="flex-1 col">
           <AVLabel>id:{this.props.classItem.id}</AVLabel>
-          <AVLabel>name:{this.props.classItem.data.name}</AVLabel>
+          <AVLabel>name:{this.props.classItem.metadata.name}</AVLabel>
           <div>
             <AVButton onClick={this._addField}>Добавить поле</AVButton>
           </div>

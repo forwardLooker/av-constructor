@@ -26,7 +26,7 @@ export class Host extends Item {
   itemType = 'host';
   $hostElement;
   firebase = firebase;
-  get FieldValue() {
+  get FieldValue() { // для удаления лишних полей объекта в базе данных
     return this.firebase.firestore.FieldValue;
   }
   firebaseConfig = {

@@ -13,7 +13,7 @@ import { JSONTree } from 'react-json-tree';
 export class AVClass extends AVItem {
   static defaultProps = {
     classItem: null,
-    onObjectDocumentSelectedFunc: this.noop,
+    onObjectDocumentSelectedFunc: this.noop, // применяется внутри объекта в котором открывают класс для поля линк на объект
   }
   state = {
     currentViewName: '',
@@ -21,7 +21,7 @@ export class AVClass extends AVItem {
     objectDocuments: [],
     selectedObjectDocument: null,
 
-    isParametersPanelOpened: false,
+    isParametersPanelOpened: false, // Пока нигде не используется
     ParametersPanelrender: this.noop
   }
 

@@ -22,7 +22,7 @@ export class AVObjectDocument extends AVItem {
   static defaultProps = {
     fieldDescriptors: [],
     objectDocument: null,
-    objectDocumentPath: '',
+    objectDocumentPath: '', // применяется вместо выше представленных полей за счёт дидимаунта, для организации роута на объект на весь экран
     onSavedFunc: this.noop,
     onCloseFunc: this.noop,
   }
@@ -329,7 +329,7 @@ export class AVObjectDocument extends AVItem {
   }
 
   _renderButtonsByServices() {
-    const connectedServices = this.state._objectDocument.Class.data.connectedServices;
+    const connectedServices = this.state._objectDocument.Class.metadata.connectedServices;
     const srvDefs = this.state._objectDocument.Class.classServiceDefinitions;
     let ButtonsAddedByServices = [];
     if (Array.isArray(connectedServices)) {
@@ -371,7 +371,7 @@ export class AVObjectDocument extends AVItem {
     // })
   }
 
-  showClass = async (id, onObjectDocumentSelected) => {
+  showClass = async (id, onObjectDocumentSelected) => { // используется в Филде для линков
     const openedClassItem = await this.Host.getClassById(id);
     this.setState({
       isClassItemOpened: true,
@@ -383,7 +383,7 @@ export class AVObjectDocument extends AVItem {
     })
   }
 
-  showItemStructure = async (name, onItemSelected) => {
+  showItemStructure = async (name, onItemSelected) => { // используется в Филде
     const itemInConfigTree = this.findDeepObjInItemsBy({name: name}, {items: this.Host.config})
     const selectedItem = await this.showDialog({text: 'Выберите item', itemTreeStructure: itemInConfigTree});
     onItemSelected(selectedItem);
