@@ -30,7 +30,7 @@ export class AVHost extends AVItem {
   };
   
   static defaultProps = {
-    appRef: null
+    appRef: null // Служит для незаметной перезагрузки Хоста со всеми роутами, полученными из специального Класса в System
   }
 
   state = {
@@ -107,7 +107,7 @@ export class AVHost extends AVItem {
     return (
       <div className="flex-1 row">
         {this._renderLeftSidebar()}
-        <div className={`pos-rel flex-1 col ${this.state.itemFullScreenMode ? '' : 'pad-8 border'} scroll-y`}>
+        <div className={`_av-item-view pos-rel flex-1 col ${this.state.itemFullScreenMode ? '' : 'pad-8 border'} scroll-y`}>
           {this.state.selectedTreeItem?.itemType === 'class' ?
             (<AVClass classItem={this.state.selectedTreeItem} itemFullScreenMode={this.state.itemFullScreenMode}></AVClass>) : ''}
           {this.state.selectedTreeItem?.itemType === 'domain' ?
@@ -263,7 +263,7 @@ export class AVHost extends AVItem {
 
   async componentDidMount() {
     if (!this.props.appRef.state.router) {
-      const config = await this.Host.getConfig();
+      const config = await this.Host.getConfig(); // Чтобы получить роуты требуется на Хосте сначала Конфиг
       const classItemRoutes = this.Host.getClassByName('Роуты');
       const routesArr = await classItemRoutes.getObjectDocuments();
       let routesConfigArr = [

@@ -14,8 +14,8 @@ export class AVItem extends AVElement {
 
   static Host() {};
   get Host() { return AVItem.Host; }
-  get db() { return this.Host.db; }
-  get auth() { return this.Host.auth; }
+  get db() { return this.Host.db; } // по идее нигде не используется, потому что всё через обёртки Айтемов
+  get auth() { return this.Host.auth; } //  используется исключительно в AVAuth, ещё в хеддере Хоста signOut
   get user() {
     if (!this._userFromHost?.listenerHasSet) {
       let listenerId = this.Host.addEventListener('user-state-changed', () => {
