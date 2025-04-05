@@ -164,13 +164,13 @@ export class AVGrid extends AVElement {
              const sortAscend = this.R.sortWith([this.R.ascend(this.R.prop(column.name))]);
              const sortDescend = this.R.sortWith([this.R.descend(this.R.prop(column.name))]);
              if (this.state.sortingType === 'ascend') {
-               this.setState({
-                 _items: sortAscend(this.state._items),
+               this.setState({ // дополнено своей сортировкой потому что рамда неправильно сортирует числа
+                 _items: column.dataType === 'number' ? this.state._items.sort((a, b) => a[column.name] - b[column.name]) : sortAscend(this.state._items),
                  sortingType: 'descend'
                });
              } else {
-               this.setState({
-                 _items: sortDescend(this.state._items),
+               this.setState({ // дополнено своей сортировкой потому что рамда неправильно сортирует числа
+                 _items: column.dataType === 'number' ? this.state._items.sort((a, b) => b[column.name] - a[column.name]) : sortDescend(this.state._items),
                  sortingType: 'ascend'
                });
              }
