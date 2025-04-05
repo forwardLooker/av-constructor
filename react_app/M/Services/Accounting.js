@@ -307,6 +307,10 @@ class Journal extends AVItem {
           columns={this.columns}
           isRowSelectable
           onRowClickFunc={(rowItem, rowIndex) => {
+            if (this.$gridRef.state.isUnderRowPanelRendered && this.$gridRef.state.underRowPanelIndex === rowIndex) {
+              this.$gridRef.closeUnderRowPanel();
+              return;
+            }
             const propertyItems = rowItem.analyticsPossibleValues.map(anItem => {
               const analyticName = Object.keys(anItem)[0];
               return {

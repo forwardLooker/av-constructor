@@ -257,7 +257,7 @@ export class AVGrid extends AVElement {
     // }
     return this.state._items.map((i, idx) => (
       <div key={i.id || idx} style={{
-        marginBottom: this.state.underRowPanelIndex === idx ? (this.state.underRowPanelContainerHeight + 'px') : 0
+        marginBottom: this.state.isUnderRowPanelRendered && this.state.underRowPanelIndex === idx ? (this.state.underRowPanelContainerHeight + 'px') : 0
       }}>
         <this.CellComponent
                             $grid={this}
@@ -367,6 +367,8 @@ export class AVGrid extends AVElement {
       this.setState({underRowPanelContainerHeight});
     })
   }
+  
+  closeUnderRowPanel = () => this.setState({ isUnderRowPanelRendered: false, underRowPanelContainerHeight: 0 })
 
   componentDidMount() {
     this._hideHiddenColumnsWithoutUpdate()
