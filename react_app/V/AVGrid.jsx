@@ -83,7 +83,7 @@ export class AVGrid extends AVElement {
               onDragStart={() => {
                 this.setState({
                   designDragStarted: true,
-                  designDragElement: this.props.columns[colIdx],
+                  designDragElement: this.props.columns.filter(c => !c.isHiddenInGrid)[colIdx],
                   designDragElementIndex: colIdx,
                 })
               }}
@@ -126,13 +126,13 @@ export class AVGrid extends AVElement {
                   if (this.state.designDropSide === 'right') {
                     insertIndex = insertIndex + 1
                   }
-                  let columns = this.deepClone(this.props.columns);
+                  let columns = this.deepClone(this.props.columns.filter(c => !c.isHiddenInGrid));
                   columns.splice(insertIndex, 0, this.state.designDragElement);
                   if (colIdx < this.state.designDragElementIndex) {
                     cutIndex = cutIndex + 1;
                   }
                   columns.splice(cutIndex, 1);
-                  this.props.onColumnsReorderFunc(columns);
+                  this.props.onColumnsReorderFunc(columns.concat(this.deepClone(this.props.columns.filter(c => c.isHiddenInGrid))));
                   this._removeDragBorder(e);
                   this.setState({
                     designDragStarted: false,

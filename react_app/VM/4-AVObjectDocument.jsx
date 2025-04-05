@@ -371,7 +371,7 @@ export class AVObjectDocument extends AVItem {
     // })
   }
 
-  showClass = async (id, onObjectDocumentSelected) => { // используется в Филде для линков
+  showClass = async (id, onObjectDocumentSelected) => { // используется в Филде для линков на объекты
     const openedClassItem = await this.Host.getClassById(id);
     this.setState({
       isClassItemOpened: true,
@@ -383,7 +383,7 @@ export class AVObjectDocument extends AVItem {
     })
   }
 
-  showItemStructure = async (name, onItemSelected) => { // используется в Филде
+  showItemStructure = async (name, onItemSelected) => { // используется в Филде для линков на Классы
     const itemInConfigTree = this.findDeepObjInItemsBy({name: name}, {items: this.Host.config})
     const selectedItem = await this.showDialog({text: 'Выберите item', itemTreeStructure: itemInConfigTree});
     onItemSelected(selectedItem);
