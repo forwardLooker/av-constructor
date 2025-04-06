@@ -766,13 +766,18 @@ export class AVObjectDocument extends AVItem {
     designDragContainer,
     designDragElementOrigin = 'objectDocument'
   }) => {
-    this.setState({
-      designDragStarted,
-      designDragElement,
-      designDragElementIndex,
-      designDragContainer,
-      designDragElementOrigin,
-    })
+    this.state.designDragStarted = designDragStarted; // для производительности в большом объекте
+    this.state.designDragElement = designDragElement;
+    this.state.designDragElementIndex = designDragElementIndex;
+    this.state.designDragContainer = designDragContainer;
+    this.state.designDragElementOrigin = designDragElementOrigin;
+    // this.setState({
+    //   designDragStarted,
+    //   designDragElement,
+    //   designDragElementIndex,
+    //   designDragContainer,
+    //   designDragElementOrigin,
+    // })
   }
 
   _findFieldOverlay = (e) => {
