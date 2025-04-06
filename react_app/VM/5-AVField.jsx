@@ -65,9 +65,13 @@ export class AVField extends AVItem {
 
     rowIdxInGrid: null
   }
+  
   state = {
-    _value: this.props.value
+    _value: ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) || this.props.value
   }
+  
+  _computedValueNotified;
+  
   render() {
     if (this.props.fieldItem.viewItemType === 'space div') {
       return (
@@ -154,8 +158,6 @@ export class AVField extends AVItem {
       </div>
     )
   }
-
-  _computedValueNotified;
 
   _renderInput({_value, readOnly, onChangeFunc, fieldItem}) {
     let value = _value === null ? (fieldItem.defaultValue || null) : _value
@@ -407,6 +409,12 @@ export class AVField extends AVItem {
 
 
     return inputElement;
+  }
+
+  componentDidMount() {
+    if ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) {
+      this.props.onChangeFunc(this.props.fieldItem?.defaultValue)
+    }
   }
 
   componentDidUpdate(prevProps) {
