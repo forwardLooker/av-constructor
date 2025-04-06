@@ -382,9 +382,9 @@ export class AVObjectDocument extends AVItem {
       }
     })
   }
-
+  // у Классов нет структуры, подразумевается Домен, возможно надо переименовать
   showItemStructure = async (name, onItemSelected) => { // используется в Филде для линков на Классы
-    const itemInConfigTree = this.findDeepObjInItemsBy({name: name}, {items: this.Host.config})
+    const itemInConfigTree = this.findDeepObjInItemsBy({name: name, itemType: 'domain'}, {items: this.Host.config})
     const selectedItem = await this.showDialog({text: 'Выберите item', itemTreeStructure: itemInConfigTree});
     onItemSelected(selectedItem);
   }

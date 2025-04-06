@@ -228,7 +228,7 @@ export class AVHost extends AVItem {
           )}
           {this.state.dialogItemTreeStructure && (
             <AVTree
-              items={[this.state.dialogItemTreeStructure]}
+              items={this.state.dialogItemTreeStructure.items}
               expandAllRowsNestedLevel={1}
               onItemSelectFunc={(item) => this.setState({dialogInputValue: item})}
             ></AVTree>
