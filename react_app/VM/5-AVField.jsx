@@ -316,7 +316,7 @@ export class AVField extends AVItem {
           {innerFields.map(innerFieldItem => (
             <AVField
               key={innerFieldItem.name}
-              value={this.state._value[innerFieldItem.name]}
+              value={this.state._value?.[innerFieldItem.name]}
               fieldItem={innerFieldItem}
               readOnly={this.props.readOnly}
               onChangeFunc={(value) => onChangeFunc(value, {isInnerField: true, name: innerFieldItem.name})}

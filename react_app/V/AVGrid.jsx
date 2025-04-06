@@ -343,7 +343,7 @@ export class AVGrid extends AVElement {
       )
     }
     if (column.variant === 'date') {
-      return new Date(fieldValue).toLocaleDateString();
+      return fieldValue && new Date(fieldValue).toLocaleDateString();
     }
     if (Array.isArray(fieldValue)) {
       return 'Табличное';
