@@ -163,6 +163,7 @@ export class AVObjectDocument extends AVItem {
             return (
               <div
                 className="horizontal-layout flex-1 row"
+                style={vrtItem.style}
                 key={vrtIndex}
                 ref={hrzDomElement => vrtItem.domElement = hrzDomElement}
               >
@@ -555,6 +556,21 @@ export class AVObjectDocument extends AVItem {
       'Установить style',
       'Сбросить style'
     ];
+    if (containerElement.viewItemType === 'vertical-layout') {
+      menu.push('Установить style ближайшего vertical-layout');
+      menu.push('Сбросить style ближайшего vertical-layout');
+      if (containerElement.container?.viewItemType === 'horizontal-layout') {
+        menu.push('Установить style ближайшего horizontal-layout');
+        menu.push('Сбросить style ближайшего horizontal-layout');
+      }
+    } else if (containerElement.viewItemType === 'horizontal-layout') {
+      menu.push('Установить style ближайшего horizontal-layout');
+      menu.push('Сбросить style ближайшего horizontal-layout');
+      if (containerElement.container?.viewItemType === 'vertical-layout') {
+        menu.push('Установить style ближайшего vertical-layout');
+        menu.push('Сбросить style ближайшего vertical-layout');
+      }
+    }    
     if (fieldItem.viewItemType === 'space div') {
       menu.push('Сделать контейнером');
     }
@@ -658,6 +674,72 @@ export class AVObjectDocument extends AVItem {
     }
     if (menuResult === 'Сбросить buttonStyle') {
       fieldItem.buttonStyle = null;
+      this.forceUpdate();
+    }
+    if (menuResult === 'Установить style ближайшего vertical-layout') {
+      let containerItem;
+      if (containerElement.viewItemType === 'vertical-layout') {
+        containerItem = containerElement;
+      } else {
+        containerItem = containerElement.container
+      }
+      const style = await this.showDialog({
+        text: ['Введите объект style,пример: {"background": "inherit"}',
+          <br></br>,
+          'Происходит мерджинг объекта, а не замена',
+          <br></br>,
+          `Текущий style: ${JSON.stringify(containerItem.style)}`
+        ],
+        inputLabel: 'style object'
+      });
+      if (style) {
+        if (!containerItem.style) containerItem.style = {};
+        const styleObj = JSON.parse(style);
+        containerItem.style = { ...containerItem.style, ...styleObj };
+        this.forceUpdate();
+      }
+    }
+    if (menuResult === 'Сбросить style ближайшего vertical-layout') {
+      let containerItem;
+      if (containerElement.viewItemType === 'vertical-layout') {
+        containerItem = containerElement;
+      } else {
+        containerItem = containerElement.container
+      }
+      containerItem.style = null;
+      this.forceUpdate();
+    }
+    if (menuResult === 'Установить style ближайшего horizontal-layout') {
+      let containerItem;
+      if (containerElement.viewItemType === 'horizontal-layout') {
+        containerItem = containerElement;
+      } else {
+        containerItem = containerElement.container
+      }
+      const style = await this.showDialog({
+        text: ['Введите объект style,пример: {"background": "inherit"}',
+          <br></br>,
+          'Происходит мерджинг объекта, а не замена',
+          <br></br>,
+          `Текущий style: ${JSON.stringify(containerItem.style)}`
+        ],
+        inputLabel: 'style object'
+      });
+      if (style) {
+        if (!containerItem.style) containerItem.style = {};
+        const styleObj = JSON.parse(style);
+        containerItem.style = { ...containerItem.style, ...styleObj };
+        this.forceUpdate();
+      }
+    }
+    if (menuResult === 'Сбросить style ближайшего horizontal-layout') {
+      let containerItem;
+      if (containerElement.viewItemType === 'horizontal-layout') {
+        containerItem = containerElement;
+      } else {
+        containerItem = containerElement.container
+      }
+      containerItem.style = null;
       this.forceUpdate();
     }
   }
