@@ -144,7 +144,7 @@ export class AVField extends AVItem {
          ref={this.props.refOnRootDiv}
       >
         {!this.props.isLabelHidden && (
-          <AVLabel>{this.props.fieldItem.label || this.props.fieldItem.name}</AVLabel>
+          <AVLabel className="pad-0-4-0-0">{this.props.fieldItem.label || this.props.fieldItem.name}</AVLabel>
         )}
         {this._renderInput(
           {
