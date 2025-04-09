@@ -22,6 +22,12 @@
 .height-2px {
   height: 2px;
 }
+.height-4px {
+  height: 4px;
+}
+.height-16px {
+  height: 16px;
+}
 .min-height-200px {
   min-height: 200px;
 }
@@ -30,6 +36,9 @@
 }
 .width-50prc {
   width: 50%
+}
+.width-16px {
+  width: 16px;
 }
 .row {
   display: flex;
@@ -124,6 +133,9 @@
 .pad-0-8 {
   padding: 0 8px;
 }
+.no-border {
+  border: none;
+}
 .border {
   border: 0.5px solid black;
 }
@@ -150,6 +162,12 @@
 }
 .border-left-4 {
   border-left: 4px solid black;
+}
+.border-radius-2px {
+  border-radius: 2px;
+}
+.border-radius-50prc {
+  border-radius: 50%;
 }
 .margin-left-2 {
   margin-left: 2px;
@@ -231,6 +249,9 @@
 .bottom-0 {
   bottom: 0;
 }
+.top-minus150prc {
+  top: -150%;
+}
 .bg-white {
   background: white;
 }
@@ -257,6 +278,12 @@
 }
 .bg-icon-file-document {
   background: #e7e1e1;
+}
+.bg-slider-free-space {
+ background: rgb(234, 236, 244);
+}
+.bg-slider-fill-space {
+  background: rgb(71, 107, 240);
 }
 .bg-transparent-45 {
   background-color: rgba(0,0,0,0.45);

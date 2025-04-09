@@ -52,6 +52,9 @@ export class AVClassConfigurator extends AVItem {
           if (this.state.selectedFieldDescriptor.dataType === 'string') {
             return ['textarea', 'select', 'date'];
           }
+          if (this.state.selectedFieldDescriptor.dataType === 'number') {
+            return ['input+range'];
+          }
           return [];
         }},
         {name: 'variantItemReference', hideIfFunc: () => {
