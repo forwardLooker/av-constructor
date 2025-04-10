@@ -63,6 +63,17 @@ export class AVField extends AVItem {
       outline: none;
       vertical-align: middle;
     `,
+    gazprombankInput: this.styled.input`
+      position: relative;
+      font-size: 20px;
+      line-height: 20px;
+      background-color: #fff;
+      transition: all .2s;
+      border: none;
+      border-radius: 6px;
+      outline: none;
+      vertical-align: middle;
+    `,
   }
   static defaultProps = {
     fieldItem: null,
@@ -84,6 +95,7 @@ export class AVField extends AVItem {
   }
   
   _computedValueNotified;
+  _labelFontSizeClassName = 'font-size-16px';
   
   render() {
     if (this.props.fieldItem.viewItemType === 'space div') {
@@ -156,7 +168,7 @@ export class AVField extends AVItem {
          style={this.props.style}
          ref={this.props.refOnRootDiv}
       >
-        {!this.props.isLabelHidden && (
+        {!this._calcIsLabelHidden() && (
           <AVLabel
             className={`pad-0-4-0-0`}
             justifyMode={this.props.fieldItem.variant === 'input+range' ? 'start' : 'center'}
@@ -253,6 +265,35 @@ export class AVField extends AVItem {
                 readOnly={readOnly}
                 onChange={onChangeFunc}
             ></AVField.styles.input>
+        )
+      }
+      if (fieldItem.variant === 'Gazprombank-string') {
+        let gazInputRef;
+        inputElement = (
+          <div className='_inputElement flex-1 col justify-center height-56px border cursor-text'
+            onClick={() => {
+              gazInputRef.removeAttribute('hidden');
+              gazInputRef.focus();
+              this._labelFontSizeClassName = 'font-size-14px';
+              this.forceUpdate()
+            }}
+          >
+            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVField.styles.gazprombankInput
+              className="flex-1 margin-left-16"
+              ref={el => gazInputRef = el}
+              hidden
+              autoComplete="off"
+              value={(value === null || value === undefined) ? '' : value}
+              readOnly={readOnly}
+              onChange={onChangeFunc}
+              onBlur={() => {
+                gazInputRef.setAttribute('hidden', '');
+                this._labelFontSizeClassName = 'font-size-16px';
+                this.forceUpdate();
+              }}
+            ></AVField.styles.gazprombankInput>
+          </div>
         )
       }
     }
@@ -521,5 +562,12 @@ export class AVField extends AVItem {
       return 'top'
     }
     return this.props.labelPosition
+  }
+  
+  _calcIsLabelHidden = () => {
+    if (this.props.fieldItem.variant === 'Gazprombank-string') {
+      return true
+    }
+    return this.props.isLabelHidden
   }
 }

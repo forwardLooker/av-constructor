@@ -28,6 +28,9 @@
 .height-16px {
   height: 16px;
 }
+.height-56px {
+  height: 56px;
+}
 .min-height-200px {
   min-height: 200px;
 }
@@ -214,6 +217,9 @@
 .cursor-default {
   cursor: default;
 }
+.cursor-text {
+  cursor: text;
+}
 .rotate-90 {
   transform: rotate(90deg);
 }
@@ -294,6 +300,9 @@
 .color-text-secondary {
   color: #818c99;
 }
+.color-gaz-label {
+  color: #7f8499;
+}
 .text-center {
   text-align: center;
 }
@@ -306,9 +315,18 @@
 .font-size-14px {
   font-size: 14px;
 }
+.font-size-16px {
+  font-size: 16px;
+}
 .font-bold {
   font-weight: bold;
 }
+.font-weight-400 {
+  font-weight: 400;
+}
 .line-height-1-5 {
   line-height: 1.5;
+}
+.transition-ease {
+  transition: .2s ease-in-out;
 }
