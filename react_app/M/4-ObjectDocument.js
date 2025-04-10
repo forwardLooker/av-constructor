@@ -5,7 +5,6 @@ export class ObjectDocument extends Item {
     super();
     if (initObj) {
       this.serverRef = initObj.serverRef;
-      this.Host = initObj.Host;
     }
   }
   itemType = 'objectDocument';

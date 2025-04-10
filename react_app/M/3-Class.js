@@ -6,11 +6,10 @@ import {Accounting} from './Services/Accounting.js';
 
 
 export class Class extends Item {
-  constructor({serverRef, Host}) {
+  constructor({serverRef}) {
     super();
     this.serverRef = serverRef;
     this.id = serverRef.id;
-    this.Host = Host;
     this.classModuleDefinitions.forEach(clsDef => {
       clsDef.Host = this.Host;
     })
@@ -23,7 +22,6 @@ export class Class extends Item {
   metadata = {};
   serverRef;
   id; // TODO может сделать getter?
-  Host;
   Domain;
   classModuleDefinitions = [usersClass];
   classServiceDefinitions = [Accounting];

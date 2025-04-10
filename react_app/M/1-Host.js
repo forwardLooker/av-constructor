@@ -7,6 +7,7 @@ import { ObjectDocument } from './4-ObjectDocument.js';
 export class Host extends Item {
   constructor(hostElement) {
     super();
+    Item.Host = this;
     this.$hostElement = hostElement;
     this.firebase.initializeApp(this.firebaseConfig);
     this.db = this.firebase.firestore();
@@ -48,17 +49,17 @@ export class Host extends Item {
     return this.config;
   }
   getClass(clsRef) {
-    const cls = new Class({serverRef: clsRef, Host: this, Domain: null});
+    const cls = new Class({serverRef: clsRef, Domain: null});
     return cls
   }
   getDomain(dmnRef, id) {
-    const domain = new Domain({serverRef: dmnRef, Host: this, id});
+    const domain = new Domain({serverRef: dmnRef, id});
     return domain
   }
     
   getClassByPath(path) {
     const clsRef = this.db.doc(path);
-    const classItem = new Class({ serverRef: clsRef, Host: this });
+    const classItem = new Class({serverRef: clsRef});
     return classItem;
   }
 
@@ -66,7 +67,7 @@ export class Host extends Item {
     const classData = this.findDeepObjInItemsBy({name: name}, {items: this.config});
     let classItem;
     if (classData) {
-      classItem = new Class({serverRef: classData.reference, Host: this});
+      classItem = new Class({serverRef: classData.reference});
     }
     return classItem;
   }
@@ -75,14 +76,14 @@ export class Host extends Item {
     const classData = this.findDeepObjInItemsBy({id: id}, {items: this.config});
     let classItem;
     if (classData) {
-      classItem = new Class({serverRef: classData.reference, Host: this});
+      classItem = new Class({serverRef: classData.reference});
     }
     return classItem;
   }
 
   getObjectDocumentByPath(path) {
     const objRef = this.db.doc(path);
-    const objectDocument = new ObjectDocument({ serverRef: objRef, Host: this });
+    const objectDocument = new ObjectDocument({serverRef: objRef});
     return objectDocument;
 
   }

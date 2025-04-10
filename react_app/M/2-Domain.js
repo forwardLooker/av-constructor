@@ -1,17 +1,14 @@
 import {Item} from './0-Item.js'
 
 export class Domain extends Item {
-  constructor({serverRef, Host, id}) {
+  constructor({serverRef, id}) {
     super();
     this.serverRef = serverRef;
     this.id = id || serverRef.id;
-    this.Host = Host;
   }
   itemType = 'domain'
   serverRef;
   id;
-  Host;
-
   async createClass(className) {
     const newClass = this.serverRef.collection('Classes').doc();
     const classInitData = {
