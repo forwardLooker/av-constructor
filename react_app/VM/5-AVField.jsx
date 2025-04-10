@@ -528,8 +528,8 @@ export class AVField extends AVItem {
     // console.log('onChange e', e);
     let value;
     if (option) {
-      if (option.isInnerField) {
-        value = this.state_value;
+      if (option.isInnerField) { //для structured-object-field
+        value = this.state._value;
         if (!value) {
           value = {};
         }
