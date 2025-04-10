@@ -1058,9 +1058,11 @@ export class AVObjectDocument extends AVItem {
           }
 
           if (dropFieldItem.style) {
-            vrtElement.style = {
-              flexBasis: dropFieldItem.style.flexBasis,
-              flexGrow: dropFieldItem.style.flexGrow,
+            if (dropFieldItem.style.flexBasis) { // Передать созданному Вертикалу длину Филда на его месте
+              vrtElement.style = {
+                flexBasis: dropFieldItem.style.flexBasis,
+                flexGrow: dropFieldItem.style.flexGrow,
+              }
             }
             // delete dropContainer.items[dropElementIndex].style.flexBasis;
             // delete dropContainer.items[dropElementIndex].style.flexGrow;
