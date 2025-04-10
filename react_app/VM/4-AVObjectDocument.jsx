@@ -157,7 +157,7 @@ export class AVObjectDocument extends AVItem {
           </div>
         </div>
         {this.state.isClassItemOpened && (
-          <div className="pos-abs trbl-0 z-index-100 bg-app-back">
+          <div className="pos-fixed rb-0-top-10prc-left-20prc z-index-100 bg-app-back">
             <AVClass
               classItem={this.state.openedClassItem}
               onObjectDocumentSelectedFunc={this.state.onObjectDocumentSelectedInOpenedClassItem}
