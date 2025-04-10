@@ -109,7 +109,7 @@ export class AVClass extends AVItem {
 
   _renderJSON() {
     return (
-      <JSONTree data={this.props.classItem.data}/>
+      <JSONTree data={this.props.classItem.metadata}/>
     );
   }
 
