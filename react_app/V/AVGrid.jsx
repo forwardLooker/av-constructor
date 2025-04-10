@@ -190,13 +190,29 @@ export class AVGrid extends AVElement {
              const sortAscend = this.R.sortWith([this.R.ascend(this.R.prop(column.name))]);
              const sortDescend = this.R.sortWith([this.R.descend(this.R.prop(column.name))]);
              if (this.state.sortingType === 'ascend') {
+               let items;
+               if (column.dataType === 'number') {
+                 items = this.state._items.sort((a, b) => a[column.name] - b[column.name])
+               } else if (column.dataType === 'boolean') {
+                 items = this.state._items.sort((a, b) => !b[column.name] - !a[column.name])
+               } else {
+                 items = sortAscend(this.state._items)
+               }
                this.setState({ // дополнено своей сортировкой потому что рамда неправильно сортирует числа
-                 _items: column.dataType === 'number' ? this.state._items.sort((a, b) => a[column.name] - b[column.name]) : sortAscend(this.state._items),
+                 _items: items,
                  sortingType: 'descend'
                });
              } else {
+               let items;
+               if (column.dataType === 'number') {
+                 items = this.state._items.sort((a, b) => b[column.name] - a[column.name])
+               } else if (column.dataType === 'boolean') {
+                 items = this.state._items.sort((a, b) => !a[column.name] - !b[column.name])
+               } else {
+                 items = sortDescend(this.state._items)
+               }
                this.setState({ // дополнено своей сортировкой потому что рамда неправильно сортирует числа
-                 _items: column.dataType === 'number' ? this.state._items.sort((a, b) => b[column.name] - a[column.name]) : sortDescend(this.state._items),
+                 _items: items,
                  sortingType: 'ascend'
                });
              }
