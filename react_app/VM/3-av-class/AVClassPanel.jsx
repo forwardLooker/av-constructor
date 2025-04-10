@@ -16,6 +16,26 @@ export class AVClassPanel extends AVItem {
     availableViewsList: [],
   }
 
+  //render
+  
+  async componentDidMount() {
+    if (this.props.classItem) {
+      await this.props.classItem.getFieldDescriptors() // TODO ?
+      const currentViewName = this.props.classItem.defaultViewName;
+      const availableViewsList = this.props.classItem.getViewsList();
+      this.setState({ currentViewName, availableViewsList });
+    }
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (this.props.classItem !== prevProps.classItem) {
+      await this.props.classItem.getFieldDescriptors() // TODO ?
+      const currentViewName = this.props.classItem.defaultViewName;
+      const availableViewsList = this.props.classItem.getViewsList();
+      this.setState({ currentViewName, availableViewsList });
+    }
+  }
+
   render() {
     return (
       <div className="_av-class-panel-root row pad-bottom-2 border-bottom-2">
@@ -43,24 +63,6 @@ export class AVClassPanel extends AVItem {
         <AVButton onClick={this.props.onCreateFunc}>Создать</AVButton>
       </div>
     )
-  }
-
-  async componentDidMount() {
-    if (this.props.classItem) {
-      await this.props.classItem.getFieldDescriptors() // TODO ?
-      const currentViewName = this.props.classItem.defaultViewName;
-      const availableViewsList = this.props.classItem.getViewsList();
-      this.setState({currentViewName, availableViewsList});
-    }
-  }
-
-  async componentDidUpdate(prevProps) {
-    if (this.props.classItem !== prevProps.classItem) {
-      await this.props.classItem.getFieldDescriptors() // TODO ?
-      const currentViewName = this.props.classItem.defaultViewName;
-      const availableViewsList = this.props.classItem.getViewsList();
-      this.setState({currentViewName, availableViewsList});
-    }
   }
 
   _selectView(view) {

@@ -62,6 +62,32 @@ export class AVObjectDocument extends AVItem {
     this._prepareDesignJson();
   }
 
+  //render
+  
+  async componentDidMount() {
+    if (this.props.objectDocumentPath) {
+      const objectDocument = this.Host.getObjectDocumentByPath(this.props.objectDocumentPath);
+      await objectDocument.getData();
+      const classItem = this.Host.getClass(objectDocument.data.classReference);
+      const fieldDescriptors = await classItem.getFieldDescriptors();
+      objectDocument.Class = classItem;
+
+      this.setState({
+        _newData: this.deepClone(objectDocument.data),
+        _newDataBeforeUpdate: this.deepClone(objectDocument.data),
+        _objectDocument: objectDocument,
+        _fieldDescriptors: fieldDescriptors
+      }, () => {
+        this._prepareDesignJson();
+        this.forceUpdate();
+      })
+    }
+    // this.setState({
+    //   _newData: this.deepClone(this.props.objectDocument.data),
+    //   _newDataBeforeUpdate: this.deepClone(this.props.objectDocument.data),
+    // })
+  }
+
   _prepareDesignJson = () => {
     if (this.state._objectDocument) {
       if (this.state._objectDocument.designJson) {
@@ -346,30 +372,6 @@ export class AVObjectDocument extends AVItem {
       })
     }
     return ButtonsAddedByServices;
-  }
-
-  async componentDidMount() {
-    if (this.props.objectDocumentPath) {
-      const objectDocument = this.Host.getObjectDocumentByPath(this.props.objectDocumentPath);
-      await objectDocument.getData();
-      const classItem = this.Host.getClass(objectDocument.data.classReference);
-      const fieldDescriptors = await classItem.getFieldDescriptors();
-      objectDocument.Class = classItem;
-      
-      this.setState({
-        _newData: this.deepClone(objectDocument.data),
-        _newDataBeforeUpdate: this.deepClone(objectDocument.data),
-        _objectDocument: objectDocument,
-        _fieldDescriptors: fieldDescriptors
-      }, () => {
-        this._prepareDesignJson();
-        this.forceUpdate();
-      })
-    }
-    // this.setState({
-    //   _newData: this.deepClone(this.props.objectDocument.data),
-    //   _newDataBeforeUpdate: this.deepClone(this.props.objectDocument.data),
-    // })
   }
 
   showClass = async (id, onObjectDocumentSelected) => { // используется в Филде для линков на объекты

@@ -78,6 +78,62 @@ export class AVClassConfigurator extends AVItem {
     {name: 'isServiceConnected', dataType: 'boolean'}
   ]
 
+  //render
+  
+  async componentDidMount() {
+    if (this.props.classItem) {
+      // Fields
+      const fieldDescriptors = await this.props.classItem.getFieldDescriptors();
+      const _newFieldDescriptors = this.deepClone(fieldDescriptors);
+      // Views
+      const viewsOptions = await this.props.classItem.getViewsOptions();
+      const _newViewsOptions = this.deepClone(viewsOptions);
+      //Services
+      const connectedServices = await this.props.classItem.getConnectedServices();
+
+      let targetDomainOrganizationItemInConfig;
+      const targetDomainOrFolderItemInConfig = this.findDeepContainerInItemsBy({ id: this.props.classItem.id }, { items: this.Host.config });
+      if (targetDomainOrFolderItemInConfig.itemType !== 'domain') {
+        targetDomainOrganizationItemInConfig = this.findDeepObjInItemsBy({ id: targetDomainOrFolderItemInConfig.domainId }, { items: this.Host.config });
+      } else {
+        targetDomainOrganizationItemInConfig = targetDomainOrFolderItemInConfig;
+      }
+
+      const servicesDomain = this.findDeepObjInItemsBy({ name: 'Сервисы', itemType: 'domain' }, { items: targetDomainOrganizationItemInConfig.items });
+      let availableServices;
+      if (servicesDomain) {
+        availableServices = this.deepClone(servicesDomain.items);
+        availableServices = availableServices.map(srv => ({ ...srv, items: null })); //TODO ?
+      } else {
+        availableServices = []
+      }
+      const _newConnectedServices = this.deepClone(connectedServices.concat(
+        availableServices.filter(avS => connectedServices.every(conS => conS.id !== avS.id))
+      ))
+
+      this.setState({
+        fieldDescriptors,
+        _newFieldDescriptors,
+        _newFieldDescriptorsBeforeUpdate: this.deepClone(_newFieldDescriptors),
+
+        viewsOptions,
+        _newViewsOptions,
+        __newViewsOptionsBeforeUpdate: this.deepClone(_newViewsOptions),
+
+        availableServices,
+        connectedServices: connectedServices,
+        _newConnectedServices: _newConnectedServices,
+        _newConnectedServicesBeforeUpdate: this.deepClone(_newConnectedServices),
+      });
+    }
+  }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.isEmpty(prevState._newFieldDescriptors) && this.isEmpty(prevState._newConnectedServices)) {
+  //     return;
+  //   }
+  // }
+
   render() {
     return (
       <div className="_av-class-configurator-root flex-1 col space-between">
@@ -172,60 +228,6 @@ export class AVClassConfigurator extends AVItem {
       </div>
     )
   }
-
-  async componentDidMount() {
-    if (this.props.classItem) {
-      // Fields
-      const fieldDescriptors = await this.props.classItem.getFieldDescriptors();
-      const _newFieldDescriptors = this.deepClone(fieldDescriptors);
-      // Views
-      const viewsOptions = await this.props.classItem.getViewsOptions();
-      const _newViewsOptions = this.deepClone(viewsOptions);
-      //Services
-      const connectedServices = await this.props.classItem.getConnectedServices();
-
-      let targetDomainOrganizationItemInConfig;
-      const targetDomainOrFolderItemInConfig = this.findDeepContainerInItemsBy({id: this.props.classItem.id}, {items: this.Host.config});
-      if (targetDomainOrFolderItemInConfig.itemType !== 'domain') {
-        targetDomainOrganizationItemInConfig = this.findDeepObjInItemsBy({id: targetDomainOrFolderItemInConfig.domainId}, {items: this.Host.config});
-      } else {
-        targetDomainOrganizationItemInConfig = targetDomainOrFolderItemInConfig;
-      }
-
-      const servicesDomain = this.findDeepObjInItemsBy({name: 'Сервисы', itemType: 'domain'}, {items: targetDomainOrganizationItemInConfig.items});
-      let availableServices;
-      if (servicesDomain) {
-        availableServices = this.deepClone(servicesDomain.items);
-        availableServices = availableServices.map(srv => ({...srv, items: null})); //TODO ?
-      } else {
-        availableServices = []
-      }
-      const _newConnectedServices = this.deepClone(connectedServices.concat(
-        availableServices.filter(avS => connectedServices.every(conS => conS.id !== avS.id))
-      ))
-
-      this.setState({
-        fieldDescriptors,
-        _newFieldDescriptors,
-        _newFieldDescriptorsBeforeUpdate: this.deepClone(_newFieldDescriptors),
-
-        viewsOptions,
-        _newViewsOptions,
-        __newViewsOptionsBeforeUpdate: this.deepClone(_newViewsOptions),
-
-        availableServices,
-        connectedServices: connectedServices,
-        _newConnectedServices: _newConnectedServices,
-        _newConnectedServicesBeforeUpdate: this.deepClone(_newConnectedServices),
-      });
-    }
-  }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.isEmpty(prevState._newFieldDescriptors) && this.isEmpty(prevState._newConnectedServices)) {
-  //     return;
-  //   }
-  // }
 
   _onTreeItemContextMenu = async (e, item) => {
     const menuChoice = await this.showContextMenu(e, ['Переименовать', 'Добавить вложенное поле', 'Удалить поле']);

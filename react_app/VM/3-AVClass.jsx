@@ -24,6 +24,22 @@ export class AVClass extends AVItem {
     isParametersPanelOpened: false, // Пока нигде не используется
     ParametersPanelrender: this.noop
   }
+  
+  //render
+  
+  async componentDidMount() {
+    if (this.props.classItem) {
+      await this._loadGridData();
+      this.setState({ currentViewName: this.props.classItem.defaultViewName })
+    }
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (this.props.classItem !== prevProps.classItem) {
+      await this._loadGridData();
+      this.setState({ currentViewName: this.props.classItem.defaultViewName })
+    }
+  }
 
   render() {
     return (
@@ -118,20 +134,6 @@ export class AVClass extends AVItem {
         </div>
       </div>
     )
-  }
-
-  async componentDidMount() {
-    if (this.props.classItem) {
-      await this._loadGridData();
-      this.setState({currentViewName: this.props.classItem.defaultViewName})
-    }
-  }
-
-  async componentDidUpdate(prevProps) {
-    if (this.props.classItem !== prevProps.classItem) {
-      await this._loadGridData();
-      this.setState({currentViewName: this.props.classItem.defaultViewName})
-    }
   }
 
   showParametersPanel = (ParametersPanelrender) => {

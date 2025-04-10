@@ -69,6 +69,32 @@ export class AVGrid extends AVElement {
   }
 
   $underRowPanelContainer;
+  
+  //render
+
+  componentDidMount() {
+    this._hideHiddenColumnsWithoutUpdate()
+    this._realignGridHeaderCells();
+    this._realignGridRows();
+    this.forceUpdate();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.columns !== this.props.columns) {
+      this.setState({_columns: this.deepCloneArrayWithInnerRef(this.props.columns)}, () => {
+        this._hideHiddenColumnsWithoutUpdate()
+        this._realignGridHeaderCells();
+        this._realignGridRows();
+        this.forceUpdate();
+      })
+    }
+    if (prevProps.items !== this.props.items) {
+      this.setState({_items: this.deepCloneArrayWithInnerRef(this.props.items)}, () => {
+        this._realignGridRows();
+        this.forceUpdate();
+      })
+    }
+  }
 
   render() {
     return (
@@ -369,31 +395,6 @@ export class AVGrid extends AVElement {
   }
   
   closeUnderRowPanel = () => this.setState({ isUnderRowPanelRendered: false, underRowPanelContainerHeight: 0 })
-
-  componentDidMount() {
-    this._hideHiddenColumnsWithoutUpdate()
-    this._realignGridHeaderCells();
-    this._realignGridRows();
-    this.forceUpdate();
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.columns !== this.props.columns) {
-      this.setState({_columns: this.deepCloneArrayWithInnerRef(this.props.columns)}, () => {
-        this._hideHiddenColumnsWithoutUpdate()
-        this._realignGridHeaderCells();
-        this._realignGridRows();
-        this.forceUpdate();
-      })
-    }
-    if (prevProps.items !== this.props.items) {
-      this.setState({_items: this.deepCloneArrayWithInnerRef(this.props.items)}, () => {
-        this._realignGridRows();
-        this.forceUpdate();
-      })
-    }
-
-  }
 
   _hideHiddenColumnsWithoutUpdate = () => {
     this.state._columns = this.state._columns.filter(c => !c.isHiddenInGrid);

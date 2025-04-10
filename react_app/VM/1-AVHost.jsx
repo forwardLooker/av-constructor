@@ -64,6 +64,54 @@ export class AVHost extends AVItem {
     super();
     AVItem.Host = new Host(this);
   }
+  
+  //render
+  
+  async componentDidMount() {
+    if (!this.props.appRef.state.router) {
+      const config = await this.Host.getConfig(); // Чтобы получить роуты требуется на Хосте сначала Конфиг
+      const classItemRoutes = this.Host.getClassByName('Роуты');
+      const routesArr = await classItemRoutes.getObjectDocuments();
+      let routesConfigArr = [
+        {
+          path: "/",
+          element: <AVHost appRef={this.props.appRef}></AVHost>,
+        },
+      ];
+      routesArr.forEach(async routeObjDoc => {
+        console.log('routeObjDoc', routeObjDoc);
+        // const classItem = this.Host.getClassByPath(routeObjDoc.targetClassPath);
+        // const fieldDescriptors = await classItem.getFieldDescriptors();
+        // const objectDocument = this.Host.getObjectDocumentByPath(routeObjDoc.targetObjectDocumentPath);
+        // await objectDocument.getData();
+        routesConfigArr.push({
+          path: routeObjDoc.routeRelativePath,
+          // element: <div>{routeObjDoc.routeRelativePath}</div>
+          element: (<AVObjectDocument
+            objectDocumentPath={routeObjDoc.targetObjectDocumentPath}
+          ></AVObjectDocument>)
+        })
+      });
+      console.log('routesConfigArr:', routesConfigArr);
+      this.props.appRef.setState({
+        router: createBrowserRouter(routesConfigArr)
+      })
+    } else {
+      const config = await this.Host.getConfig();
+      this.setState({ config });
+
+      // const bodyElem = window.document.getElementsByTagName('body');
+      // console.log('bodyElem', bodyElem);
+      window.document.addEventListener('keydown', e => {
+        console.log('didMountKeyDown', e);
+        if (e.key === 'F7') {
+          e.preventDefault();
+          this.setState(state => ({ itemFullScreenMode: !state.itemFullScreenMode }));
+        }
+      });
+      // bodyElem.focus();
+    }
+  }
 
   render() {
     if (!this.props.appRef.state.router) {
@@ -259,52 +307,6 @@ export class AVHost extends AVItem {
         }}
       ></AVContextMenu>
     )
-  }
-
-  async componentDidMount() {
-    if (!this.props.appRef.state.router) {
-      const config = await this.Host.getConfig(); // Чтобы получить роуты требуется на Хосте сначала Конфиг
-      const classItemRoutes = this.Host.getClassByName('Роуты');
-      const routesArr = await classItemRoutes.getObjectDocuments();
-      let routesConfigArr = [
-        {
-          path: "/",
-          element: <AVHost appRef={this.props.appRef}></AVHost>,
-        },
-      ];
-      routesArr.forEach(async routeObjDoc => {
-        console.log('routeObjDoc', routeObjDoc);
-        // const classItem = this.Host.getClassByPath(routeObjDoc.targetClassPath);
-        // const fieldDescriptors = await classItem.getFieldDescriptors();
-        // const objectDocument = this.Host.getObjectDocumentByPath(routeObjDoc.targetObjectDocumentPath);
-        // await objectDocument.getData();
-        routesConfigArr.push({
-          path: routeObjDoc.routeRelativePath,
-          // element: <div>{routeObjDoc.routeRelativePath}</div>
-          element: (<AVObjectDocument
-            objectDocumentPath={routeObjDoc.targetObjectDocumentPath}
-          ></AVObjectDocument>)
-        })
-      });
-      console.log('routesConfigArr:', routesConfigArr);
-      this.props.appRef.setState({
-        router: createBrowserRouter(routesConfigArr)
-      })
-    } else {
-      const config = await this.Host.getConfig();
-      this.setState({ config });
-      
-      // const bodyElem = window.document.getElementsByTagName('body');
-      // console.log('bodyElem', bodyElem);
-      window.document.addEventListener('keydown', e => {
-        console.log('didMountKeyDown', e);
-        if (e.key === 'F7') {
-          e.preventDefault();
-          this.setState(state => ({ itemFullScreenMode: !state.itemFullScreenMode }));
-        }
-      });
-      // bodyElem.focus();
-    }
   }
 
   _onTreeItemSelect = async (item) => {

@@ -45,9 +45,22 @@ export class AVTree extends AVElement {
     onItemSelectFunc: this.noop,
     onItemContextMenuFunc: this.noop
   }
+  
   state = {
     _items: [],
     selectedItem: null
+  }
+  
+  //render
+  
+  componentDidMount() {
+    this._cloneAndPrepareItems();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.items !== prevProps.items) {
+      this._cloneAndPrepareItems();
+    }
   }
 
   render(nestedItems, level) {
@@ -92,16 +105,6 @@ export class AVTree extends AVElement {
         ))}
       </div>
     )
-  }
-
-  componentDidMount() {
-    this._cloneAndPrepareItems();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.items !== prevProps.items) {
-      this._cloneAndPrepareItems();
-    }
   }
 
   _cloneAndPrepareItems = () => {

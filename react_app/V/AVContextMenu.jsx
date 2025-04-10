@@ -16,6 +16,12 @@ export class AVContextMenu extends AVElement {
     onItemSelectFunc: this.noop
   }
 
+  //render
+  
+  componentDidMount() {
+    window.addEventListener('click', this._onCloseWithoutSelect);
+  }
+
   // TODO подобрать цвета и отступы а так очень похоже на нативное контекст меню
   render() {
     return (
@@ -37,10 +43,6 @@ export class AVContextMenu extends AVElement {
         ))}
       </div>
     )
-  }
-
-  componentDidMount() {
-    window.addEventListener('click', this._onCloseWithoutSelect);
   }
 
   _onCloseWithoutSelect = (e) => {

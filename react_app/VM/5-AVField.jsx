@@ -95,8 +95,22 @@ export class AVField extends AVItem {
   }
   
   _computedValueNotified;
-  _labelFontSizeClassName = 'font-size-16px';
+  _labelFontSizeClassName = 'font-size-16px'; //for variant Gazprombank-string
   
+  //render
+  
+  componentDidMount() {
+    if ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) {
+      this.props.onChangeFunc(this.props.fieldItem?.defaultValue)
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.value !== prevProps.value || this.props.inspectedObject !== prevProps.inspectedObject) {
+      this.setState({ _value: this.props.value });
+    }
+  }
+
   render() {
     if (this.props.fieldItem.viewItemType === 'space div') {
       return (
@@ -507,18 +521,6 @@ export class AVField extends AVItem {
 
 
     return inputElement;
-  }
-
-  componentDidMount() {
-    if ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) {
-      this.props.onChangeFunc(this.props.fieldItem?.defaultValue)
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.value !== prevProps.value || this.props.inspectedObject !== prevProps.inspectedObject) {
-      this.setState({_value: this.props.value});
-    }
   }
 
   _onChange = (eOrValue, option) => {

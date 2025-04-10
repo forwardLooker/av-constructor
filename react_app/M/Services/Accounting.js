@@ -486,9 +486,6 @@ class Journal extends AVItem {
     )
   }
   
-  async componentDidMount() {
-  }
-
   makeFilteredBalance = async () => {
     const operations = await this.props.classItem.getObjectDocuments();
 
