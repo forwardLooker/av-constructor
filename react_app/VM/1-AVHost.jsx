@@ -19,16 +19,6 @@ import {
 } from "react-router-dom";
 
 export class AVHost extends AVItem {
-  static styles = {
-    header: this.styled.div`
-      padding: 0 1.5em;
-      //box-shadow: 0 5px 5px 0 rgb(3 5 10 / 66%);
-    `,
-    leftSidebar: this.styled.div`
-      width: 20%;
-    `,
-  };
-  
   static defaultProps = {
     appRef: null // Служит для незаметной перезагрузки Хоста со всеми роутами, полученными из специального Класса в System
   }
@@ -134,7 +124,7 @@ export class AVHost extends AVItem {
       return null
     }
     return (
-      <AVHost.styles.header className="row space-between height-10vh">
+      <div className="_host-header row space-between pad-0-1dot5em height-10vh">
         <div className="row align-center">
           <div className="pad-0-4">
             <AVIcon name="globe"></AVIcon>
@@ -147,7 +137,7 @@ export class AVHost extends AVItem {
             <AVButton onClick={() => this.auth.signOut()}>Выйти</AVButton>
           </div>
         )}
-      </AVHost.styles.header>
+      </div>
     )
   }
 
@@ -170,7 +160,7 @@ export class AVHost extends AVItem {
       return null
     }
     return (
-      <AVHost.styles.leftSidebar className="col font-size-14px pad-8 bg-tree border height-90vh scroll-y">
+      <div className="_host-left-sidebar col font-size-14px pad-8 bg-tree border width-20prc height-90vh scroll-y">
         {this.state.designMode && this._renderInstrumentPanel()}
         {!this.state.designMode && (
           <AVTree
@@ -180,7 +170,7 @@ export class AVHost extends AVItem {
             onItemContextMenuFunc={this._onTreeItemContextMenu}
           ></AVTree>
         )}
-      </AVHost.styles.leftSidebar>
+      </div>
     )
   }
 

@@ -40,6 +40,12 @@
 .width-50prc {
   width: 50%
 }
+.width-20prc {
+  width: 20%
+}
+.width-4px {
+  width: 4px;
+}
 .width-16px {
   width: 16px;
 }
@@ -136,6 +142,9 @@
 .pad-0-8 {
   padding: 0 8px;
 }
+.pad-0-1dot5em {
+  padding: 0 1.5em;
+}
 .no-border {
   border: none;
 }
@@ -213,6 +222,9 @@
 }
 .cursor-row-resize {
   cursor: row-resize;
+}
+.cursor-col-resize {
+  cursor: col-resize;
 }
 .cursor-default {
   cursor: default;

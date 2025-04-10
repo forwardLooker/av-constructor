@@ -11,14 +11,6 @@ import {AVIcon} from '../V/icons/AVIcon.jsx';
 import { JSONTree } from 'react-json-tree';
 
 export class AVObjectDocument extends AVItem {
-  static styles = {
-    horizontalResizer: this.styled.div`
-      width: 4px;
-      height: 100%;
-      cursor: col-resize;
-    `
-  }
-
   static defaultProps = {
     fieldDescriptors: [],
     objectDocument: null,
@@ -341,12 +333,12 @@ export class AVObjectDocument extends AVItem {
                  onDragEnd={e => this.setState({designDragStarted: false})}
                  onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
             ></div>
-            <AVObjectDocument.styles.horizontalResizer
+            <div className="_horizontal-resizer height-100prc width-4px cursor-col-resize"
               hidden={this.state.designDragStarted}
               onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}
-            ></AVObjectDocument.styles.horizontalResizer>
+            ></div>
           </div>
-          <div className="width-100prc height-2px cursor-row-resize"
+          <div className="_vertical-resizer width-100prc height-2px cursor-row-resize"
                hidden={this.state.designDragStarted}
                onMouseDown={(e) => this._startVerticalResize(e, fieldItem, idx, containerElement)}
           ></div>
