@@ -575,7 +575,7 @@ export class AVObjectDocument extends AVItem {
       menu.push('Установить buttonStyle');
       menu.push('Сбросить buttonStyle');
     }
-    if (fieldItem.viewItemType !== 'tabs') {
+    if (fieldItem.viewItemType !== 'tabs' && fieldItem.viewItemType && fieldItem.viewItemType !== 'field') {
       menu.push('Убрать элемент')
     }
     if (fieldItem.fullOverlayMode) {
