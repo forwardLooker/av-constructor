@@ -4,7 +4,9 @@ export class Item {
   get user() {
     return Item.user;
   }
-  Host; // сеттится в конструкторе Хоста
+  get Host() {
+    return Item.Host // сеттится в конструкторе Хоста
+  }; 
 
   _listenersIdIncrementator;
   _listeners;
