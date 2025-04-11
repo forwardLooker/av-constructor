@@ -73,26 +73,28 @@ export class AVGrid extends AVElement {
   //render
 
   componentDidMount() {
-    this._hideHiddenColumnsWithoutUpdate()
     this._realignGridHeaderCells();
     this._realignGridRows();
     this.forceUpdate();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.columns !== this.props.columns) {
-      this.setState({_columns: this.deepCloneArrayWithInnerRef(this.props.columns)}, () => {
-        this._hideHiddenColumnsWithoutUpdate()
+    if (prevProps.columns !== this.props.columns && prevProps.items !== this.props.items) {
+      this.setState({
+        _columns: this.deepCloneArrayWithInnerRef(this.props.columns).filter(c => !c.isHiddenInGrid),
+          _items: this.deepCloneArrayWithInnerRef(this.props.items)
+      }, () => {
         this._realignGridHeaderCells();
         this._realignGridRows();
         this.forceUpdate();
       })
-    }
-    if (prevProps.items !== this.props.items) {
-      this.setState({_items: this.deepCloneArrayWithInnerRef(this.props.items)}, () => {
-        this._realignGridRows();
-        this.forceUpdate();
-      })
+    } else {
+      if (prevProps.items !== this.props.items) {
+        this.setState({ _items: this.deepCloneArrayWithInnerRef(this.props.items) }, () => {
+          this._realignGridRows();
+          this.forceUpdate();
+        })
+      }
     }
   }
 
@@ -411,10 +413,6 @@ export class AVGrid extends AVElement {
   }
   
   closeUnderRowPanel = () => this.setState({ isUnderRowPanelRendered: false, underRowPanelContainerHeight: 0 })
-
-  _hideHiddenColumnsWithoutUpdate = () => {
-    this.state._columns = this.state._columns.filter(c => !c.isHiddenInGrid);
-  }
 
   _removeDragBorder = (e) => {
     const fieldOverlay = this._findFieldOverlay(e);
