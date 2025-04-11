@@ -87,5 +87,9 @@ export class Host extends Item {
     return objectDocument;
 
   }
+  
+  navigate(...params) {
+    this.$hostElement.props.appRef.state.router.navigate(...params);
+  }
 
 };

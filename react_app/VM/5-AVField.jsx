@@ -143,7 +143,7 @@ export class AVField extends AVItem {
             style={this.props.fieldItem.buttonStyle}
             onClick={() => {
               if (this.props.$objectDocument) {
-                const classInstance = this.props.$objectDocument.props.objectDocument.Class;
+                const classInstance = this.props.$objectDocument.state._objectDocument.Class;
                 const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
                 if (moduleDefinition) {
                   const methodOnButton = moduleDefinition.methods[this.props.fieldItem.label];

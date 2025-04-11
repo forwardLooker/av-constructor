@@ -1201,15 +1201,17 @@ export class AVObjectDocument extends AVItem {
     })
   }
   _removeDeletedItemInContainer = (delItem, containerEl) => {
-    const forDelItemIndex = containerEl.items.findIndex(i => i.name === delItem.name);
-    if (forDelItemIndex > -1) {
-      containerEl.items.splice(forDelItemIndex, 1);
-      this._removeEmptyContainers(containerEl);
-    } else {
-      const containerElements = containerEl.items.filter(i => i.viewItemType && i.viewItemType !== 'field');
-      containerElements.forEach(contEl => {
-        this._removeDeletedItemInContainer(delItem, contEl)
-      })
+    if (containerEl.items) {
+      const forDelItemIndex = containerEl.items.findIndex(i => i.name === delItem.name);
+      if (forDelItemIndex > -1) {
+        containerEl.items.splice(forDelItemIndex, 1);
+        this._removeEmptyContainers(containerEl);
+      } else {
+        const containerElements = containerEl.items.filter(i => i.viewItemType && i.viewItemType !== 'field');
+        containerElements.forEach(contEl => {
+          this._removeDeletedItemInContainer(delItem, contEl)
+        })
+      }
     }
   }
 
