@@ -32,7 +32,7 @@ export class Item {
     }
   }
   fire(eventName, data) {
-    if (this._listeners[eventName]) {
+    if (this._listeners?.[eventName]) {
       Object.keys(this._listeners[eventName])
         .forEach(listenerId => this._listeners[eventName][listenerId](data))
     }
