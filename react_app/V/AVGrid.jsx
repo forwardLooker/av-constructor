@@ -94,6 +94,14 @@ export class AVGrid extends AVElement {
           this._realignGridRows();
           this.forceUpdate();
         })
+      } else if (prevProps.columns !== this.props.columns) {
+        this.setState({
+          _columns: this.deepCloneArrayWithInnerRef(this.props.columns).filter(c => !c.isHiddenInGrid),
+        }, () => {
+          this._realignGridHeaderCells();
+          this._realignGridRows();
+          this.forceUpdate();
+        })
       }
     }
   }
