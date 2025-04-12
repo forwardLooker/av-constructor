@@ -95,7 +95,12 @@ export class AVField extends AVItem {
   }
   
   _computedValueNotified;
+  
   _labelFontSizeClassName = 'font-size-16px'; //for variant Gazprombank-string
+  
+  _sliderFreeSpaceRef;
+  _sliderFillSpaceWidth = 0;
+
   
   //render
   
@@ -103,12 +108,35 @@ export class AVField extends AVItem {
     if ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) {
       this.props.onChangeFunc(this.props.fieldItem?.defaultValue)
     }
+    if (this._sliderFreeSpaceRef) {
+      const sliderFreeSpaceWidth = this._sliderFreeSpaceRef.getBoundingClientRect().width;
+      this._sliderFillSpaceWidth = (sliderFreeSpaceWidth / (this.props.fieldItem.maxValue - this.props.fieldItem.minValue)) * (this.state._value - this.props.fieldItem.minValue);
+      if (Number(this.state._value) < Number(this.props.fieldItem.minValue)) {
+        this._sliderFillSpaceWidth = 0;
+      }
+      if (Number(this.state._value) > Number(this.props.fieldItem.maxValue)) {
+        this._sliderFillSpaceWidth = sliderFreeSpaceWidth;
+      }
+      this.forceUpdate();
+    }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (this.props.value !== prevProps.value || this.props.inspectedObject !== prevProps.inspectedObject) {
       this.setState({ _value: this.props.value });
     }
+    if (this._sliderFreeSpaceRef && this.state._value !== prevState._value) {
+      const sliderFreeSpaceWidth = this._sliderFreeSpaceRef.getBoundingClientRect().width;
+      this._sliderFillSpaceWidth = (sliderFreeSpaceWidth / (this.props.fieldItem.maxValue - this.props.fieldItem.minValue)) * (this.state._value - this.props.fieldItem.minValue);
+      if (Number(this.state._value) < Number(this.props.fieldItem.minValue)) {
+        this._sliderFillSpaceWidth = 0;
+      }
+      if (Number(this.state._value) > Number(this.props.fieldItem.maxValue)) {
+        this._sliderFillSpaceWidth = sliderFreeSpaceWidth;
+      }
+      this.forceUpdate();
+    }
+
   }
 
   render() {
@@ -352,13 +380,19 @@ export class AVField extends AVItem {
                 </svg>
               </div>
             </div>
-            <div className="_range-slider-free-space pos-rel height-4px bg-slider-free-space cursor-pointer">
-              <div className="_range-slider-fill-space height-100prc bg-slider-fill-space border-radius-2px"></div>
-              <div className='_range-slider-fill-handle pos-abs top-minus150prc width-16px height-16px bg-slider-fill-space border-radius-50prc'></div>
+            <div className="_range-slider-free-space pos-rel height-4px bg-slider-free-space cursor-pointer"
+              ref={el => this._sliderFreeSpaceRef = el}
+            >
+              <div className="_range-slider-fill-space height-100prc bg-slider-fill-space border-radius-2px"
+                style={{width: this._sliderFillSpaceWidth + 'px'}}
+              ></div>
+              <div className='_range-slider-fill-handle pos-abs top-minus150prc width-16px height-16px bg-slider-fill-space border-radius-50prc'
+                style={{left: this._sliderFillSpaceWidth + 'px'}}
+              ></div>
             </div>
             <div className="row space-between margin-top-8 font-size-14px">
-              <div>от 300 000 Р</div>
-              <div>до 7 000 000 Р</div>
+              <div>{fieldItem.minLabel}</div>
+              <div>{fieldItem.maxLabel}</div>
             </div>
           </div>
         );

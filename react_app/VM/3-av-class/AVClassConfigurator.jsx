@@ -69,7 +69,36 @@ export class AVClassConfigurator extends AVItem {
           }
           return false
         }},
-        {name: 'defaultValue'},
+        { name: 'defaultValue' },
+        {name: 'minValue', dataType: 'number', hideIfFunc: () => {
+            if (this.state.selectedFieldDescriptor.variant !== 'input+range') {
+              return true
+            }
+            return false
+          }
+        },
+        {name: 'maxValue', dataType: 'number', hideIfFunc: () => {
+            if (this.state.selectedFieldDescriptor.variant !== 'input+range') {
+              return true
+            }
+            return false
+          }
+        },
+        {name: 'minLabel', hideIfFunc: () => {
+            if (this.state.selectedFieldDescriptor.variant !== 'input+range') {
+              return true
+            }
+            return false
+          }
+        },
+        {name: 'maxLabel', hideIfFunc: () => {
+            if (this.state.selectedFieldDescriptor.variant !== 'input+range') {
+              return true
+            }
+            return false
+          }
+        },
+
       ]
     },
     {name: 'isReadOnly', dataType: 'boolean'},
