@@ -63,7 +63,12 @@ export class AVClassConfigurator extends AVItem {
           }
           return false
         }},
-        {name: 'valuesList'},
+        {name: 'valuesList', hideIfFunc: () => {
+          if (this.state.selectedFieldDescriptor.variant !== 'select') {
+            return true
+          }
+          return false
+        }},
         {name: 'defaultValue'},
       ]
     },
