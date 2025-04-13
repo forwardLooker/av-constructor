@@ -386,8 +386,9 @@ export class AVField extends AVItem {
               <div className="_range-slider-fill-space height-100prc bg-slider-fill-space border-radius-2px"
                 style={{width: this._sliderFillSpaceWidth + 'px'}}
               ></div>
-              <div className='_range-slider-fill-handle pos-abs top-minus150prc width-16px height-16px bg-slider-fill-space border-radius-50prc'
-                style={{left: this._sliderFillSpaceWidth + 'px'}}
+              <div className='_range-slider-fill-handle pos-abs top-minus150prc z-index-10 width-16px height-16px bg-slider-fill-space border-radius-50prc'
+                style={{ left: (this._sliderFillSpaceWidth - 5) + 'px' }}
+                onMouseDown={this._startHorizontalResize}
               ></div>
             </div>
             <div className="row space-between margin-top-8 font-size-14px">
@@ -605,5 +606,31 @@ export class AVField extends AVItem {
       return true
     }
     return this.props.isLabelHidden
+  }
+  
+  _startHorizontalResize = (msDownEvent) => {
+    msDownEvent.preventDefault();
+    const startResizePageX = msDownEvent.pageX;
+    const _sliderFillSpaceWidth = this._sliderFillSpaceWidth // запомнить стартовый перед маусмув
+    const sliderFreeSpaceWidth = this._sliderFreeSpaceRef.getBoundingClientRect().width;
+    window.document.onmouseup = upEv => {
+      upEv.preventDefault();
+      window.document.onmousemove = null;
+      window.document.onmouseup = null;
+    }
+    
+    window.document.onmousemove = moveEv => {
+      moveEv.preventDefault();
+      const pageXDiff = moveEv.pageX - startResizePageX;
+      const startPlusDiffWidth = _sliderFillSpaceWidth + pageXDiff
+      if ((startPlusDiffWidth >= 0) && (startPlusDiffWidth <= sliderFreeSpaceWidth)) {
+        this._sliderFillSpaceWidth = startPlusDiffWidth;
+        const newValue = Math.round(((this.props.fieldItem.maxValue - this.props.fieldItem.minValue) * (this._sliderFillSpaceWidth / sliderFreeSpaceWidth)) + (1 * this.props.fieldItem.minValue));
+        this.setState({ _value: newValue });
+        this.props.onChangeFunc(newValue);
+        // this.forceUpdate()
+      }
+    }
+
   }
 }
