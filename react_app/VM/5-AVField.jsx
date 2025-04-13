@@ -633,7 +633,13 @@ export class AVField extends AVItem {
     window.document.onmousemove = moveEv => {
       moveEv.preventDefault();
       const pageXDiff = moveEv.pageX - startResizePageX;
-      const startPlusDiffWidth = _sliderFillSpaceWidth + pageXDiff
+      let startPlusDiffWidth = _sliderFillSpaceWidth + pageXDiff;
+      if (startPlusDiffWidth < 0.5) {
+        startPlusDiffWidth = 0
+      }
+      if (startPlusDiffWidth >= sliderFreeSpaceWidth) {
+        startPlusDiffWidth = sliderFreeSpaceWidth;
+      }
       if ((startPlusDiffWidth >= 0) && (startPlusDiffWidth <= sliderFreeSpaceWidth)) {
         this._sliderFillSpaceWidth = startPlusDiffWidth;
         const newValue = Math.round(((this.props.fieldItem.maxValue - this.props.fieldItem.minValue) * (this._sliderFillSpaceWidth / sliderFreeSpaceWidth)) + (1 * this.props.fieldItem.minValue));
