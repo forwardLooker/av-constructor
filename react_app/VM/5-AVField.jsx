@@ -382,6 +382,17 @@ export class AVField extends AVItem {
             </div>
             <div className="_range-slider-free-space pos-rel height-4px bg-slider-free-space cursor-pointer"
               ref={el => this._sliderFreeSpaceRef = el}
+              onClick={e => {
+                if (e.target.classList.contains('_range-slider-fill-handle')) {
+                  return;
+                }
+                const divLeft = e.target.getBoundingClientRect().left;
+                const newFillSpaceWidth = e.pageX - divLeft;
+                const sliderFreeSpaceWidth = this._sliderFreeSpaceRef.getBoundingClientRect().width;
+                const newValue = Math.round(((this.props.fieldItem.maxValue - this.props.fieldItem.minValue) * (newFillSpaceWidth / sliderFreeSpaceWidth)) + (1 * this.props.fieldItem.minValue));
+                this.setState({ _value: newValue });
+                this.props.onChangeFunc(newValue);
+              }}
             >
               <div className="_range-slider-fill-space height-100prc bg-slider-fill-space border-radius-2px"
                 style={{width: this._sliderFillSpaceWidth + 'px'}}
