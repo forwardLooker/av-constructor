@@ -619,7 +619,7 @@ export class AVField extends AVItem {
     return this.props.isLabelHidden
   }
   
-  _startHorizontalResize = (msDownEvent) => {
+  _startHorizontalResize = (msDownEvent) => { // для input+ranger slider resize
     msDownEvent.preventDefault();
     const startResizePageX = msDownEvent.pageX;
     const _sliderFillSpaceWidth = this._sliderFillSpaceWidth // запомнить стартовый перед маусмув
