@@ -148,6 +148,9 @@
 .no-border {
   border: none;
 }
+.border-gaz {
+  border: 1px solid #cccfde
+}
 .border {
   border: 0.5px solid black;
 }
@@ -177,6 +180,9 @@
 }
 .border-radius-2px {
   border-radius: 2px;
+}
+.border-radius-8px {
+  border-radius: 8px;
 }
 .border-radius-50prc {
   border-radius: 50%;

@@ -50,7 +50,7 @@ export class AVClassConfigurator extends AVItem {
             ];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'string') {
-            return ['textarea', 'select', 'date', 'Gazprombank-string'];
+            return ['textarea', 'select', 'date', 'Gazprombank-string', 'Gazprombank-tel'];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'number') {
             return ['input+range'];

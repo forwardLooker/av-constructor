@@ -65,7 +65,8 @@ export class AVField extends AVItem {
     `,
     gazprombankInput: this.styled.input`
       position: relative;
-      font-size: 20px;
+      font-size: 16px;
+      font-weight: 400;
       line-height: 20px;
       background-color: #fff;
       transition: all .2s;
@@ -312,7 +313,7 @@ export class AVField extends AVItem {
       if (fieldItem.variant === 'Gazprombank-string') {
         let gazInputRef;
         inputElement = (
-          <div className='_inputElement flex-1 col justify-center height-56px border cursor-text'
+          <div className='_inputElement flex-1 col justify-center height-56px border-gaz border-radius-8px cursor-text'
             onClick={() => {
               gazInputRef.removeAttribute('hidden');
               gazInputRef.focus();
@@ -330,9 +331,44 @@ export class AVField extends AVItem {
               readOnly={readOnly}
               onChange={onChangeFunc}
               onBlur={() => {
-                gazInputRef.setAttribute('hidden', '');
-                this._labelFontSizeClassName = 'font-size-16px';
-                this.forceUpdate();
+                if (!value) {
+                  gazInputRef.setAttribute('hidden', '');
+                  this._labelFontSizeClassName = 'font-size-16px';
+                  this.forceUpdate();
+                }
+              }}
+            ></AVField.styles.gazprombankInput>
+          </div>
+        )
+      }
+      if (fieldItem.variant === 'Gazprombank-tel') {
+        let gazInputRef;
+        inputElement = (
+          <div className='_inputElement flex-1 col justify-center height-56px border-gaz border-radius-8px cursor-text'
+            onClick={() => {
+              gazInputRef.removeAttribute('hidden');
+              gazInputRef.focus();
+              this._labelFontSizeClassName = 'font-size-14px';
+              this.forceUpdate()
+            }}
+          >
+            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVField.styles.gazprombankInput
+              className="flex-1 margin-left-16"
+              ref={el => gazInputRef = el}
+              hidden
+              autoComplete="off"
+              inputmode="tel"
+              value={(value === null || value === undefined) ? '+7 (___) ___-__-__' : value}
+              placeholder="+7 (___) ___-__-__"
+              readOnly={readOnly}
+              onChange={onChangeFunc}
+              onBlur={() => {
+                if (!value) {
+                  gazInputRef.setAttribute('hidden', '');
+                  this._labelFontSizeClassName = 'font-size-16px';
+                  this.forceUpdate();
+                }
               }}
             ></AVField.styles.gazprombankInput>
           </div>
@@ -613,7 +649,7 @@ export class AVField extends AVItem {
   }
   
   _calcIsLabelHidden = () => {
-    if (this.props.fieldItem.variant === 'Gazprombank-string') {
+    if (this.props.fieldItem.variant === 'Gazprombank-string' || this.props.fieldItem.variant === 'Gazprombank-tel') {
       return true
     }
     return this.props.isLabelHidden
