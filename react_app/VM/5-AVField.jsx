@@ -92,7 +92,9 @@ export class AVField extends AVItem {
   }
   
   state = {
-    _value: ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) || this.props.value
+    _value: ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) || this.props.value,
+    isInvalidState: false,
+    isRequiredMessageRendered: false
   }
   
   _computedValueNotified;
@@ -207,24 +209,31 @@ export class AVField extends AVItem {
     //   )
     // }
     return (
-      <div className={`_av-field-root flex-1 ${this._calcLabelPosition() === 'top'? 'column' : 'row'} align-center`}
+      <div className={`_av-field-root flex-1 row align-center`}
          style={this.props.style}
          ref={this.props.refOnRootDiv}
       >
-        {!this._calcIsLabelHidden() && (
-          <AVLabel
-            className={`pad-0-4-0-0`}
-            justifyMode={this.props.fieldItem.variant === 'input+range' ? 'start' : 'center'}
-          >{this.props.fieldItem.label || this.props.fieldItem.name}</AVLabel>
-        )}
-        {this._renderInput(
-          {
-            _value: this.state._value,
-            readOnly: this.props.readOnly || this.props.fieldItem.isReadOnly || this.props.fieldItem.isComputed,
-            onChangeFunc: this._onChange,
-            fieldItem: this.props.fieldItem,
-          }
-        )}
+        <div className='flex-1 col'>
+          <div className={`flex-1 ${this._calcLabelPosition() === 'top' ? '' : 'row'}`}>
+            {!this._calcIsLabelHidden() && (
+              <AVLabel
+                className={`pad-0-4-0-0`}
+                justifyMode={this.props.fieldItem.variant === 'input+range' ? 'start' : 'center'}
+              >{this.props.fieldItem.label || this.props.fieldItem.name}</AVLabel>
+            )}
+            {this._renderInput(
+              {
+                _value: this.state._value,
+                readOnly: this.props.readOnly || this.props.fieldItem.isReadOnly || this.props.fieldItem.isComputed,
+                onChangeFunc: this._onChange,
+                fieldItem: this.props.fieldItem,
+              }
+            )}
+          </div>
+          {this.state.isRequiredMessageRendered && (
+            <div className="margin-top-8 font-size-14px color-gaz-error">Обязательное поле</div>
+          )}
+        </div>
         {this.props.children}
       </div>
     )
@@ -313,7 +322,7 @@ export class AVField extends AVItem {
       if (fieldItem.variant === 'Gazprombank-string') {
         let gazInputRef;
         inputElement = (
-          <div className='_inputElement flex-1 col justify-center height-56px border-gaz border-radius-8px cursor-text'
+          <div className={`_inputElement flex-1 col justify-center height-56px ${this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz'} border-radius-8px cursor-text`}
             onClick={() => {
               gazInputRef.removeAttribute('hidden');
               gazInputRef.focus();
@@ -337,6 +346,10 @@ export class AVField extends AVItem {
                   this.forceUpdate();
                 }
               }}
+              onFocus={() => this.setState({
+                isInvalidState: false,
+                isRequiredMessageRendered: false,
+              })}
             ></AVField.styles.gazprombankInput>
           </div>
         )
@@ -344,7 +357,7 @@ export class AVField extends AVItem {
       if (fieldItem.variant === 'Gazprombank-tel') {
         let gazInputRef;
         inputElement = (
-          <div className='_inputElement flex-1 col justify-center height-56px border-gaz border-radius-8px cursor-text'
+          <div className={`_inputElement flex-1 col justify-center height-56px ${this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz'} border-radius-8px cursor-text`}
             onClick={() => {
               gazInputRef.removeAttribute('hidden');
               gazInputRef.focus();
@@ -370,6 +383,10 @@ export class AVField extends AVItem {
                   this.forceUpdate();
                 }
               }}
+              onFocus={() => this.setState({
+                isInvalidState: false,
+                isRequiredMessageRendered: false,
+              })}
             ></AVField.styles.gazprombankInput>
           </div>
         )
@@ -642,7 +659,7 @@ export class AVField extends AVItem {
   }
   
   _calcLabelPosition = () => {
-    if (this.props.fieldItem.variant === 'input+range') {
+    if (this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'Gazprombank-string' || this.props.fieldItem.variant === 'Gazprombank-tel') {
       return 'top'
     }
     return this.props.labelPosition

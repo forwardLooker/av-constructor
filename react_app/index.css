@@ -149,7 +149,10 @@
   border: none;
 }
 .border-gaz {
-  border: 1px solid #cccfde
+  border: 1px solid #cccfde;
+}
+.border-gaz-error {
+  border: 1px solid rgb(229, 92, 92);
 }
 .border {
   border: 0.5px solid black;
@@ -326,6 +329,9 @@
 }
 .color-gaz-label {
   color: #7f8499;
+}
+.color-gaz-error {
+  color: rgb(229, 92, 92);
 }
 .text-center {
   text-align: center;
