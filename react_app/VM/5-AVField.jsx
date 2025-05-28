@@ -94,7 +94,10 @@ export class AVField extends AVItem {
   state = {
     _value: ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) || this.props.value,
     isInvalidState: false,
-    isRequiredMessageRendered: false
+    isRequiredMessageRendered: false,
+    
+    isInvalidMessageRendered: false,
+    invalidMessage: '',
   }
   
   _computedValueNotified;
@@ -103,6 +106,8 @@ export class AVField extends AVItem {
   
   _sliderFreeSpaceRef;
   _sliderFillSpaceWidth = 0;
+
+  gazInputRef;
 
   
   //render
@@ -233,6 +238,9 @@ export class AVField extends AVItem {
           {this.state.isRequiredMessageRendered && (
             <div className="margin-top-8 font-size-14px color-gaz-error">Обязательное поле</div>
           )}
+          {this.state.isInvalidMessageRendered && (
+            <div className="margin-top-8 font-size-14px color-gaz-error">{ this.state.invalidMessage }</div>
+          )}
         </div>
         {this.props.children}
       </div>
@@ -355,12 +363,13 @@ export class AVField extends AVItem {
         )
       }
       if (fieldItem.variant === 'Gazprombank-tel') {
-        let gazInputRef;
+        // let gazInputRef;
+        value = (value === null || value === undefined) ? '+7 (___) ___-__-__' : value;
         inputElement = (
           <div className={`_inputElement flex-1 col justify-center height-56px ${this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz'} border-radius-8px cursor-text`}
             onClick={() => {
-              gazInputRef.removeAttribute('hidden');
-              gazInputRef.focus();
+              this.gazInputRef.removeAttribute('hidden');
+              this.gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
               this.forceUpdate()
             }}
@@ -368,25 +377,94 @@ export class AVField extends AVItem {
             <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVField.styles.gazprombankInput
               className="flex-1 margin-left-16"
-              ref={el => gazInputRef = el}
-              hidden
+              ref={el => this.gazInputRef = el}
               autoComplete="off"
               inputmode="tel"
               value={(value === null || value === undefined) ? '+7 (___) ___-__-__' : value}
               placeholder="+7 (___) ___-__-__"
               readOnly={readOnly}
-              onChange={onChangeFunc}
+              onClick={e => {
+                const selectionIndex = value.indexOf('_');
+                this.gazInputRef.selectionStart = selectionIndex;
+                this.gazInputRef.selectionEnd = selectionIndex;
+
+              }}
+              onKeyPress={evt => {
+                var theEvent = evt || window.event;
+                // Handle paste
+                if (theEvent.type === 'paste') {
+                  key = event.clipboardData.getData('text/plain');
+                } else {
+                  // Handle key press
+                  var key = theEvent.keyCode || theEvent.which;
+                  key = String.fromCharCode(key);
+                }
+                var regex = /[0-9]|\./;
+                if (!regex.test(key)) {
+                  theEvent.returnValue = false;
+                  if (theEvent.preventDefault) theEvent.preventDefault();
+                }
+              }}
+              onChange={e => {
+                e.persist();
+                console.log('onChange e', e);
+                console.log('gazInputRef.selectionStart', this.gazInputRef.selectionStart);
+                if (this.gazInputRef.selectionStart === this.gazInputRef.selectionEnd) {
+                  if (this.gazInputRef.selectionStart === 19) {
+                    return;
+                  }
+                  let valueArr = value.split('');
+                  if (e.nativeEvent.inputType === 'deleteContentBackward') {
+                    if (valueArr[this.gazInputRef.selectionStart] === '-') {
+                      valueArr.splice(this.gazInputRef.selectionStart - 1, 1, '_');
+                    } else if (valueArr[this.gazInputRef.selectionStart] === ' ') {
+                      valueArr.splice(this.gazInputRef.selectionStart - 2, 1, '_');
+                    } else if (valueArr[this.gazInputRef.selectionStart] === '(') {
+                      Promise.resolve().then(() => {
+                        this.gazInputRef.selectionStart = 4;
+                        this.gazInputRef.selectionEnd = 4;
+                      });
+                      return;
+                    } else {
+                      valueArr.splice(this.gazInputRef.selectionStart, 1, '_');
+                    }
+                  } else {
+                    const key = e.nativeEvent.data;
+                    valueArr.splice(this.gazInputRef.selectionStart - 1, 1, key);
+                  }
+                  const newValue = valueArr.join('');
+                  this.setState({ _value: newValue }, () => {
+                    const selectionIndex = newValue.indexOf('_');
+                    this.gazInputRef.selectionStart = selectionIndex;
+                    this.gazInputRef.selectionEnd = selectionIndex;
+                  })
+                  this.props.onChangeFunc(newValue);
+                }
+                // onChangeFunc(e);
+              }}
               onBlur={() => {
                 if (!value) {
-                  gazInputRef.setAttribute('hidden', '');
+                  this.gazInputRef.setAttribute('hidden', '');
                   this._labelFontSizeClassName = 'font-size-16px';
                   this.forceUpdate();
                 }
+                if (value.indexOf('_') > -1) {
+                  this.setState({
+                    isInvalidState: true,
+                    isInvalidMessageRendered: true,
+                    invalidMessage: 'Номер телефона указан неверно',
+                  })
+                }
               }}
-              onFocus={() => this.setState({
-                isInvalidState: false,
-                isRequiredMessageRendered: false,
-              })}
+              onFocus={() => {
+                this.gazInputRef.selectionStart = 4;
+                this.gazInputRef.selectionEnd = 4;
+                this.setState({
+                  isInvalidState: false,
+                  isRequiredMessageRendered: false,
+                  isInvalidMessageRendered: false,
+                });
+              }}
             ></AVField.styles.gazprombankInput>
           </div>
         )
@@ -623,8 +701,8 @@ export class AVField extends AVItem {
   }
 
   _onChange = (eOrValue, option) => {
-    // e.persist();
-    // console.log('onChange e', e);
+    eOrValue.persist();
+    console.log('onChange e', eOrValue);
     let value;
     if (option) {
       if (option.isInnerField) { //для structured-object-field
