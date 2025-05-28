@@ -406,9 +406,6 @@ export class AVField extends AVItem {
                 }
               }}
               onChange={e => {
-                e.persist();
-                console.log('onChange e', e);
-                console.log('gazInputRef.selectionStart', this.gazInputRef.selectionStart);
                 if (this.gazInputRef.selectionStart === this.gazInputRef.selectionEnd) {
                   if (this.gazInputRef.selectionStart === 19) {
                     return;
@@ -701,8 +698,8 @@ export class AVField extends AVItem {
   }
 
   _onChange = (eOrValue, option) => {
-    eOrValue.persist();
-    console.log('onChange e', eOrValue);
+    // eOrValue.persist();
+    // console.log('onChange e', eOrValue);
     let value;
     if (option) {
       if (option.isInnerField) { //для structured-object-field
