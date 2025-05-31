@@ -333,6 +333,9 @@
 .color-gaz-error {
   color: rgb(229, 92, 92);
 }
+.color-gaz-info {
+  color: #696e82;
+}
 .text-center {
   text-align: center;
 }

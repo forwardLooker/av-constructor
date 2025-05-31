@@ -50,7 +50,7 @@ export class AVClassConfigurator extends AVItem {
             ];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'string') {
-            return ['textarea', 'select', 'date', 'Gazprombank-string', 'Gazprombank-tel'];
+            return ['textarea', 'select', 'date', 'Gazprombank-string', 'Gazprombank-tel', 'Gazprombank-email'];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'number') {
             return ['input+range'];
@@ -70,6 +70,12 @@ export class AVClassConfigurator extends AVItem {
           return false
         }},
         { name: 'defaultValue' },
+        {name: 'infoMessage', hideIfFunc: () => {
+          if (this.state.selectedFieldDescriptor.dataType !== 'string') {
+            return true
+          }
+          return false
+        }},
         {name: 'minValue', dataType: 'number', hideIfFunc: () => {
             if (this.state.selectedFieldDescriptor.variant !== 'input+range') {
               return true

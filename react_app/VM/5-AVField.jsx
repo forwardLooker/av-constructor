@@ -4,7 +4,10 @@ import {AVItem} from './0-AVItem.js';
 
 import {AVLabel} from "../V/AVLabel.jsx";
 import {AVButton} from "../V/AVButton.jsx";
-import {AVGrid} from "../V/AVGrid.jsx";
+import { AVGrid } from "../V/AVGrid.jsx";
+
+const emailValidator = require('@sefinek/email-validator');
+
 
 export class AVField extends AVItem {
   static styles = {
@@ -235,6 +238,9 @@ export class AVField extends AVItem {
               }
             )}
           </div>
+          {this.props.fieldItem.infoMessage && (
+            <div className="margin-top-8 font-size-14px color-gaz-info">{this.props.fieldItem.infoMessage }</div>
+          )}
           {this.state.isRequiredMessageRendered && (
             <div className="margin-top-8 font-size-14px color-gaz-error">Обязательное поле</div>
           )}
@@ -362,6 +368,52 @@ export class AVField extends AVItem {
           </div>
         )
       }
+      if (fieldItem.variant === 'Gazprombank-email') {
+        let gazInputRef;
+        inputElement = (
+          <div className={`_inputElement flex-1 col justify-center height-56px ${this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz'} border-radius-8px cursor-text`}
+            onClick={() => {
+              gazInputRef.removeAttribute('hidden');
+              gazInputRef.focus();
+              this._labelFontSizeClassName = 'font-size-14px';
+              this.forceUpdate()
+            }}
+          >
+            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVField.styles.gazprombankInput
+              className="flex-1 margin-left-16"
+              ref={el => gazInputRef = el}
+              hidden
+              autoComplete="off"
+              value={(value === null || value === undefined) ? '' : value}
+              readOnly={readOnly}
+              onChange={onChangeFunc}
+              onBlur={() => {
+                if (!value) {
+                  gazInputRef.setAttribute('hidden', '');
+                  this._labelFontSizeClassName = 'font-size-16px';
+                  this.forceUpdate();
+                }
+                if (value) {
+                  if (!emailValidator.test(value)) {
+                    this.setState({
+                      isInvalidState: true,
+                      isInvalidMessageRendered: true,
+                      invalidMessage: 'Проверьте адрес почты',
+                    })
+                  }
+                }
+              }}
+              onFocus={() => this.setState({
+                isInvalidState: false,
+                isInvalidMessageRendered: false,
+                isRequiredMessageRendered: false,
+              })}
+            ></AVField.styles.gazprombankInput>
+          </div>
+        )
+      }
+      
       if (fieldItem.variant === 'Gazprombank-tel') {
         // let gazInputRef;
         value = (value === null || value === undefined) ? '+7 (___) ___-__-__' : value;
@@ -741,7 +793,7 @@ export class AVField extends AVItem {
   }
   
   _calcIsLabelHidden = () => {
-    if (this.props.fieldItem.variant === 'Gazprombank-string' || this.props.fieldItem.variant === 'Gazprombank-tel') {
+    if (this.props.fieldItem.variant && this.props.fieldItem.variant.includes('Gazprombank')) {
       return true
     }
     return this.props.isLabelHidden
