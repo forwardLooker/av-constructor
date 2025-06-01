@@ -45,7 +45,9 @@ export class AVObjectDocument extends AVItem {
 
     isClassItemOpened: false,
     openedClassItem: null,
-    onObjectDocumentSelectedInOpenedClassItem: this.noop
+    onObjectDocumentSelectedInOpenedClassItem: this.noop,
+    
+    presentationGroupsHidden: [],
   }
 
   constructor(props) {
@@ -72,12 +74,28 @@ export class AVObjectDocument extends AVItem {
       }, () => {
         this._prepareDesignJson();
         this.forceUpdate();
+        this._makeDidMountByModule();
       })
+    } else {
+      this._makeDidMountByModule()
     }
+
     // this.setState({
     //   _newData: this.deepClone(this.props.objectDocument.data),
     //   _newDataBeforeUpdate: this.deepClone(this.props.objectDocument.data),
     // })
+  }
+
+  _makeDidMountByModule = () => {
+    // вызывается в модуле конкретного класса
+    const classInstance = this.state._objectDocument.Class;
+    const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+    if (moduleDefinition) {
+      const methodOnComponentDidMount = moduleDefinition.onComponentDidMount;
+      if (methodOnComponentDidMount) {
+        methodOnComponentDidMount(this)
+      }
+    }
   }
 
   _prepareDesignJson = () => {
@@ -169,6 +187,9 @@ export class AVObjectDocument extends AVItem {
   }
 
   _renderVerticalLayout(vrtLayoutItem, vrtLayoutItemIndex) {
+    if (this.state.presentationGroupsHidden.includes(vrtLayoutItem.presentationGroup)) {
+      return null
+    }
     return (
       <div
         className="vertical-layout flex-1 col"
@@ -178,6 +199,9 @@ export class AVObjectDocument extends AVItem {
       >
         {vrtLayoutItem.items.map((vrtItem, vrtIndex) => {
           if (vrtItem.viewItemType === 'horizontal-layout') {
+            if (this.state.presentationGroupsHidden.includes(vrtItem.presentationGroup)) {
+              return null
+            }
             return (
               <div
                 className="horizontal-layout flex-1 row"
@@ -206,6 +230,9 @@ export class AVObjectDocument extends AVItem {
   }
 
   _renderField(fieldItem, idx, containerElement) {
+    if (this.state.presentationGroupsHidden.includes(fieldItem.presentationGroup)) {
+      return null
+    }
     if (fieldItem.isHiddenInObjectDocument) {
       return null
     }
@@ -557,21 +584,26 @@ export class AVObjectDocument extends AVItem {
     let menu = [
       `Установить font-size`,
       'Установить style',
-      'Сбросить style'
+      'Сбросить style',
+      'Установить presentationGroup'
     ];
     if (containerElement.viewItemType === 'vertical-layout') {
       menu.push('Установить style ближайшего vertical-layout');
       menu.push('Сбросить style ближайшего vertical-layout');
+      menu.push('Установить presentationGroup ближайшего vertical-layout');
       if (containerElement.container?.viewItemType === 'horizontal-layout') {
         menu.push('Установить style ближайшего horizontal-layout');
         menu.push('Сбросить style ближайшего horizontal-layout');
+        menu.push('Установить presentationGroup ближайшего horizontal-layout');
       }
     } else if (containerElement.viewItemType === 'horizontal-layout') {
       menu.push('Установить style ближайшего horizontal-layout');
       menu.push('Сбросить style ближайшего horizontal-layout');
+      menu.push('Установить presentationGroup ближайшего horizontal-layout');
       if (containerElement.container?.viewItemType === 'vertical-layout') {
         menu.push('Установить style ближайшего vertical-layout');
         menu.push('Сбросить style ближайшего vertical-layout');
+        menu.push('Установить presentationGroup ближайшего vertical-layout');
       }
     }    
     if (fieldItem.viewItemType === 'space div') {
@@ -744,6 +776,63 @@ export class AVObjectDocument extends AVItem {
       }
       containerItem.style = null;
       this.forceUpdate();
+    }
+    if (menuResult === 'Установить presentationGroup') {
+      const presentationGroup = await this.showDialog({
+        text: ['Введите имя presentationGroup, пример: ifParamYesNeedHide',
+          <br></br>,
+          'Значение строковое, для сброса передайте пустую строку',
+          <br></br>,
+          `Текущий presentationGroup: ${fieldItem.presentationGroup}`
+        ],
+        inputLabel: 'presentationGroup'
+      });
+      if (typeof presentationGroup === 'string') {
+        fieldItem.presentationGroup = presentationGroup;
+        this.forceUpdate();
+      }
+    }
+    if (menuResult === 'Установить presentationGroup ближайшего horizontal-layout') {
+      let containerItem;
+      if (containerElement.viewItemType === 'horizontal-layout') {
+        containerItem = containerElement;
+      } else {
+        containerItem = containerElement.container
+      }
+      const presentationGroup = await this.showDialog({
+        text: ['Введите имя presentationGroup, пример: ifParamYesNeedHide',
+          <br></br>,
+          'Значение строковое, для сброса передайте пустую строку',
+          <br></br>,
+          `Текущий presentationGroup: ${containerItem.presentationGroup}`
+        ],
+        inputLabel: 'presentationGroup'
+      });
+      if (typeof presentationGroup === 'string') {
+        containerItem.presentationGroup = presentationGroup;
+        this.forceUpdate();
+      }
+    }
+    if (menuResult === 'Установить presentationGroup ближайшего vertical-layout') {
+      let containerItem;
+      if (containerElement.viewItemType === 'vertical-layout') {
+        containerItem = containerElement;
+      } else {
+        containerItem = containerElement.container
+      }
+      const presentationGroup = await this.showDialog({
+        text: ['Введите имя presentationGroup, пример: ifParamYesNeedHide',
+          <br></br>,
+          'Значение строковое, для сброса передайте пустую строку',
+          <br></br>,
+          `Текущий presentationGroup: ${containerItem.presentationGroup}`
+        ],
+        inputLabel: 'presentationGroup'
+      });
+      if (typeof presentationGroup === 'string') {
+        containerItem.presentationGroup = presentationGroup;
+        this.forceUpdate();
+      }
     }
   }
 

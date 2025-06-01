@@ -4,6 +4,14 @@ export default class {
   static id = 'QStTd7nQGF9YQjrVkpRP';
   static name = 'Газпромбанк (стр.1)';
   static Host; // инициализируется в момент соединения с классом
+  static onComponentDidMount = async ($objectDocument) => {
+    if (!$objectDocument.state._newData['Я налоговый резидент только РФ']) {
+      if (!$objectDocument.state.presentationGroupsHidden.includes('nalogResidentNo')) {
+        $objectDocument.state.presentationGroupsHidden.push('nalogResidentNo');
+        $objectDocument.forceUpdate();
+      }
+    }
+  }
   static on_newDataChange = async ({ $objectDocument, fieldItemName, value }) => {
     if (fieldItemName === 'Предоставляю указанные ниже согласия') {
       $objectDocument.setState(state => ({...state, _newData: {
@@ -14,6 +22,30 @@ export default class {
         'Я согласен получать предложения, информацию о продуктах, услугах Банка и его партнеров': value,
         'Я даю согласие на передачу персональных данных партнёрам Банка': value,
       }}))
+    }
+    if (fieldItemName === 'Я налоговый резидент только РФ') {
+      if (value === 'Нет') {
+        if (!$objectDocument.state.presentationGroupsHidden.includes('nalogResidentYes')) {
+          $objectDocument.state.presentationGroupsHidden.push('nalogResidentYes');
+          $objectDocument.forceUpdate();
+        }
+        if ($objectDocument.state.presentationGroupsHidden.includes('nalogResidentNo')) {
+          const idxToRemove = $objectDocument.state.presentationGroupsHidden.findIndex(prGr => prGr === 'nalogResidentNo');
+          $objectDocument.state.presentationGroupsHidden.splice(idxToRemove, 1);
+          $objectDocument.forceUpdate();
+        }
+      }
+      if (value === 'Да') {
+        if ($objectDocument.state.presentationGroupsHidden.includes('nalogResidentYes')) {
+          const idxToRemove = $objectDocument.state.presentationGroupsHidden.findIndex(prGr => prGr === 'nalogResidentYes');
+          $objectDocument.state.presentationGroupsHidden.splice(idxToRemove, 1);
+          $objectDocument.forceUpdate();
+        }
+        if (!$objectDocument.state.presentationGroupsHidden.includes('nalogResidentNo')) {
+          $objectDocument.state.presentationGroupsHidden.push('nalogResidentNo');
+          $objectDocument.forceUpdate();
+        }
+      }
     }
   }
   static methods = {

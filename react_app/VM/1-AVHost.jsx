@@ -543,7 +543,10 @@ export class AVHost extends AVItem {
   }
 
   _dialogSubmitted = () => {
-    const resolveValue = this.state.dialogInputValue || true;
+    let resolveValue = this.state.dialogInputValue;
+    if (!this.state.dialogInputLabel) {
+      resolveValue = true
+    }
     const resolveFunc = this.state._dialogResolveFunc;
     this.setState({
       isDialogOpened: false,
