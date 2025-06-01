@@ -59,7 +59,7 @@ export class AVClassConfigurator extends AVItem {
             ];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'string') {
-            return ['textarea', 'select', 'date', 'Gazprombank-string', 'Gazprombank-tel', 'Gazprombank-email'];
+            return ['textarea', 'select', 'binary-buttons', 'date', 'Gazprombank-string', 'Gazprombank-tel', 'Gazprombank-email'];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'number') {
             return ['input+range'];
@@ -73,7 +73,7 @@ export class AVClassConfigurator extends AVItem {
           return false
         }},
         {name: 'valuesList', hideIfFunc: () => {
-          if (this.state.selectedFieldDescriptor.variant !== 'select') {
+          if (this.state.selectedFieldDescriptor.variant !== 'select' && this.state.selectedFieldDescriptor.variant !== 'binary-buttons') {
             return true
           }
           return false

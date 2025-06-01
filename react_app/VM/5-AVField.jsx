@@ -241,7 +241,7 @@ export class AVField extends AVItem {
             {(!this._calcIsLabelHidden() && this._calcLabelPosition() !== 'right') && (
               <AVLabel
                 className={`pad-0-4-0-0`}
-                justifyMode={this.props.fieldItem.variant === 'input+range' ? 'start' : 'center'}
+                justifyMode={(this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'binary-buttons') ? 'start' : 'center'}
               >{this._buildLabel()}</AVLabel>
             )}
             {this._renderInput(
@@ -357,6 +357,45 @@ export class AVField extends AVItem {
           </AVField.styles.select>
         )
       }
+      if (fieldItem.variant === 'binary-buttons' && fieldItem.valuesList) {
+        let valuesArr
+        if (Array.isArray(fieldItem.valuesList)) {
+          valuesArr = fieldItem.valuesList;
+        } else if (typeof fieldItem.valuesList === 'function') {
+          valuesArr = fieldItem.valuesList();
+        } else {
+          valuesArr = fieldItem.valuesList.split(',');
+        }
+        const trimedValuesArr = valuesArr.map(str => str.trim());
+        
+        const selectedStyle = { padding: '12px 16px', color: '#fff', fontWeight: 400, background: '#1e222e', border: 'none', borderRadius: '100px', transition: 'background .2s' };
+        const unselectedStyle = { padding: '12px 16px', color: '#1e222e', fontWeight: 400, background: '#eaecf4', border: 'none', borderRadius: '100px', transition: 'background .2s' };
+        const firstButtonStyle = trimedValuesArr[0] === value ? selectedStyle : unselectedStyle;
+        let secondButtonStyle = trimedValuesArr[1] === value ? selectedStyle : unselectedStyle;
+        secondButtonStyle = this.deepClone(secondButtonStyle); // клон чтобы к соседу не применялось
+        secondButtonStyle.marginLeft = '8px'; 
+        inputElement = (
+          <div className='margin-top-12'>
+            <AVButton
+              style={firstButtonStyle}
+              onClick={() => {
+                this.setState({ _value: trimedValuesArr[0] });
+                this.props.onChangeFunc(trimedValuesArr[0])
+              }}
+              disabled={readOnly}
+            >{trimedValuesArr[0]}</AVButton>
+            <AVButton
+              style={secondButtonStyle}
+              onClick={() => {
+                this.setState({ _value: trimedValuesArr[1] });
+                this.props.onChangeFunc(trimedValuesArr[1])
+              }}
+              disabled={readOnly}
+            >{trimedValuesArr[1]}</AVButton>
+          </div>
+        )
+      }
+
       if (fieldItem.variant === 'date') {
         inputElement = (
             <AVField.styles.input
@@ -827,7 +866,11 @@ export class AVField extends AVItem {
   }
   
   _calcLabelPosition = () => {
-    if (this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'Gazprombank-string' || this.props.fieldItem.variant === 'Gazprombank-tel') {
+    if (this.props.fieldItem.variant === 'input+range' ||
+      this.props.fieldItem.variant === 'Gazprombank-string' ||
+      this.props.fieldItem.variant === 'Gazprombank-tel' ||
+      this.props.fieldItem.variant === 'binary-buttons'
+    ) {
       return 'top'
     }
     return (this.props.fieldItem.labelPosition || this.props.labelPosition)
