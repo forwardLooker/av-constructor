@@ -1,6 +1,10 @@
 * {
   box-sizing: border-box;
 }
+a {
+  text-decoration: none;
+  color: #476bf0;
+}
 .inline-block {
   display: inline-block;
 }
@@ -48,6 +52,9 @@
 }
 .width-16px {
   width: 16px;
+}
+.min-width-28px {
+  min-width: 28px;
 }
 .row {
   display: flex;

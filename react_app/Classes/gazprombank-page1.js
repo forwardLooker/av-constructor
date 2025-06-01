@@ -4,6 +4,18 @@ export default class {
   static id = 'QStTd7nQGF9YQjrVkpRP';
   static name = 'Газпромбанк (стр.1)';
   static Host; // инициализируется в момент соединения с классом
+  static on_newDataChange = async ({ $objectDocument, fieldItemName, value }) => {
+    if (fieldItemName === 'Предоставляю указанные ниже согласия') {
+      $objectDocument.setState(state => ({...state, _newData: {
+        ...state._newData,
+        'Я подтверждаю заявку и даю согласие на обработку персональных данных': value,
+        'Я даю согласие на передачу третьим лицам персональных данных': value,
+        'Я даю согласие на получение Банком информации из БКИ': value,
+        'Я согласен получать предложения, информацию о продуктах, услугах Банка и его партнеров': value,
+        'Я даю согласие на передачу персональных данных партнёрам Банка': value,
+      }}))
+    }
+  }
   static methods = {
     'Подтвердить данные': async ($objectDocument) => {
       console.log('Подтвердить данные успех', this.Host);

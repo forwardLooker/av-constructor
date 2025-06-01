@@ -300,6 +300,14 @@ export class AVObjectDocument extends AVItem {
           readOnly={this.state._newData.readOnly}
           onChangeFunc={value => {
             this.state._newData[fieldItem.name] = value;
+            const classInstance = this.state._objectDocument.Class;
+            const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+            if (moduleDefinition) {
+              const methodOnNewDataChange = moduleDefinition.on_newDataChange;
+              if (methodOnNewDataChange) {
+                methodOnNewDataChange({ $objectDocument: this, fieldItemName: fieldItem.name, value })
+              }
+            }
             this._forceUpdateDebounced1Sec() // для подсветки кнопки сохранить
           }}
           labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}

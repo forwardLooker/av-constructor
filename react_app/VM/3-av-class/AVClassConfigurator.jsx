@@ -33,7 +33,16 @@ export class AVClassConfigurator extends AVItem {
     _metadataChangeDetected: false
   }
   fieldDescriptorProperties = [
-    {name: 'label'},
+    { name: 'label' },
+    {
+      name: 'labelPartWhichHaveLinkUrl',
+      dataType: 'string',
+      expanded: true,
+      items: [
+        { name: 'linkUrlForLabelPart'}
+      ]
+    },
+
     {name: 'dataType',
       dataType: 'string',
       variant: 'select',
@@ -76,6 +85,18 @@ export class AVClassConfigurator extends AVItem {
           }
           return false
         }},
+        {
+          name: 'labelPosition', hideIfFunc: () => {
+            if (this.state.selectedFieldDescriptor.dataType !== 'boolean') {
+              return true
+            }
+            return false
+          },
+          dataType: 'string',
+          variant: 'select',
+          valuesList: 'right',
+        },
+
         {name: 'minValue', dataType: 'number', hideIfFunc: () => {
             if (this.state.selectedFieldDescriptor.variant !== 'input+range') {
               return true

@@ -223,7 +223,7 @@ export class AVField extends AVItem {
       >
         <div className='flex-1 col'>
           <div className={`flex-1 ${this._calcLabelPosition() === 'top' ? '' : 'row'}`}>
-            {!this._calcIsLabelHidden() && (
+            {(!this._calcIsLabelHidden() && this._calcLabelPosition() !== 'right') && (
               <AVLabel
                 className={`pad-0-4-0-0`}
                 justifyMode={this.props.fieldItem.variant === 'input+range' ? 'start' : 'center'}
@@ -236,6 +236,12 @@ export class AVField extends AVItem {
                 onChangeFunc: this._onChange,
                 fieldItem: this.props.fieldItem,
               }
+            )}
+            {this._calcLabelPosition() === 'right' && (
+              <AVLabel
+                className={`pad-0-4-0-0`}
+                justifyMode={this.props.fieldItem.variant === 'input+range' ? 'start' : 'center'}
+              >{this._buildLabel()}</AVLabel>
             )}
           </div>
           {this.props.fieldItem.infoMessage && (
@@ -251,6 +257,21 @@ export class AVField extends AVItem {
         {this.props.children}
       </div>
     )
+  }
+  
+  _buildLabel() {
+    if (this.props.fieldItem.labelPartWhichHaveLinkUrl) {
+      const labelArr = this.props.fieldItem.label.split(this.props.fieldItem.labelPartWhichHaveLinkUrl);
+      return (
+        <span>
+          <span>{labelArr[0]}</span>
+          <a href={this.props.fieldItem.linkUrl} target="_blank">{this.props.fieldItem.labelPartWhichHaveLinkUrl}</a>
+          <span>{labelArr[1]}</span>
+        </span>
+      )
+    } else {
+      return (this.props.fieldItem.label || this.props.fieldItem.name)
+    }
   }
 
   _renderInput({_value, readOnly, onChangeFunc, fieldItem}) {
@@ -593,7 +614,7 @@ export class AVField extends AVItem {
     if (fieldItem.dataType === 'boolean') {
       inputElement = (
         <AVField.styles.input
-          className="checkbox flex-1"
+          className="checkbox flex-1 min-width-28px"
           autoComplete="off"
           type="checkbox"
           checked={value === null ? false : value}
@@ -789,7 +810,7 @@ export class AVField extends AVItem {
     if (this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'Gazprombank-string' || this.props.fieldItem.variant === 'Gazprombank-tel') {
       return 'top'
     }
-    return this.props.labelPosition
+    return (this.props.fieldItem.labelPosition || this.props.labelPosition)
   }
   
   _calcIsLabelHidden = () => {
