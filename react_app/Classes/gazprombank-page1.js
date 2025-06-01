@@ -41,6 +41,33 @@ export default class {
         });
         stopNavigate = true
       }
+      // проверки чекбоксов
+      if (!$objectDocument['fieldRef_Я подтверждаю заявку и даю согласие на обработку персональных данных'].state._value) {
+        $objectDocument['fieldRef_Я подтверждаю заявку и даю согласие на обработку персональных данных'].setState({
+          isInvalidState: true,
+          isInvalidMessageRendered: true,
+          invalidMessage: 'Заявка не может быть обработана без вашего согласия',
+        });
+        stopNavigate = true
+      }
+      if (!$objectDocument['fieldRef_Я даю согласие на передачу третьим лицам персональных данных'].state._value) {
+        $objectDocument['fieldRef_Я даю согласие на передачу третьим лицам персональных данных'].setState({
+          isInvalidState: true,
+          isInvalidMessageRendered: true,
+          invalidMessage: 'Заявка не может быть обработана без вашего согласия',
+        });
+        stopNavigate = true
+      }
+      if (!$objectDocument['fieldRef_Я даю согласие на получение Банком информации из БКИ'].state._value) {
+        $objectDocument['fieldRef_Я даю согласие на получение Банком информации из БКИ'].setState({
+          isInvalidState: true,
+          isInvalidMessageRendered: true,
+          invalidMessage: 'Заявка не может быть обработана без вашего согласия',
+        });
+        stopNavigate = true
+      }
+
+
       if (!stopNavigate) {
         this.Host.navigate('/gaz2');
       }

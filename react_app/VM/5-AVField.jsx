@@ -227,7 +227,7 @@ export class AVField extends AVItem {
               <AVLabel
                 className={`pad-0-4-0-0`}
                 justifyMode={this.props.fieldItem.variant === 'input+range' ? 'start' : 'center'}
-              >{this.props.fieldItem.label || this.props.fieldItem.name}</AVLabel>
+              >{this._buildLabel()}</AVLabel>
             )}
             {this._renderInput(
               {
@@ -265,7 +265,7 @@ export class AVField extends AVItem {
       return (
         <span>
           <span>{labelArr[0]}</span>
-          <a href={this.props.fieldItem.linkUrl} target="_blank">{this.props.fieldItem.labelPartWhichHaveLinkUrl}</a>
+          <a href={this.props.fieldItem.linkUrlForLabelPart} target="_blank">{this.props.fieldItem.labelPartWhichHaveLinkUrl}</a>
           <span>{labelArr[1]}</span>
         </span>
       )
@@ -620,6 +620,11 @@ export class AVField extends AVItem {
           checked={value === null ? false : value}
           disabled={readOnly}
           onChange={onChangeFunc}
+          onFocus={() => this.setState({
+            isInvalidState: false,
+            isInvalidMessageRendered: false,
+            isRequiredMessageRendered: false,
+          })}
         ></AVField.styles.input>
       )
     }
