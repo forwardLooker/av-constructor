@@ -243,6 +243,19 @@ export class AVHost extends AVItem {
           >
             tabs
           </div>
+          <div
+            className="border pad-4"
+            draggable="true"
+            onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+              e,
+              {
+                designDragElement: { viewItemType: 'gazprombank progress bar' },
+                designDragElementOrigin: 'instrument panel'
+              }
+            )}
+          >
+            gazprombank progress bar
+          </div>
         </div>
     )
   }

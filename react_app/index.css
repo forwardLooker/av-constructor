@@ -29,6 +29,9 @@ a {
 .height-4px {
   height: 4px;
 }
+.height-8px {
+  height: 8px;
+}
 .height-16px {
   height: 16px;
 }
@@ -44,8 +47,14 @@ a {
 .width-50prc {
   width: 50%
 }
+.width-25prc {
+  width: 25%
+}
 .width-20prc {
   width: 20%
+}
+.width-5prc {
+  width: 5%
 }
 .width-4px {
   width: 4px;
@@ -283,6 +292,9 @@ a {
   top: 10%;
   left: 20%;
 }
+.top-0 {
+  top: 0;
+}
 .right-0 {
   right: 0;
 }
@@ -324,6 +336,34 @@ a {
 }
 .bg-slider-fill-space {
   background: rgb(71, 107, 240);
+}
+.bg-gaz-progress-empty {
+  background: #f4f6fa;
+}
+.bg-gaz-progress-four {
+  background: #dbdfec;
+}
+.bg-gaz-progress-fill {
+  background: linear-gradient(45deg, #427221, #8ec26a);;
+}
+.animation-gaz-progress::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(-66deg, hsla(0, 0%, 100%, .24) 25%, transparent 0, transparent 50%, hsla(0, 0%, 100%, .24) 0, hsla(0, 0%, 100%, .24) 75%, transparent 0, transparent);
+  background-size: 16px 30px;
+  animation: gaz_progress 2s linear infinite;
+}
+@keyframes gaz_progress {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 16px 0;
+  }
 }
 .bg-transparent-45 {
   background-color: rgba(0,0,0,0.45);

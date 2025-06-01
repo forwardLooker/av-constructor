@@ -197,6 +197,21 @@ export class AVField extends AVItem {
         </div>
       )
     }
+    if (this.props.fieldItem.viewItemType === 'gazprombank progress bar') {
+      return (
+        <div className='_av-field-viewItem-root flex-1 row'
+          style={this.props.style}
+          ref={this.props.refOnRootDiv}
+        >
+          <div className='flex-1 pos-rel height-8px bg-gaz-progress-empty border-radius-8px'>
+            <div className='width-25prc height-100prc bg-gaz-progress-four border-radius-8px'></div>
+            <div className='width-5prc pos-abs top-0 height-100prc bg-gaz-progress-fill border-radius-8px animation-gaz-progress'></div>
+          </div>
+          {this.props.children}
+        </div>
+      )
+    }
+
     // if (this.props.fieldItem.viewItemType === 'tabs') {
     //   return (
     //       <div className='flex-1 pad-8'
