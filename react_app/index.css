@@ -167,6 +167,9 @@ a {
 .border-gaz {
   border: 1px solid #cccfde;
 }
+.border-gaz-accent {
+  border: 1px solid #476bf0;
+}
 .border-gaz-error {
   border: 1px solid rgb(229, 92, 92);
 }

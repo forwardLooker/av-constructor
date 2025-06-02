@@ -97,6 +97,7 @@ export class AVField extends AVItem {
   
   state = {
     _value: ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) || this.props.value,
+    isFocusedState: false, // для Газпромбанк инпутов
     isInvalidState: false,
     isRequiredMessageRendered: false,
     
@@ -420,8 +421,12 @@ export class AVField extends AVItem {
       }
       if (fieldItem.variant === 'Gazprombank-string') {
         let gazInputRef;
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        if (this.state.isFocusedState) {
+          borderGaz = 'border-gaz-accent'
+        }
         inputElement = (
-          <div className={`_inputElement flex-1 col justify-center height-56px ${this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz'} border-radius-8px cursor-text`}
+          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               gazInputRef.removeAttribute('hidden');
               gazInputRef.focus();
@@ -444,8 +449,10 @@ export class AVField extends AVItem {
                   this._labelFontSizeClassName = 'font-size-16px';
                   this.forceUpdate();
                 }
+                this.setState({ isFocusedState: false })
               }}
               onFocus={() => this.setState({
+                isFocusedState: true,
                 isInvalidState: false,
                 isRequiredMessageRendered: false,
               })}
@@ -455,8 +462,12 @@ export class AVField extends AVItem {
       }
       if (fieldItem.variant === 'Gazprombank-email') {
         let gazInputRef;
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        if (this.state.isFocusedState) {
+          borderGaz = 'border-gaz-accent'
+        }
         inputElement = (
-          <div className={`_inputElement flex-1 col justify-center height-56px ${this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz'} border-radius-8px cursor-text`}
+          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               gazInputRef.removeAttribute('hidden');
               gazInputRef.focus();
@@ -488,8 +499,10 @@ export class AVField extends AVItem {
                     })
                   }
                 }
+                this.setState({ isFocusedState: false })
               }}
               onFocus={() => this.setState({
+                isFocusedState: true,
                 isInvalidState: false,
                 isInvalidMessageRendered: false,
                 isRequiredMessageRendered: false,
@@ -502,8 +515,12 @@ export class AVField extends AVItem {
       if (fieldItem.variant === 'Gazprombank-tel') {
         // let gazInputRef;
         value = (value === null || value === undefined) ? '+7 (___) ___-__-__' : value;
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        if (this.state.isFocusedState) {
+          borderGaz = 'border-gaz-accent'
+        }
         inputElement = (
-          <div className={`_inputElement flex-1 col justify-center height-56px ${this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz'} border-radius-8px cursor-text`}
+          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               this.gazInputRef.removeAttribute('hidden');
               this.gazInputRef.focus();
@@ -589,11 +606,13 @@ export class AVField extends AVItem {
                     invalidMessage: 'Номер телефона указан неверно',
                   })
                 }
+                this.setState({ isFocusedState: false })
               }}
               onFocus={() => {
                 this.gazInputRef.selectionStart = 4;
                 this.gazInputRef.selectionEnd = 4;
                 this.setState({
+                  isFocusedState: true,
                   isInvalidState: false,
                   isRequiredMessageRendered: false,
                   isInvalidMessageRendered: false,
