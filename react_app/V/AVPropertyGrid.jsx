@@ -2,7 +2,8 @@ import React from 'react';
 
 import {AVElement} from './0-AVElement.js';
 
-import {AVField} from "../VM/5-AVField.jsx";
+import { AVField } from "../VM/5-AVField.jsx";
+import { AVIcon } from './icons/AVIcon.jsx';
 
 export class AVPropertyGrid extends AVElement {
   static styles = {
@@ -26,16 +27,6 @@ export class AVPropertyGrid extends AVElement {
         transition: transform .2s ease-in-out;
       }
     `,
-    iconSVG: this.styled.svg`
-      font-size: 18px;
-      user-select: none;
-      width: 1em;
-      height: 1em;
-      display: inline-block;
-      fill: currentColor;
-      flex-shrink: 0;
-      transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    `
   };
 
   static defaultProps = {
@@ -71,10 +62,7 @@ export class AVPropertyGrid extends AVElement {
               <AVPropertyGrid.styles.iconContainer className={`tree-row-expander ${propertyItem.expanded ? 'expanded' : ''} ${this.isEmpty(propertyItem.items) ? 'invisible': ''}`}
                                                      onClick={() => this._toggleExpand(propertyItem)}
               >
-                <AVPropertyGrid.styles.iconSVG focusable="false"
-                                                 aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
-                </AVPropertyGrid.styles.iconSVG>
+                <AVIcon name='treeArrow'></AVIcon>
               </AVPropertyGrid.styles.iconContainer>
               {this._renderPropGridField(propertyItem, parentItem)}
             </AVPropertyGrid.styles.treeRow>

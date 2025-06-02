@@ -2,7 +2,6 @@ import React from 'react';
 
 import {AVItem} from '../0-AVItem.js';
 
-import {AVTextHeader} from "../../V/AVTextHeader.jsx";
 import {AVLabel} from "../../V/AVLabel.jsx";
 import {AVButton} from "../../V/AVButton.jsx";
 import {AVTree} from "../../V/AVTree.jsx";

@@ -1,4 +1,4 @@
-export default class {
+export default class { // Тестовый эксперимент
   static id = 'users';
   static name = 'Пользователи';
   static Host;

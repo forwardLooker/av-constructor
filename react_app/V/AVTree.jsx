@@ -26,16 +26,6 @@ export class AVTree extends AVElement {
         transform: rotate(90deg);
         transition: transform .2s ease-in-out;
       }
-    `,
-    iconSVG: this.styled.svg`
-      font-size: 18px;
-      user-select: none;
-      width: 1em;
-      height: 1em;
-      display: inline-block;
-      fill: currentColor;
-      flex-shrink: 0;
-      transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     `
   };
 
@@ -80,10 +70,7 @@ export class AVTree extends AVElement {
               <AVTree.styles.iconContainer className={`tree-row-expander ${i.expanded ? 'expanded' : ''} ${this.isEmpty(i.items) ? 'invisible': ''}`}
                                                      onClick={() => this._toggleExpand(i)}
               >
-                <AVTree.styles.iconSVG focusable="false"
-                     aria-hidden="true" viewBox="0 0 24 24">
-                  <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
-                </AVTree.styles.iconSVG>
+                <AVIcon name='treeArrow'></AVIcon>
               </AVTree.styles.iconContainer>
               {i.itemType && (
                 <div className="pad-0-2">
