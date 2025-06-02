@@ -587,6 +587,9 @@ export class AVObjectDocument extends AVItem {
       'Сбросить style',
       'Установить presentationGroup'
     ];
+    if (fieldItem.viewItemType === 'icon') {
+      menu = ['Поменять иконку на', ...menu]
+    }
     if (containerElement.viewItemType === 'vertical-layout') {
       menu.push('Установить style ближайшего vertical-layout');
       menu.push('Сбросить style ближайшего vertical-layout');
@@ -637,6 +640,13 @@ export class AVObjectDocument extends AVItem {
       }
     } else {
       menuResult = await this.showContextMenu(e, menu);
+    }
+    if (menuResult === 'Поменять иконку на') {
+      const iconName = await this.showDialog({ text: 'Введите name иконки', inputLabel: 'name' });
+      if (iconName) {
+        fieldItem.name = iconName;
+        this.forceUpdate();
+      }
     }
     if (menuResult === 'Сделать контейнером') {
       fieldItem.viewItemType = 'items-container'

@@ -199,6 +199,17 @@ export class AVField extends AVItem {
         </div>
       )
     }
+    if (this.props.fieldItem.viewItemType === 'icon') {
+      return (
+        <div className='_av-field-viewItem-root flex-1 row'
+          style={this.props.style}
+          ref={this.props.refOnRootDiv}
+        >
+          <AVIcon name={this.props.fieldItem.name}></AVIcon>
+          {this.props.children}
+        </div>
+      )
+    }
     if (this.props.fieldItem.viewItemType === 'gazprombank progress bar') {
       return (
         <div className='_av-field-viewItem-root flex-1 row'
