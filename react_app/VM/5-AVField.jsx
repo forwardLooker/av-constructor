@@ -261,13 +261,22 @@ export class AVField extends AVItem {
             )}
           </div>
           {this.props.fieldItem.infoMessage && (
-            <div className="margin-top-8 font-size-14px color-gaz-info">{this.props.fieldItem.infoMessage }</div>
+            <div className="row align-start margin-top-8 font-size-14px color-gaz-info">
+              <AVIcon className='margin-top-2' name='informer'></AVIcon>
+              <span className='margin-left-4'>{this.props.fieldItem.infoMessage}</span>
+            </div>
           )}
           {this.state.isRequiredMessageRendered && (
-            <div className="margin-top-8 font-size-14px color-gaz-error">Обязательное поле</div>
+            <div className="row align-start margin-top-8 font-size-14px color-gaz-error">
+              <AVIcon className='margin-top-2' name='informerError'></AVIcon>
+              <span className='margin-left-4'>Обязательное поле</span>
+            </div>
           )}
           {this.state.isInvalidMessageRendered && (
-            <div className="margin-top-8 font-size-14px color-gaz-error">{ this.state.invalidMessage }</div>
+            <div className="row align-start margin-top-8 font-size-14px color-gaz-error">
+              <AVIcon className='margin-top-2' name='informerError'></AVIcon>
+              <span className='margin-left-4'>{this.state.invalidMessage}</span>
+            </div>
           )}
         </div>
         {this.props.children}

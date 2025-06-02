@@ -1,4 +1,5 @@
 import React from 'react';
+import './AVIcon.css';
 
 import {AVElement} from '../0-AVElement.js';
 // import Briefcase from './briefcase-svgrepo-com.svg'
@@ -104,15 +105,32 @@ export class AVIcon extends AVElement {
           <path fillRule="evenodd" clipRule="evenodd" d="M4.818 14.558c.142-.274.283-.545.48-.785.094-.115.2-.222.413-.434l9.924-9.924c.658-.659.987-.988 1.34-1.167a2.5 2.5 0 0 1 2.27 0c.353.18.682.508 1.34 1.167.658.658.987.987 1.167 1.34a2.5 2.5 0 0 1 0 2.27c-.18.352-.509.681-1.167 1.34l-9.924 9.923c-.213.213-.319.32-.435.414-.24.196-.51.337-.785.48l-2.66 1.38c-.404.21-.607.315-.815.33a1.002 1.002 0 0 1-.433-.067c-.16-.063-.297-.184-.521-.404-.212.198-.42.425-.677.565-.106.057-.22.101-.336.131-.188.049-.387.048-.785.047l-.548-.002c-.487-.002-.73-.003-.834-.11a.35.35 0 0 1-.097-.24c0-.149.174-.319.522-.659l1.26-1.229c-.182-.187-.285-.313-.342-.457a1 1 0 0 1-.067-.434c.014-.208.12-.41.33-.815l1.38-2.66ZM16.617 4.554l.079-.079c.74-.74.872-.846.96-.89a1 1 0 0 1 .908 0c.088.044.22.15.96.89s.847.873.891.96a1 1 0 0 1 0 .908c-.044.088-.15.22-.89.96l-.08.08-2.828-2.829Zm-.67.67L6.772 14.4c-.187.187-.363.359-.488.593l2.723 2.724c.235-.126.406-.301.593-.488l9.175-9.175-2.828-2.829ZM5.825 15.874l2.3 2.3-2.132 1.107-1.275-1.275 1.107-2.132Z" fill="#1C1C1E"></path>
         </svg>
       </svg>
+    ),
+    informer: () => ( // подпись информера Газпромбанк input
+      <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="progressive_icon progressive_icon16">
+          <path d="M7.82 5.644a.906.906 0 1 0 0-1.812.906.906 0 0 0 0 1.812Z" fill="#1C1C1E"></path>
+          <path d="M7.485 7.9h-.711a.513.513 0 1 1 0-1.025h.861c.469 0 .703 0 .865.123a.6.6 0 0 1 .111.112c.124.161.124.396.124.864v3.027h.671a.625.625 0 1 1 0 1.25H6.777a.625.625 0 1 1 0-1.25h.708v-3.1Z" fill="#1C1C1E"></path>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M15 8A7 7 0 1 1 1 8a7 7 0 0 1 14 0Zm-1.25 0a5.75 5.75 0 1 1-11.5 0 5.75 5.75 0 0 1 11.5 0Z" fill="#1C1C1E"></path>
+        </svg>
+      </svg>
+    ),
+    informerError: () => (
+      <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="progressive_icon progressive_icon16">
+          <path d="M6.254 5.37a.625.625 0 1 0-.883.884L7.116 8 5.371 9.746a.625.625 0 1 0 .883.883L8 8.884l1.746 1.745a.625.625 0 1 0 .883-.883L8.884 8l1.745-1.746a.625.625 0 1 0-.883-.883L8 7.116 6.254 5.371Z" fill="#e55c5c"></path>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm5.75-7a5.75 5.75 0 1 1-11.5 0 5.75 5.75 0 0 1 11.5 0Z" fill="#e55c5c"></path>
+        </svg>
+      </svg>
     )
-
+    
   }
 
 
   render() {
     const SVG = this.iconSet[this.props.name]();
     return (
-      <div className="_av-icon-root row align-center justify-center" {...this.props}>
+      <div className={`_av-icon-root row align-center justify-center ${this.props.className}`} {...this.R.omit(['className'], this.props)}>
         {SVG}
       </div>
     )
