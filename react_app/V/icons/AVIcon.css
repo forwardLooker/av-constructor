@@ -14,3 +14,12 @@ html[data-color-scheme=light] {
     --elements-error-hover: #c84848;
     --elements-attention: #e76528;
 } */
+.benefitSum {
+  margin: 0 -14px 0 0;
+}
+.benefitClock {
+  margin: 0 -14px 0 0;
+}
+.benefitPassport {
+  margin: 0 -14px 0 0;
+}

@@ -251,6 +251,9 @@ a {
 .scroll-y {
   overflow-y: scroll;
 }
+.overflow-hidden {
+  overflow: hidden;
+}
 .cursor-pointer {
   cursor: pointer;
 }
