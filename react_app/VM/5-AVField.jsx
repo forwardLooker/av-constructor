@@ -9,8 +9,17 @@ import { AVIcon } from "../V/icons/AVIcon.jsx";
 
 const emailValidator = require('@sefinek/email-validator');
 
+export class AVField extends React.PureComponent { // Для отладки в Dev Tools, тест производительности разницы не заметил
+  AVFieldWithDisplayName = class extends AVFieldOriginal { }
+  render() {
+    this.AVFieldWithDisplayName.displayName = ('AVField' + '(' + (this.props.fieldItem.label || this.props.fieldItem.viewItemType) + ')');
+    return (
+      <this.AVFieldWithDisplayName {...this.props}></this.AVFieldWithDisplayName>
+    )
+  }
+}
 
-export class AVField extends AVItem {
+export class AVFieldOriginal extends AVItem {
   static styles = {
     input: this.styled.input`
       position: relative;
@@ -332,24 +341,24 @@ export class AVField extends AVItem {
     }
     if (!fieldItem.dataType || fieldItem.dataType === 'string') {
       inputElement = (
-        <AVField.styles.input
+        <AVFieldOriginal.styles.input
           className="flex-1"
           autoComplete="off"
           value={(value === null || value === undefined) ? '' : value}
           readOnly={readOnly}
           onChange={onChangeFunc}
-        ></AVField.styles.input>
+        ></AVFieldOriginal.styles.input>
       );
       if (fieldItem.variant === 'textarea') {
         inputElement = (
-          <AVField.styles.textarea
+          <AVFieldOriginal.styles.textarea
             className="flex-1"
             autoComplete="off"
             rows={16}
             value={(value === null || value === undefined) ? '' : value}
             readOnly={readOnly}
             onChange={onChangeFunc}
-          ></AVField.styles.textarea>
+          ></AVFieldOriginal.styles.textarea>
         );
       }
       if (fieldItem.variant === 'select' && fieldItem.valuesList) {
@@ -363,7 +372,7 @@ export class AVField extends AVItem {
         }
         const trimedValuesArr = valuesArr.map(str => str.trim());
         inputElement = (
-          <AVField.styles.select
+          <AVFieldOriginal.styles.select
             className="flex-1"
             autoComplete="off"
             value={(value === null || value === undefined) ? (fieldItem.defaultValue || '') : value}
@@ -376,7 +385,7 @@ export class AVField extends AVItem {
             {trimedValuesArr.map(str => (
               <option key={str} value={str}>{str}</option>
             ))}
-          </AVField.styles.select>
+          </AVFieldOriginal.styles.select>
         )
       }
       if (fieldItem.variant === 'binary-buttons' && fieldItem.valuesList) {
@@ -428,14 +437,14 @@ export class AVField extends AVItem {
 
       if (fieldItem.variant === 'date') {
         inputElement = (
-            <AVField.styles.input
+          <AVFieldOriginal.styles.input
                 className="flex-1"
                 autoComplete="off"
                 type="date"
                 value={(value === null || value === undefined) ? '' : value}
                 readOnly={readOnly}
                 onChange={onChangeFunc}
-            ></AVField.styles.input>
+          ></AVFieldOriginal.styles.input>
         )
       }
       if (fieldItem.variant === 'Gazprombank-string') {
@@ -454,7 +463,7 @@ export class AVField extends AVItem {
             }}
           >
             <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
-            <AVField.styles.gazprombankInput
+            <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => gazInputRef = el}
               hidden
@@ -475,7 +484,7 @@ export class AVField extends AVItem {
                 isInvalidState: false,
                 isRequiredMessageRendered: false,
               })}
-            ></AVField.styles.gazprombankInput>
+            ></AVFieldOriginal.styles.gazprombankInput>
           </div>
         )
       }
@@ -495,7 +504,7 @@ export class AVField extends AVItem {
             }}
           >
             <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
-            <AVField.styles.gazprombankInput
+            <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => gazInputRef = el}
               hidden
@@ -526,7 +535,7 @@ export class AVField extends AVItem {
                 isInvalidMessageRendered: false,
                 isRequiredMessageRendered: false,
               })}
-            ></AVField.styles.gazprombankInput>
+            ></AVFieldOriginal.styles.gazprombankInput>
           </div>
         )
       }
@@ -548,7 +557,7 @@ export class AVField extends AVItem {
             }}
           >
             <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
-            <AVField.styles.gazprombankInput
+            <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
               autoComplete="off"
@@ -637,27 +646,27 @@ export class AVField extends AVItem {
                   isInvalidMessageRendered: false,
                 });
               }}
-            ></AVField.styles.gazprombankInput>
+            ></AVFieldOriginal.styles.gazprombankInput>
           </div>
         )
       }
     }
     if (fieldItem.dataType === 'number') {
       inputElement = (
-        <AVField.styles.input
+        <AVFieldOriginal.styles.input
           className="input-number flex-1"
           autoComplete="off"
           type={fieldItem.dataType}
           value={(value === null || value === undefined) ? '' : value}
           readOnly={readOnly}
           onChange={onChangeFunc}
-        ></AVField.styles.input>
+        ></AVFieldOriginal.styles.input>
       )
       if (fieldItem.variant === 'input+range') {
         inputElement = (
           <div className="">
             <div className="row align-center">
-              <AVField.styles.rangeInput
+              <AVFieldOriginal.styles.rangeInput
                 className="input+range"
                 autoComplete="off"
                 size="7"
@@ -665,7 +674,7 @@ export class AVField extends AVItem {
                 value={(value === null || value === undefined) ? '' : value}
                 readOnly={readOnly}
                 onChange={onChangeFunc}
-              ></AVField.styles.rangeInput>
+              ></AVFieldOriginal.styles.rangeInput>
               <AVIcon name='pencil'></AVIcon>
             </div>
             <div className="_range-slider-free-space pos-rel height-4px bg-slider-free-space cursor-pointer"
@@ -700,7 +709,7 @@ export class AVField extends AVItem {
     }
     if (fieldItem.dataType === 'boolean') {
       inputElement = (
-        <AVField.styles.input
+        <AVFieldOriginal.styles.input
           className="checkbox flex-1 min-width-28px"
           autoComplete="off"
           type="checkbox"
@@ -712,7 +721,7 @@ export class AVField extends AVItem {
             isInvalidMessageRendered: false,
             isRequiredMessageRendered: false,
           })}
-        ></AVField.styles.input>
+        ></AVFieldOriginal.styles.input>
       )
     }
     if (fieldItem.dataType === 'array') {
@@ -783,12 +792,12 @@ export class AVField extends AVItem {
     if (fieldItem.dataType === 'object' && fieldItem.variant === 'link-on-object-in-class') {
       inputElement = (
         <div className="flex-1 row">
-          <AVField.styles.input
+          <AVFieldOriginal.styles.input
             className="flex-1"
             autoComplete="off"
             value={value?.name}
             readOnly
-          ></AVField.styles.input>
+          ></AVFieldOriginal.styles.input>
           <AVButton onClick={() => this.showClass(fieldItem.variantItemReference)} disabled={readOnly}>
             Выбрать
           </AVButton>
@@ -798,12 +807,12 @@ export class AVField extends AVItem {
     if (fieldItem.dataType === 'object' && fieldItem.variant === 'link-on-class-in-domain') {
       inputElement = (
         <div className="flex-1 row">
-          <AVField.styles.input
+          <AVFieldOriginal.styles.input
             className="flex-1"
             autoComplete="off"
             value={value?.name}
             readOnly
-          ></AVField.styles.input>
+          ></AVFieldOriginal.styles.input>
           <AVButton onClick={() => this.showItemStructure(fieldItem.variantItemReference)} disabled={readOnly}>
             Выбрать
           </AVButton>
