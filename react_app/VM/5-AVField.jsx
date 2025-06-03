@@ -19,7 +19,7 @@ export class AVField extends React.PureComponent { // Для отладки в D
   }
 }
 
-export class AVFieldOriginal extends AVItem {
+class AVFieldOriginal extends AVItem {
   static styles = {
     input: this.styled.input`
       position: relative;
