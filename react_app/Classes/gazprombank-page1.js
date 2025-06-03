@@ -11,6 +11,8 @@ export default class {
         $objectDocument.forceUpdate();
       }
     }
+    $objectDocument.state.presentationGroupsHidden.push('confirmSMS');
+    $objectDocument.forceUpdate();
   }
   static on_newDataChange = async ({ $objectDocument, fieldItemName, value }) => {
     if (fieldItemName === 'Предоставляю указанные ниже согласия') {
@@ -29,6 +31,10 @@ export default class {
           $objectDocument.state.presentationGroupsHidden.push('nalogResidentYes');
           $objectDocument.forceUpdate();
         }
+        if (!$objectDocument.state.presentationGroupsHidden.includes('confirmData')) {
+          $objectDocument.state.presentationGroupsHidden.push('confirmData');
+          $objectDocument.forceUpdate();
+        }
         if ($objectDocument.state.presentationGroupsHidden.includes('nalogResidentNo')) {
           const idxToRemove = $objectDocument.state.presentationGroupsHidden.findIndex(prGr => prGr === 'nalogResidentNo');
           $objectDocument.state.presentationGroupsHidden.splice(idxToRemove, 1);
@@ -38,6 +44,11 @@ export default class {
       if (value === 'Да') {
         if ($objectDocument.state.presentationGroupsHidden.includes('nalogResidentYes')) {
           const idxToRemove = $objectDocument.state.presentationGroupsHidden.findIndex(prGr => prGr === 'nalogResidentYes');
+          $objectDocument.state.presentationGroupsHidden.splice(idxToRemove, 1);
+          $objectDocument.forceUpdate();
+        }
+        if ($objectDocument.state.presentationGroupsHidden.includes('confirmData')) {
+          const idxToRemove = $objectDocument.state.presentationGroupsHidden.findIndex(prGr => prGr === 'confirmData');
           $objectDocument.state.presentationGroupsHidden.splice(idxToRemove, 1);
           $objectDocument.forceUpdate();
         }
@@ -52,6 +63,7 @@ export default class {
     'Подтвердить данные': async ($objectDocument) => {
       console.log('Подтвердить данные успех', this.Host);
       let stopNavigate;
+      // проверки полей на наличие
       if (!$objectDocument['fieldRef_Фамилия Имя Отчество'].state._value) {
         $objectDocument['fieldRef_Фамилия Имя Отчество'].setState({
           isInvalidState: true,
@@ -73,7 +85,22 @@ export default class {
         });
         stopNavigate = true
       }
-      // проверки чекбоксов
+      // проверки полей на валидность
+      if ($objectDocument['fieldRef_Я налоговый резидент только РФ'].state._value !== 'Да') {
+        $objectDocument['fieldRef_Я налоговый резидент только РФ'].setState({
+          isInvalidState: true,
+          isInvalidMessageRendered: true,
+          invalidMessage: 'Выберите один из вариантов',
+        });
+        stopNavigate = true
+      }
+      if ($objectDocument['fieldRef_Мобильный телефон'].state.isInvalidState) {
+        stopNavigate = true
+      }
+      if ($objectDocument['fieldRef_Email'].state.isInvalidState) {
+        stopNavigate = true
+      }
+      // проверки чекбоксов на отмечено
       if (!$objectDocument['fieldRef_Я подтверждаю заявку и даю согласие на обработку персональных данных'].state._value) {
         $objectDocument['fieldRef_Я подтверждаю заявку и даю согласие на обработку персональных данных'].setState({
           isInvalidState: true,
@@ -101,11 +128,26 @@ export default class {
 
 
       if (!stopNavigate) {
-        this.Host.navigate('/gaz2');
+        // render SMS
+        if (!$objectDocument.state.presentationGroupsHidden.includes('confirmData')) {
+          $objectDocument.state.presentationGroupsHidden.push('confirmData');
+        }
+        if ($objectDocument.state.presentationGroupsHidden.includes('confirmSMS')) {
+          const idxToRemove = $objectDocument.state.presentationGroupsHidden.findIndex(prGr => prGr === 'confirmSMS');
+          $objectDocument.state.presentationGroupsHidden.splice(idxToRemove, 1);
+        }
+        $objectDocument.forceUpdate();
+
+        // this.Host.navigate('/gaz2');
       }
       // redirect('/gaz2');
       // $objectDocument.closeWithoutSave();
       // this.Host.$hostElement.setState({ selectedTreeItem: await this.Host.getClassByName('Сотрудники') })
+    },
+    'Подтвердить': async ($objectDocument) => {
+      if ($objectDocument.state._newData['Код из СМС'] === '1111') {
+        this.Host.navigate('/gaz2');
+      }
     }
   };
 }

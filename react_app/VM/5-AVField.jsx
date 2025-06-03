@@ -401,7 +401,11 @@ export class AVField extends AVItem {
             <AVButton
               style={firstButtonStyle}
               onClick={() => {
-                this.setState({ _value: trimedValuesArr[0] });
+                this.setState({
+                  _value: trimedValuesArr[0],
+                  isInvalidState: false,
+                  isInvalidMessageRendered: false,
+                });
                 this.props.onChangeFunc(trimedValuesArr[0])
               }}
               disabled={readOnly}
@@ -409,7 +413,11 @@ export class AVField extends AVItem {
             <AVButton
               style={secondButtonStyle}
               onClick={() => {
-                this.setState({ _value: trimedValuesArr[1] });
+                this.setState({
+                  _value: trimedValuesArr[1],
+                  isInvalidState: false,
+                  isInvalidMessageRendered: false,
+                });
                 this.props.onChangeFunc(trimedValuesArr[1])
               }}
               disabled={readOnly}
