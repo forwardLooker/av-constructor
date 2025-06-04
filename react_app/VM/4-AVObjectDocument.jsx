@@ -629,7 +629,8 @@ export class AVObjectDocument extends AVItem {
     
     let menuResult;
     if (fieldItem.viewItemType === 'label' || fieldItem.viewItemType === 'button') {
-      menu.push('Изменить label');
+      // menu.push('Изменить label');
+      menu = ['Изменить label', ...menu];
       menuResult = await this.showContextMenu(e, menu);
       if (menuResult === 'Изменить label') {
         const newLabel = await this.showDialog({text: 'Введите новый label', inputLabel: 'label'});
