@@ -32,16 +32,14 @@ export class AVClassConfigurator extends AVItem {
     _metadataChangeDetected: false
   }
   fieldDescriptorProperties = [
-    { name: 'label' },
     {
-      name: 'labelPartWhichHaveLinkUrl',
-      dataType: 'string',
+      name: 'label',
       expanded: true,
       items: [
-        { name: 'linkUrlForLabelPart'}
+        { name: 'labelPartWhichHaveLinkUrl' },
+        { name: 'linkUrlForLabelPart' }
       ]
     },
-
     {name: 'dataType',
       dataType: 'string',
       variant: 'select',
