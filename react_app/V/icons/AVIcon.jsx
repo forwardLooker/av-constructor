@@ -174,6 +174,13 @@ export class AVIcon extends AVElement {
           </linearGradient>
         </defs>
       </svg>
+    ),
+    checkMark: () => (
+      <svg width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="progressive_icon progressive_icon20">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M16.662 3.55a.75.75 0 0 1 .215 1.04l-7.52 11.459-.014.02c-.061.094-.141.216-.224.313a1.001 1.001 0 0 1-.588.353.996.996 0 0 1-.264.01 1.002 1.002 0 0 1-.616-.3c-.09-.09-.18-.204-.25-.293l-.015-.02-3.726-4.74a.75.75 0 1 1 1.18-.928l3.48 4.43 7.303-11.128a.75.75 0 0 1 1.039-.215Z" fill="#fff"></path>
+        </svg>
+      </svg>
     )
     
   }
