@@ -56,7 +56,17 @@ export class AVClassConfigurator extends AVItem {
             ];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'string') {
-            return ['textarea', 'select', 'binary-buttons', 'date', 'Gazprombank-string', 'Gazprombank-tel', 'Gazprombank-email', 'Gazprombank-passport-seria-number', 'Gazprombank-date'];
+            return ['textarea',
+              'select',
+              'binary-buttons',
+              'date',
+              'Gazprombank-string',
+              'Gazprombank-tel',
+              'Gazprombank-email',
+              'Gazprombank-passport-seria-number',
+              'Gazprombank-date',
+              'Gazprombank-passport-kod-podrazdelenia',
+            ];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'number') {
             return ['input+range'];
