@@ -557,6 +557,7 @@ class AVFieldOriginal extends AVItem {
                 isRequiredMessageRendered: false,
               })}
             ></AVFieldOriginal.styles.gazprombankInput>
+            <AVIcon className='pos-abs right-16px' name='gazSelectArrow'></AVIcon>
             <div ref={el => this.optionsListRef = el}
               hidden
               className='pos-abs height-160px bottom-minus168px rl-0 pad-4 bg-white border-radius-12px scroll-y z-index-100'
