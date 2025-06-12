@@ -122,6 +122,7 @@ class AVFieldOriginal extends AVItem {
   _sliderFillSpaceWidth = 0;
 
   gazInputRef;
+  optionsListRef; // для Газпромбанк селекта
 
   
   //render
@@ -500,6 +501,78 @@ class AVFieldOriginal extends AVItem {
                 isRequiredMessageRendered: false,
               })}
             ></AVFieldOriginal.styles.gazprombankInput>
+          </div>
+        )
+      }
+      if (fieldItem.variant === 'Gazprombank-string-select') {
+        let valuesArr
+        if (Array.isArray(fieldItem.valuesList)) {
+          valuesArr = fieldItem.valuesList;
+        } else if (typeof fieldItem.valuesList === 'function') {
+          valuesArr = fieldItem.valuesList();
+        } else {
+          valuesArr = fieldItem.valuesList.split(',');
+        }
+        const trimedValuesArr = valuesArr.map(str => str.trim());
+        
+        let gazInputRef;
+        // let optionsListRef;
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        if (this.state.isFocusedState) {
+          borderGaz = 'border-gaz-accent'
+        }
+        inputElement = (
+          <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
+            onClick={() => {
+              this.optionsListRef.removeAttribute('hidden');
+              gazInputRef.removeAttribute('hidden');
+              gazInputRef.focus();
+              this._labelFontSizeClassName = 'font-size-14px';
+              this.forceUpdate()
+            }}
+          >
+            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVFieldOriginal.styles.gazprombankInput
+              className="flex-1 margin-left-16"
+              ref={el => gazInputRef = el}
+              hidden
+              autoComplete="off"
+              value={(value === null || value === undefined) ? '' : value}
+              readOnly={true}
+              onChange={onChangeFunc}
+              onBlur={() => {
+                if (!value) {
+                  gazInputRef.setAttribute('hidden', '');
+                  this._labelFontSizeClassName = 'font-size-16px';
+                  this.forceUpdate();
+                }
+                this.setState({ isFocusedState: false });
+                setTimeout(() => { // потому что онКлик в Листе не успевает сработать
+                  this.optionsListRef.setAttribute('hidden', '');
+                }, 200)
+              }}
+              onFocus={() => this.setState({
+                isFocusedState: true,
+                isInvalidState: false,
+                isRequiredMessageRendered: false,
+              })}
+            ></AVFieldOriginal.styles.gazprombankInput>
+            <div ref={el => this.optionsListRef = el}
+              hidden
+              className='pos-abs height-160px bottom-minus168px rl-0 pad-4 bg-white border-radius-12px scroll-y z-index-100'
+            >
+              {trimedValuesArr.map(str => (
+                <div
+                  key={str}
+                  className={`pad-8 font-weight-400 ${value === str ? 'color-gaz-accent bg-gaz-field-selected' : ''} bg-gaz-field-hover cursor-pointer`}
+                  onClick={() => {
+                    console.log('str onClick', str);
+                    this.setState({ _value: str });
+                    this.props.onChangeFunc(str)
+                  }}
+                >{str}</div>
+              ))}
+            </div>
           </div>
         )
       }
@@ -1192,7 +1265,7 @@ class AVFieldOriginal extends AVItem {
     return inputElement;
   }
 
-  _onChange = (eOrValue, option) => {
+  _onChange = (eOrValue, option) => { // типа для нескольких дефолтных инпутов, для остального копируешь 2 нижних строки для очевидности
     // eOrValue.persist();
     // console.log('onChange e', eOrValue);
     let value;

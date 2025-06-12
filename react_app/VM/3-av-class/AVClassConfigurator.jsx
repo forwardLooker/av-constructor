@@ -61,6 +61,7 @@ export class AVClassConfigurator extends AVItem {
               'binary-buttons',
               'date',
               'Gazprombank-string',
+              'Gazprombank-string-select',
               'Gazprombank-tel',
               'Gazprombank-email',
               'Gazprombank-passport-seria-number',
@@ -80,7 +81,11 @@ export class AVClassConfigurator extends AVItem {
           return false
         }},
         {name: 'valuesList', hideIfFunc: () => {
-          if (this.state.selectedFieldDescriptor.variant !== 'select' && this.state.selectedFieldDescriptor.variant !== 'binary-buttons') {
+          if (
+            this.state.selectedFieldDescriptor.variant !== 'select'
+            && this.state.selectedFieldDescriptor.variant !== 'binary-buttons'
+            && this.state.selectedFieldDescriptor.variant !== 'Gazprombank-string-select'
+          ) {
             return true
           }
           return false
