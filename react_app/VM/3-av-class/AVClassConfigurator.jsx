@@ -59,6 +59,7 @@ export class AVClassConfigurator extends AVItem {
             return ['textarea',
               'select',
               'binary-buttons',
+              'radio-buttons',
               'date',
               'Gazprombank-string',
               'Gazprombank-string-select',
@@ -84,6 +85,7 @@ export class AVClassConfigurator extends AVItem {
           if (
             this.state.selectedFieldDescriptor.variant !== 'select'
             && this.state.selectedFieldDescriptor.variant !== 'binary-buttons'
+            && this.state.selectedFieldDescriptor.variant !== 'radio-buttons'
             && this.state.selectedFieldDescriptor.variant !== 'Gazprombank-string-select'
           ) {
             return true

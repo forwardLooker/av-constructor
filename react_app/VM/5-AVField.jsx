@@ -88,6 +88,17 @@ class AVFieldOriginal extends AVItem {
       outline: none;
       vertical-align: middle;
     `,
+    gazprombankRadioInput: this.styled.div`
+      &::after {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        opacity: 1;
+        border-radius: 50%;
+        background: white;
+      }
+    `,
   }
   static defaultProps = {
     fieldItem: null,
@@ -279,7 +290,7 @@ class AVFieldOriginal extends AVItem {
             {(!this._calcIsLabelHidden() && this._calcLabelPosition() !== 'right') && (
               <AVLabel
                 className={`pad-0-4-0-0`}
-                justifyMode={(this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'binary-buttons') ? 'start' : 'center'}
+                justifyMode={(this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'binary-buttons' || this.props.fieldItem.variant === 'radio-buttons') ? 'start' : 'center'}
               >{this._buildLabel()}</AVLabel>
             )}
             {this._renderInput(
@@ -447,6 +458,48 @@ class AVFieldOriginal extends AVItem {
               }}
               disabled={readOnly}
             >{trimedValuesArr[1]}</AVButton>
+          </div>
+        )
+      }
+
+      if (fieldItem.variant === 'radio-buttons' && fieldItem.valuesList) {
+        let valuesArr
+        if (Array.isArray(fieldItem.valuesList)) {
+          valuesArr = fieldItem.valuesList;
+        } else if (typeof fieldItem.valuesList === 'function') {
+          valuesArr = fieldItem.valuesList();
+        } else {
+          valuesArr = fieldItem.valuesList.split(',');
+        }
+        const trimedValuesArr = valuesArr.map(str => str.trim());
+        
+        inputElement = (
+          <div className='margin-top-12'>
+            {trimedValuesArr.map(str => (
+              <div className='row margin-top-12 cursor-pointer'
+                onClick={() => {
+                  this.setState({
+                    _value: str,
+                    isInvalidState: false,
+                    isInvalidMessageRendered: false,
+                  });
+                  this.props.onChangeFunc(str)
+                }}
+              >
+                <AVFieldOriginal.styles.gazprombankRadioInput
+                  className={`row pos-rel width-20px height-20px align-center justify-center ${value === str ? 'bg-gaz-radio' : 'bg-white border-gaz-radio'} border-radius-50prc cursor-pointer`}
+                >
+                  <input
+                    className='margin-0 opacity-0 cursor-pointer'
+                    type='radio'
+                    name={fieldItem.name}
+                    checked={value === str}
+                    disabled={readOnly}
+                  ></input>
+                </AVFieldOriginal.styles.gazprombankRadioInput>
+                <AVLabel className='margin-left-8 cursor-pointer'>{str}</AVLabel>
+              </div>
+            ))}
           </div>
         )
       }
@@ -1306,7 +1359,8 @@ class AVFieldOriginal extends AVItem {
     if (this.props.fieldItem.variant === 'input+range' ||
       this.props.fieldItem.variant === 'Gazprombank-string' ||
       this.props.fieldItem.variant === 'Gazprombank-tel' ||
-      this.props.fieldItem.variant === 'binary-buttons'
+      this.props.fieldItem.variant === 'binary-buttons' ||
+      this.props.fieldItem.variant === 'radio-buttons'
     ) {
       return 'top'
     }
