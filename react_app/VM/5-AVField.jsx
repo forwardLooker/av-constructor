@@ -476,7 +476,7 @@ class AVFieldOriginal extends AVItem {
         inputElement = (
           <div className='margin-top-12'>
             {trimedValuesArr.map(str => (
-              <div className='row margin-top-12 cursor-pointer'
+              <div key={str} className='row margin-top-12 cursor-pointer'
                 onClick={() => {
                   this.setState({
                     _value: str,
@@ -613,7 +613,7 @@ class AVFieldOriginal extends AVItem {
             <AVIcon className='pos-abs right-16px' name='gazSelectArrow'></AVIcon>
             <div ref={el => this.optionsListRef = el}
               hidden
-              className='pos-abs height-160px bottom-minus168px rl-0 pad-4 bg-white border-radius-12px scroll-y z-index-100'
+              className='pos-abs height-160px bottom-minus168px rl-0 pad-4 bg-white border-radius-12px scroll-y z-index-100 box-shadow'
             >
               {trimedValuesArr.map(str => (
                 <div
