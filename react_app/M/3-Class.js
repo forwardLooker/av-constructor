@@ -2,6 +2,8 @@ import {Item} from './0-Item.js'
 import {ObjectDocument} from './4-ObjectDocument.js';
 import usersClass from '../Classes/users.js';
 import gazprombankPage1Class from '../Classes/gazprombank-page1.js';
+import gazprombankPage2Class from '../Classes/gazprombank-page2.js';
+
 
 
 import {Accounting} from './Services/Accounting.js';
@@ -25,7 +27,7 @@ export class Class extends Item {
   serverRef;
   id; // TODO может сделать getter?
   Domain;
-  classModuleDefinitions = [usersClass, gazprombankPage1Class];
+  classModuleDefinitions = [usersClass, gazprombankPage1Class, gazprombankPage2Class];
   classServiceDefinitions = [Accounting];
   async getObjectDocuments() {
     if (this.serverRef) {
