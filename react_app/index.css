@@ -170,6 +170,9 @@ a {
 .pad-0-8 {
   padding: 0 8px;
 }
+.pad-24 {
+  padding: 24px;
+}
 .pad-0-1dot5em {
   padding: 0 1.5em;
 }
@@ -387,7 +390,7 @@ a {
   background: #dbdfec;
 }
 .bg-gaz-progress-fill {
-  background: linear-gradient(45deg, #427221, #8ec26a);;
+  background: linear-gradient(225deg, #3abb87, #43bb3a);
 }
 .bg-gaz-field-hover:hover {
   background: #f4f6fa;
@@ -397,6 +400,9 @@ a {
 }
 .bg-gaz-radio {
   background: #476bf0;
+}
+.bg-gaz-change-credit-parameters {
+  background: rgb(245, 245, 245);
 }
 .animation-gaz-progress::after {
   content: "";
@@ -427,13 +433,13 @@ a {
   color: #818c99;
 }
 .color-gaz-label {
-  color: #7f8499;
+  color: rgb(111, 111, 111);
 }
 .color-gaz-error {
   color: rgb(229, 92, 92);
 }
 .color-gaz-info {
-  color: #696e82;
+  color: rgb(111, 111, 111);
 }
 .color-gaz-accent {
   color: rgb(71, 107, 240);

@@ -259,6 +259,36 @@ class AVFieldOriginal extends AVItem {
         </div>
       )
     }
+    
+    if (this.props.fieldItem.viewItemType === 'gazprombank change credit parameters') {
+      return (
+        <div className='_av-field-viewItem-root flex-1 pad-24 bg-gaz-change-credit-parameters'
+          style={this.props.style}
+          ref={this.props.refOnRootDiv}
+        >
+          <div className='flex-1 row space-between'>
+            <div className='row'>
+              <div>
+                <div>Сумма кредита</div>
+                <div>5 000 000 ₽</div>
+              </div>
+              <div>
+                <div>Срок кредита</div>
+                <div>60 месяцев</div>
+              </div>
+              <div>
+                <div>Ежемесячный платеж</div>
+                <div>от 168 823 ₽</div>
+              </div>
+            </div>
+            <div>
+              <AVButton>Изменить</AVButton>
+            </div>
+          </div>
+          {this.props.children}
+        </div>
+      )
+    }
 
 
     // if (this.props.fieldItem.viewItemType === 'tabs') {
@@ -289,7 +319,7 @@ class AVFieldOriginal extends AVItem {
           <div className={`flex-1 ${this._calcLabelPosition() === 'top' ? '' : 'row'}`}>
             {(!this._calcIsLabelHidden() && this._calcLabelPosition() !== 'right') && (
               <AVLabel
-                className={`pad-0-4-0-0`}
+                className={`pad-0-4-0-0 ${this.props.fieldItem.variant === 'input+range' ? 'color-gaz-label' : ''}`}
                 justifyMode={(this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'binary-buttons' || this.props.fieldItem.variant === 'radio-buttons') ? 'start' : 'center'}
               >{this._buildLabel()}</AVLabel>
             )}
@@ -1148,8 +1178,8 @@ class AVFieldOriginal extends AVItem {
               ></div>
             </div>
             <div className="row space-between margin-top-8 font-size-14px">
-              <div>{fieldItem.minLabel}</div>
-              <div>{fieldItem.maxLabel}</div>
+              <div className='color-gaz-label'>{fieldItem.minLabel}</div>
+              <div className='color-gaz-label'>{fieldItem.maxLabel}</div>
             </div>
           </div>
         );
