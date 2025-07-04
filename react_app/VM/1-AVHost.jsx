@@ -58,6 +58,8 @@ export class AVHost extends AVItem {
   //render
   
   async componentDidMount() {
+    AVItem.appRef = this.props.appRef;
+
     if (!this.props.appRef.state.router) {
       const config = await this.Host.getConfig(); // Чтобы получить роуты требуется на Хосте сначала Конфиг
       const classItemRoutes = this.Host.getClassByName('Роуты');

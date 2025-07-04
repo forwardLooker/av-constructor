@@ -262,27 +262,38 @@ class AVFieldOriginal extends AVItem {
     
     if (this.props.fieldItem.viewItemType === 'gazprombank change credit parameters') {
       return (
-        <div className='_av-field-viewItem-root flex-1 pad-24 bg-gaz-change-credit-parameters'
+        <div className='_av-field-viewItem-root flex-1 pad-15 bg-gaz-change-credit-parameters'
           style={this.props.style}
           ref={this.props.refOnRootDiv}
         >
           <div className='flex-1 row space-between'>
             <div className='row'>
               <div>
-                <div>Сумма кредита</div>
-                <div>5 000 000 ₽</div>
+                <div className='color-gaz-label font-size-14px font-weight-400'>Сумма кредита</div>
+                <div className='font-size-20px font-weight-600'>5 000 000 ₽</div>
               </div>
-              <div>
-                <div>Срок кредита</div>
-                <div>60 месяцев</div>
+              <div className='margin-left-32'>
+                <div className='color-gaz-label font-size-14px font-weight-400'>Срок кредита</div>
+                <div className='font-size-20px font-weight-600'>60 месяцев</div>
               </div>
-              <div>
-                <div>Ежемесячный платеж</div>
-                <div>от 168 823 ₽</div>
+              <div className='margin-left-32'>
+                <div className='color-gaz-label font-size-14px font-weight-400'>Ежемесячный платеж</div>
+                <div className='font-size-20px font-weight-600'>от 168 823 ₽</div>
               </div>
             </div>
-            <div>
-              <AVButton>Изменить</AVButton>
+            <div className='row align-center'>
+              <AVButton
+                style={{
+                  border: '0px',
+                  fontSize: '16px',
+                  height: '40px',
+                  padding: '0 16px',
+                  color: 'black',
+                  background: '#0a0a0b0f'
+                }}
+              >
+                Изменить
+              </AVButton>
             </div>
           </div>
           {this.props.children}

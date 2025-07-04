@@ -146,6 +146,7 @@ export default class {
     },
     'Подтвердить': async ($objectDocument) => {
       if ($objectDocument.state._newData['Код из СМС'] === '1111') {
+        $objectDocument.appRef.gazCreditFirstPageData = $objectDocument.state._newData;
         this.Host.navigate('/gaz2');
       }
     }

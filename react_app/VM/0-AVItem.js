@@ -26,6 +26,7 @@ export class AVItem extends AVElement {
     }
     return this._userFromHost.value;
   }
+  appRef; // рутовый реакт компонент для хранения глобальных данных между страницами, устанавливается в дидмаунте Хоста
   componentWillUnmount() {
     // super.componentWillUnmount();
     if (this._userFromHost?.listenerId) {
