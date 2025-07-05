@@ -1,17 +1,6 @@
 import {AVElement} from "../V/0-AVElement.js";
 
 export class AVItem extends AVElement {
-  // fromHost(propName) {
-  //   return {
-  //     _fieldFromHost: propName
-  //   }
-  // }
-  // constructor() {
-  //   super();
-  //   const name = Object.keys(this).find((fieldName) => this[fieldName]?._fieldFromHost?.length > 0);
-  //
-  // }
-
   static Host() {};
   get Host() { return AVItem.Host; }
   get db() { return this.Host.db; } // по идее нигде не используется, потому что всё через обёртки Айтемов
@@ -26,7 +15,7 @@ export class AVItem extends AVElement {
     }
     return this._userFromHost.value;
   }
-  appRef; // рутовый реакт компонент для хранения глобальных данных между страницами, устанавливается в дидмаунте Хоста
+  
   componentWillUnmount() {
     // super.componentWillUnmount();
     if (this._userFromHost?.listenerId) {

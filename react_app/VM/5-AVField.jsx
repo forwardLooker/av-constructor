@@ -9,12 +9,17 @@ import { AVIcon } from "../V/icons/AVIcon.jsx";
 
 const emailValidator = require('@sefinek/email-validator');
 
-export class AVField extends React.PureComponent { // Для отладки в Dev Tools, тест производительности разницы не заметил
+const AVField = React.forwardRef((props, ref) => (
+  <AVFieldWrapper {...props} forwardedRef={ref}></AVFieldWrapper>
+))
+export { AVField };
+  
+class AVFieldWrapper extends React.PureComponent { // Для отладки в Dev Tools, тест производительности разницы не заметил
   AVFieldWithDisplayName = class extends AVFieldOriginal { }
   render() {
     this.AVFieldWithDisplayName.displayName = ('AVField' + '(' + (this.props.fieldItem.label || this.props.fieldItem.viewItemType) + ')');
     return (
-      <this.AVFieldWithDisplayName {...this.props}></this.AVFieldWithDisplayName>
+      <this.AVFieldWithDisplayName ref={this.props.forwardedRef} {...this.props}></this.AVFieldWithDisplayName>
     )
   }
 }
@@ -270,11 +275,11 @@ class AVFieldOriginal extends AVItem {
             <div className='row'>
               <div>
                 <div className='color-gaz-label font-size-14px font-weight-400'>Сумма кредита</div>
-                <div className='font-size-20px font-weight-600'>5 000 000 ₽</div>
+                <div className='font-size-20px font-weight-600'>{this.Host.gazCreditFirstPageData['Желаемая сумма'] + ' ₽'}</div>
               </div>
               <div className='margin-left-32'>
                 <div className='color-gaz-label font-size-14px font-weight-400'>Срок кредита</div>
-                <div className='font-size-20px font-weight-600'>60 месяцев</div>
+                <div className='font-size-20px font-weight-600'>{this.Host.gazCreditFirstPageData['Срок кредита'] + ' месяцев'}</div>
               </div>
               <div className='margin-left-32'>
                 <div className='color-gaz-label font-size-14px font-weight-400'>Ежемесячный платеж</div>
