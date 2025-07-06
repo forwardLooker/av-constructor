@@ -266,6 +266,16 @@ class AVFieldOriginal extends AVItem {
     }
     
     if (this.props.fieldItem.viewItemType === 'gazprombank change credit parameters') {
+      const calcMonthPay = () => {
+        if (!this.Host.gazCreditFirstPageData?.['Желаемая сумма']) {
+          return '168 823'
+        }
+        const years = Number(this.Host.gazCreditFirstPageData['Срок кредита']) / 12;
+        const payPerYear = Number(this.Host.gazCreditFirstPageData['Желаемая сумма']) * 0.2;
+        const SumWithProcent = Number(this.Host.gazCreditFirstPageData['Желаемая сумма']) + (payPerYear * years);
+        const monthPay = SumWithProcent / Number(this.Host.gazCreditFirstPageData['Срок кредита']);
+        return Math.round(monthPay)
+      }
       return (
         <div className='_av-field-viewItem-root flex-1 pad-15 bg-gaz-change-credit-parameters'
           style={this.props.style}
@@ -275,15 +285,19 @@ class AVFieldOriginal extends AVItem {
             <div className='row'>
               <div>
                 <div className='color-gaz-label font-size-14px font-weight-400'>Сумма кредита</div>
-                <div className='font-size-20px font-weight-600'>{this.Host.gazCreditFirstPageData?.['Желаемая сумма'] + ' ₽'}</div>
+                <div className='font-size-20px font-weight-600'>
+                  {this.Host.gazCreditFirstPageData?.['Желаемая сумма'] ? (this.Host.gazCreditFirstPageData?.['Желаемая сумма'] + ' ₽') : '5 000 000 ₽'}
+                </div>
               </div>
               <div className='margin-left-32'>
                 <div className='color-gaz-label font-size-14px font-weight-400'>Срок кредита</div>
-                <div className='font-size-20px font-weight-600'>{this.Host.gazCreditFirstPageData?.['Срок кредита'] + ' месяцев'}</div>
+                <div className='font-size-20px font-weight-600'>
+                  {this.Host.gazCreditFirstPageData?.['Срок кредита'] ? (this.Host.gazCreditFirstPageData?.['Срок кредита'] + ' месяцев') : '60 месяцев'}
+                </div>
               </div>
               <div className='margin-left-32'>
                 <div className='color-gaz-label font-size-14px font-weight-400'>Ежемесячный платеж</div>
-                <div className='font-size-20px font-weight-600'>от 168 823 ₽</div>
+                <div className='font-size-20px font-weight-600'>от {calcMonthPay()} ₽</div>
               </div>
             </div>
             <div className='row align-center'>
