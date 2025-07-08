@@ -62,11 +62,13 @@ export class AVClassConfigurator extends AVItem {
               'radio-buttons',
               'date',
               'Gazprombank-string',
+              'Gazprombank-string-number',
               'Gazprombank-string-select',
               'Gazprombank-tel',
               'Gazprombank-email',
               'Gazprombank-passport-seria-number',
               'Gazprombank-date',
+              'Gazprombank-date-month-year',
               'Gazprombank-passport-kod-podrazdelenia',
             ];
           }

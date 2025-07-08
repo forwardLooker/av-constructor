@@ -632,6 +632,64 @@ class AVFieldOriginal extends AVItem {
           </div>
         )
       }
+      if (fieldItem.variant === 'Gazprombank-string-number') {
+        let gazInputRef;
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        if (this.state.isFocusedState) {
+          borderGaz = 'border-gaz-accent'
+        }
+        inputElement = (
+          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
+            onClick={() => {
+              gazInputRef.removeAttribute('hidden');
+              gazInputRef.focus();
+              this._labelFontSizeClassName = 'font-size-14px';
+              this.forceUpdate()
+            }}
+          >
+            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVFieldOriginal.styles.gazprombankInput
+              className="flex-1 margin-left-16"
+              ref={el => gazInputRef = el}
+              hidden
+              autoComplete="off"
+              value={(value === null || value === undefined) ? '' : value}
+              readOnly={readOnly}
+              onChange={onChangeFunc}
+              onKeyPress={evt => {
+                var theEvent = evt || window.event;
+                // Handle paste
+                if (theEvent.type === 'paste') {
+                  key = event.clipboardData.getData('text/plain');
+                } else {
+                  // Handle key press
+                  var key = theEvent.keyCode || theEvent.which;
+                  key = String.fromCharCode(key);
+                }
+                var regex = /[0-9]|\./;
+                if (!regex.test(key)) {
+                  theEvent.returnValue = false;
+                  if (theEvent.preventDefault) theEvent.preventDefault();
+                }
+              }}
+              onBlur={() => {
+                if (!value) {
+                  gazInputRef.setAttribute('hidden', '');
+                  this._labelFontSizeClassName = 'font-size-16px';
+                  this.forceUpdate();
+                }
+                this.setState({ isFocusedState: false })
+              }}
+              onFocus={() => this.setState({
+                isFocusedState: true,
+                isInvalidState: false,
+                isRequiredMessageRendered: false,
+              })}
+            ></AVFieldOriginal.styles.gazprombankInput>
+          </div>
+        )
+      }
+
       if (fieldItem.variant === 'Gazprombank-string-select') {
         let valuesArr
         if (Array.isArray(fieldItem.valuesList)) {
@@ -1073,6 +1131,119 @@ class AVFieldOriginal extends AVItem {
           </div>
         )
       }
+      if (fieldItem.variant === 'Gazprombank-date-month-year') {
+        // let gazInputRef;
+        value = (value === null || value === undefined) ? '__.____' : value;
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        if (this.state.isFocusedState) {
+          borderGaz = 'border-gaz-accent'
+        }
+        inputElement = (
+          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
+            onClick={() => {
+              this.gazInputRef.removeAttribute('hidden');
+              this.gazInputRef.focus();
+              this._labelFontSizeClassName = 'font-size-14px';
+              this.forceUpdate()
+            }}
+          >
+            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVFieldOriginal.styles.gazprombankInput
+              className="flex-1 margin-left-16"
+              ref={el => this.gazInputRef = el}
+              autoComplete="off"
+              inputmode="tel"
+              value={(value === null || value === undefined) ? '__.____' : value}
+              readOnly={readOnly}
+              onClick={e => {
+                const selectionIndex = value.indexOf('_');
+                this.gazInputRef.selectionStart = selectionIndex;
+                this.gazInputRef.selectionEnd = selectionIndex;
+
+              }}
+              onKeyPress={evt => {
+                var theEvent = evt || window.event;
+                // Handle paste
+                if (theEvent.type === 'paste') {
+                  key = event.clipboardData.getData('text/plain');
+                } else {
+                  // Handle key press
+                  var key = theEvent.keyCode || theEvent.which;
+                  key = String.fromCharCode(key);
+                }
+                var regex = /[0-9]|\./;
+                if (!regex.test(key)) {
+                  theEvent.returnValue = false;
+                  if (theEvent.preventDefault) theEvent.preventDefault();
+                }
+              }}
+              onChange={e => {
+                if (this.gazInputRef.selectionStart === this.gazInputRef.selectionEnd) {
+                  if (this.gazInputRef.selectionStart === 8) {
+                    return;
+                  }
+                  let valueArr = value.split('');
+                  if (e.nativeEvent.inputType === 'deleteContentBackward') {
+                    if (valueArr[this.gazInputRef.selectionStart] === '.') {
+                      valueArr.splice(this.gazInputRef.selectionStart - 1, 1, '_');
+                    } else {
+                      valueArr.splice(this.gazInputRef.selectionStart, 1, '_');
+                    }
+                  } else {
+                    const key = e.nativeEvent.data;
+                    valueArr.splice(this.gazInputRef.selectionStart - 1, 1, key);
+                  }
+                  const newValue = valueArr.join('');
+                  this.setState({ _value: newValue }, () => {
+                    const selectionIndex = newValue.indexOf('_');
+                    this.gazInputRef.selectionStart = selectionIndex;
+                    this.gazInputRef.selectionEnd = selectionIndex;
+                  })
+                  this.props.onChangeFunc(newValue);
+                }
+                // onChangeFunc(e);
+              }}
+              onBlur={() => {
+                if (!value) {
+                  this.gazInputRef.setAttribute('hidden', '');
+                  this._labelFontSizeClassName = 'font-size-16px';
+                  this.forceUpdate();
+                }
+                if (value.indexOf('_') > -1) {
+                  this.setState({
+                    isInvalidState: true,
+                    isInvalidMessageRendered: true,
+                    invalidMessage: 'Некорректное значение',
+                  })
+                } else {
+                  // const day = Number(value.substring(0, 2));
+                  // const month = Number(value.substring(3, 5));
+                  // const year = Number(value.substring(6));
+                  const month = Number(value.substring(0, 2));
+                  const year = Number(value.substring(3));
+                  if (((1 > month) || (month > 12)) || ((1900 > year) || (year > 2100))) {
+                    this.setState({
+                      isInvalidState: true,
+                      isInvalidMessageRendered: true,
+                      invalidMessage: 'Некорректное значение',
+                    })
+                  }
+                }
+                this.setState({ isFocusedState: false })
+              }}
+              onFocus={() => {
+                this.setState({
+                  isFocusedState: true,
+                  isInvalidState: false,
+                  isRequiredMessageRendered: false,
+                  isInvalidMessageRendered: false,
+                });
+              }}
+            ></AVFieldOriginal.styles.gazprombankInput>
+          </div>
+        )
+      }
+
       if (fieldItem.variant === 'Gazprombank-passport-kod-podrazdelenia') {
         // let gazInputRef;
         value = (value === null || value === undefined) ? '___-___' : value;
