@@ -96,9 +96,9 @@ export class AVClassConfigurator extends AVItem {
         }},
         { name: 'defaultValue' },
         {name: 'infoMessage', hideIfFunc: () => {
-          if (this.state.selectedFieldDescriptor.dataType !== 'string') {
-            return true
-          }
+          // if (this.state.selectedFieldDescriptor.dataType !== 'string') {
+          //   return true
+          // }
           return false
         }},
         {
