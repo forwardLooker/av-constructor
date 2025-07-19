@@ -86,6 +86,29 @@ export class AVObjectDocument extends AVItem {
     // })
   }
 
+  async componentDidUpdate(prevProps) {
+    if (this.props.objectDocumentPath !== prevProps.objectDocumentPath) {
+      const objectDocument = this.Host.getObjectDocumentByPath(this.props.objectDocumentPath);
+      await objectDocument.getData();
+      const classItem = this.Host.getClass(objectDocument.data.classReference);
+      const fieldDescriptors = await classItem.getFieldDescriptors();
+      objectDocument.Class = classItem;
+
+      this.setState({
+        _newData: this.deepClone(objectDocument.data),
+        _newDataBeforeUpdate: this.deepClone(objectDocument.data),
+        _objectDocument: objectDocument,
+        _fieldDescriptors: fieldDescriptors
+      }, () => {
+        this._prepareDesignJson();
+        this.forceUpdate();
+        // this._makeDidMountByModule();
+      })
+    } else {
+      // this._makeDidMountByModule()
+    }
+  }
+
   _makeDidMountByModule = () => {
     // вызывается в модуле конкретного класса
     const classInstance = this.state._objectDocument.Class;
