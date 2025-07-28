@@ -656,7 +656,7 @@ export class AVObjectDocument extends AVItem {
       menu = ['Изменить label', ...menu];
       menuResult = await this.showContextMenu(e, menu);
       if (menuResult === 'Изменить label') {
-        const newLabel = await this.showDialog({text: 'Введите новый label', inputLabel: 'label'});
+        const newLabel = await this.showDialog({ text: 'Введите новый label', inputLabel: 'label', dialogInputValue: fieldItem.label });
         if (newLabel) {
           fieldItem.label = newLabel;
           this.forceUpdate();
@@ -819,7 +819,8 @@ export class AVObjectDocument extends AVItem {
           <br></br>,
           `Текущий presentationGroup: ${fieldItem.presentationGroup}`
         ],
-        inputLabel: 'presentationGroup'
+        inputLabel: 'presentationGroup',
+        dialogInputValue: fieldItem.presentationGroup
       });
       if (typeof presentationGroup === 'string') {
         fieldItem.presentationGroup = presentationGroup;
@@ -840,7 +841,8 @@ export class AVObjectDocument extends AVItem {
           <br></br>,
           `Текущий presentationGroup: ${containerItem.presentationGroup}`
         ],
-        inputLabel: 'presentationGroup'
+        inputLabel: 'presentationGroup',
+        dialogInputValue: containerItem.presentationGroup
       });
       if (typeof presentationGroup === 'string') {
         containerItem.presentationGroup = presentationGroup;
@@ -861,7 +863,8 @@ export class AVObjectDocument extends AVItem {
           <br></br>,
           `Текущий presentationGroup: ${containerItem.presentationGroup}`
         ],
-        inputLabel: 'presentationGroup'
+        inputLabel: 'presentationGroup',
+        dialogInputValue: containerItem.presentationGroup
       });
       if (typeof presentationGroup === 'string') {
         containerItem.presentationGroup = presentationGroup;
