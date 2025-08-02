@@ -338,7 +338,7 @@ export class AVObjectDocument extends AVItem {
 
     return (
       <div
-        className="_av-field-wrapper pos-rel col flex-1 margin-top-2"
+        className={`_av-field-wrapper pos-rel col flex-1 ${fieldItem.withoutPaddingAndMargin ? '' : 'margin-top-2'}`}
         style={fieldItem.style}
         key={fieldItem.name || idx}
       >
@@ -642,6 +642,11 @@ export class AVObjectDocument extends AVItem {
       menu.push('Установить buttonStyle');
       menu.push('Сбросить buttonStyle');
     }
+    if (fieldItem.viewItemType === 'label' && !fieldItem.withoutPaddingAndMargin) {
+      menu.push('Убрать margin-top-2 и pad-8');
+    } else if (fieldItem.viewItemType === 'label' && fieldItem.withoutPaddingAndMargin) {
+      menu.push('Вернуть margin-top-2 и pad-8');
+    }
     if (fieldItem.viewItemType !== 'tabs' && fieldItem.viewItemType && fieldItem.viewItemType !== 'field') {
       menu.push('Убрать элемент')
     }
@@ -661,6 +666,14 @@ export class AVObjectDocument extends AVItem {
           fieldItem.label = newLabel;
           this.forceUpdate();
         }
+      }
+      if (menuResult === 'Убрать margin-top-2 и pad-8') {
+        fieldItem.withoutPaddingAndMargin = true;
+        this.forceUpdate();
+      }
+      if (menuResult === 'Вернуть margin-top-2 и pad-8') {
+        fieldItem.withoutPaddingAndMargin = false;
+        this.forceUpdate();
       }
     } else {
       menuResult = await this.showContextMenu(e, menu);

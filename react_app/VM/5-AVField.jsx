@@ -191,7 +191,7 @@ class AVFieldOriginal extends AVItem {
     }
     if (this.props.fieldItem.viewItemType === 'label') {
       return (
-          <div className='_av-field-viewItem-root flex-1 pad-8'
+        <div className={`_av-field-viewItem-root flex-1 ${this.props.fieldItem.withoutPaddingAndMargin ? '' : 'pad-8'}`}
                style={this.props.style}
                ref={this.props.refOnRootDiv}
           >
