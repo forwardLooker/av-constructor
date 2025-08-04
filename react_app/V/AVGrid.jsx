@@ -76,6 +76,18 @@ export class AVGrid extends AVElement {
     this._realignGridHeaderCells();
     this._realignGridRows();
     this.forceUpdate();
+    
+    // для ресайза при переключениях на весь экран
+    window.document.addEventListener('keydown', e => {
+      console.log('didMountKeyDown', e);
+      if (e.key === 'F7') {
+        e.preventDefault();
+        this._realignGridHeaderCells();
+        this._realignGridRows();
+        this.forceUpdate();
+      }
+    });
+    
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {

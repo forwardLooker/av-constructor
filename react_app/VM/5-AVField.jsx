@@ -148,16 +148,19 @@ class AVFieldOriginal extends AVItem {
       this.props.onChangeFunc(this.props.fieldItem?.defaultValue)
     }
     if (this._sliderFreeSpaceRef) {
-      const sliderFreeSpaceWidth = this._sliderFreeSpaceRef.getBoundingClientRect().width;
-      this._sliderFillSpaceWidth = (sliderFreeSpaceWidth / (this.props.fieldItem.maxValue - this.props.fieldItem.minValue)) * (this.state._value - this.props.fieldItem.minValue);
-      if (Number(this.state._value) < Number(this.props.fieldItem.minValue)) {
-        this._sliderFillSpaceWidth = 0;
-      }
-      if (Number(this.state._value) > Number(this.props.fieldItem.maxValue)) {
-        this._sliderFillSpaceWidth = sliderFreeSpaceWidth;
-      }
+      this.calcSliderFillSpaceWidth();
       this.forceUpdate();
     }
+    
+    // для ресайза при переключениях на весь экран
+    window.document.addEventListener('keydown', e => {
+      console.log('didMountKeyDown', e);
+      if (e.key === 'F7') {
+        e.preventDefault();
+        this.calcSliderFillSpaceWidth();
+        this.forceUpdate();
+      }
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -165,17 +168,21 @@ class AVFieldOriginal extends AVItem {
       this.setState({ _value: this.props.value });
     }
     if (this._sliderFreeSpaceRef && this.state._value !== prevState._value) {
-      const sliderFreeSpaceWidth = this._sliderFreeSpaceRef.getBoundingClientRect().width;
-      this._sliderFillSpaceWidth = (sliderFreeSpaceWidth / (this.props.fieldItem.maxValue - this.props.fieldItem.minValue)) * (this.state._value - this.props.fieldItem.minValue);
-      if (Number(this.state._value) < Number(this.props.fieldItem.minValue)) {
-        this._sliderFillSpaceWidth = 0;
-      }
-      if (Number(this.state._value) > Number(this.props.fieldItem.maxValue)) {
-        this._sliderFillSpaceWidth = sliderFreeSpaceWidth;
-      }
+      this.calcSliderFillSpaceWidth();
       this.forceUpdate();
     }
 
+  }
+  
+  calcSliderFillSpaceWidth = () => {
+    const sliderFreeSpaceWidth = this._sliderFreeSpaceRef.getBoundingClientRect().width;
+    this._sliderFillSpaceWidth = (sliderFreeSpaceWidth / (this.props.fieldItem.maxValue - this.props.fieldItem.minValue)) * (this.state._value - this.props.fieldItem.minValue);
+    if (Number(this.state._value) < Number(this.props.fieldItem.minValue)) {
+      this._sliderFillSpaceWidth = 0;
+    }
+    if (Number(this.state._value) > Number(this.props.fieldItem.maxValue)) {
+      this._sliderFillSpaceWidth = sliderFreeSpaceWidth;
+    }
   }
 
   render() {

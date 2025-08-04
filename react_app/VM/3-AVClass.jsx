@@ -14,6 +14,7 @@ export class AVClass extends AVItem {
   static defaultProps = {
     classItem: null,
     onObjectDocumentSelectedFunc: this.noop, // применяется внутри объекта в котором открывают класс для поля линк на объект
+    itemFullScreenMode: false, // знание убирает паддинги
   }
   state = {
     currentViewName: '',
