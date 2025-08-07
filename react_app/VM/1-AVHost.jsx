@@ -93,7 +93,7 @@ export class AVHost extends AVItem {
       // const bodyElem = window.document.getElementsByTagName('body');
       // console.log('bodyElem', bodyElem);
       window.document.addEventListener('keydown', e => {
-        console.log('didMountKeyDown', e);
+        // console.log('didMountKeyDown', e);
         if (e.key === 'F7') {
           e.preventDefault();
           this.setState(state => ({ itemFullScreenMode: !state.itemFullScreenMode }));

@@ -7,6 +7,8 @@ import {AVButton} from "../V/AVButton.jsx";
 import { AVGrid } from "../V/AVGrid.jsx";
 import { AVIcon } from "../V/icons/AVIcon.jsx";
 
+import formatNumber from 'number-format.js';
+
 const emailValidator = require('@sefinek/email-validator');
 
 const AVField = React.forwardRef((props, ref) => (
@@ -154,7 +156,6 @@ class AVFieldOriginal extends AVItem {
     
     // для ресайза при переключениях на весь экран
     window.document.addEventListener('keydown', e => {
-      console.log('didMountKeyDown', e);
       if (e.key === 'F7') {
         e.preventDefault();
         this.calcSliderFillSpaceWidth();
@@ -1382,12 +1383,51 @@ class AVFieldOriginal extends AVItem {
             <div className="row align-center">
               <AVFieldOriginal.styles.rangeInput
                 className="input+range"
+                ref={el => this.gazInputRef = el}
                 autoComplete="off"
                 size="7"
                 inputMode="numeric"
                 value={(value === null || value === undefined) ? '' : value}
                 readOnly={readOnly}
-                onChange={onChangeFunc}
+                onKeyPress={evt => {
+                  var theEvent = evt || window.event;
+                  // Handle paste
+                  if (theEvent.type === 'paste') {
+                    key = event.clipboardData.getData('text/plain');
+                  } else {
+                    // Handle key press
+                    var key = theEvent.keyCode || theEvent.which;
+                    key = String.fromCharCode(key);
+                  }
+                  var regex = /[0-9]|\./;
+                  if (!regex.test(key)) {
+                    theEvent.returnValue = false;
+                    if (theEvent.preventDefault) theEvent.preventDefault();
+                  }
+                }}
+                onChange={e => {
+                  // e.persist();
+                  console.log('range onChange e', e);
+                  const newValue = e.target.value;
+                  // onChangeFunc(e)
+                  if (this.getPureValueFromFormatted(newValue) === this.getPureValueFromFormatted(value) && e.nativeEvent.inputType === 'deleteContentBackward') {
+                  } else {
+                    const pureValueFromFormatted = this.getPureValueFromFormatted(newValue);
+                    console.log('pureValueFromFormatted', pureValueFromFormatted);
+                    const formattedValue = formatNumber('### ###. ₽', pureValueFromFormatted);
+                    console.log('formattedValue', formattedValue);
+                    this.setState({ _value: formattedValue });
+                    this.props.onChangeFunc(formattedValue);
+                  }
+                  // он почему то после onChange каретку переставляет в конец
+                  const selectionStart = this.gazInputRef.selectionStart;
+                  const selectionEnd = this.gazInputRef.selectionEnd;
+                  Promise.resolve().then(() => {
+                    this.gazInputRef.selectionStart = selectionStart;
+                    this.gazInputRef.selectionEnd = selectionEnd;
+                  });
+
+                }}
               ></AVFieldOriginal.styles.rangeInput>
               <AVIcon name='pencil'></AVIcon>
             </div>
@@ -1669,6 +1709,9 @@ class AVFieldOriginal extends AVItem {
         // this.forceUpdate()
       }
     }
-
+  }
+  
+  getPureValueFromFormatted = (value) => {
+    return value.split('').filter(v => v != ' ' && Number.isInteger(Number(v))).join('');
   }
 }
