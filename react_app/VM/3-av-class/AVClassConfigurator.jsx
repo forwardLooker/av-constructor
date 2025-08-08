@@ -127,6 +127,14 @@ export class AVClassConfigurator extends AVItem {
             return false
           }
         },
+        {
+          name: 'suffixInValue', hideIfFunc: () => {
+            if (this.state.selectedFieldDescriptor.variant !== 'input+range') {
+              return true
+            }
+            return false
+          }
+        },
         {name: 'minLabel', hideIfFunc: () => {
             if (this.state.selectedFieldDescriptor.variant !== 'input+range') {
               return true
