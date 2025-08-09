@@ -680,20 +680,7 @@ class AVFieldOriginal extends AVItem {
               readOnly={readOnly}
               onChange={onChangeFunc}
               onKeyPress={evt => {
-                var theEvent = evt || window.event;
-                // Handle paste
-                if (theEvent.type === 'paste') {
-                  key = event.clipboardData.getData('text/plain');
-                } else {
-                  // Handle key press
-                  var key = theEvent.keyCode || theEvent.which;
-                  key = String.fromCharCode(key);
-                }
-                var regex = /[0-9]|\./;
-                if (!regex.test(key)) {
-                  theEvent.returnValue = false;
-                  if (theEvent.preventDefault) theEvent.preventDefault();
-                }
+                this._blockNonDigitsToEnter(evt)
               }}
               onBlur={() => {
                 if (!value) {
@@ -869,20 +856,7 @@ class AVFieldOriginal extends AVItem {
 
               }}
               onKeyPress={evt => {
-                var theEvent = evt || window.event;
-                // Handle paste
-                if (theEvent.type === 'paste') {
-                  key = event.clipboardData.getData('text/plain');
-                } else {
-                  // Handle key press
-                  var key = theEvent.keyCode || theEvent.which;
-                  key = String.fromCharCode(key);
-                }
-                var regex = /[0-9]|\./;
-                if (!regex.test(key)) {
-                  theEvent.returnValue = false;
-                  if (theEvent.preventDefault) theEvent.preventDefault();
-                }
+                this._blockNonDigitsToEnter(evt)
               }}
               onChange={e => {
                 if (this.gazInputRef.selectionStart === this.gazInputRef.selectionEnd) {
@@ -976,20 +950,7 @@ class AVFieldOriginal extends AVItem {
 
               }}
               onKeyPress={evt => {
-                var theEvent = evt || window.event;
-                // Handle paste
-                if (theEvent.type === 'paste') {
-                  key = event.clipboardData.getData('text/plain');
-                } else {
-                  // Handle key press
-                  var key = theEvent.keyCode || theEvent.which;
-                  key = String.fromCharCode(key);
-                }
-                var regex = /[0-9]|\./;
-                if (!regex.test(key)) {
-                  theEvent.returnValue = false;
-                  if (theEvent.preventDefault) theEvent.preventDefault();
-                }
+                this._blockNonDigitsToEnter(evt)
               }}
               onChange={e => {
                 if (this.gazInputRef.selectionStart === this.gazInputRef.selectionEnd) {
@@ -1075,20 +1036,7 @@ class AVFieldOriginal extends AVItem {
 
               }}
               onKeyPress={evt => {
-                var theEvent = evt || window.event;
-                // Handle paste
-                if (theEvent.type === 'paste') {
-                  key = event.clipboardData.getData('text/plain');
-                } else {
-                  // Handle key press
-                  var key = theEvent.keyCode || theEvent.which;
-                  key = String.fromCharCode(key);
-                }
-                var regex = /[0-9]|\./;
-                if (!regex.test(key)) {
-                  theEvent.returnValue = false;
-                  if (theEvent.preventDefault) theEvent.preventDefault();
-                }
+                this._blockNonDigitsToEnter(evt)
               }}
               onChange={e => {
                 if (this.gazInputRef.selectionStart === this.gazInputRef.selectionEnd) {
@@ -1185,20 +1133,7 @@ class AVFieldOriginal extends AVItem {
 
               }}
               onKeyPress={evt => {
-                var theEvent = evt || window.event;
-                // Handle paste
-                if (theEvent.type === 'paste') {
-                  key = event.clipboardData.getData('text/plain');
-                } else {
-                  // Handle key press
-                  var key = theEvent.keyCode || theEvent.which;
-                  key = String.fromCharCode(key);
-                }
-                var regex = /[0-9]|\./;
-                if (!regex.test(key)) {
-                  theEvent.returnValue = false;
-                  if (theEvent.preventDefault) theEvent.preventDefault();
-                }
+                this._blockNonDigitsToEnter(evt)
               }}
               onChange={e => {
                 if (this.gazInputRef.selectionStart === this.gazInputRef.selectionEnd) {
@@ -1298,20 +1233,7 @@ class AVFieldOriginal extends AVItem {
 
               }}
               onKeyPress={evt => {
-                var theEvent = evt || window.event;
-                // Handle paste
-                if (theEvent.type === 'paste') {
-                  key = event.clipboardData.getData('text/plain');
-                } else {
-                  // Handle key press
-                  var key = theEvent.keyCode || theEvent.which;
-                  key = String.fromCharCode(key);
-                }
-                var regex = /[0-9]|\./;
-                if (!regex.test(key)) {
-                  theEvent.returnValue = false;
-                  if (theEvent.preventDefault) theEvent.preventDefault();
-                }
+                this._blockNonDigitsToEnter(evt)
               }}
               onChange={e => {
                 if (this.gazInputRef.selectionStart === this.gazInputRef.selectionEnd) {
@@ -1392,20 +1314,7 @@ class AVFieldOriginal extends AVItem {
                 value={(value === null || value === undefined) ? '' : value}
                 readOnly={readOnly}
                 onKeyPress={evt => {
-                  var theEvent = evt || window.event;
-                  // Handle paste
-                  if (theEvent.type === 'paste') {
-                    key = event.clipboardData.getData('text/plain');
-                  } else {
-                    // Handle key press
-                    var key = theEvent.keyCode || theEvent.which;
-                    key = String.fromCharCode(key);
-                  }
-                  var regex = /[0-9]|\./;
-                  if (!regex.test(key)) {
-                    theEvent.returnValue = false;
-                    if (theEvent.preventDefault) theEvent.preventDefault();
-                  }
+                  this._blockNonDigitsToEnter(evt)
                 }}
                 onChange={e => {
                   // e.persist();
@@ -1733,5 +1642,22 @@ class AVFieldOriginal extends AVItem {
   
   getPureValueFromFormatted = (value) => {
     return value.split('').filter(v => v != ' ' && Number.isInteger(Number(v))).join('');
+  }
+
+  _blockNonDigitsToEnter = (evt) => {
+    var theEvent = evt || window.event;
+    // Handle paste
+    if (theEvent.type === 'paste') {
+      key = event.clipboardData.getData('text/plain');
+    } else {
+      // Handle key press
+      var key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode(key);
+    }
+    var regex = /[0-9]|\./;
+    if (!regex.test(key)) {
+      theEvent.returnValue = false;
+      if (theEvent.preventDefault) theEvent.preventDefault();
+    }
   }
 }
