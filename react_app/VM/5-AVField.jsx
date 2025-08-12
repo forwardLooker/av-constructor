@@ -308,10 +308,10 @@ class AVFieldOriginal extends AVItem {
         if (!this.Host.gazCreditFirstPageData?.['Желаемая сумма']) {
           return '168 823'
         }
-        const years = Number(this.Host.gazCreditFirstPageData['Срок кредита']) / 12;
-        const payPerYear = Number(this.Host.gazCreditFirstPageData['Желаемая сумма']) * 0.2;
-        const SumWithProcent = Number(this.Host.gazCreditFirstPageData['Желаемая сумма']) + (payPerYear * years);
-        const monthPay = SumWithProcent / Number(this.Host.gazCreditFirstPageData['Срок кредита']);
+        const years = Number(this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Срок кредита'])) / 12;
+        const payPerYear = Number(this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Желаемая сумма'])) * 0.2;
+        const SumWithProcent = Number(this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Желаемая сумма'])) + (payPerYear * years);
+        const monthPay = SumWithProcent / Number(this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Срок кредита']));
         return Math.round(monthPay)
       }
       return (
@@ -324,13 +324,13 @@ class AVFieldOriginal extends AVItem {
               <div>
                 <div className='color-gaz-label font-size-14px font-weight-400'>Сумма кредита</div>
                 <div className='font-size-20px font-weight-600'>
-                  {this.Host.gazCreditFirstPageData?.['Желаемая сумма'] ? (this.Host.gazCreditFirstPageData?.['Желаемая сумма'] + ' ₽') : '5 000 000 ₽'}
+                  {this.Host.gazCreditFirstPageData?.['Желаемая сумма'] ? (this.Host.gazCreditFirstPageData?.['Желаемая сумма']) : '5 000 000 ₽'}
                 </div>
               </div>
               <div className='margin-left-32'>
                 <div className='color-gaz-label font-size-14px font-weight-400'>Срок кредита</div>
                 <div className='font-size-20px font-weight-600'>
-                  {this.Host.gazCreditFirstPageData?.['Срок кредита'] ? (this.Host.gazCreditFirstPageData?.['Срок кредита'] + ' месяцев') : '60 месяцев'}
+                  {this.Host.gazCreditFirstPageData?.['Срок кредита'] ? (this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData?.['Срок кредита']) + ' месяцев') : '60 месяцев'}
                 </div>
               </div>
               <div className='margin-left-32'>
