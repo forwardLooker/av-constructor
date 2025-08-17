@@ -380,8 +380,9 @@ class AVFieldOriginal extends AVItem {
     // }
     return (
       <div className={`_av-field-root flex-1 row align-center`}
-         style={this.props.style}
-         ref={this.props.refOnRootDiv}
+        style={this.props.style}
+        ref={this.props.refOnRootDiv}
+        tabIndex="0"
       >
         <div className='flex-1 col'>
           <div className={`flex-1 ${this._calcLabelPosition() === 'top' ? '' : 'row'}`}>

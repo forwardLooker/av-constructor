@@ -92,6 +92,7 @@ export default class {
           isInvalidMessageRendered: true,
           invalidMessage: 'Выберите один из вариантов',
         });
+        $objectDocument['fieldRef_Я налоговый резидент только РФ'].props.fieldItem.domElement.focus();
         stopNavigate = true
       }
       if ($objectDocument['fieldRef_Мобильный телефон'].state.isInvalidState) {
