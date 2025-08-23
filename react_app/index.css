@@ -447,6 +447,9 @@ a {
 .color-gaz-label {
   color: rgb(111, 111, 111);
 }
+.color-gaz-label-focused {
+  color: rgb(58, 100, 208);
+}
 .color-gaz-error {
   color: rgb(219, 44, 36);
 }

@@ -388,7 +388,7 @@ class AVFieldOriginal extends AVItem {
           <div className={`flex-1 ${this._calcLabelPosition() === 'top' ? '' : 'row'}`}>
             {(!this._calcIsLabelHidden() && this._calcLabelPosition() !== 'right') && (
               <AVLabel
-                className={`pad-0-4-0-0 ${this.props.fieldItem.variant === 'input+range' ? 'color-gaz-label' : ''}`}
+                className={`pad-0-4-0-0 ${this.props.fieldItem.variant === 'input+range' ? (this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label') : ''}`}
                 justifyMode={(this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'binary-buttons' || this.props.fieldItem.variant === 'radio-buttons') ? 'start' : 'center'}
               >{this._buildLabel()}</AVLabel>
             )}
@@ -1352,12 +1352,17 @@ class AVFieldOriginal extends AVItem {
 
                   const formattedValue = formatNumber(`### ###. ${fieldItem.suffixInValue}`, valueToSet);
                   console.log('Blur formattedValue', formattedValue);
-                  this.setState({ _value: formattedValue });
+                  this.setState({ _value: formattedValue, isFocusedState: false });
                   this.props.onChangeFunc(formattedValue);
 
                 }}
+                onFocus={() => {
+                  this.setState({
+                    isFocusedState: true,
+                  });
+                }}
               ></AVFieldOriginal.styles.rangeInput>
-              <AVIcon name='pencil'></AVIcon>
+              <AVIcon name='pencil' fillColor={this.state.isFocusedState ? 'rgb(58, 100, 208)' : null}></AVIcon>
             </div>
             <div className="_range-slider-free-space pos-rel height-4px bg-slider-free-space cursor-pointer"
               ref={el => this._sliderFreeSpaceRef = el}
