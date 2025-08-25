@@ -33,7 +33,8 @@ export class AVTree extends AVElement {
     items: [],
     expandAllRowsNestedLevel: 0,
     onItemSelectFunc: this.noop,
-    onItemContextMenuFunc: this.noop
+    onItemContextMenuFunc: this.noop,
+    isRowsWithBorders: false,
   }
   
   state = {
@@ -66,7 +67,7 @@ export class AVTree extends AVElement {
       <div className={`_av-tree-root flex-1 col bg-tree ${nestingLevel > 0 ? 'margin-left-16' : ''}`}>
         {items.map((i,idx) => (
           <div className="col" key={i.name || idx}>
-            <AVTree.styles.treeRow className={`row ${i.selected ? 'selected' : ''}`}>
+            <AVTree.styles.treeRow className={`row ${i.selected ? 'selected' : ''} ${this.props.isRowsWithBorders ? 'border' : ''}`}>
               <AVTree.styles.iconContainer className={`tree-row-expander ${i.expanded ? 'expanded' : ''} ${this.isEmpty(i.items) ? 'invisible': ''}`}
                                                      onClick={() => this._toggleExpand(i)}
               >

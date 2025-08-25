@@ -252,6 +252,7 @@ export class AVClassConfigurator extends AVItem {
             items={this.state._newFieldDescriptors}
             onItemSelectFunc={selectedFieldDescriptor => this.setState({selectedFieldDescriptor})}
             onItemContextMenuFunc={this._onTreeItemContextMenu}
+            isRowsWithBorders
           ></AVTree>
         </div>
         <div className="flex-1 row margin-left-8 border">
