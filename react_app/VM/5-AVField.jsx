@@ -1115,7 +1115,7 @@ class AVFieldOriginal extends AVItem {
       }
       if (fieldItem.variant === 'Gazprombank-date-month-year') {
         // let gazInputRef;
-        value = (value === null || value === undefined) ? '__.____' : value;
+        value = (value === null || value === undefined) ? '' : value;
         let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
@@ -1133,9 +1133,10 @@ class AVFieldOriginal extends AVItem {
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
+              hidden
               autoComplete="off"
               inputmode="tel"
-              value={(value === null || value === undefined) ? '__.____' : value}
+              value={value}
               readOnly={readOnly}
               onClick={e => {
                 const selectionIndex = value.indexOf('_');
@@ -1151,7 +1152,7 @@ class AVFieldOriginal extends AVItem {
                   if (this.gazInputRef.selectionStart === 8) {
                     return;
                   }
-                  let valueArr = value.split('');
+                  let valueArr = (value && value.split('')) || '__.____'.split('');
                   if (e.nativeEvent.inputType === 'deleteContentBackward') {
                     if (valueArr[this.gazInputRef.selectionStart] === '.') {
                       valueArr.splice(this.gazInputRef.selectionStart - 1, 1, '_');
@@ -1162,7 +1163,10 @@ class AVFieldOriginal extends AVItem {
                     const key = e.nativeEvent.data;
                     valueArr.splice(this.gazInputRef.selectionStart - 1, 1, key);
                   }
-                  const newValue = valueArr.join('');
+                  let newValue = valueArr.join('');
+                  if (newValue === '__.____') {
+                    newValue = ''
+                  }
                   this.setState({ _value: newValue }, () => {
                     const selectionIndex = newValue.indexOf('_');
                     this.gazInputRef.selectionStart = selectionIndex;
