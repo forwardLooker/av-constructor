@@ -922,7 +922,7 @@ class AVFieldOriginal extends AVItem {
       }
       if (fieldItem.variant === 'Gazprombank-passport-seria-number') {
         // let gazInputRef;
-        value = (value === null || value === undefined) ? '____ ______' : value;
+        value = (value === null || value === undefined) ? '' : value;
         let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
@@ -942,7 +942,7 @@ class AVFieldOriginal extends AVItem {
               ref={el => this.gazInputRef = el}
               autoComplete="off"
               inputmode="tel"
-              value={(value === null || value === undefined) ? '____ ______' : value}
+              value={value}
               readOnly={readOnly}
               onClick={e => {
                 const selectionIndex = value.indexOf('_');
@@ -958,7 +958,7 @@ class AVFieldOriginal extends AVItem {
                   if (this.gazInputRef.selectionStart === 12) {
                     return;
                   }
-                  let valueArr = value.split('');
+                  let valueArr = (value && value.split('')) || '____ ______'.split('');
                   if (e.nativeEvent.inputType === 'deleteContentBackward') {
                     if (valueArr[this.gazInputRef.selectionStart] === ' ') {
                       valueArr.splice(this.gazInputRef.selectionStart - 1, 1, '_');
@@ -969,7 +969,10 @@ class AVFieldOriginal extends AVItem {
                     const key = e.nativeEvent.data;
                     valueArr.splice(this.gazInputRef.selectionStart - 1, 1, key);
                   }
-                  const newValue = valueArr.join('');
+                  let newValue = valueArr.join('');
+                  if (newValue === '____ ______') {
+                    newValue = ''
+                  }
                   this.setState({ _value: newValue }, () => {
                     const selectionIndex = newValue.indexOf('_');
                     this.gazInputRef.selectionStart = selectionIndex;
@@ -1008,7 +1011,7 @@ class AVFieldOriginal extends AVItem {
       }
       if (fieldItem.variant === 'Gazprombank-date') {
         // let gazInputRef;
-        value = (value === null || value === undefined) ? '__.__.____' : value;
+        value = (value === null || value === undefined) ? '' : value;
         let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
@@ -1028,7 +1031,7 @@ class AVFieldOriginal extends AVItem {
               ref={el => this.gazInputRef = el}
               autoComplete="off"
               inputmode="tel"
-              value={(value === null || value === undefined) ? '__.__.____' : value}
+              value={value}
               readOnly={readOnly}
               onClick={e => {
                 const selectionIndex = value.indexOf('_');
@@ -1044,7 +1047,7 @@ class AVFieldOriginal extends AVItem {
                   if (this.gazInputRef.selectionStart === 11) {
                     return;
                   }
-                  let valueArr = value.split('');
+                  let valueArr = (value && value.split('')) || '__.__.____'.split('');
                   if (e.nativeEvent.inputType === 'deleteContentBackward') {
                     if (valueArr[this.gazInputRef.selectionStart] === '.') {
                       valueArr.splice(this.gazInputRef.selectionStart - 1, 1, '_');
@@ -1055,7 +1058,10 @@ class AVFieldOriginal extends AVItem {
                     const key = e.nativeEvent.data;
                     valueArr.splice(this.gazInputRef.selectionStart - 1, 1, key);
                   }
-                  const newValue = valueArr.join('');
+                  let newValue = valueArr.join('');
+                  if (newValue === '__.__.____') {
+                    newValue = ''
+                  }
                   this.setState({ _value: newValue }, () => {
                     const selectionIndex = newValue.indexOf('_');
                     this.gazInputRef.selectionStart = selectionIndex;
@@ -1205,7 +1211,7 @@ class AVFieldOriginal extends AVItem {
 
       if (fieldItem.variant === 'Gazprombank-passport-kod-podrazdelenia') {
         // let gazInputRef;
-        value = (value === null || value === undefined) ? '___-___' : value;
+        value = (value === null || value === undefined) ? '' : value;
         let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
@@ -1225,7 +1231,7 @@ class AVFieldOriginal extends AVItem {
               ref={el => this.gazInputRef = el}
               autoComplete="off"
               inputmode="tel"
-              value={(value === null || value === undefined) ? '___-___' : value}
+              value={value}
               readOnly={readOnly}
               onClick={e => {
                 const selectionIndex = value.indexOf('_');
@@ -1241,7 +1247,7 @@ class AVFieldOriginal extends AVItem {
                   if (this.gazInputRef.selectionStart === 8) {
                     return;
                   }
-                  let valueArr = value.split('');
+                  let valueArr = (value && value.split('')) || '___-___'.split('');
                   if (e.nativeEvent.inputType === 'deleteContentBackward') {
                     if (valueArr[this.gazInputRef.selectionStart] === '-') {
                       valueArr.splice(this.gazInputRef.selectionStart - 1, 1, '_');
@@ -1252,7 +1258,10 @@ class AVFieldOriginal extends AVItem {
                     const key = e.nativeEvent.data;
                     valueArr.splice(this.gazInputRef.selectionStart - 1, 1, key);
                   }
-                  const newValue = valueArr.join('');
+                  let newValue = valueArr.join('');
+                  if (newValue === '___-___') {
+                    newValue = ''
+                  }
                   this.setState({ _value: newValue }, () => {
                     const selectionIndex = newValue.indexOf('_');
                     this.gazInputRef.selectionStart = selectionIndex;
