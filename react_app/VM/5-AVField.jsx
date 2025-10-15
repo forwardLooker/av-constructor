@@ -158,8 +158,10 @@ class AVFieldOriginal extends AVItem {
     window.document.addEventListener('keydown', e => {
       if (e.key === 'F7') {
         e.preventDefault();
-        this.calcSliderFillSpaceWidth();
-        this.forceUpdate();
+        if (this._sliderFreeSpaceRef) {
+          this.calcSliderFillSpaceWidth();
+          this.forceUpdate();
+        }
       }
     });
   }
@@ -940,6 +942,7 @@ class AVFieldOriginal extends AVItem {
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
+              hidden
               autoComplete="off"
               inputmode="tel"
               value={value}
@@ -1029,6 +1032,7 @@ class AVFieldOriginal extends AVItem {
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
+              hidden
               autoComplete="off"
               inputmode="tel"
               value={value}
@@ -1229,6 +1233,7 @@ class AVFieldOriginal extends AVItem {
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
+              hidden
               autoComplete="off"
               inputmode="tel"
               value={value}
