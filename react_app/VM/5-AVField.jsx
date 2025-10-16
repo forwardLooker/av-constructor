@@ -1405,7 +1405,7 @@ class AVFieldOriginal extends AVItem {
                 onMouseDown={this._startHorizontalResize}
               ></div>
             </div>
-            <div className="row space-between margin-top-8 font-size-14px">
+            <div className="row space-between margin-top-12 font-size-14px">
               <div className='color-gaz-label'>{fieldItem.minLabel}</div>
               <div className='color-gaz-label'>{fieldItem.maxLabel}</div>
             </div>
