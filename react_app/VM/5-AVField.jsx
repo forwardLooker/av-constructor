@@ -141,7 +141,20 @@ class AVFieldOriginal extends AVItem {
 
   gazInputRef;
   optionsListRef; // для Газпромбанк селекта
-
+  
+  _eventListenerGazSelect = e => {
+    if (!e.target.closest('._av-field-root')) {
+      if (this.props.fieldItem.variant === 'Gazprombank-string-select') {
+        if (!this.state._value) {
+          this.gazInputRef.setAttribute('hidden', '');
+          this._labelFontSizeClassName = 'font-size-16px';
+        }
+        this.optionsListRef.setAttribute('hidden', '');
+        this.setState({ isFocusedState: false });
+        window.document.removeEventListener('click', this._eventListenerGazSelect);
+      }
+    }
+  };
   
   //render
   
@@ -164,6 +177,7 @@ class AVFieldOriginal extends AVItem {
         }
       }
     });
+    
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -714,7 +728,7 @@ class AVFieldOriginal extends AVItem {
         }
         const trimedValuesArr = valuesArr.map(str => str.trim());
         
-        let gazInputRef;
+        // let gazInputRef;
         // let optionsListRef;
         let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
         if (this.state.isFocusedState) {
@@ -724,32 +738,23 @@ class AVFieldOriginal extends AVItem {
           <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               this.optionsListRef.removeAttribute('hidden');
-              gazInputRef.removeAttribute('hidden');
-              gazInputRef.focus();
+              this.gazInputRef.removeAttribute('hidden');
+              this.gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
-              this.forceUpdate()
+              this.forceUpdate();
+              
+              window.document.addEventListener('click', this._eventListenerGazSelect);
             }}
           >
             <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
-              ref={el => gazInputRef = el}
+              ref={el => this.gazInputRef = el}
               hidden
               autoComplete="off"
               value={(value === null || value === undefined) ? '' : value}
               readOnly={true}
               onChange={onChangeFunc}
-              onBlur={() => {
-                if (!value) {
-                  gazInputRef.setAttribute('hidden', '');
-                  this._labelFontSizeClassName = 'font-size-16px';
-                  this.forceUpdate();
-                }
-                this.setState({ isFocusedState: false });
-                setTimeout(() => { // потому что онКлик в Листе не успевает сработать
-                  this.optionsListRef.setAttribute('hidden', '');
-                }, 200)
-              }}
               onFocus={() => this.setState({
                 isFocusedState: true,
                 isInvalidState: false,
@@ -765,10 +770,14 @@ class AVFieldOriginal extends AVItem {
                 <div
                   key={str}
                   className={`pad-8 font-weight-400 ${value === str ? 'color-gaz-accent bg-gaz-field-selected' : ''} bg-gaz-field-hover cursor-pointer`}
-                  onClick={() => {
-                    console.log('str onClick', str);
+                  onClick={(e) => {
+                    setTimeout(() => { // потому что онКлик выше в диве сеттит
+                      this.optionsListRef.setAttribute('hidden', '');
+                      window.document.removeEventListener('click', this._eventListenerGazSelect);
+                      this.setState({ isFocusedState: false });
+                    })
                     this.setState({ _value: str });
-                    this.props.onChangeFunc(str)
+                    this.props.onChangeFunc(str);
                   }}
                 >{str}</div>
               ))}
