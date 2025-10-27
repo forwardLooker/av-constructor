@@ -26,6 +26,8 @@ export class AVClass extends AVItem {
     ParametersPanelrender: this.noop
   }
   
+  gridRef;
+  
   //render
   
   async componentDidMount() {
@@ -39,6 +41,10 @@ export class AVClass extends AVItem {
     if (this.props.classItem !== prevProps.classItem) {
       await this._loadGridData();
       this.setState({ currentViewName: this.props.classItem.defaultViewName })
+    }
+    
+    if (!this.state.selectedObjectDocument) {
+      this.gridRef.realign()
     }
   }
 
@@ -74,6 +80,7 @@ export class AVClass extends AVItem {
       <div className="margin-top-8">
         <div hidden={!!this.state.selectedObjectDocument}>
           <AVGrid
+            ref={$grid => this.gridRef = $grid}
             items={this.state.objectDocuments}
             columns={this.state.fieldDescriptors}
             onRowClickFunc={this._onGridRowClick}

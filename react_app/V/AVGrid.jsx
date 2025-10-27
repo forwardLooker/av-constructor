@@ -116,6 +116,12 @@ export class AVGrid extends AVElement {
       }
     }
   }
+  
+  realign = () => { // в AVClass
+    this._realignGridHeaderCells();
+    this._realignGridRows();
+    this.forceUpdate();
+  }
 
   render() {
     return (
