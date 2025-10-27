@@ -510,7 +510,7 @@ class AVFieldOriginal extends AVItem {
         } else if (typeof fieldItem.valuesList === 'function') {
           valuesArr = fieldItem.valuesList();
         } else {
-          valuesArr = fieldItem.valuesList.split(',');
+          valuesArr = fieldItem.valuesList.split('||');
         }
         const trimedValuesArr = valuesArr.map(str => str.trim());
         inputElement = (
@@ -724,7 +724,7 @@ class AVFieldOriginal extends AVItem {
         } else if (typeof fieldItem.valuesList === 'function') {
           valuesArr = fieldItem.valuesList();
         } else {
-          valuesArr = fieldItem.valuesList.split(',');
+          valuesArr = fieldItem.valuesList.split('||');
         }
         const trimedValuesArr = valuesArr.map(str => str.trim());
         
