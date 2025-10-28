@@ -43,7 +43,7 @@ export class AVClassConfigurator extends AVItem {
     {name: 'dataType',
       dataType: 'string',
       variant: 'select',
-      valuesList: 'string,number,boolean,array,object,image',
+      valuesList: 'string||number||boolean||array||object||image',
       expanded: true,
       items: [
         {name: 'variant', variant: 'select', valuesList: () => {
