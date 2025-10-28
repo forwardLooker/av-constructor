@@ -4,23 +4,35 @@ export default class {
   static name = 'Газпромбанк (стр.3)';
   static Host; // инициализируется в момент соединения с классом
   
-  // static on_newDataChange = async ({ $objectDocument, fieldItemName, value }) => {
-  //   if (fieldItemName === 'Фактический адрес проживания совпадает с адресом регистрации') {
-  //     if (value === 'Нет') {
-  //       if ($objectDocument.state.presentationGroupsHidden.includes('addressFactSovpadaetNo')) {
-  //         const idxToRemove = $objectDocument.state.presentationGroupsHidden.findIndex(prGr => prGr === 'addressFactSovpadaetNo');
-  //         $objectDocument.state.presentationGroupsHidden.splice(idxToRemove, 1);
-  //         $objectDocument.forceUpdate();
-  //       }
-  //     }
-  //     if (value === 'Да') {
-  //       if (!$objectDocument.state.presentationGroupsHidden.includes('addressFactSovpadaetNo')) {
-  //         $objectDocument.state.presentationGroupsHidden.push('addressFactSovpadaetNo');
-  //         $objectDocument.forceUpdate();
-  //       }
-  //     }
-  //   }
-  // }
+  static onComponentDidMount = async ($objectDocument) => {
+    $objectDocument.state.presentationGroupsHidden.push('INN organization');
+    $objectDocument.forceUpdate();
+  }
+  
+  static on_newDataChange = async ({ $objectDocument, fieldItemName, value }) => {
+    if (fieldItemName === 'Категория занятости') {
+      if (value === 'Работа по найму' || value === 'Служба по контракту (силовые структуры)') {
+        if ($objectDocument.state.presentationGroupsHidden.includes('INN organization')) {
+          const idxToRemove = $objectDocument.state.presentationGroupsHidden.findIndex(prGr => prGr === 'INN organization');
+          $objectDocument.state.presentationGroupsHidden.splice(idxToRemove, 1);
+        }
+        if ($objectDocument.state.presentationGroupsHidden.includes('rabotaPoNaimuAndSluzbaPoKontraktu')) {
+          const idxToRemove = $objectDocument.state.presentationGroupsHidden.findIndex(prGr => prGr === 'rabotaPoNaimuAndSluzbaPoKontraktu');
+          $objectDocument.state.presentationGroupsHidden.splice(idxToRemove, 1);
+        }
+        $objectDocument.forceUpdate();
+      }
+      if (value === 'Неработающий пенсионер') {
+        if (!$objectDocument.state.presentationGroupsHidden.includes('rabotaPoNaimuAndSluzbaPoKontraktu')) {
+          $objectDocument.state.presentationGroupsHidden.push('rabotaPoNaimuAndSluzbaPoKontraktu');
+        }
+        if (!$objectDocument.state.presentationGroupsHidden.includes('INN organization')) {
+          $objectDocument.state.presentationGroupsHidden.push('INN organization');
+        }
+        $objectDocument.forceUpdate();
+      }
+    }
+  }
   
   static methods = {
     'Далее': async ($objectDocument) => {
