@@ -106,6 +106,44 @@ class AVFieldOriginal extends AVItem {
         background: white;
       }
     `,
+    gazprombankCheckboxSwitch: this.styled.span`
+      display: block;
+      top: 1px;
+      margin-right: 8px;
+      flex-shrink: 0;
+      width: 36px;
+      height: 20px;
+      border-radius: 96px;
+      padding: 4px;;
+      box-sizing: border-box;
+      cursor: pointer;
+      background-color: #a5a5a5;
+      transition: background-color 0.2s ease-in-out 0s;
+      position: relative;
+      &:hover {
+        background-color: #8b8b8b;
+      }
+      &::after {
+        position: absolute;
+        content: "";
+        height: 12px;
+        width: 12px;
+        left: 0px;
+        border-radius: 50%;
+        background-color: #fff;;
+        transition: transform 0.2s ease 0s;
+        transform: translateX(4px);
+      }
+      &.checked-value {
+        background-color:#2b61ec;
+      }
+      &.checked-value:hover {
+        background-color:#194fda;
+      }
+      &.checked-value::after {
+        transform: translateX(20px);;
+      }
+    `,
   }
   static defaultProps = {
     fieldItem: null,
@@ -1438,6 +1476,21 @@ class AVFieldOriginal extends AVItem {
           })}
         ></AVFieldOriginal.styles.input>
       )
+      if (fieldItem.variant === 'Gazprombank-checkbox-switch') {
+        inputElement = (
+          <AVFieldOriginal.styles.gazprombankCheckboxSwitch
+            className={`${value ? 'checked-value' : ''}`}
+            onClick={e => {
+              if (readOnly) return;
+              this.setState(
+                state => ({ _value: !state._value }),
+                () => this.props.onChangeFunc(this.state._value)
+              );
+            }
+      }
+          ></AVFieldOriginal.styles.gazprombankCheckboxSwitch>
+        )
+      }
     }
     if (fieldItem.dataType === 'array') {
       const gridItems = value || [];
