@@ -331,7 +331,7 @@ class AVFieldOriginal extends AVItem {
         return Math.round(monthPay)
       }
       return (
-        <div className='_av-field-viewItem-root flex-1 pad-15 bg-gaz-change-credit-parameters'
+        <div className='_av-field-viewItem-root flex-1 pad-15 bg-gaz-change-credit-parameters border-radius-12px'
           style={this.props.style}
           ref={this.props.refOnRootDiv}
         >
