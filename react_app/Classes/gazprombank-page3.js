@@ -53,41 +53,44 @@ export default class {
         });
         stopNavigate = true
       }
-      if (!$objectDocument['fieldRef_Название организации'].state._value) {
-        $objectDocument['fieldRef_Название организации'].setState({
-          isInvalidState: true,
-          isRequiredMessageRendered: true,
-        });
-        stopNavigate = true
+      if ($objectDocument['fieldRef_Категория занятости'].state._value !== 'Неработающий пенсионер') {
+        if (!$objectDocument['fieldRef_Название организации'].state._value) {
+          $objectDocument['fieldRef_Название организации'].setState({
+            isInvalidState: true,
+            isRequiredMessageRendered: true,
+          });
+          stopNavigate = true
+        }
+        if (!$objectDocument['fieldRef_ИНН организации'].state._value) {
+          $objectDocument['fieldRef_ИНН организации'].setState({
+            isInvalidState: true,
+            isRequiredMessageRendered: true,
+          });
+          stopNavigate = true
+        }
+        if (!$objectDocument['fieldRef_Должность'].state._value) {
+          $objectDocument['fieldRef_Должность'].setState({
+            isInvalidState: true,
+            isRequiredMessageRendered: true,
+          });
+          stopNavigate = true
+        }
+        if (!$objectDocument['fieldRef_Телефон работодателя'].state._value) {
+          $objectDocument['fieldRef_Телефон работодателя'].setState({
+            isInvalidState: true,
+            isRequiredMessageRendered: true,
+          });
+          stopNavigate = true
+        }
+        if (!$objectDocument['fieldRef_Месяц и год приема на текущее место работы'].state._value) {
+          $objectDocument['fieldRef_Месяц и год приема на текущее место работы'].setState({
+            isInvalidState: true,
+            isRequiredMessageRendered: true,
+          });
+          stopNavigate = true
+        }
       }
-      if (!$objectDocument['fieldRef_ИНН организации'].state._value) {
-        $objectDocument['fieldRef_ИНН организации'].setState({
-          isInvalidState: true,
-          isRequiredMessageRendered: true,
-        });
-        stopNavigate = true
-      }
-      if (!$objectDocument['fieldRef_Должность'].state._value) {
-        $objectDocument['fieldRef_Должность'].setState({
-          isInvalidState: true,
-          isRequiredMessageRendered: true,
-        });
-        stopNavigate = true
-      }
-      if (!$objectDocument['fieldRef_Телефон работодателя'].state._value) {
-        $objectDocument['fieldRef_Телефон работодателя'].setState({
-          isInvalidState: true,
-          isRequiredMessageRendered: true,
-        });
-        stopNavigate = true
-      }
-      if (!$objectDocument['fieldRef_Месяц и год приема на текущее место работы'].state._value) {
-        $objectDocument['fieldRef_Месяц и год приема на текущее место работы'].setState({
-          isInvalidState: true,
-          isRequiredMessageRendered: true,
-        });
-        stopNavigate = true
-      }
+      
       if (!$objectDocument['fieldRef_Доход на основном месте работы'].state._value) {
         $objectDocument['fieldRef_Доход на основном месте работы'].setState({
           isInvalidState: true,
@@ -97,11 +100,13 @@ export default class {
       }
 
       // проверки полей на валидность
-      if ($objectDocument['fieldRef_Телефон работодателя'].state.isInvalidState) {
-        stopNavigate = true
-      }
-      if ($objectDocument['fieldRef_Месяц и год приема на текущее место работы'].state.isInvalidState) {
-        stopNavigate = true
+      if ($objectDocument['fieldRef_Категория занятости'].state._value !== 'Неработающий пенсионер') {
+        if ($objectDocument['fieldRef_Телефон работодателя'].state.isInvalidState) {
+          stopNavigate = true
+        }
+        if ($objectDocument['fieldRef_Месяц и год приема на текущее место работы'].state.isInvalidState) {
+          stopNavigate = true
+        }
       }
 
       if (!stopNavigate) {
