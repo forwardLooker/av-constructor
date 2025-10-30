@@ -94,16 +94,16 @@ export class AVObjectDocument extends AVItem {
       const fieldDescriptors = await classItem.getFieldDescriptors();
       objectDocument.Class = classItem;
 
-      this.setState({
-        _newData: this.deepClone(objectDocument.data),
-        _newDataBeforeUpdate: this.deepClone(objectDocument.data),
-        _objectDocument: objectDocument,
-        _fieldDescriptors: fieldDescriptors
-      }, () => {
-        this._prepareDesignJson();
-        this.forceUpdate();
-        // this._makeDidMountByModule();
-      })
+      this.state._newData = this.deepClone(objectDocument.data),
+      this.state._newDataBeforeUpdate = this.deepClone(objectDocument.data),
+      this.state._objectDocument = objectDocument,
+      this.state._fieldDescriptors = fieldDescriptors
+      
+      this._prepareDesignJson();
+      this.state.presentationGroupsHidden = []; // бывает переносим копированием страницы и что-то исчезает
+      window.scrollTo({ top: 0 });
+
+      this.forceUpdate(() => this._makeDidMountByModule());
     } else {
       // this._makeDidMountByModule()
     }
