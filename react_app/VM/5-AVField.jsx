@@ -689,6 +689,7 @@ class AVFieldOriginal extends AVItem {
               className="flex-1 margin-left-16"
               ref={el => gazInputRef = el}
               hidden
+              size={fieldItem.size}
               autoComplete="off"
               value={(value === null || value === undefined) ? '' : value}
               readOnly={readOnly}

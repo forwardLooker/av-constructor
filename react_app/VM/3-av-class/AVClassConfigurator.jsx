@@ -103,7 +103,20 @@ export class AVClassConfigurator extends AVItem {
           //   return true
           // }
           return false
-        }},
+        }
+        },
+        {
+          name: 'size', hideIfFunc: () => {
+            if (
+              this.state.selectedFieldDescriptor.variant !== 'Gazprombank-string' &&
+              this.state.selectedFieldDescriptor.variant !== 'Gazprombank-string-number'
+            ) {
+              return true
+            }
+            return false
+          }
+        },
+
         {
           name: 'labelPosition', hideIfFunc: () => {
             if (this.state.selectedFieldDescriptor.dataType !== 'boolean') {
