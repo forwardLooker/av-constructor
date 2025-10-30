@@ -17,6 +17,8 @@ export class AVObjectDocument extends AVItem {
     objectDocumentPath: '', // применяется вместо выше представленных полей за счёт дидимаунта, для организации роута на объект на весь экран
     onSavedFunc: this.noop,
     onCloseFunc: this.noop,
+
+    noOkCancelPanel: false,
   }
   // componentDidMount() {
   //   this.setState({
@@ -180,7 +182,7 @@ export class AVObjectDocument extends AVItem {
               {this._renderVerticalLayout(this.state.designJson)}
             </div>
           )}
-          <div className="row justify-end">
+          <div className={`${this.props.noOkCancelPanel ? 'no-display' : 'row'} justify-end`}>
             <div className="row align-center justify-center">
               {this._renderButtonsByServices()}
               <AVButton onClick={this.saveAndClose}>OK</AVButton>

@@ -79,6 +79,7 @@ export class AVHost extends AVItem {
           // element: <div>{routeObjDoc.routeRelativePath}</div>
           element: (<AVObjectDocument
             objectDocumentPath={routeObjDoc.targetObjectDocumentPath}
+            noOkCancelPanel
           ></AVObjectDocument>)
         })
       });
