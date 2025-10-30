@@ -114,7 +114,8 @@ export class AVClassConfigurator extends AVItem {
               return true
             }
             return false
-          }
+          },
+          placeholder: '(size+3)*9.5px'
         },
 
         {

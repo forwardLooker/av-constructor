@@ -524,6 +524,7 @@ class AVFieldOriginal extends AVItem {
         <AVFieldOriginal.styles.input
           className="flex-1"
           autoComplete="off"
+          placeholder={fieldItem.placeholder}
           value={(value === null || value === undefined) ? '' : value}
           readOnly={readOnly}
           onChange={onChangeFunc}
