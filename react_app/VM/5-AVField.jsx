@@ -888,6 +888,7 @@ class AVFieldOriginal extends AVItem {
       
       if (fieldItem.variant === 'Gazprombank-tel') {
         // let gazInputRef;
+        this._labelFontSizeClassName = 'font-size-14px'; // маска вот, поэтому сразу 14
         value = (value === null || value === undefined) ? '+7 (___) ___-__-__' : value;
         let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
         if (this.state.isFocusedState) {
