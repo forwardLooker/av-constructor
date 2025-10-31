@@ -147,6 +147,7 @@ class AVFieldOriginal extends AVItem {
   }
   static defaultProps = {
     fieldItem: null,
+    containerItem: null,
     value: null,
     readOnly: false,
     isLabelHidden: false,
@@ -244,10 +245,18 @@ class AVFieldOriginal extends AVItem {
 
   render() {
     if (this.props.fieldItem.viewItemType === 'space div') {
+      const flexBasisNumber = 17 || this.getPureValueFromFormatted(this.props.fieldItem?.style?.flexBasis);
+      const getStyleObj = () => {
+        if (this.props.containerItem.viewItemType === 'vertical-layout') {
+          return ({ height: flexBasisNumber + 'px' });
+        } else {
+          return ({ width: flexBasisNumber + 'px' })
+        }
+      }
       return (
-        <div className='_av-field-viewItem-root flex-1 pad-8'
-             style={this.props.style}
-             ref={this.props.refOnRootDiv}
+        <div className={`_av-field-viewItem-root flex-1 ${flexBasisNumber > 16 ? 'pad-8' : ''}`}
+          style={flexBasisNumber > 16 ? null : getStyleObj()}
+          ref={this.props.refOnRootDiv}
         >
           {this.props.children}
         </div>
@@ -1729,7 +1738,7 @@ class AVFieldOriginal extends AVItem {
   }
   
   getPureValueFromFormatted = (value) => {
-    return value.split('').filter(v => v != ' ' && Number.isInteger(Number(v))).join('');
+    return (value && value.split('').filter(v => v != ' ' && Number.isInteger(Number(v))).join(''));
   }
 
   _blockNonDigitsToEnter = (evt) => {

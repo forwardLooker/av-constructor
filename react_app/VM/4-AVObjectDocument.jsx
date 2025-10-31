@@ -348,6 +348,7 @@ export class AVObjectDocument extends AVItem {
           refOnRootDiv={fieldDomElement => fieldItem.domElement = fieldDomElement}
           ref={fieldRef => this[`fieldRef_${fieldItem.name}`] = fieldRef}
           fieldItem={fieldItem}
+          containerItem={containerElement}
           value={this.state._newData[fieldItem.name]}
           readOnly={this.state._newData.readOnly}
           onChangeFunc={value => {

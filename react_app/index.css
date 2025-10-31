@@ -1,6 +1,139 @@
 * {
   box-sizing: border-box;
 }
+
+@font-face {
+  font-family: Gazprombank Sans;
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans400.eot);
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans400.eot?#iefix) format("embedded-opentype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans400.ttf) format("truetype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans400.woff) format("woff"), url(https://cdn.gpb.ru/upload/fonts/GPBSans400.woff2) format("woff2");
+  font-weight: 400;
+  font-style: normal
+}
+
+@font-face {
+  font-family: Gazprombank Sans;
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans400Italic.eot);
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans400Italic.eot?#iefix) format("embedded-opentype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans400Italic.ttf) format("truetype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans400Italic.woff) format("woff"), url(https://cdn.gpb.ru/upload/fonts/GPBSans400Italic.woff2) format("woff2");
+  font-weight: 400;
+  font-style: italic
+}
+
+@font-face {
+  font-family: Gazprombank Sans;
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans500.eot);
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans500.eot?#iefix) format("embedded-opentype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans500.ttf) format("truetype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans500.woff) format("woff"), url(https://cdn.gpb.ru/upload/fonts/GPBSans500.woff2) format("woff2");
+  font-weight: 500;
+  font-style: normal
+}
+
+@font-face {
+  font-family: Gazprombank Sans;
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans500Italic.eot);
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans500Italic.eot?#iefix) format("embedded-opentype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans500Italic.ttf) format("truetype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans500Italic.woff) format("woff"), url(https://cdn.gpb.ru/upload/fonts/GPBSans500Italic.woff2) format("woff2");
+  font-weight: 500;
+  font-style: italic
+}
+
+@font-face {
+  font-family: Gazprombank Sans;
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans600.eot);
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans600.eot?#iefix) format("embedded-opentype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans600.ttf) format("truetype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans600.woff) format("woff"), url(https://cdn.gpb.ru/upload/fonts/GPBSans600.woff2) format("woff2");
+  font-weight: 600;
+  font-style: normal
+}
+
+@font-face {
+  font-family: Gazprombank Sans;
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans600Italic.eot);
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans600Italic.eot?#iefix) format("embedded-opentype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans600Italic.ttf) format("truetype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans600Italic.woff) format("woff"), url(https://cdn.gpb.ru/upload/fonts/GPBSans600Italic.woff2) format("woff2");
+  font-weight: 600;
+  font-style: italic
+}
+
+@font-face {
+  font-family: Gazprombank Sans;
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans700.eot);
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans700.eot?#iefix) format("embedded-opentype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans700.ttf) format("truetype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans700.woff) format("woff"), url(https://cdn.gpb.ru/upload/fonts/GPBSans700.woff2) format("woff2");
+  font-weight: 700;
+  font-style: normal
+}
+
+@font-face {
+  font-family: Gazprombank Sans;
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans700Italic.eot);
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSans700Italic.eot?#iefix) format("embedded-opentype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans700Italic.ttf) format("truetype"), url(https://cdn.gpb.ru/upload/fonts/GPBSans700Italic.woff) format("woff"), url(https://cdn.gpb.ru/upload/fonts/GPBSans700Italic.woff2) format("woff2");
+  font-weight: 700;
+  font-style: italic
+}
+
+@font-face {
+  font-family: Gazprombank Sans Base;
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSansBase400.eot);
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSansBase400.eot?#iefix) format("embedded-opentype"), url(https://cdn.gpb.ru/upload/fonts/GPBSansBase400.ttf) format("truetype"), url(https://cdn.gpb.ru/upload/fonts/GPBSansBase400.woff) format("woff"), url(https://cdn.gpb.ru/upload/fonts/GPBSansBase400.woff2) format("woff2");
+  font-weight: 400;
+  font-style: normal
+}
+
+@font-face {
+  font-family: Gazprombank Sans Base;
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSansBase400Italic.eot);
+  src: url(https://cdn.gpb.ru/upload/fonts/GPBSansBase400Italic.eot?#iefix) format("embedded-opentype"), url(https://cdn.gpb.ru/upload/fonts/GPBSansBase400Italic.ttf) format("truetype"), url(https://cdn.gpb.ru/upload/fonts/GPBSansBase400Italic.woff) format("woff"), url(https://cdn.gpb.ru/upload/fonts/GPBSansBase400Italic.woff2) format("woff2");
+  font-weight: 400;
+  font-style: italic
+}
+
+html * {
+  font-family: Gazprombank Sans, "sans-serif"
+}
+
+:root {
+  --Typeface-Font-Family: "Gazprombank-Sans", "sans-serif";
+  --Typeface-Regular: 400;
+  --Typeface-Medium: 500;
+  --Typeface-Demibold: 600;
+  --Typeface-Bold: 700;
+  --Typeface-Size-H0: 56px;
+  --Typeface-Size-H1: 44px;
+  --Typeface-Size-H2: 40px;
+  --Typeface-Size-H3: 32px;
+  --Typeface-Size-H4: 28px;
+  --Typeface-Size-H5: 24px;
+  --Typeface-Size-H6: 20px;
+  --Typeface-Size-H7: 18px;
+  --Typeface-Size-P1: 16px;
+  --Typeface-Size-P2: 14px;
+  --Typeface-Size-P3: 12px;
+  --Typeface-Size-Micro: 10px;
+  --Typeface-Line-height-H0: 60px;
+  --Typeface-Line-height-H1: 48px;
+  --Typeface-Line-height-H2: 48px;
+  --Typeface-Line-height-H3: 40px;
+  --Typeface-Line-height-H4: 32px;
+  --Typeface-Line-height-H5: 28px;
+  --Typeface-Line-height-H6: 24px;
+  --Typeface-Line-height-H7: 22px;
+  --Typeface-Line-height-P1: 20px;
+  --Typeface-Line-height-P2: 16px;
+  --Typeface-Line-height-P3: 16px;
+  --Typeface-Line-height-Micro: 12px;
+  --Typeface-Letter-spacing-H0: 0.3px;
+  --Typeface-Letter-spacing-H1: 0.3px;
+  --Typeface-Letter-spacing-H2: 0.3px;
+  --Typeface-Letter-spacing-H3: 0.2px;
+  --Typeface-Letter-spacing-H4: 0.2px;
+  --Typeface-Letter-spacing-H5-Regular: 0;
+  --Typeface-Letter-spacing-H5-Demibold: 0.2px;
+  --Typeface-Letter-spacing-H5-Bold: 0.2px;
+  --Typeface-Letter-spacing-H6: 0.1px;
+  --Typeface-Letter-spacing-H7: 0;
+  --Typeface-Letter-spacing-P1-Regular: 0;
+  --Typeface-Letter-spacing-P1-Medium: 0;
+  --Typeface-Letter-spacing-P1-Demibold: 0.1px;
+  --Typeface-Letter-spacing-P2: 0;
+  --Typeface-Letter-spacing-P3: 0.2px;
+  --Typeface-Letter-spacing-Micro: 0.2px
+}
+
 a {
   text-decoration: none;
   color: #476bf0;
