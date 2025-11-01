@@ -145,6 +145,14 @@ export class AVClassConfigurator extends AVItem {
           }
         },
         {
+          name: 'roundValueInSlider', dataType: 'string', placeholder: 'Введите кол-во 0 для округления, пример: 000', hideIfFunc: () => {
+            if (this.state.selectedFieldDescriptor.variant !== 'input+range') {
+              return true
+            }
+            return false
+          }
+        },
+        {
           name: 'suffixInValue', hideIfFunc: () => {
             if (this.state.selectedFieldDescriptor.variant !== 'input+range') {
               return true

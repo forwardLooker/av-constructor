@@ -1740,7 +1740,8 @@ class AVFieldOriginal extends AVItem {
       }
       if ((startPlusDiffWidth >= 0) && (startPlusDiffWidth <= sliderFreeSpaceWidth)) {
         this._sliderFillSpaceWidth = startPlusDiffWidth;
-        const newValue = Math.round(((this.props.fieldItem.maxValue - this.props.fieldItem.minValue) * (this._sliderFillSpaceWidth / sliderFreeSpaceWidth)) + (1 * this.props.fieldItem.minValue));
+        let newValue = Math.round(((this.props.fieldItem.maxValue - this.props.fieldItem.minValue) * (this._sliderFillSpaceWidth / sliderFreeSpaceWidth)) + (1 * this.props.fieldItem.minValue));
+        newValue = this.props.fieldItem.roundValueInSlider ? (Math.round(newValue / Number('1' + this.props.fieldItem.roundValueInSlider))) * Number('1' + this.props.fieldItem.roundValueInSlider) : newValue
         const newFormattedValue = formatNumber(`### ###. ${this.props.fieldItem.suffixInValue}`, newValue);
         this.setState({ _value: newFormattedValue });
         this.props.onChangeFunc(newFormattedValue);
