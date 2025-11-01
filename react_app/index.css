@@ -577,6 +577,9 @@ a {
 .color-text-secondary {
   color: #818c99;
 }
+.color-gaz-text-primary {
+  color: #0a0a0b;
+}
 .color-gaz-label {
   color: rgb(111, 111, 111);
 }

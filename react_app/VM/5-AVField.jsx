@@ -32,6 +32,7 @@ class AVFieldOriginal extends AVItem {
       position: relative;
       display: inline-block;
       padding: 5px 10px;
+      color: #0a0a0b;
       line-height: 20px;
       background-color: #fff;
       transition: all .2s;
@@ -50,6 +51,7 @@ class AVFieldOriginal extends AVItem {
       position: relative;
       display: inline-block;
       padding: 5px 10px;
+      color: #0a0a0b;
       line-height: 20px;
       background-color: #fff;
       transition: all .2s;
@@ -60,6 +62,7 @@ class AVFieldOriginal extends AVItem {
     select: this.styled.select`
       position: relative;
       display: inline-block;
+      color: #0a0a0b;
       line-height: 20px;
       background-color: #fff;
       transition: all .2s;
@@ -73,6 +76,7 @@ class AVFieldOriginal extends AVItem {
     rangeInput: this.styled.input`
       position: relative;
       display: inline-block;
+      color: #0a0a0b;
       padding: 8px 0 12px;
       font-size: 20px;
       line-height: 20px;
@@ -87,6 +91,7 @@ class AVFieldOriginal extends AVItem {
       position: relative;
       font-size: 16px;
       font-weight: 400;
+      color: #0a0a0b;
       line-height: 20px;
       background-color: #fff;
       transition: all .2s;
@@ -268,10 +273,12 @@ class AVFieldOriginal extends AVItem {
         <div className={`_av-field-viewItem-root flex-1 ${this.props.fieldItem.withoutPaddingAndMargin ? '' : 'pad-8'}`}
                style={this.props.style}
                ref={this.props.refOnRootDiv}
-          >
-            <AVLabel>{this.props.fieldItem.label || 'label'}</AVLabel>
-            {this.props.children}
-          </div>
+        >
+          <AVLabel color={this.props.fieldItem?.style?.color}>
+            {this.props.fieldItem.label || 'label'}
+          </AVLabel>
+          {this.props.children}
+        </div>
       )
     }
     if (this.props.fieldItem.viewItemType === 'button') {
@@ -453,6 +460,7 @@ class AVFieldOriginal extends AVItem {
             {(!this._calcIsLabelHidden() && this._calcLabelPosition() !== 'right') && (
               <AVLabel
                 className={`pad-0-4-0-0 ${this.props.fieldItem.variant === 'input+range' ? (this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label') : ''}`}
+                color={this.props.fieldItem?.style?.color}
                 justifyMode={(this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'binary-buttons' || this.props.fieldItem.variant === 'radio-buttons') ? 'start' : 'center'}
               >{this._buildLabel()}</AVLabel>
             )}
@@ -467,6 +475,7 @@ class AVFieldOriginal extends AVItem {
             {this._calcLabelPosition() === 'right' && (
               <AVLabel
                 className={`pad-0-4-0-0`}
+                color={this.props.fieldItem?.style?.color}
                 justifyMode={this.props.fieldItem.variant === 'input+range' ? 'start' : 'center'}
               >{this._buildLabel()}</AVLabel>
             )}
