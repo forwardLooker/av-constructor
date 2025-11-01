@@ -79,6 +79,7 @@ class AVFieldOriginal extends AVItem {
       color: #0a0a0b;
       padding: 8px 0 12px;
       font-size: 20px;
+      font-weight: 600;
       line-height: 20px;
       background-color: #fff;
       transition: all .2s;
@@ -1397,7 +1398,7 @@ class AVFieldOriginal extends AVItem {
                 className="input+range"
                 ref={el => this.gazInputRef = el}
                 autoComplete="off"
-                size="7"
+                size={(value && value.length > 7) ? value.length : 7}
                 inputMode="numeric"
                 value={(value === null || value === undefined) ? '' : value}
                 readOnly={readOnly}
@@ -1449,7 +1450,7 @@ class AVFieldOriginal extends AVItem {
                   });
                 }}
               ></AVFieldOriginal.styles.rangeInput>
-              <AVIcon name='pencil' fillColor={this.state.isFocusedState ? 'rgb(58, 100, 208)' : null}></AVIcon>
+              <AVIcon className="margin-left-12" name='pencil' fillColor={this.state.isFocusedState ? 'rgb(58, 100, 208)' : null}></AVIcon>
             </div>
             <div className="_range-slider-free-space pos-rel height-4px bg-slider-free-space cursor-pointer"
               ref={el => this._sliderFreeSpaceRef = el}
