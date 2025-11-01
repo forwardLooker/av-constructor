@@ -625,6 +625,9 @@ a {
 .line-height-1-5 {
   line-height: 1.5;
 }
+.line-height-16px {
+  line-height: 16px;
+}
 .transition-ease {
   transition: .2s ease-in-out;
 }
