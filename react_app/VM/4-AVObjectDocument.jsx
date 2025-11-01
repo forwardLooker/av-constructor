@@ -462,8 +462,10 @@ export class AVObjectDocument extends AVItem {
       moveEv.preventDefault();
       const pageYDiff = moveEv.pageY - startResizePageY;
 
-      const newHeight = (resizeElemRect.height + pageYDiff) + 'px';
-      console.log('newHeight:', newHeight);
+      let newHeight = (resizeElemRect.height + pageYDiff);
+      newHeight = newHeight < 4 ? 4 : newHeight;
+      newHeight = newHeight + 'px';
+      
       let forStyleHeightObj;
       if (containerElement.viewItemType === 'horizontal-layout') {
         forStyleHeightObj = {
@@ -541,8 +543,10 @@ export class AVObjectDocument extends AVItem {
       const pageXDiff = moveEv.pageX - startResizePageX;
 
       if (containerElement.viewItemType === 'horizontal-layout' && idx !== containerElement.items.length - 1) {
-        const newWidth = (resizeElemRect.width + pageXDiff) + 'px';
-        console.log('newWidth:', newWidth);
+        let newWidth = (resizeElemRect.width + pageXDiff);
+        newWidth = newWidth < 4 ? 4 : newWidth;
+        newWidth = newWidth + 'px';
+        
         const forStyleWidthObj = {
           flexBasis: newWidth,
           flexGrow: 0

@@ -245,17 +245,18 @@ class AVFieldOriginal extends AVItem {
 
   render() {
     if (this.props.fieldItem.viewItemType === 'space div') {
-      const flexBasisNumber = 17 || this.getPureValueFromFormatted(this.props.fieldItem?.style?.flexBasis);
+      let flexBasisNumber = this.getPureValueFromFormatted(this.props.fieldItem?.style?.flexBasis);
+      flexBasisNumber = (flexBasisNumber && flexBasisNumber < 4) ? 4 : flexBasisNumber;
       const getStyleObj = () => {
         if (this.props.containerItem.viewItemType === 'vertical-layout') {
           return ({ height: flexBasisNumber + 'px' });
         } else {
           return ({ width: flexBasisNumber + 'px' })
         }
-      }
+      };
       return (
-        <div className={`_av-field-viewItem-root flex-1 ${flexBasisNumber > 16 ? 'pad-8' : ''}`}
-          style={flexBasisNumber > 16 ? null : getStyleObj()}
+        <div className={`_av-field-viewItem-root flex-1 ${(flexBasisNumber > 16 || !flexBasisNumber) ? 'pad-8' : ''}`}
+          style={(flexBasisNumber > 16 || !flexBasisNumber) ? null : getStyleObj()}
           ref={this.props.refOnRootDiv}
         >
           {this.props.children}
@@ -371,10 +372,10 @@ class AVFieldOriginal extends AVItem {
         if (!this.Host.gazCreditFirstPageData?.['Желаемая сумма']) {
           return '168 823'
         }
-        const years = Number(this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Срок кредита'])) / 12;
-        const payPerYear = Number(this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Желаемая сумма'])) * 0.2;
-        const SumWithProcent = Number(this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Желаемая сумма'])) + (payPerYear * years);
-        const monthPay = SumWithProcent / Number(this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Срок кредита']));
+        const years = this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Срок кредита']) / 12;
+        const payPerYear = this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Желаемая сумма']) * 0.2;
+        const SumWithProcent = this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Желаемая сумма']) + (payPerYear * years);
+        const monthPay = SumWithProcent / this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Срок кредита']);
         return Math.round(monthPay)
       }
       return (
@@ -1739,7 +1740,7 @@ class AVFieldOriginal extends AVItem {
   }
   
   getPureValueFromFormatted = (value) => {
-    return (value && value.split('').filter(v => v != ' ' && Number.isInteger(Number(v))).join(''));
+    return (value && Number(value.split('').filter(v => v != ' ' && Number.isInteger(Number(v))).join('')));
   }
 
   _blockNonDigitsToEnter = (evt) => {
