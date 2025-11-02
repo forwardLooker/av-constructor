@@ -116,7 +116,7 @@ export class AVIcon extends AVElement {
       </svg>
     ),
     gazprombankLogo: () => (
-      <svg xmlns="http://www.w3.org/2000/svg" width="174" height="36" viewBox="0 0 174 36" fill="none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="164px" height="34px" viewBox="0 0 174 36" fill="none">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M160.039 10.33h3.539l-.021 5.58h.769l2.019-5.58h3.829l-2.748 7.372 3.144 8.16h-4.143l-2.037-6.247h-.833l.021 6.246h-3.539V10.33z" fill="#ffffff"></path>
         <path fill-rule="evenodd" clip-rule="evenodd" d="M148.117 10.33h3.517v5.601h2.518V10.33h3.515v15.532h-3.515v-6.225h-2.518v6.225h-3.517V10.33z" fill="#ffffff"></path>
         <path fill-rule="evenodd" clip-rule="evenodd" d="M135.86 25.882h3.663l.438-2.685h2.516l.438 2.685h3.662l-3.08-15.53h-4.537l-3.1 15.53zm5.368-10.827l.666 4.727h-1.353l.687-4.727z" fill="#ffffff"></path>
