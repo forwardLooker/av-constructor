@@ -210,7 +210,15 @@ export class AVObjectDocument extends AVItem {
       </div>
     )
   }
-
+  
+  VerticalLayoutComponent = class VerticalLayoutComponent extends AVItem {
+    static defaultProps = {
+    }
+    render() {
+      return (null);
+    }
+  }
+  
   _renderVerticalLayout(vrtLayoutItem, vrtLayoutItemIndex) {
     if (this.state.presentationGroupsHidden.includes(vrtLayoutItem.presentationGroup)) {
       return null
@@ -238,7 +246,14 @@ export class AVObjectDocument extends AVItem {
                   if (hrzItem.viewItemType === 'vertical-layout') {
                     return this._renderVerticalLayout(hrzItem, hrzIndex);
                   } else {
-                    return this._renderField(hrzItem, hrzIndex, vrtItem)
+                    return (<this.FieldWrapper
+                      fieldItem={hrzItem}
+                      idx={hrzIndex}
+                      containerElement={vrtItem}
+                      $objDoc={this}
+                      designMode={this.state.designMode}
+                      _newData={this.state._newData}
+                    ></this.FieldWrapper>)
                   }
                 })}
               </div>
@@ -247,132 +262,274 @@ export class AVObjectDocument extends AVItem {
           if (vrtItem.viewItemType === 'field' || !vrtItem.viewItemType ||
             (vrtItem.viewItemType !== 'vertical-layout' && vrtItem.viewItemType !== 'horizontal-layout')
           ) {
-            return this._renderField(vrtItem, vrtIndex, vrtLayoutItem)
+            return (<this.FieldWrapper
+              fieldItem={vrtItem}
+              idx={vrtIndex}
+              containerElement={vrtLayoutItem}
+              $objDoc={this}
+              designMode={this.state.designMode}
+              _newData={this.state._newData}
+            ></this.FieldWrapper>)
           }
         })}
       </div>
     )
   }
+  
+  FieldWrapper = class FieldWrapper extends AVItem {
+    static defaultProps = {
+      fieldItem: null,
+      idx: null,
+      containerElement: null,
+      $objDoc: null,
+      designMode: false,
+      _newData: null,
+    }
+    
+    render() {
+      let fieldItem = this.props.fieldItem;
+      let idx = this.props.idx;
+      let containerElement = this.props.containerElement;
+      let $objDoc = this.props.$objDoc;
+      let designMode = this.props.designMode;
 
-  _renderField(fieldItem, idx, containerElement) {
-    if (this.state.presentationGroupsHidden.includes(fieldItem.presentationGroup)) {
-      return null
-    }
-    if (fieldItem.isHiddenInObjectDocument) {
-      return null
-    }
-    if (fieldItem.viewItemType === 'items-container') {
-      return (
-        <div className='_av-field-wrapper pos-rel col flex-1 margin-top-2'
-          style={fieldItem.style}
-          key={fieldItem.name || fieldItem.label || idx}
-          ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
-        >
-          <img className='pos-abs trbl-0' src={fieldItem.imgSrc}></img>
-          <div className='_av-field-viewItem-root flex-1 pad-8'>
-            {fieldItem.items && this._renderVerticalLayout(fieldItem.items[0])}
-          </div>
-          {(this.state.designMode) && this._renderDesignFieldOverlay(fieldItem, idx, containerElement)}
-        </div>
-      )
-    }
-    if (fieldItem.viewItemType === 'tabs') {
-      if (!fieldItem.items) {
-        fieldItem.items = [
-          {
-            viewItemType: 'tab',
-            label: 'tab 1',
-            items: [{
-              viewItemType: 'vertical-layout',
-              items: [{
-                viewItemType: 'space div'
-              }]
-            }]
-          }
-        ]
+      if ($objDoc.state.presentationGroupsHidden.includes(fieldItem.presentationGroup)) {
+        return null
       }
-      if (!fieldItem.selectedTabLabel) {
-        fieldItem.selectedTabLabel = fieldItem.items[0].label;
+      if (fieldItem.isHiddenInObjectDocument) {
+        return null
       }
-      return (
-        <div className='_av-field-wrapper pos-rel col flex-1 margin-top-2'
-               style={fieldItem.style}
-               key={fieldItem.name || fieldItem.label || idx}
-               ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
+      if (fieldItem.viewItemType === 'items-container') {
+        return (
+          <div className='_av-field-wrapper pos-rel col flex-1 margin-top-2'
+            style={fieldItem.style}
+            key={fieldItem.name || fieldItem.label || idx}
+            ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
           >
-          <div className='_av-field-viewItem-root flex-1 pad-8'>
+            <img className='pos-abs trbl-0' src={fieldItem.imgSrc}></img>
+            <div className='_av-field-viewItem-root flex-1 pad-8'>
+              {fieldItem.items && $objDoc._renderVerticalLayout(fieldItem.items[0])}
+            </div>
+            {designMode && $objDoc._renderDesignFieldOverlay(fieldItem, idx, containerElement, this)}
+          </div>
+        )
+      }
+      if (fieldItem.viewItemType === 'tabs') {
+        if (!fieldItem.items) {
+          fieldItem.items = [
+            {
+              viewItemType: 'tab',
+              label: 'tab 1',
+              items: [{
+                viewItemType: 'vertical-layout',
+                items: [{
+                  viewItemType: 'space div'
+                }]
+              }]
+            }
+          ]
+        }
+        if (!fieldItem.selectedTabLabel) {
+          fieldItem.selectedTabLabel = fieldItem.items[0].label;
+        }
+        return (
+          <div className='_av-field-wrapper pos-rel col flex-1 margin-top-2'
+            style={fieldItem.style}
+            key={fieldItem.name || fieldItem.label || idx}
+            ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
+          >
+            <div className='_av-field-viewItem-root flex-1 pad-8'>
               <div className='_tab-head row'>
                 {fieldItem.items.map(tab => (
-                    <div
-                         className={['_tab-head-item', 'pad-0-4',
-                           (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'border-2' : 'border',
-                           (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'font-bold' : ''
-                         ].join(' ')}
-                         key={tab.label}
-                         onClick={() => {
-                           if (tab.redirectToUrl) {
-                             window.open(tab.redirectToUrl);
-                             // window.open(tab.redirectToUrl , '_blank');
-                           } else {
-                             fieldItem.selectedTabLabel = tab.label;
-                             this.forceUpdate();
-                           }
-                         }}
-                         onContextMenu={e => this._onTabContextMenu(e, tab, fieldItem, idx, containerElement)}
-                    >{tab.label || 'tab1'}</div>
+                  <div
+                    className={['_tab-head-item', 'pad-0-4',
+                      (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'border-2' : 'border',
+                      (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'font-bold' : ''
+                    ].join(' ')}
+                    key={tab.label}
+                    onClick={() => {
+                      if (tab.redirectToUrl) {
+                        window.open(tab.redirectToUrl);
+                        // window.open(tab.redirectToUrl , '_blank');
+                      } else {
+                        fieldItem.selectedTabLabel = tab.label;
+                        this.forceUpdate();
+                      }
+                    }}
+                    onContextMenu={e => $objDoc._onTabContextMenu(e, tab, fieldItem, idx, containerElement)}
+                  >{tab.label || 'tab1'}</div>
                 ))}
                 <div className='flex-1'></div>
               </div>
-              {this.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl) ) ? null : (
+              {this.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl)) ? null : (
                 <div className='_tabs-body-container pad-8 border'>
                   {fieldItem.items.map(tab => (
                     <div className="_tab-body" key={tab.label} hidden={fieldItem.selectedTabLabel !== tab.label}>
-                      {this._renderVerticalLayout(tab.items[0])}
+                      {$objDoc._renderVerticalLayout(tab.items[0])}
                     </div>
                   ))}
                 </div>
               )}
             </div>
-            {(this.state.designMode && fieldItem.fullOverlayMode) && this._renderDesignFieldOverlay(fieldItem, idx, containerElement)}
+            {(designMode && fieldItem.fullOverlayMode) && $objDoc._renderDesignFieldOverlay(fieldItem, idx, containerElement, this)}
           </div>
+        )
+      }
+
+      return (
+        <div
+          className={`_av-field-wrapper pos-rel col flex-1 ${fieldItem.withoutPaddingAndMargin ? '' : 'margin-top-2'}`}
+          style={fieldItem.style}
+          key={fieldItem.name || idx}
+        >
+          <AVField
+            refOnRootDiv={fieldDomElement => fieldItem.domElement = fieldDomElement}
+            ref={fieldRef => $objDoc[`fieldRef_${fieldItem.name}`] = fieldRef}
+            fieldItem={fieldItem}
+            containerItem={containerElement}
+            value={$objDoc.state._newData[fieldItem.name]}
+            readOnly={$objDoc.state._newData.readOnly}
+            onChangeFunc={value => {
+              $objDoc.state._newData[fieldItem.name] = value;
+              const classInstance = $objDoc.state._objectDocument.Class;
+              const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+              if (moduleDefinition) {
+                const methodOnNewDataChange = moduleDefinition.on_newDataChange;
+                if (methodOnNewDataChange) {
+                  methodOnNewDataChange({ $objectDocument: $objDoc, fieldItemName: fieldItem.name, value })
+                }
+              }
+              $objDoc._forceUpdateDebounced1Sec() // для подсветки кнопки сохранить
+            }}
+            labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
+            $objectDocument={$objDoc}
+          >
+            {designMode && ($objDoc._renderDesignFieldOverlay(fieldItem, idx, containerElement, this))}
+          </AVField>
+        </div>
       )
     }
-
-    return (
-      <div
-        className={`_av-field-wrapper pos-rel col flex-1 ${fieldItem.withoutPaddingAndMargin ? '' : 'margin-top-2'}`}
-        style={fieldItem.style}
-        key={fieldItem.name || idx}
-      >
-        <AVField
-          refOnRootDiv={fieldDomElement => fieldItem.domElement = fieldDomElement}
-          ref={fieldRef => this[`fieldRef_${fieldItem.name}`] = fieldRef}
-          fieldItem={fieldItem}
-          containerItem={containerElement}
-          value={this.state._newData[fieldItem.name]}
-          readOnly={this.state._newData.readOnly}
-          onChangeFunc={value => {
-            this.state._newData[fieldItem.name] = value;
-            const classInstance = this.state._objectDocument.Class;
-            const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
-            if (moduleDefinition) {
-              const methodOnNewDataChange = moduleDefinition.on_newDataChange;
-              if (methodOnNewDataChange) {
-                methodOnNewDataChange({ $objectDocument: this, fieldItemName: fieldItem.name, value })
-              }
-            }
-            this._forceUpdateDebounced1Sec() // для подсветки кнопки сохранить
-          }}
-          labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
-          $objectDocument={this}
-        >
-          {this.state.designMode && (this._renderDesignFieldOverlay(fieldItem, idx, containerElement))}
-        </AVField>
-      </div>
-    )
   }
+  
+  // _renderField(fieldItem, idx, containerElement) {
+  //   if (this.state.presentationGroupsHidden.includes(fieldItem.presentationGroup)) {
+  //     return null
+  //   }
+  //   if (fieldItem.isHiddenInObjectDocument) {
+  //     return null
+  //   }
+  //   if (fieldItem.viewItemType === 'items-container') {
+  //     return (
+  //       <div className='_av-field-wrapper pos-rel col flex-1 margin-top-2'
+  //         style={fieldItem.style}
+  //         key={fieldItem.name || fieldItem.label || idx}
+  //         ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
+  //       >
+  //         <img className='pos-abs trbl-0' src={fieldItem.imgSrc}></img>
+  //         <div className='_av-field-viewItem-root flex-1 pad-8'>
+  //           {fieldItem.items && this._renderVerticalLayout(fieldItem.items[0])}
+  //         </div>
+  //         {(this.state.designMode) && this._renderDesignFieldOverlay(fieldItem, idx, containerElement)}
+  //       </div>
+  //     )
+  //   }
+  //   if (fieldItem.viewItemType === 'tabs') {
+  //     if (!fieldItem.items) {
+  //       fieldItem.items = [
+  //         {
+  //           viewItemType: 'tab',
+  //           label: 'tab 1',
+  //           items: [{
+  //             viewItemType: 'vertical-layout',
+  //             items: [{
+  //               viewItemType: 'space div'
+  //             }]
+  //           }]
+  //         }
+  //       ]
+  //     }
+  //     if (!fieldItem.selectedTabLabel) {
+  //       fieldItem.selectedTabLabel = fieldItem.items[0].label;
+  //     }
+  //     return (
+  //       <div className='_av-field-wrapper pos-rel col flex-1 margin-top-2'
+  //              style={fieldItem.style}
+  //              key={fieldItem.name || fieldItem.label || idx}
+  //              ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
+  //         >
+  //         <div className='_av-field-viewItem-root flex-1 pad-8'>
+  //             <div className='_tab-head row'>
+  //               {fieldItem.items.map(tab => (
+  //                   <div
+  //                        className={['_tab-head-item', 'pad-0-4',
+  //                          (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'border-2' : 'border',
+  //                          (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'font-bold' : ''
+  //                        ].join(' ')}
+  //                        key={tab.label}
+  //                        onClick={() => {
+  //                          if (tab.redirectToUrl) {
+  //                            window.open(tab.redirectToUrl);
+  //                            // window.open(tab.redirectToUrl , '_blank');
+  //                          } else {
+  //                            fieldItem.selectedTabLabel = tab.label;
+  //                            this.forceUpdate();
+  //                          }
+  //                        }}
+  //                        onContextMenu={e => this._onTabContextMenu(e, tab, fieldItem, idx, containerElement)}
+  //                   >{tab.label || 'tab1'}</div>
+  //               ))}
+  //               <div className='flex-1'></div>
+  //             </div>
+  //             {this.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl) ) ? null : (
+  //               <div className='_tabs-body-container pad-8 border'>
+  //                 {fieldItem.items.map(tab => (
+  //                   <div className="_tab-body" key={tab.label} hidden={fieldItem.selectedTabLabel !== tab.label}>
+  //                     {this._renderVerticalLayout(tab.items[0])}
+  //                   </div>
+  //                 ))}
+  //               </div>
+  //             )}
+  //           </div>
+  //           {(this.state.designMode && fieldItem.fullOverlayMode) && this._renderDesignFieldOverlay(fieldItem, idx, containerElement)}
+  //         </div>
+  //     )
+  //   }
 
-  _renderDesignFieldOverlay(fieldItem, idx, containerElement) {
+  //   return (
+  //     <div
+  //       className={`_av-field-wrapper pos-rel col flex-1 ${fieldItem.withoutPaddingAndMargin ? '' : 'margin-top-2'}`}
+  //       style={fieldItem.style}
+  //       key={fieldItem.name || idx}
+  //     >
+  //       <AVField
+  //         refOnRootDiv={fieldDomElement => fieldItem.domElement = fieldDomElement}
+  //         ref={fieldRef => this[`fieldRef_${fieldItem.name}`] = fieldRef}
+  //         fieldItem={fieldItem}
+  //         containerItem={containerElement}
+  //         value={this.state._newData[fieldItem.name]}
+  //         readOnly={this.state._newData.readOnly}
+  //         onChangeFunc={value => {
+  //           this.state._newData[fieldItem.name] = value;
+  //           const classInstance = this.state._objectDocument.Class;
+  //           const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+  //           if (moduleDefinition) {
+  //             const methodOnNewDataChange = moduleDefinition.on_newDataChange;
+  //             if (methodOnNewDataChange) {
+  //               methodOnNewDataChange({ $objectDocument: this, fieldItemName: fieldItem.name, value })
+  //             }
+  //           }
+  //           this._forceUpdateDebounced1Sec() // для подсветки кнопки сохранить
+  //         }}
+  //         labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
+  //         $objectDocument={this}
+  //       >
+  //         {this.state.designMode && (this._renderDesignFieldOverlay(fieldItem, idx, containerElement))}
+  //       </AVField>
+  //     </div>
+  //   )
+  // }
+
+  _renderDesignFieldOverlay(fieldItem, idx, containerElement, FieldWrapper) {
     return (
       <div className="field-overlay pos-abs trbl-0 row border-1 bg-transparent-25">
         <div className="flex-1 col">
@@ -397,12 +554,12 @@ export class AVObjectDocument extends AVItem {
             ></div>
             <div className="_horizontal-resizer height-100prc width-4px cursor-col-resize"
               hidden={this.state.designDragStarted}
-              onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement)}
+              onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement, FieldWrapper)}
             ></div>
           </div>
           <div className="_vertical-resizer width-100prc height-2px cursor-row-resize"
-               hidden={this.state.designDragStarted}
-               onMouseDown={(e) => this._startVerticalResize(e, fieldItem, idx, containerElement)}
+            hidden={this.state.designDragStarted}
+            onMouseDown={(e) => this._startVerticalResize(e, fieldItem, idx, containerElement, FieldWrapper)}
           ></div>
         </div>
       </div>
@@ -446,7 +603,7 @@ export class AVObjectDocument extends AVItem {
     onItemSelected(selectedItem);
   }
 
-  _startVerticalResize = (msDownEvent, fieldItem, idx, containerElement) => {
+  _startVerticalResize = (msDownEvent, fieldItem, idx, containerElement, FieldWrapper) => {
     msDownEvent.preventDefault();
     const startResizePageY = msDownEvent.pageY;
     const resizeElem = fieldItem.domElement;
@@ -486,12 +643,13 @@ export class AVObjectDocument extends AVItem {
         fieldItem.style = forStyleHeightObj;
       }
 
-      this.forceUpdate();
+      // this.forceUpdate();
+      FieldWrapper.forceUpdate();
     }
 
   }
 
-  _startHorizontalResize = (msDownEvent, fieldItem, idx, containerElement) => {
+  _startHorizontalResize = (msDownEvent, fieldItem, idx, containerElement, FieldWrapper) => {
     msDownEvent.preventDefault();
     // запрет на изменение ширины крайнего правого элемента
     if ((!fieldItem.viewItemType || fieldItem.viewItemType === 'field') &&
@@ -559,6 +717,7 @@ export class AVObjectDocument extends AVItem {
         } else {
           fieldItem.style = forStyleWidthObj;
         }
+        FieldWrapper.forceUpdate();
       }
       if (
         (containerElement.viewItemType === 'horizontal-layout' && idx === containerElement.items.length - 1) ||
@@ -578,10 +737,9 @@ export class AVObjectDocument extends AVItem {
           } else {
             firstVerticalNotRightest.style = forStyleVrtWidthObj;
           }
+          this.forceUpdate();
         }
       }
-
-      this.forceUpdate();
     }
   }
 
