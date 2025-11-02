@@ -384,7 +384,7 @@ class AVFieldOriginal extends AVItem {
         const payPerYear = this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Желаемая сумма']) * 0.2;
         const SumWithProcent = this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Желаемая сумма']) + (payPerYear * years);
         const monthPay = SumWithProcent / this.getPureValueFromFormatted(this.Host.gazCreditFirstPageData['Срок кредита']);
-        return Math.round(monthPay)
+        return formatNumber(`### ###.`, Math.round(monthPay))
       }
       return (
         <div className='_av-field-viewItem-root flex-1 pad-15 bg-gaz-change-credit-parameters border-radius-12px'
@@ -1461,7 +1461,8 @@ class AVFieldOriginal extends AVItem {
                 const divLeft = e.target.getBoundingClientRect().left;
                 const newFillSpaceWidth = e.pageX - divLeft;
                 const sliderFreeSpaceWidth = this._sliderFreeSpaceRef.getBoundingClientRect().width;
-                const newValue = Math.round(((this.props.fieldItem.maxValue - this.props.fieldItem.minValue) * (newFillSpaceWidth / sliderFreeSpaceWidth)) + (1 * this.props.fieldItem.minValue));
+                let newValue = Math.round(((this.props.fieldItem.maxValue - this.props.fieldItem.minValue) * (newFillSpaceWidth / sliderFreeSpaceWidth)) + (1 * this.props.fieldItem.minValue));
+                newValue = this.props.fieldItem.roundValueInSlider ? (Math.round(newValue / Number('1' + this.props.fieldItem.roundValueInSlider))) * Number('1' + this.props.fieldItem.roundValueInSlider) : newValue;
                 const newFormattedValue = formatNumber(`### ###. ${fieldItem.suffixInValue}`, newValue);
                 this.setState({ _value: newFormattedValue });
                 this.props.onChangeFunc(newFormattedValue);
@@ -1741,7 +1742,7 @@ class AVFieldOriginal extends AVItem {
       if ((startPlusDiffWidth >= 0) && (startPlusDiffWidth <= sliderFreeSpaceWidth)) {
         this._sliderFillSpaceWidth = startPlusDiffWidth;
         let newValue = Math.round(((this.props.fieldItem.maxValue - this.props.fieldItem.minValue) * (this._sliderFillSpaceWidth / sliderFreeSpaceWidth)) + (1 * this.props.fieldItem.minValue));
-        newValue = this.props.fieldItem.roundValueInSlider ? (Math.round(newValue / Number('1' + this.props.fieldItem.roundValueInSlider))) * Number('1' + this.props.fieldItem.roundValueInSlider) : newValue
+        newValue = this.props.fieldItem.roundValueInSlider ? (Math.round(newValue / Number('1' + this.props.fieldItem.roundValueInSlider))) * Number('1' + this.props.fieldItem.roundValueInSlider) : newValue;
         const newFormattedValue = formatNumber(`### ###. ${this.props.fieldItem.suffixInValue}`, newValue);
         this.setState({ _value: newFormattedValue });
         this.props.onChangeFunc(newFormattedValue);
