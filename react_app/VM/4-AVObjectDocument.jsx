@@ -279,6 +279,7 @@ export class AVObjectDocument extends AVItem {
                         $objDoc={$objDoc}
                         designMode={designMode}
                         _newData={_newData}
+                        designDragStarted={$objDoc.state.designDragStarted}
                       ></$objDoc.FieldWrapper>)
                     }
                   })}
@@ -295,6 +296,7 @@ export class AVObjectDocument extends AVItem {
                 $objDoc={$objDoc}
                 designMode={designMode}
                 _newData={_newData}
+                designDragStarted={$objDoc.state.designDragStarted}
               ></$objDoc.FieldWrapper>)
             }
           })}
@@ -321,6 +323,7 @@ export class AVObjectDocument extends AVItem {
       $objDoc: null,
       designMode: false,
       _newData: null,
+      designDragStarted: false,
     }
     
     render() {
