@@ -216,7 +216,7 @@ export class AVObjectDocument extends AVItem {
     )
   }
   
-  VerticalLayout = class VerticalLayout extends AVItem {
+  VerticalLayout = class VerticalLayout extends React.Component {
     static defaultProps = {
       vrtLayoutItem: null,
       vrtLayoutItemIndex: null,
