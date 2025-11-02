@@ -225,6 +225,10 @@ export class AVObjectDocument extends AVItem {
       designMode: false,
     }
     
+    componentDidMount() {
+      this.props.vrtLayoutItem.VerticalLayout = this;
+    }
+    
     shouldComponentUpdate() {
       return true;
     }
@@ -770,7 +774,7 @@ export class AVObjectDocument extends AVItem {
           } else {
             firstVerticalNotRightest.style = forStyleVrtWidthObj;
           }
-          this.forceUpdate();
+          firstVerticalNotRightest.VerticalLayout.forceUpdate();
         }
       }
     }
@@ -1492,6 +1496,7 @@ export class AVObjectDocument extends AVItem {
   saveDesign = async () => {
     this._removeContainerReference(this.state.designJson);
     this._removeDomElementReference(this.state.designJson);
+    this._removeVirtualDomElementReference(this.state.designJson);
     await this.state._objectDocument.saveDesignJson(this.deepClone(this.state.designJson));
     this._addContainerReference(this.state.designJson);
   }
@@ -1501,6 +1506,15 @@ export class AVObjectDocument extends AVItem {
     if (layoutElememt.items) {
       layoutElememt.items.forEach(i => {
         this._removeDomElementReference(i);
+      })
+    }
+  }
+  
+  _removeVirtualDomElementReference = (layoutElememt) => {
+    delete layoutElememt.VerticalLayout;
+    if (layoutElememt.items) {
+      layoutElememt.items.forEach(i => {
+        this._removeVirtualDomElementReference(i);
       })
     }
   }
