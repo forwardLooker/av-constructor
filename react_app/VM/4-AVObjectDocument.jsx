@@ -179,7 +179,12 @@ export class AVObjectDocument extends AVItem {
             <JSONTree data={this.state._newData}/>
           ) : (
             <div>
-              {this._renderVerticalLayout(this.state.designJson)}
+                <this.VerticalLayout
+                  vrtLayoutItem={this.state.designJson}
+                  _newData={this.state._newData}
+                  $objDoc={this}
+                  designMode={this.state.designMode}
+                ></this.VerticalLayout>
             </div>
           )}
           <div className={`${this.props.noOkCancelPanel ? 'no-display' : 'row'} justify-end`}>
@@ -211,69 +216,97 @@ export class AVObjectDocument extends AVItem {
     )
   }
   
-  VerticalLayoutComponent = class VerticalLayoutComponent extends AVItem {
+  VerticalLayout = class VerticalLayout extends AVItem {
     static defaultProps = {
+      vrtLayoutItem: null,
+      vrtLayoutItemIndex: null,
+      _newData: null,
+      $objDoc: null,
+      designMode: false,
     }
+    
+    shouldComponentUpdate() {
+      return true;
+    }
+    
     render() {
-      return (null);
+      let vrtLayoutItem = this.props.vrtLayoutItem;
+      let vrtLayoutItemIndex = this.props.vrtLayoutItemIndex;
+      let _newData = this.props._newData;
+      let $objDoc = this.props.$objDoc;
+      let designMode = this.props.designMode;
+      
+      if ($objDoc.state.presentationGroupsHidden.includes(vrtLayoutItem.presentationGroup)) {
+        return null
+      }
+      return (
+        <div
+          className="vertical-layout flex-1 col"
+          style={vrtLayoutItem.style}
+          ref={vrtDomElement => vrtLayoutItem.domElement = vrtDomElement}
+          key={vrtLayoutItemIndex || 0}
+        >
+          {vrtLayoutItem.items.map((vrtItem, vrtIndex) => {
+            if (vrtItem.viewItemType === 'horizontal-layout') {
+              if ($objDoc.state.presentationGroupsHidden.includes(vrtItem.presentationGroup)) {
+                return null
+              }
+              return (
+                <div
+                  className="horizontal-layout flex-1 row"
+                  style={vrtItem.style}
+                  key={vrtIndex}
+                  ref={hrzDomElement => vrtItem.domElement = hrzDomElement}
+                >
+                  {vrtItem.items.map((hrzItem, hrzIndex) => {
+                    if (hrzItem.viewItemType === 'vertical-layout') {
+                      return (<$objDoc.VerticalLayout
+                        vrtLayoutItem={hrzItem}
+                        vrtLayoutItemIndex={hrzIndex}
+                        _newData={_newData}
+                        $objDoc={$objDoc}
+                        designMode={designMode}
+                      ></$objDoc.VerticalLayout>);
+                    } else {
+                      return (<$objDoc.FieldWrapper
+                        fieldItem={hrzItem}
+                        idx={hrzIndex}
+                        containerElement={vrtItem}
+                        $objDoc={$objDoc}
+                        designMode={designMode}
+                        _newData={_newData}
+                      ></$objDoc.FieldWrapper>)
+                    }
+                  })}
+                </div>
+              )
+            }
+            if (vrtItem.viewItemType === 'field' || !vrtItem.viewItemType ||
+              (vrtItem.viewItemType !== 'vertical-layout' && vrtItem.viewItemType !== 'horizontal-layout')
+            ) {
+              return (<$objDoc.FieldWrapper
+                fieldItem={vrtItem}
+                idx={vrtIndex}
+                containerElement={vrtLayoutItem}
+                $objDoc={$objDoc}
+                designMode={designMode}
+                _newData={_newData}
+              ></$objDoc.FieldWrapper>)
+            }
+          })}
+        </div>
+      )
     }
   }
   
   _renderVerticalLayout(vrtLayoutItem, vrtLayoutItemIndex) {
-    if (this.state.presentationGroupsHidden.includes(vrtLayoutItem.presentationGroup)) {
-      return null
-    }
-    return (
-      <div
-        className="vertical-layout flex-1 col"
-        style={vrtLayoutItem.style}
-        ref={vrtDomElement => vrtLayoutItem.domElement = vrtDomElement}
-        key={vrtLayoutItemIndex || 0}
-      >
-        {vrtLayoutItem.items.map((vrtItem, vrtIndex) => {
-          if (vrtItem.viewItemType === 'horizontal-layout') {
-            if (this.state.presentationGroupsHidden.includes(vrtItem.presentationGroup)) {
-              return null
-            }
-            return (
-              <div
-                className="horizontal-layout flex-1 row"
-                style={vrtItem.style}
-                key={vrtIndex}
-                ref={hrzDomElement => vrtItem.domElement = hrzDomElement}
-              >
-                {vrtItem.items.map((hrzItem, hrzIndex) => {
-                  if (hrzItem.viewItemType === 'vertical-layout') {
-                    return this._renderVerticalLayout(hrzItem, hrzIndex);
-                  } else {
-                    return (<this.FieldWrapper
-                      fieldItem={hrzItem}
-                      idx={hrzIndex}
-                      containerElement={vrtItem}
-                      $objDoc={this}
-                      designMode={this.state.designMode}
-                      _newData={this.state._newData}
-                    ></this.FieldWrapper>)
-                  }
-                })}
-              </div>
-            )
-          }
-          if (vrtItem.viewItemType === 'field' || !vrtItem.viewItemType ||
-            (vrtItem.viewItemType !== 'vertical-layout' && vrtItem.viewItemType !== 'horizontal-layout')
-          ) {
-            return (<this.FieldWrapper
-              fieldItem={vrtItem}
-              idx={vrtIndex}
-              containerElement={vrtLayoutItem}
-              $objDoc={this}
-              designMode={this.state.designMode}
-              _newData={this.state._newData}
-            ></this.FieldWrapper>)
-          }
-        })}
-      </div>
-    )
+    return (<this.VerticalLayout
+      vrtLayoutItem={vrtLayoutItem}
+      vrtLayoutItemIndex={vrtLayoutItemIndex}
+      _newData={this.state._newData}
+      $objDoc={this}
+      designMode={this.state.designMode}
+    ></this.VerticalLayout>)
   }
   
   FieldWrapper = class FieldWrapper extends AVItem {
@@ -1405,7 +1438,7 @@ export class AVObjectDocument extends AVItem {
     }
     this.state.designDropTargetLevel2 = null;
 
-    this.setState({designDragStarted: false});
+    this.setState({designDragStarted: false, designJson: {...this.state.designJson}});
     // this.forceUpdate();
     // this.designJson = newDesign;
   }
