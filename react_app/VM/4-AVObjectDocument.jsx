@@ -315,7 +315,7 @@ export class AVObjectDocument extends AVItem {
     ></this.VerticalLayout>)
   }
   
-  FieldWrapper = class FieldWrapper extends AVItem {
+  FieldWrapper = class FieldWrapper extends React.Component {
     static defaultProps = {
       fieldItem: null,
       idx: null,
@@ -401,7 +401,7 @@ export class AVObjectDocument extends AVItem {
                 ))}
                 <div className='flex-1'></div>
               </div>
-              {this.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl)) ? null : (
+              {$objDoc.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl)) ? null : (
                 <div className='_tabs-body-container pad-8 border'>
                   {fieldItem.items.map(tab => (
                     <div className="_tab-body" key={tab.label} hidden={fieldItem.selectedTabLabel !== tab.label}>
@@ -451,124 +451,6 @@ export class AVObjectDocument extends AVItem {
     }
   }
   
-  // _renderField(fieldItem, idx, containerElement) {
-  //   if (this.state.presentationGroupsHidden.includes(fieldItem.presentationGroup)) {
-  //     return null
-  //   }
-  //   if (fieldItem.isHiddenInObjectDocument) {
-  //     return null
-  //   }
-  //   if (fieldItem.viewItemType === 'items-container') {
-  //     return (
-  //       <div className='_av-field-wrapper pos-rel col flex-1 margin-top-2'
-  //         style={fieldItem.style}
-  //         key={fieldItem.name || fieldItem.label || idx}
-  //         ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
-  //       >
-  //         <img className='pos-abs trbl-0' src={fieldItem.imgSrc}></img>
-  //         <div className='_av-field-viewItem-root flex-1 pad-8'>
-  //           {fieldItem.items && this._renderVerticalLayout(fieldItem.items[0])}
-  //         </div>
-  //         {(this.state.designMode) && this._renderDesignFieldOverlay(fieldItem, idx, containerElement)}
-  //       </div>
-  //     )
-  //   }
-  //   if (fieldItem.viewItemType === 'tabs') {
-  //     if (!fieldItem.items) {
-  //       fieldItem.items = [
-  //         {
-  //           viewItemType: 'tab',
-  //           label: 'tab 1',
-  //           items: [{
-  //             viewItemType: 'vertical-layout',
-  //             items: [{
-  //               viewItemType: 'space div'
-  //             }]
-  //           }]
-  //         }
-  //       ]
-  //     }
-  //     if (!fieldItem.selectedTabLabel) {
-  //       fieldItem.selectedTabLabel = fieldItem.items[0].label;
-  //     }
-  //     return (
-  //       <div className='_av-field-wrapper pos-rel col flex-1 margin-top-2'
-  //              style={fieldItem.style}
-  //              key={fieldItem.name || fieldItem.label || idx}
-  //              ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
-  //         >
-  //         <div className='_av-field-viewItem-root flex-1 pad-8'>
-  //             <div className='_tab-head row'>
-  //               {fieldItem.items.map(tab => (
-  //                   <div
-  //                        className={['_tab-head-item', 'pad-0-4',
-  //                          (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'border-2' : 'border',
-  //                          (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'font-bold' : ''
-  //                        ].join(' ')}
-  //                        key={tab.label}
-  //                        onClick={() => {
-  //                          if (tab.redirectToUrl) {
-  //                            window.open(tab.redirectToUrl);
-  //                            // window.open(tab.redirectToUrl , '_blank');
-  //                          } else {
-  //                            fieldItem.selectedTabLabel = tab.label;
-  //                            this.forceUpdate();
-  //                          }
-  //                        }}
-  //                        onContextMenu={e => this._onTabContextMenu(e, tab, fieldItem, idx, containerElement)}
-  //                   >{tab.label || 'tab1'}</div>
-  //               ))}
-  //               <div className='flex-1'></div>
-  //             </div>
-  //             {this.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl) ) ? null : (
-  //               <div className='_tabs-body-container pad-8 border'>
-  //                 {fieldItem.items.map(tab => (
-  //                   <div className="_tab-body" key={tab.label} hidden={fieldItem.selectedTabLabel !== tab.label}>
-  //                     {this._renderVerticalLayout(tab.items[0])}
-  //                   </div>
-  //                 ))}
-  //               </div>
-  //             )}
-  //           </div>
-  //           {(this.state.designMode && fieldItem.fullOverlayMode) && this._renderDesignFieldOverlay(fieldItem, idx, containerElement)}
-  //         </div>
-  //     )
-  //   }
-
-  //   return (
-  //     <div
-  //       className={`_av-field-wrapper pos-rel col flex-1 ${fieldItem.withoutPaddingAndMargin ? '' : 'margin-top-2'}`}
-  //       style={fieldItem.style}
-  //       key={fieldItem.name || idx}
-  //     >
-  //       <AVField
-  //         refOnRootDiv={fieldDomElement => fieldItem.domElement = fieldDomElement}
-  //         ref={fieldRef => this[`fieldRef_${fieldItem.name}`] = fieldRef}
-  //         fieldItem={fieldItem}
-  //         containerItem={containerElement}
-  //         value={this.state._newData[fieldItem.name]}
-  //         readOnly={this.state._newData.readOnly}
-  //         onChangeFunc={value => {
-  //           this.state._newData[fieldItem.name] = value;
-  //           const classInstance = this.state._objectDocument.Class;
-  //           const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
-  //           if (moduleDefinition) {
-  //             const methodOnNewDataChange = moduleDefinition.on_newDataChange;
-  //             if (methodOnNewDataChange) {
-  //               methodOnNewDataChange({ $objectDocument: this, fieldItemName: fieldItem.name, value })
-  //             }
-  //           }
-  //           this._forceUpdateDebounced1Sec() // для подсветки кнопки сохранить
-  //         }}
-  //         labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
-  //         $objectDocument={this}
-  //       >
-  //         {this.state.designMode && (this._renderDesignFieldOverlay(fieldItem, idx, containerElement))}
-  //       </AVField>
-  //     </div>
-  //   )
-  // }
-
   _renderDesignFieldOverlay(fieldItem, idx, containerElement, FieldWrapper) {
     return (
       <div className="field-overlay pos-abs trbl-0 row border-1 bg-transparent-25">
@@ -1221,14 +1103,14 @@ export class AVObjectDocument extends AVItem {
     
     this._removeDragBorder(e);
     this._removeDragBorderFromDomELement(dropContainer.domElement);
-    if (dropContainer.container) {
+    if (dropContainer.container && dropContainer.container.viewItemType !== 'tab') {
       this._removeDragBorderFromDomELement(dropContainer.container.domElement)
     }
     this.state.designDropTargetLevel2 = null;
 
     if (elemRect.left + elemRect.width / 10 > e.pageX) {
       if (elemRect.left + elemRect.width * 0.05 > e.pageX) {
-        if (dropContainer.viewItemType === 'vertical-layout' && dropContainer.container) {
+        if (dropContainer.viewItemType === 'vertical-layout' && dropContainer.container && dropContainer.container.viewItemType !== 'tab') {
           dropContainer.domElement.classList.add('border-left-4');
           this.state.designDropTargetLevel2 = dropContainer;
         } else if (dropContainer.viewItemType === 'horizontal-layout' && dropElementIndex === 0 && dropContainer.container && dropContainer.container.container) {
@@ -1242,7 +1124,7 @@ export class AVObjectDocument extends AVItem {
     } else {
       if (elemRect.right - elemRect.width / 10 <= e.pageX) {
         if (elemRect.right - elemRect.width * 0.05 <= e.pageX) {
-          if (dropContainer.viewItemType === 'vertical-layout' && dropContainer.container) {
+          if (dropContainer.viewItemType === 'vertical-layout' && dropContainer.container && dropContainer.container.viewItemType !== 'tab') {
             dropContainer.domElement.classList.add('border-right-4');
             this.state.designDropTargetLevel2 = dropContainer;
           } else if (dropContainer.viewItemType === 'horizontal-layout' && dropElementIndex === (dropContainer.items.length - 1) && dropContainer.container && dropContainer.container.container) {
@@ -1440,7 +1322,7 @@ export class AVObjectDocument extends AVItem {
 
     this._removeDragBorder(e);
     this._removeDragBorderFromDomELement(dropContainer.domElement);
-    if (dropContainer.container) {
+    if (dropContainer.container && dropContainer.container.viewItemType !== 'tab') {
       this._removeDragBorderFromDomELement(dropContainer.container.domElement)
     }
     this.state.designDropTargetLevel2 = null;
