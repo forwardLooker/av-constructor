@@ -474,16 +474,19 @@ export class AVObjectDocument extends AVItem {
                  onDragOver={e => this._dragover(e, fieldItem, idx, containerElement)}
                  onDragLeave={e => this._dragleave(e, fieldItem, idx, containerElement)}
                  onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
-                 onDragEnd={e => this.setState(state => ({ designDragStarted: false, designJson: { ...state.designJson } }))}
+                 onDragEnd={e => {
+                   console.log('onDragend');
+                   this.setState(state => ({ designDragStarted: false, designJson: { ...state.designJson } }))
+                 }}
                  onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
             ></div>
             <div className="_horizontal-resizer height-100prc width-4px cursor-col-resize"
-              hidden={this.state.designDragStarted}
+              // hidden={this.state.designDragStarted}
               onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement, FieldWrapper)}
             ></div>
           </div>
           <div className="_vertical-resizer width-100prc height-2px cursor-row-resize"
-            hidden={this.state.designDragStarted}
+            // hidden={this.state.designDragStarted}
             onMouseDown={(e) => this._startVerticalResize(e, fieldItem, idx, containerElement, FieldWrapper)}
           ></div>
         </div>
@@ -1242,6 +1245,9 @@ export class AVObjectDocument extends AVItem {
       if (this.state.designDropSide === 'left' || this.state.designDropSide === 'right') {
         if (dropContainer.viewItemType === 'vertical-layout') {
           if (this.state.designDropSide === 'left') {
+            if (dropFieldItem.style?.flexBasis) {
+              delete dropFieldItem.style.flexBasis;
+            }
             dropContainer.items[dropElementIndex] = {
               container: dropContainer,
               viewItemType: 'horizontal-layout',
@@ -1249,6 +1255,9 @@ export class AVObjectDocument extends AVItem {
             }
           }
           if (this.state.designDropSide === 'right') {
+            if (dropFieldItem.style?.flexBasis) {
+              delete dropFieldItem.style.flexBasis;
+            }
             dropContainer.items[dropElementIndex] = {
               container: dropContainer,
               viewItemType: 'horizontal-layout',
