@@ -265,6 +265,7 @@ export class AVObjectDocument extends AVItem {
                   {vrtItem.items.map((hrzItem, hrzIndex) => {
                     if (hrzItem.viewItemType === 'vertical-layout') {
                       return (<$objDoc.VerticalLayout
+                        key={hrzIndex}
                         vrtLayoutItem={hrzItem}
                         vrtLayoutItemIndex={hrzIndex}
                         _newData={_newData}
@@ -273,6 +274,7 @@ export class AVObjectDocument extends AVItem {
                       ></$objDoc.VerticalLayout>);
                     } else {
                       return (<$objDoc.FieldWrapper
+                        key={hrzIndex}
                         fieldItem={hrzItem}
                         idx={hrzIndex}
                         containerElement={vrtItem}
@@ -290,6 +292,7 @@ export class AVObjectDocument extends AVItem {
               (vrtItem.viewItemType !== 'vertical-layout' && vrtItem.viewItemType !== 'horizontal-layout')
             ) {
               return (<$objDoc.FieldWrapper
+                key={vrtIndex}
                 fieldItem={vrtItem}
                 idx={vrtIndex}
                 containerElement={vrtLayoutItem}
@@ -471,7 +474,7 @@ export class AVObjectDocument extends AVItem {
                  onDragOver={e => this._dragover(e, fieldItem, idx, containerElement)}
                  onDragLeave={e => this._dragleave(e, fieldItem, idx, containerElement)}
                  onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
-                 onDragEnd={e => this.setState({designDragStarted: false})}
+                 onDragEnd={e => this.setState(state => ({ designDragStarted: false, designJson: { ...state.designJson } }))}
                  onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
             ></div>
             <div className="_horizontal-resizer height-100prc width-4px cursor-col-resize"
