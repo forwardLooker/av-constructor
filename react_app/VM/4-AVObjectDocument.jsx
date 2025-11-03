@@ -173,8 +173,8 @@ export class AVObjectDocument extends AVItem {
       return null
     }
     return (
-      <div className={`_av-object-document-root flex-1 col ${this.state.designMode ?  'bg-white' : 'bg-app-back'}`}>
-        <div className="flex-1 col space-between line-height-1-5">
+      <div className={`_av-object-document-root flex-1 col line-height-20px ${this.state.designMode ?  'bg-white' : 'bg-app-back'}`}>
+        <div className="flex-1 col space-between">
           {this.state.isJSONshowed ? (
             <JSONTree data={this.state._newData}/>
           ) : (

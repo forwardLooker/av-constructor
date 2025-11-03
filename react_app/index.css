@@ -628,6 +628,9 @@ a {
 .line-height-16px {
   line-height: 16px;
 }
+.line-height-20px {
+  line-height: 20px;
+}
 .transition-ease {
   transition: .2s ease-in-out;
 }
