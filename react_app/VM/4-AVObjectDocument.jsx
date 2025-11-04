@@ -852,6 +852,11 @@ export class AVObjectDocument extends AVItem {
       if (!fieldItem.viewItemType || fieldItem.viewItemType === 'field') {
         return; // TODO Сделать плашку где отображаются скрытые поля, чтобы их можно было вернуть
       } else {
+        if (idx === (containerElement.items.length - 1) && containerElement.items.length !== 1) {
+          if (containerElement.items[idx - 1].style?.flexBasis) {
+            containerElement.items[idx - 1].style = { ...containerElement.items[idx - 1].style, flexBasis: 0, flexGrow: 1 }
+          }
+        }
         containerElement.items.splice(idx, 1);
         this.forceUpdate();
       }
