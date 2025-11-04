@@ -99,6 +99,7 @@ export class AVClass extends AVItem {
               objectDocument={this.state.selectedObjectDocument}
               onCloseFunc={() => {this.setState({selectedObjectDocument: null})}}
               onSavedFunc={this._onObjectSaved}
+              itemFullScreenMode={this.props.itemFullScreenMode}
             ></AVObjectDocument>
           </div>
         )}
