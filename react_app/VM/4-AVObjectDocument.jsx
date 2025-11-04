@@ -54,6 +54,7 @@ export class AVObjectDocument extends AVItem {
     presentationGroupsHidden: [],
 
     isLeftPanelOpened: false, // для инструментов дизайна
+    isRightPanelOpened: false,
   }
 
   constructor(props) {
@@ -203,6 +204,7 @@ export class AVObjectDocument extends AVItem {
                   $objDoc={this}
                   designMode={this.state.designMode}
                   isLeftPanelOpened={this.state.isLeftPanelOpened}
+                  isRightPanelOpened={this.state.isRightPanelOpened}
                 ></this.VerticalLayout>
             </div>
           )}
@@ -231,17 +233,37 @@ export class AVObjectDocument extends AVItem {
             ></AVClass>
           </div>
         )}
-        {(this.state.designMode && this.props.itemFullScreenMode) && (
-          <div className={this.state.isLeftPanelOpened ? '_panel-instruments pos-fixed tbl-0 row align-center z-index-100000' : ''}>
-            {this.state.isLeftPanelOpened && (
-              <div className='bg-tree'>{this.Host.$hostElement._renderInstrumentPanel()}</div>
-          )}
-            <div className={this.state.isLeftPanelOpened ? 'row align-center' : ''}>
-              <div className={`_panel-instruments-opener ${this.state.isLeftPanelOpened ? '' : 'pos-fixed left-0 top-50prc'} row align-center height-56px bg-link cursor-pointer z-index-100000`}
-                onClick={e => this.setState(state => ({ isLeftPanelOpened: !this.state.isLeftPanelOpened }))}
-              >....</div>
-          </div>
-          </div>
+        {(this.state.designMode && this.props.itemFullScreenMode) && (this._renderLeftPanel())}
+        {(this.state.designMode && this.props.itemFullScreenMode) && (this._renderRightPanel())}
+      </div>
+    )
+  }
+  
+  _renderLeftPanel() {
+    return (
+      <div className={this.state.isLeftPanelOpened ? '_panel-instruments pos-fixed tbl-0 row align-center z-index-100000' : ''}>
+        {this.state.isLeftPanelOpened && (
+          <div className='bg-tree'>{this.Host.$hostElement._renderInstrumentPanel()}</div>
+        )}
+        <div className={this.state.isLeftPanelOpened ? 'row align-center' : ''}>
+          <div className={`_panel-instruments-opener ${this.state.isLeftPanelOpened ? '' : 'pos-fixed left-0 top-50prc'} row align-center height-56px bg-link cursor-pointer z-index-100000`}
+            onClick={e => this.setState(state => ({ isLeftPanelOpened: !this.state.isLeftPanelOpened }))}
+          >....</div>
+        </div>
+      </div>
+    )
+  }
+  
+  _renderRightPanel() {
+    return (
+      <div className={this.state.isRightPanelOpened ? '_panel-instruments pos-fixed trb-0 row align-center z-index-100000' : ''}>
+        <div className={this.state.isRightPanelOpened ? 'row align-center' : ''}>
+          <div className={`_panel-instruments-opener ${this.state.isRightPanelOpened ? '' : 'pos-fixed right-0 top-50prc'} row align-center height-56px bg-link cursor-pointer z-index-100000`}
+            onClick={e => this.setState(state => ({ isRightPanelOpened: !this.state.isRightPanelOpened }))}
+          >....</div>
+        </div>
+        {this.state.isRightPanelOpened && (
+          <div className='bg-tree'>{this.Host.$hostElement._renderInstrumentPanel()}</div>
         )}
       </div>
     )
@@ -256,6 +278,7 @@ export class AVObjectDocument extends AVItem {
       designMode: false,
 
       isLeftPanelOpened: false,
+      isRightPanelOpened: false,
     }
     
     componentDidMount() {
@@ -263,7 +286,7 @@ export class AVObjectDocument extends AVItem {
     }
     
     shouldComponentUpdate(nextProps) {
-      if (this.props.isLeftPanelOpened !== nextProps.isLeftPanelOpened) {
+      if (this.props.isLeftPanelOpened !== nextProps.isLeftPanelOpened || this.props.isRightPanelOpened !== nextProps.isRightPanelOpened) {
         return false
       }
       return true;
