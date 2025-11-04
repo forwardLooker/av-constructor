@@ -79,13 +79,23 @@ export class AVObjectDocument extends AVItem {
         this._makeDidMountByModule();
       })
     } else {
-      this._makeDidMountByModule()
+      this._makeDidMountByModule();
+      
+      window.document.addEventListener('keydown', this._f4Listener);
+
     }
 
     // this.setState({
     //   _newData: this.deepClone(this.props.objectDocument.data),
     //   _newDataBeforeUpdate: this.deepClone(this.props.objectDocument.data),
     // })
+  }
+  
+  _f4Listener = e => {
+    if (e.key === 'F4') {
+      e.preventDefault();
+      this.toggleDesign();
+    }
   }
 
   async componentDidUpdate(prevProps) {
@@ -121,6 +131,10 @@ export class AVObjectDocument extends AVItem {
         methodOnComponentDidMount(this)
       }
     }
+  }
+  
+  componentWillUnmount() {
+    window.document.removeEventListener('keydown', this._f4Listener);
   }
 
   _prepareDesignJson = () => {
