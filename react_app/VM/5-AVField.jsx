@@ -271,11 +271,11 @@ class AVFieldOriginal extends AVItem {
     }
     if (this.props.fieldItem.viewItemType === 'label') {
       return (
-        <div className={`_av-field-viewItem-root flex-1 ${this.props.fieldItem.withoutPaddingAndMargin ? '' : 'pad-8'}`}
+        <div className={`_av-field-viewItem-root flex-1 ${this.props.fieldItem.withoutPaddingAndMargin ? '' : 'pad-8-0'}`}
                style={this.props.style}
                ref={this.props.refOnRootDiv}
         >
-          <AVLabel color={this.props.fieldItem?.style?.color}>
+          <AVLabel justifyMode={this.props.fieldItem.justifyMode || 'start'} color={this.props.fieldItem?.style?.color}>
             {this.props.fieldItem.label || 'label'}
           </AVLabel>
           {this.props.children}

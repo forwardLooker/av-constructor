@@ -1246,7 +1246,7 @@ export class AVObjectDocument extends AVItem {
         if (dropContainer.viewItemType === 'vertical-layout') {
           if (this.state.designDropSide === 'left') {
             if (dropFieldItem.style?.flexBasis) {
-              delete dropFieldItem.style.flexBasis;
+              dropFieldItem.style = { ...dropFieldItem.style, flexGrow: 1, flexBasis: 0 };
             }
             dropContainer.items[dropElementIndex] = {
               container: dropContainer,
@@ -1256,7 +1256,7 @@ export class AVObjectDocument extends AVItem {
           }
           if (this.state.designDropSide === 'right') {
             if (dropFieldItem.style?.flexBasis) {
-              delete dropFieldItem.style.flexBasis;
+              dropFieldItem.style = { ...dropFieldItem.style, flexGrow: 1, flexBasis: 0 };
             }
             dropContainer.items[dropElementIndex] = {
               container: dropContainer,
