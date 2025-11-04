@@ -852,7 +852,7 @@ export class AVObjectDocument extends AVItem {
       if (!fieldItem.viewItemType || fieldItem.viewItemType === 'field') {
         return; // TODO Сделать плашку где отображаются скрытые поля, чтобы их можно было вернуть
       } else {
-        if (idx === (containerElement.items.length - 1) && containerElement.items.length !== 1) {
+        if (idx === (containerElement.items.length - 1) && containerElement.items.length > 1) {
           if (containerElement.items[idx - 1].style?.flexBasis) {
             containerElement.items[idx - 1].style = { ...containerElement.items[idx - 1].style, flexBasis: 0, flexGrow: 1 }
           }
@@ -1392,6 +1392,13 @@ export class AVObjectDocument extends AVItem {
 
 
     if (this.state.designDragElementOrigin !== 'instrument panel') {
+      if (this.state.designDragContainer !== dropContainer) { // растягивание элемента левее при удалении крайнего правого
+        if (cutIndex === (this.state.designDragContainer.items.length - 1) && this.state.designDragContainer.items.length > 1) {
+          if (this.state.designDragContainer.items[cutIndex - 1].style?.flexBasis) {
+            this.state.designDragContainer.items[cutIndex - 1].style = { ...this.state.designDragContainer.items[cutIndex - 1].style, flexBasis: 0, flexGrow: 1 }
+          }
+        }
+      }
       this.state.designDragContainer.items.splice(cutIndex, 1);
       this._removeEmptyContainers(this.state.designDragContainer);
     }
