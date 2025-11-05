@@ -762,6 +762,9 @@ export class AVObjectDocument extends AVItem {
       'Сбросить style',
       'Установить presentationGroup'
     ];
+    if (fieldItem.viewItemType === 'label') {
+      menu.splice(1, 0, 'Установить justifyMode');
+    }
     if (fieldItem.viewItemType === 'icon') {
       menu = ['Поменять иконку на', ...menu]
     }
@@ -816,6 +819,21 @@ export class AVObjectDocument extends AVItem {
         const newLabel = await this.showDialog({ text: 'Введите новый label', inputLabel: 'label', dialogInputValue: fieldItem.label });
         if (newLabel) {
           fieldItem.label = newLabel;
+          this.forceUpdate();
+        }
+      }
+      if (menuResult === 'Установить justifyMode') {
+        const justifyMode = await this.showDialog({
+          text: ['Введите строку justifyMode, пример: center',
+            <br></br>,
+            'enum [start, center, end]',
+            <br></br>,
+            `Текущий justifyMode: ${fieldItem.justifyMode}`
+          ],
+          inputLabel: 'justifyMode'
+        });
+        if (justifyMode) {
+          fieldItem.justifyMode = justifyMode;
           this.forceUpdate();
         }
       }
