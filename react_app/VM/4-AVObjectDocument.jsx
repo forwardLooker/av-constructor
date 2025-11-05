@@ -280,11 +280,7 @@ export class AVObjectDocument extends AVItem {
       isLeftPanelOpened: false,
       isRightPanelOpened: false,
     }
-    
-    componentDidMount() {
-      this.props.vrtLayoutItem.VerticalLayout = this;
-    }
-    
+        
     shouldComponentUpdate(nextProps) {
       if (this.props.isLeftPanelOpened !== nextProps.isLeftPanelOpened || this.props.isRightPanelOpened !== nextProps.isRightPanelOpened) {
         return false
@@ -325,6 +321,7 @@ export class AVObjectDocument extends AVItem {
                     if (hrzItem.viewItemType === 'vertical-layout') {
                       return (<$objDoc.VerticalLayout
                         key={hrzIndex}
+                        ref={virtualDomElement => hrzItem.VerticalLayout = virtualDomElement }
                         vrtLayoutItem={hrzItem}
                         vrtLayoutItemIndex={hrzIndex}
                         _newData={_newData}
