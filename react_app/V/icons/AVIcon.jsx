@@ -115,6 +115,15 @@ export class AVIcon extends AVElement {
         </svg>
       </svg>
     ),
+    informerContent: () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="progressive_icon progressive_icon24">
+          <path d="M13 7.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0Z" fill="#e88600"></path>
+          <path d="M10.275 11.75H11.4v4.5h-1.2a.75.75 0 1 0 0 1.5h3.85a.75.75 0 0 0 0-1.5H12.9v-4.436c0-.624 0-.936-.174-1.145a.748.748 0 0 0-.095-.095c-.21-.174-.521-.174-1.145-.174h-1.211a.675.675 0 1 0 0 1.35Z" fill="#e88600"></path>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Zm-10 8.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Z" fill="#e88600"></path>
+        </svg>
+      </svg>
+    ),
     gazprombankLogo: () => (
       <svg xmlns="http://www.w3.org/2000/svg" width="164px" height="34px" viewBox="0 0 174 36" fill="none">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M160.039 10.33h3.539l-.021 5.58h.769l2.019-5.58h3.829l-2.748 7.372 3.144 8.16h-4.143l-2.037-6.247h-.833l.021 6.246h-3.539V10.33z" fill="#ffffff"></path>
