@@ -1407,7 +1407,7 @@ export class AVObjectDocument extends AVItem {
 
 
     if (this.state.designDragElementOrigin !== 'instrument panel') {
-      if (this.state.designDragContainer !== dropContainer) { // растягивание элемента левее при удалении крайнего правого
+      if (this.state.designDragContainer !== dropContainer) { // растягивание элемента левее при удалении крайнего правого, или ниже при удалении крайнего нижнего
         if (cutIndex === (this.state.designDragContainer.items.length - 1) && this.state.designDragContainer.items.length > 1) {
           if (this.state.designDragContainer.items[cutIndex - 1].style?.flexBasis) {
             this.state.designDragContainer.items[cutIndex - 1].style = { ...this.state.designDragContainer.items[cutIndex - 1].style, flexBasis: 0, flexGrow: 1 }
@@ -1415,6 +1415,10 @@ export class AVObjectDocument extends AVItem {
         }
       }
       this.state.designDragContainer.items.splice(cutIndex, 1);
+      if (this.state.designDragContainer.items.length === 1 && this.state.designDragContainer.container) { // Если в Хрз или Врт остался 1 то вытащить филд на 1 этаж выше
+        const replaceIdx = this.state.designDragContainer.container.findIndex(item => item === this.state.designDragContainer);
+        this.state.designDragContainer.container.splice(replaceIdx, 1, this.state.designDragContainer.items[0]);
+      }
       this._removeEmptyContainers(this.state.designDragContainer);
     }
 
