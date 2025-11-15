@@ -309,6 +309,9 @@ a {
 .pad-15 {
   padding: 15px;
 }
+.pad-15-24-19 {
+  padding: 15px 24px 19px;
+}
 .pad-0-1dot5em {
   padding: 0 1.5em;
 }
