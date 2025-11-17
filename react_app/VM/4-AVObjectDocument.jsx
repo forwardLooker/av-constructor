@@ -874,8 +874,8 @@ export class AVObjectDocument extends AVItem {
         }
         containerElement.items.splice(idx, 1);
         if (containerElement.items.length === 1 && containerElement.container) { // Если в Хрз или Врт остался 1 то вытащить филд на 1 этаж выше
-          const replaceIdx = containerElement.container.findIndex(item => item === containerElement);
-          containerElement.container.splice(replaceIdx, 1, containerElement.items[0]);
+          const replaceIdx = containerElement.container.items.findIndex(item => item === containerElement);
+          containerElement.container.items.splice(replaceIdx, 1, containerElement.items[0]);
         }
         this._removeEmptyContainers(containerElement);
         this.forceUpdate();
