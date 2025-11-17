@@ -1591,7 +1591,7 @@ class AVFieldOriginal extends AVItem {
             readOnly
           ></AVFieldOriginal.styles.input>
           <AVButton onClick={() => this.showClass(fieldItem.variantItemReference)} disabled={readOnly}>
-            Выбрать
+            Вбр
           </AVButton>
         </div>
       )
@@ -1606,7 +1606,7 @@ class AVFieldOriginal extends AVItem {
             readOnly
           ></AVFieldOriginal.styles.input>
           <AVButton onClick={() => this.showItemStructure(fieldItem.variantItemReference)} disabled={readOnly}>
-            Выбрать
+            Вбр
           </AVButton>
         </div>
       )
