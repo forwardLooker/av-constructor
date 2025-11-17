@@ -536,12 +536,12 @@ export class AVObjectDocument extends AVItem {
                  }}
                  onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
             ></div>
-            <div className="_horizontal-resizer height-100prc width-4px cursor-col-resize"
+            <div className="_horizontal-resizer height-100prc width-4px z-index-10000 cursor-col-resize"
               // hidden={this.state.designDragStarted}
               onMouseDown={(e) => this._startHorizontalResize(e, fieldItem, idx, containerElement, FieldWrapper)}
             ></div>
           </div>
-          <div className="_vertical-resizer width-100prc height-2px cursor-row-resize"
+          <div className="_vertical-resizer width-100prc height-2px z-index-10000 cursor-row-resize"
             // hidden={this.state.designDragStarted}
             onMouseDown={(e) => this._startVerticalResize(e, fieldItem, idx, containerElement, FieldWrapper)}
           ></div>
