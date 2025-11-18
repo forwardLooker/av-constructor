@@ -312,6 +312,9 @@ a {
 .pad-15-24-19 {
   padding: 15px 24px 19px;
 }
+.pad-15-59-19 {
+  padding: 15px 59px 19px;
+}
 .pad-0-1dot5em {
   padding: 0 1.5em;
 }
@@ -466,6 +469,11 @@ a {
   top: 0;
   right: 0;
   bottom: 0;
+  left: 0;
+}
+.trl-0 {
+  top: 0;
+  right: 0;
   left: 0;
 }
 .trb-0 {

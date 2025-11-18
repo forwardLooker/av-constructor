@@ -1491,6 +1491,7 @@ export class AVObjectDocument extends AVItem {
     this._removeVirtualDomElementReference(this.state.designJson);
     await this.state._objectDocument.saveDesignJson(this.deepClone(this.state.designJson));
     this._addContainerReference(this.state.designJson);
+    this.forceUpdate(); // add dom references
   }
 
   _removeDomElementReference = (layoutElememt) => {

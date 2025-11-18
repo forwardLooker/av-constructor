@@ -222,6 +222,34 @@ class AVFieldOriginal extends AVItem {
         }
       }
     });
+
+    if (this.props.fieldItem.viewItemType === 'gazprombank change credit parameters') {
+      // const initialTop = this.props.fieldItem.domElement.offsetTop;
+      // window.document.addEventListener('scroll', () => {
+      //   if (window.scrollY > initialTop) {
+      //     this.props.fieldItem.domElement.classList.add('pos-fixed', 'trl-0');
+      //     this.props.fieldItem.domElement.classList.remove('border-radius-12px');
+      //   } else {
+      //     this.props.fieldItem.domElement.classList.remove('pos-fixed', 'trl-0');
+      //     this.props.fieldItem.domElement.classList.add('border-radius-12px');
+      //   }
+      // });
+      // const initialTop = this.props.fieldItem.domElement.getBoundingClientRect().top;
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+            // Element has scrolled out of view upwards
+            this.props.fieldItem.domElement.classList.add('pos-fixed', 'trl-0', 'pad-15-59-19');
+            this.props.fieldItem.domElement.classList.remove('border-radius-12px');
+          } else {
+            this.props.fieldItem.domElement.classList.remove('pos-fixed', 'trl-0', 'pad-15-59-19');
+            this.props.fieldItem.domElement.classList.add('border-radius-12px');
+          }
+        });
+      }, { threshold: [0] }); // Observe when 0% of the element is visible
+      observer.observe(this.props.fieldItem.domElement.parentElement);
+
+    }
     
   }
 
