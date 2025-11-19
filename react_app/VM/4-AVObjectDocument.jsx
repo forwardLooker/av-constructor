@@ -899,14 +899,21 @@ export class AVObjectDocument extends AVItem {
           <br></br>,
           'Происходит мерджинг объекта, а не замена',
           <br></br>,
-          `Текущий style: ${JSON.stringify(fieldItem.style)}`
+          `Текущий style: ${JSON.stringify(fieldItem.style)}`,
+          <br></br>,
+          'Пример удаления: {"position": "delete"}'
         ],
         inputLabel: 'style object'
       });
       if (style) {
         if (!fieldItem.style) fieldItem.style = {};
         const styleObj = JSON.parse(style);
-        fieldItem.style = {...fieldItem.style, ...styleObj};
+        fieldItem.style = { ...fieldItem.style, ...styleObj };
+        Object.keys(styleObj).forEach(propName => {
+          if (styleObj[propName] === 'delete') {
+            delete fieldItem.style[propName];
+          }
+        })
         this.forceUpdate();
       }
     }
@@ -920,7 +927,9 @@ export class AVObjectDocument extends AVItem {
           <br></br>,
           'Происходит мерджинг объекта, а не замена',
           <br></br>,
-          `Текущий style: ${JSON.stringify(fieldItem.buttonStyle)}`
+          `Текущий style: ${JSON.stringify(fieldItem.buttonStyle)}`,
+          <br></br>,
+          'Пример удаления: {"position": "delete"}',
         ],
         inputLabel: 'style object'
       });
@@ -928,6 +937,11 @@ export class AVObjectDocument extends AVItem {
         if (!fieldItem.buttonStyle) fieldItem.buttonStyle = {};
         const styleObj = JSON.parse(style);
         fieldItem.buttonStyle = { ...fieldItem.buttonStyle, ...styleObj };
+        Object.keys(styleObj).forEach(propName => {
+          if (styleObj[propName] === 'delete') {
+            delete fieldItem.buttonStyle[propName];
+          }
+        })
         this.forceUpdate();
       }
     }
@@ -947,7 +961,9 @@ export class AVObjectDocument extends AVItem {
           <br></br>,
           'Происходит мерджинг объекта, а не замена',
           <br></br>,
-          `Текущий style: ${JSON.stringify(containerItem.style)}`
+          `Текущий style: ${JSON.stringify(containerItem.style)}`,
+          <br></br>,
+          'Пример удаления: {"position": "delete"}',
         ],
         inputLabel: 'style object'
       });
@@ -955,6 +971,11 @@ export class AVObjectDocument extends AVItem {
         if (!containerItem.style) containerItem.style = {};
         const styleObj = JSON.parse(style);
         containerItem.style = { ...containerItem.style, ...styleObj };
+        Object.keys(styleObj).forEach(propName => {
+          if (styleObj[propName] === 'delete') {
+            delete containerItem.style[propName];
+          }
+        })
         this.forceUpdate();
       }
     }
@@ -980,7 +1001,9 @@ export class AVObjectDocument extends AVItem {
           <br></br>,
           'Происходит мерджинг объекта, а не замена',
           <br></br>,
-          `Текущий style: ${JSON.stringify(containerItem.style)}`
+          `Текущий style: ${JSON.stringify(containerItem.style)}`,
+          <br></br>,
+          'Пример удаления: {"position": "delete"}',
         ],
         inputLabel: 'style object'
       });
@@ -988,6 +1011,11 @@ export class AVObjectDocument extends AVItem {
         if (!containerItem.style) containerItem.style = {};
         const styleObj = JSON.parse(style);
         containerItem.style = { ...containerItem.style, ...styleObj };
+        Object.keys(styleObj).forEach(propName => {
+          if (styleObj[propName] === 'delete') {
+            delete containerItem.style[propName];
+          }
+        })
         this.forceUpdate();
       }
     }
