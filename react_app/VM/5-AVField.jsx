@@ -171,6 +171,7 @@ class AVFieldOriginal extends AVItem {
     _value: ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) || this.props.value,
     isFocusedState: false, // для Газпромбанк инпутов
     isInvalidState: false,
+    isInputRendered: !this.props.fieldItem.variant?.startsWith('Gazprombank') || !!(((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) || this.props.value),
     isRequiredMessageRendered: false,
     
     isInvalidMessageRendered: false,
@@ -223,6 +224,15 @@ class AVFieldOriginal extends AVItem {
       }
     });
 
+    if (this.props.fieldItem.variant === 'Gazprombank-tel') {
+      this.setState({ _value: '+7 (___) ___-__-__', isInputRendered: true });
+    }
+    
+    if (this.props.fieldItem.variant?.startsWith('Gazprombank') && this.state._value) {
+      this._labelFontSizeClassName = 'font-size-14px';
+      this.forceUpdate();
+    }
+    
     if (this.props.fieldItem.viewItemType === 'gazprombank change credit parameters') {
       // const initialTop = this.props.fieldItem.domElement.offsetTop;
       // window.document.addEventListener('scroll', () => {
@@ -719,7 +729,8 @@ class AVFieldOriginal extends AVItem {
         )
       }
       if (fieldItem.variant === 'Gazprombank-string') {
-        let gazInputRef;
+        // let gazInputRef;
+        this._labelFontSizeClassName = this.state._value ? 'font-size-14px' : this._labelFontSizeClassName;
         let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
@@ -727,17 +738,17 @@ class AVFieldOriginal extends AVItem {
         inputElement = (
           <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
-              gazInputRef.removeAttribute('hidden');
-              gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
-              this.forceUpdate()
+              this.setState({ isInputRendered: true }, () => {
+                this.gazInputRef.focus();
+              })
             }}
           >
-            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVLabel className={`margin-left-16 ${this.state.isInputRendered ? 'transform-y-5px' : ''} ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
-              ref={el => gazInputRef = el}
-              hidden
+              ref={el => this.gazInputRef = el}
+              hidden={!this.state.isInputRendered}
               size={fieldItem.size}
               autoComplete="off"
               value={(value === null || value === undefined) ? '' : value}
@@ -745,9 +756,8 @@ class AVFieldOriginal extends AVItem {
               onChange={onChangeFunc}
               onBlur={() => {
                 if (!value) {
-                  gazInputRef.setAttribute('hidden', '');
                   this._labelFontSizeClassName = 'font-size-16px';
-                  this.forceUpdate();
+                  this.setState({ isInputRendered: false })
                 }
                 this.setState({ isFocusedState: false })
               }}
@@ -761,7 +771,7 @@ class AVFieldOriginal extends AVItem {
         )
       }
       if (fieldItem.variant === 'Gazprombank-string-number') {
-        let gazInputRef;
+        // let gazInputRef;
         let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
@@ -769,17 +779,17 @@ class AVFieldOriginal extends AVItem {
         inputElement = (
           <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
-              gazInputRef.removeAttribute('hidden');
-              gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
-              this.forceUpdate()
+              this.setState({ isInputRendered: true }, () => {
+                this.gazInputRef.focus();
+              })
             }}
           >
-            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVLabel className={`margin-left-16 ${this.state.isInputRendered ? 'transform-y-5px' : ''} ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
-              ref={el => gazInputRef = el}
-              hidden
+              ref={el => this.gazInputRef = el}
+              hidden={!this.state.isInputRendered}
               autoComplete="off"
               value={(value === null || value === undefined) ? '' : value}
               readOnly={readOnly}
@@ -789,9 +799,8 @@ class AVFieldOriginal extends AVItem {
               }}
               onBlur={() => {
                 if (!value) {
-                  gazInputRef.setAttribute('hidden', '');
                   this._labelFontSizeClassName = 'font-size-16px';
-                  this.forceUpdate();
+                  this.setState({ isInputRendered: false })
                 }
                 this.setState({ isFocusedState: false })
               }}
@@ -874,7 +883,7 @@ class AVFieldOriginal extends AVItem {
         )
       }
       if (fieldItem.variant === 'Gazprombank-email') {
-        let gazInputRef;
+        // let gazInputRef;
         let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
@@ -882,26 +891,25 @@ class AVFieldOriginal extends AVItem {
         inputElement = (
           <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
-              gazInputRef.removeAttribute('hidden');
-              gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
-              this.forceUpdate()
+              this.setState({ isInputRendered: true }, () => {
+                this.gazInputRef.focus();
+              })
             }}
           >
-            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVLabel className={`margin-left-16 ${this.state.isInputRendered ? 'transform-y-5px' : ''} ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
-              ref={el => gazInputRef = el}
-              hidden
+              ref={el => this.gazInputRef = el}
+              hidden={!this.state.isInputRendered}
               autoComplete="off"
               value={(value === null || value === undefined) ? '' : value}
               readOnly={readOnly}
               onChange={onChangeFunc}
               onBlur={() => {
                 if (!value) {
-                  gazInputRef.setAttribute('hidden', '');
                   this._labelFontSizeClassName = 'font-size-16px';
-                  this.forceUpdate();
+                  this.setState({ isInputRendered: false })
                 }
                 if (value) {
                   if (!emailValidator.test(value)) {
@@ -936,13 +944,13 @@ class AVFieldOriginal extends AVItem {
         inputElement = (
           <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
-              this.gazInputRef.removeAttribute('hidden');
-              this.gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
-              this.forceUpdate()
+              this.setState({ isInputRendered: true }, () => {
+                this.gazInputRef.focus();
+              })
             }}
           >
-            <AVLabel className={`margin-left-16 transform-y-5px ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVLabel className={`margin-left-16 ${this.state.isInputRendered ? 'transform-y-5px' : ''} ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
@@ -995,9 +1003,8 @@ class AVFieldOriginal extends AVItem {
               }}
               onBlur={() => {
                 if (!value) {
-                  this.gazInputRef.setAttribute('hidden', '');
                   this._labelFontSizeClassName = 'font-size-16px';
-                  this.forceUpdate();
+                  this.setState({ isInputRendered: false })
                 }
                 if (value.indexOf('_') > -1) {
                   this.setState({
@@ -1030,17 +1037,17 @@ class AVFieldOriginal extends AVItem {
         inputElement = (
           <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
-              this.gazInputRef.removeAttribute('hidden');
-              this.gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
-              this.forceUpdate()
+              this.setState({ isInputRendered: true }, () => {
+                this.gazInputRef.focus();
+              })
             }}
           >
-            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVLabel className={`margin-left-16 ${this.state.isInputRendered ? 'transform-y-5px' : ''} ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
-              hidden
+              hidden={!this.state.isInputRendered}
               autoComplete="off"
               inputmode="tel"
               value={value}
@@ -1085,9 +1092,8 @@ class AVFieldOriginal extends AVItem {
               }}
               onBlur={() => {
                 if (!value) {
-                  this.gazInputRef.setAttribute('hidden', '');
                   this._labelFontSizeClassName = 'font-size-16px';
-                  this.forceUpdate();
+                  this.setState({ isInputRendered: false })
                 }
                 if (value.indexOf('_') > -1) {
                   this.setState({
@@ -1120,17 +1126,17 @@ class AVFieldOriginal extends AVItem {
         inputElement = (
           <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
-              this.gazInputRef.removeAttribute('hidden');
-              this.gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
-              this.forceUpdate()
+              this.setState({ isInputRendered: true }, () => {
+                this.gazInputRef.focus();
+              })
             }}
           >
-            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVLabel className={`margin-left-16 ${this.state.isInputRendered ? 'transform-y-5px' : ''} ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
-              hidden
+              hidden={!this.state.isInputRendered}
               autoComplete="off"
               inputmode="tel"
               value={value}
@@ -1175,9 +1181,8 @@ class AVFieldOriginal extends AVItem {
               }}
               onBlur={() => {
                 if (!value) {
-                  this.gazInputRef.setAttribute('hidden', '');
                   this._labelFontSizeClassName = 'font-size-16px';
-                  this.forceUpdate();
+                  this.setState({ isInputRendered: false })
                 }
                 if (value.indexOf('_') > -1) {
                   this.setState({
@@ -1221,17 +1226,17 @@ class AVFieldOriginal extends AVItem {
         inputElement = (
           <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
-              this.gazInputRef.removeAttribute('hidden');
-              this.gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
-              this.forceUpdate()
+              this.setState({ isInputRendered: true }, () => {
+                this.gazInputRef.focus();
+              })
             }}
           >
-            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVLabel className={`margin-left-16 ${this.state.isInputRendered ? 'transform-y-5px' : ''} ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
-              hidden
+              hidden={!this.state.isInputRendered}
               autoComplete="off"
               inputmode="tel"
               value={value}
@@ -1276,9 +1281,8 @@ class AVFieldOriginal extends AVItem {
               }}
               onBlur={() => {
                 if (!value) {
-                  this.gazInputRef.setAttribute('hidden', '');
                   this._labelFontSizeClassName = 'font-size-16px';
-                  this.forceUpdate();
+                  this.setState({ isInputRendered: false })
                 }
                 if (value.indexOf('_') > -1) {
                   this.setState({
@@ -1325,17 +1329,17 @@ class AVFieldOriginal extends AVItem {
         inputElement = (
           <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
-              this.gazInputRef.removeAttribute('hidden');
-              this.gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
-              this.forceUpdate()
+              this.setState({ isInputRendered: true }, () => {
+                this.gazInputRef.focus();
+              })
             }}
           >
-            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVLabel className={`margin-left-16 ${this.state.isInputRendered ? 'transform-y-5px' : ''} ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
-              hidden
+              hidden={!this.state.isInputRendered}
               autoComplete="off"
               inputmode="tel"
               value={value}
@@ -1380,9 +1384,8 @@ class AVFieldOriginal extends AVItem {
               }}
               onBlur={() => {
                 if (!value) {
-                  this.gazInputRef.setAttribute('hidden', '');
                   this._labelFontSizeClassName = 'font-size-16px';
-                  this.forceUpdate();
+                  this.setState({ isInputRendered: false })
                 }
                 if (value.indexOf('_') > -1) {
                   this.setState({
