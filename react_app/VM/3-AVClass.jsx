@@ -43,7 +43,7 @@ export class AVClass extends AVItem {
       this.setState({ currentViewName: this.props.classItem.defaultViewName })
     }
     
-    if (!this.state.selectedObjectDocument) {
+    if (!this.state.selectedObjectDocument && this.gridRef) {
       this.gridRef.realign()
     }
   }
@@ -78,7 +78,7 @@ export class AVClass extends AVItem {
   _renderGrid() {
     return (
       <div className="margin-top-8">
-        <div hidden={!!this.state.selectedObjectDocument}>
+        <div className={`${this.state.selectedObjectDocument ? 'invisible' : ''}`}>
           <AVGrid
             ref={$grid => this.gridRef = $grid}
             items={this.state.objectDocuments}
