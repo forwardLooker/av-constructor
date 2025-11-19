@@ -225,7 +225,7 @@ class AVFieldOriginal extends AVItem {
     });
 
     if (this.props.fieldItem.variant === 'Gazprombank-tel') {
-      this.setState({ _value: '+7 (___) ___-__-__', isInputRendered: true });
+      this.setState({ _value: this.state._value || '+7 (___) ___-__-__', isInputRendered: true });
     }
     
     if (this.props.fieldItem.variant?.startsWith('Gazprombank') && this.state._value) {
