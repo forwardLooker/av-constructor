@@ -234,17 +234,6 @@ class AVFieldOriginal extends AVItem {
     }
     
     if (this.props.fieldItem.viewItemType === 'gazprombank change credit parameters') {
-      // const initialTop = this.props.fieldItem.domElement.offsetTop;
-      // window.document.addEventListener('scroll', () => {
-      //   if (window.scrollY > initialTop) {
-      //     this.props.fieldItem.domElement.classList.add('pos-fixed', 'trl-0');
-      //     this.props.fieldItem.domElement.classList.remove('border-radius-12px');
-      //   } else {
-      //     this.props.fieldItem.domElement.classList.remove('pos-fixed', 'trl-0');
-      //     this.props.fieldItem.domElement.classList.add('border-radius-12px');
-      //   }
-      // });
-      // const initialTop = this.props.fieldItem.domElement.getBoundingClientRect().top;
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
@@ -425,7 +414,7 @@ class AVFieldOriginal extends AVItem {
         return formatNumber(`### ###.`, Math.round(monthPay))
       }
       return (
-        <div className='_av-field-viewItem-root flex-1 pad-15-24-19 bg-gaz-change-credit-parameters border-radius-12px'
+        <div className='_av-field-viewItem-root flex-1 pad-15-24-19 bg-gaz-change-credit-parameters border-radius-12px z-index-100000'
           style={this.props.style}
           ref={this.props.refOnRootDiv}
         >

@@ -307,42 +307,15 @@ export class AVObjectDocument extends AVItem {
         >
           {vrtLayoutItem.items.map((vrtItem, vrtIndex) => {
             if (vrtItem.viewItemType === 'horizontal-layout') {
-              if ($objDoc.state.presentationGroupsHidden.includes(vrtItem.presentationGroup)) {
-                return null
-              }
-              return (
-                <div
-                  className="horizontal-layout flex-1 row"
-                  style={vrtItem.style}
-                  key={vrtIndex}
-                  ref={hrzDomElement => vrtItem.domElement = hrzDomElement}
-                >
-                  {vrtItem.items.map((hrzItem, hrzIndex) => {
-                    if (hrzItem.viewItemType === 'vertical-layout') {
-                      return (<$objDoc.VerticalLayout
-                        key={hrzIndex}
-                        ref={virtualDomElement => hrzItem.VerticalLayout = virtualDomElement }
-                        vrtLayoutItem={hrzItem}
-                        vrtLayoutItemIndex={hrzIndex}
-                        _newData={_newData}
-                        $objDoc={$objDoc}
-                        designMode={designMode}
-                      ></$objDoc.VerticalLayout>);
-                    } else {
-                      return (<$objDoc.FieldWrapper
-                        key={hrzIndex}
-                        fieldItem={hrzItem}
-                        idx={hrzIndex}
-                        containerElement={vrtItem}
-                        $objDoc={$objDoc}
-                        designMode={designMode}
-                        _newData={_newData}
-                        designDragStarted={$objDoc.state.designDragStarted}
-                      ></$objDoc.FieldWrapper>)
-                    }
-                  })}
-                </div>
-              )
+              return (<$objDoc.HorizontalLayout
+                key={vrtIndex}
+                ref={virtualDomElement => vrtItem.HorizontalLayout = virtualDomElement}
+                hrzLayoutItem={vrtItem}
+                hrzLayoutItemIndex={vrtIndex}
+                _newData={_newData}
+                $objDoc={$objDoc}
+                designMode={designMode}
+              ></$objDoc.HorizontalLayout>);
             }
             if (vrtItem.viewItemType === 'field' || !vrtItem.viewItemType ||
               (vrtItem.viewItemType !== 'vertical-layout' && vrtItem.viewItemType !== 'horizontal-layout')
@@ -352,6 +325,60 @@ export class AVObjectDocument extends AVItem {
                 fieldItem={vrtItem}
                 idx={vrtIndex}
                 containerElement={vrtLayoutItem}
+                $objDoc={$objDoc}
+                designMode={designMode}
+                _newData={_newData}
+                designDragStarted={$objDoc.state.designDragStarted}
+              ></$objDoc.FieldWrapper>)
+            }
+          })}
+        </div>
+      )
+    }
+  }
+
+  HorizontalLayout = class HorizontalLayout extends React.Component {
+    static defaultProps = {
+      hrzLayoutItem: null,
+      hrzLayoutItemIndex: null,
+      _newData: null,
+      $objDoc: null,
+      designMode: false,
+    }
+
+    render() {
+      let hrzLayoutItem = this.props.hrzLayoutItem;
+      let hrzLayoutItemIndex = this.props.hrzLayoutItemIndex;
+      let _newData = this.props._newData;
+      let $objDoc = this.props.$objDoc;
+      let designMode = this.props.designMode;
+
+      if ($objDoc.state.presentationGroupsHidden.includes(hrzLayoutItem.presentationGroup)) {
+        return null
+      }
+      return (
+        <div
+          className="horizontal-layout flex-1 row"
+          style={hrzLayoutItem.style}
+          ref={hrzDomElement => hrzLayoutItem.domElement = hrzDomElement}
+        >
+          {hrzLayoutItem.items.map((hrzItem, hrzIndex) => {
+            if (hrzItem.viewItemType === 'vertical-layout') {
+              return (<$objDoc.VerticalLayout
+                key={hrzIndex}
+                ref={virtualDomElement => hrzItem.VerticalLayout = virtualDomElement}
+                vrtLayoutItem={hrzItem}
+                vrtLayoutItemIndex={hrzIndex}
+                _newData={_newData}
+                $objDoc={$objDoc}
+                designMode={designMode}
+              ></$objDoc.VerticalLayout>);
+            } else {
+              return (<$objDoc.FieldWrapper
+                key={hrzIndex}
+                fieldItem={hrzItem}
+                idx={hrzIndex}
+                containerElement={hrzLayoutItem}
                 $objDoc={$objDoc}
                 designMode={designMode}
                 _newData={_newData}
@@ -610,25 +637,41 @@ export class AVObjectDocument extends AVItem {
       let forStyleHeightObj;
       if (containerElement.viewItemType === 'horizontal-layout') {
         forStyleHeightObj = {
-          height: newHeight
+          flexBasis: newHeight,
+          flexGrow: 0
         }
+        
+        if (containerElement.style) {
+          containerElement.style = {
+            ...containerElement.style,
+            ...forStyleHeightObj
+          }
+        } else {
+          containerElement.style = forStyleHeightObj;
+        }
+
+        containerElement.HorizontalLayout.forceUpdate();
+        
       } else {
         forStyleHeightObj = {
           flexBasis: newHeight,
           flexGrow: 0
         }
-      }
-      if (fieldItem.style) {
-        fieldItem.style = {
-          ...fieldItem.style,
-          ...forStyleHeightObj
+        
+        if (fieldItem.style) {
+          fieldItem.style = {
+            ...fieldItem.style,
+            ...forStyleHeightObj
+          }
+        } else {
+          fieldItem.style = forStyleHeightObj;
         }
-      } else {
-        fieldItem.style = forStyleHeightObj;
+        
+        FieldWrapper.forceUpdate();
+
       }
 
       // this.forceUpdate();
-      FieldWrapper.forceUpdate();
     }
 
   }
@@ -1547,6 +1590,7 @@ export class AVObjectDocument extends AVItem {
   
   _removeVirtualDomElementReference = (layoutElememt) => {
     delete layoutElememt.VerticalLayout;
+    delete layoutElememt.HorizontalLayout;
     if (layoutElememt.items) {
       layoutElememt.items.forEach(i => {
         this._removeVirtualDomElementReference(i);
