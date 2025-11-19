@@ -192,8 +192,8 @@ class AVFieldOriginal extends AVItem {
     if (!e.target.closest('._av-field-root')) {
       if (this.props.fieldItem.variant === 'Gazprombank-string-select') {
         if (!this.state._value) {
-          this.gazInputRef.setAttribute('hidden', '');
           this._labelFontSizeClassName = 'font-size-16px';
+          this.setState({ isInputRendered: false });
         }
         this.optionsListRef.setAttribute('hidden', '');
         this.setState({ isFocusedState: false });
@@ -835,19 +835,18 @@ class AVFieldOriginal extends AVItem {
           <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               this.optionsListRef.removeAttribute('hidden');
-              this.gazInputRef.removeAttribute('hidden');
-              this.gazInputRef.focus();
               this._labelFontSizeClassName = 'font-size-14px';
-              this.forceUpdate();
-              
+              this.setState({ isInputRendered: true }, () => {
+                this.gazInputRef.focus();
+              })              
               window.document.addEventListener('click', this._eventListenerGazSelect);
             }}
           >
-            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVLabel className={`margin-left-16 ${this.state.isInputRendered ? 'transform-y-5px' : ''} ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} z-index-10 transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
-              hidden
+              hidden={!this.state.isInputRendered}
               autoComplete="off"
               value={(value === null || value === undefined) ? '' : value}
               readOnly={true}
