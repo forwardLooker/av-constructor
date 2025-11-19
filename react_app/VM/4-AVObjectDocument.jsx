@@ -617,7 +617,10 @@ export class AVObjectDocument extends AVItem {
   _startVerticalResize = (msDownEvent, fieldItem, idx, containerElement, FieldWrapper) => {
     msDownEvent.preventDefault();
     const startResizePageY = msDownEvent.pageY;
-    const resizeElem = fieldItem.domElement;
+    let resizeElem = fieldItem.domElement;
+    if (containerElement.viewItemType === 'vertical-layout' && idx === (containerElement.items.length - 1) && containerElement.container?.viewItemType === 'horizontal-layout') {
+      resizeElem = containerElement.container.domElement;
+    }
     const resizeElemRect = resizeElem.getBoundingClientRect();
 
     window.document.onmouseup = upEv => {
@@ -651,6 +654,25 @@ export class AVObjectDocument extends AVItem {
         }
 
         containerElement.HorizontalLayout.forceUpdate();
+        
+      } else if (containerElement.viewItemType === 'vertical-layout' && idx === (containerElement.items.length -1) && containerElement.container?.viewItemType === 'horizontal-layout') {
+        forStyleHeightObj = {
+          flexBasis: newHeight,
+          flexGrow: 0
+        }
+        
+        const hrzContainer = containerElement.container;
+
+        if (hrzContainer.style) {
+          hrzContainer.style = {
+            ...hrzContainer.style,
+            ...forStyleHeightObj
+          }
+        } else {
+          hrzContainer.style = forStyleHeightObj;
+        }
+
+        hrzContainer.HorizontalLayout.forceUpdate();
         
       } else {
         forStyleHeightObj = {
