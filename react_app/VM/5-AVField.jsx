@@ -489,7 +489,7 @@ class AVFieldOriginal extends AVItem {
     //   )
     // }
     return (
-      <div className={`_av-field-root flex-1 row align-center`}
+      <div className={`_av-field-root flex-1 row align-start`}
         style={this.props.style}
         ref={this.props.refOnRootDiv}
         tabIndex="0"
