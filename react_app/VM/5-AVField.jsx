@@ -942,7 +942,7 @@ class AVFieldOriginal extends AVItem {
               this.forceUpdate()
             }}
           >
-            <AVLabel className={`margin-left-16 ${this._labelFontSizeClassName} font-weight-400 color-gaz-label transition-ease cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
+            <AVLabel className={`margin-left-16 transform-y-5px ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
             <AVFieldOriginal.styles.gazprombankInput
               className="flex-1 margin-left-16"
               ref={el => this.gazInputRef = el}
