@@ -1491,6 +1491,7 @@ export class AVObjectDocument extends AVItem {
   }
 
   toggleDesign = async () => {
+    // this._cleanFromEmptyContainers(this.state.designJson) // Для возможного очищения дизайна
     this.setState(
       state => ({designMode: !state.designMode}),
       async () => {
@@ -1507,6 +1508,19 @@ export class AVObjectDocument extends AVItem {
       designMode: !state.designMode,
       $designObjectDocument: this
     }));
+  }
+  
+  _cleanFromEmptyContainers = (layoutElement) => {
+    if (!layoutElement.items) return;
+    layoutElement.items.forEach((i, idx) => {
+      if (i.viewItemType === 'horizontal-layout' || i.viewItemType === 'vertical-layout') {
+        if (i.items?.length === 0) {
+          layoutElement.items.splice(idx, 1);
+          this._removeEmptyContainers(layoutElement);
+        }
+      }
+      this._cleanFromEmptyContainers(i)
+    })
   }
 
   toggleToJSON = () => {
