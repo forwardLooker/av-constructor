@@ -527,6 +527,16 @@ export class AVObjectDocument extends AVItem {
               }
               $objDoc._forceUpdateDebounced1Sec() // для подсветки кнопки сохранить
             }}
+            onBlurFunc={event => {
+              const classInstance = $objDoc.state._objectDocument.Class;
+              const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+              if (moduleDefinition) {
+                const methodOnFieldBlur = moduleDefinition.on_fieldBlur;
+                if (methodOnFieldBlur) {
+                  methodOnFieldBlur({ $objectDocument: $objDoc, fieldItemName: fieldItem.name, value: $objDoc.state._newData[fieldItem.name] , fieldItem, event })
+                }
+              }
+            }}
             labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
             $objectDocument={$objDoc}
           >

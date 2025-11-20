@@ -159,6 +159,7 @@ class AVFieldOriginal extends AVItem {
     isLabelHidden: false,
     labelPosition: 'left' , // enum: ['left', 'top']
     onChangeFunc: this.noop,
+    onBlurFunc: this.noop,
 
     style: null,
     $objectDocument: null,
@@ -575,6 +576,7 @@ class AVFieldOriginal extends AVItem {
           value={(value === null || value === undefined) ? '' : value}
           readOnly={readOnly}
           onChange={onChangeFunc}
+          onBlur={this.props.onBlurFunc}
         ></AVFieldOriginal.styles.input>
       );
       if (fieldItem.variant === 'textarea') {
@@ -586,6 +588,7 @@ class AVFieldOriginal extends AVItem {
             value={(value === null || value === undefined) ? '' : value}
             readOnly={readOnly}
             onChange={onChangeFunc}
+            onBlur={this.props.onBlurFunc}
           ></AVFieldOriginal.styles.textarea>
         );
       }
@@ -749,6 +752,7 @@ class AVFieldOriginal extends AVItem {
                   this.setState({ isInputRendered: false })
                 }
                 this.setState({ isFocusedState: false })
+                this.props.onBlurFunc();
               }}
               onFocus={() => this.setState({
                 isFocusedState: true,
@@ -792,7 +796,8 @@ class AVFieldOriginal extends AVItem {
                   this._labelFontSizeClassName = 'font-size-16px';
                   this.setState({ isInputRendered: false })
                 }
-                this.setState({ isFocusedState: false })
+                this.setState({ isFocusedState: false });
+                this.props.onBlurFunc();
               }}
               onFocus={() => this.setState({
                 isFocusedState: true,
@@ -910,7 +915,8 @@ class AVFieldOriginal extends AVItem {
                     })
                   }
                 }
-                this.setState({ isFocusedState: false })
+                this.setState({ isFocusedState: false });
+                this.props.onBlurFunc();
               }}
               onFocus={() => this.setState({
                 isFocusedState: true,
@@ -1004,7 +1010,8 @@ class AVFieldOriginal extends AVItem {
                     invalidMessage: 'Номер телефона указан неверно',
                   })
                 }
-                this.setState({ isFocusedState: false })
+                this.setState({ isFocusedState: false });
+                this.props.onBlurFunc();
               }}
               onFocus={() => {
                 this.setState({
@@ -1094,7 +1101,8 @@ class AVFieldOriginal extends AVItem {
                     invalidMessage: 'Некорректное значение',
                   })
                 }
-                this.setState({ isFocusedState: false })
+                this.setState({ isFocusedState: false });
+                this.props.onBlurFunc();
               }}
               onFocus={() => {
                 this.setState({
@@ -1195,7 +1203,8 @@ class AVFieldOriginal extends AVItem {
                     })
                   }
                 }
-                this.setState({ isFocusedState: false })
+                this.setState({ isFocusedState: false });
+                this.props.onBlurFunc();
               }}
               onFocus={() => {
                 this.setState({
@@ -1298,7 +1307,8 @@ class AVFieldOriginal extends AVItem {
                     })
                   }
                 }
-                this.setState({ isFocusedState: false })
+                this.setState({ isFocusedState: false });
+                this.props.onBlurFunc();
               }}
               onFocus={() => {
                 this.setState({
@@ -1389,7 +1399,8 @@ class AVFieldOriginal extends AVItem {
                     invalidMessage: 'Некорректное значение',
                   })
                 }
-                this.setState({ isFocusedState: false })
+                this.setState({ isFocusedState: false });
+                this.props.onBlurFunc();
               }}
               onFocus={() => {
                 this.setState({
@@ -1415,6 +1426,7 @@ class AVFieldOriginal extends AVItem {
           value={(value === null || value === undefined) ? '' : value}
           readOnly={readOnly}
           onChange={onChangeFunc}
+          onBlur={this.props.onBlurFunc}
         ></AVFieldOriginal.styles.input>
       )
       if (fieldItem.variant === 'input+range') {
@@ -1469,7 +1481,8 @@ class AVFieldOriginal extends AVItem {
                   console.log('Blur formattedValue', formattedValue);
                   this.setState({ _value: formattedValue, isFocusedState: false });
                   this.props.onChangeFunc(formattedValue);
-
+                  
+                  this.props.onBlurFunc();
                 }}
                 onFocus={() => {
                   this.setState({
