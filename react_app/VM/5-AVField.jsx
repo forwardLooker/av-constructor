@@ -720,12 +720,12 @@ class AVFieldOriginal extends AVItem {
       if (fieldItem.variant === 'Gazprombank-string') {
         // let gazInputRef;
         this._labelFontSizeClassName = this.state._value ? 'font-size-14px' : this._labelFontSizeClassName;
-        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : (value ? 'border-gaz-success' : 'border-gaz');
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
         }
         inputElement = (
-          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
+          <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               this._labelFontSizeClassName = 'font-size-14px';
               this.setState({ isInputRendered: true }, () => {
@@ -756,17 +756,18 @@ class AVFieldOriginal extends AVItem {
                 isRequiredMessageRendered: false,
               })}
             ></AVFieldOriginal.styles.gazprombankInput>
+            <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || !value ? 'no-display' : ''} `}></AVIcon>
           </div>
         )
       }
       if (fieldItem.variant === 'Gazprombank-string-number') {
         // let gazInputRef;
-        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : (value ? 'border-gaz-success' : 'border-gaz');
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
         }
         inputElement = (
-          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
+          <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               this._labelFontSizeClassName = 'font-size-14px';
               this.setState({ isInputRendered: true }, () => {
@@ -799,6 +800,7 @@ class AVFieldOriginal extends AVItem {
                 isRequiredMessageRendered: false,
               })}
             ></AVFieldOriginal.styles.gazprombankInput>
+            <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || !value ? 'no-display' : ''} `}></AVIcon>
           </div>
         )
       }
@@ -816,7 +818,7 @@ class AVFieldOriginal extends AVItem {
         
         // let gazInputRef;
         // let optionsListRef;
-        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : (value ? 'border-gaz-success' : 'border-gaz');
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
         }
@@ -872,12 +874,12 @@ class AVFieldOriginal extends AVItem {
       }
       if (fieldItem.variant === 'Gazprombank-email') {
         // let gazInputRef;
-        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : (value ? 'border-gaz-success' : 'border-gaz');
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
         }
         inputElement = (
-          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
+          <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               this._labelFontSizeClassName = 'font-size-14px';
               this.setState({ isInputRendered: true }, () => {
@@ -917,6 +919,7 @@ class AVFieldOriginal extends AVItem {
                 isRequiredMessageRendered: false,
               })}
             ></AVFieldOriginal.styles.gazprombankInput>
+            <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || !value ? 'no-display' : ''} `}></AVIcon>
           </div>
         )
       }
@@ -925,7 +928,7 @@ class AVFieldOriginal extends AVItem {
         // let gazInputRef;
         this._labelFontSizeClassName = 'font-size-14px'; // маска вот, поэтому сразу 14
         value = (value === null || value === undefined) ? '+7 (___) ___-__-__' : value;
-        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : (value && value !== '+7 (___) ___-__-__' ? 'border-gaz-success' : 'border-gaz');
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
         }
@@ -1012,6 +1015,7 @@ class AVFieldOriginal extends AVItem {
                 });
               }}
             ></AVFieldOriginal.styles.gazprombankInput>
+            <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || !value || value === '+7 (___) ___-__-__' ? 'no-display' : ''} `}></AVIcon>
           </div>
         )
       }
@@ -1023,7 +1027,7 @@ class AVFieldOriginal extends AVItem {
           borderGaz = 'border-gaz-accent'
         }
         inputElement = (
-          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
+          <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               this._labelFontSizeClassName = 'font-size-14px';
               this.setState({ isInputRendered: true }, () => {
@@ -1108,12 +1112,12 @@ class AVFieldOriginal extends AVItem {
       if (fieldItem.variant === 'Gazprombank-date') {
         // let gazInputRef;
         value = (value === null || value === undefined) ? '' : value;
-        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : (value ? 'border-gaz-success' : 'border-gaz');
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
         }
         inputElement = (
-          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
+          <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               this._labelFontSizeClassName = 'font-size-14px';
               this.setState({ isInputRendered: true }, () => {
@@ -1202,18 +1206,19 @@ class AVFieldOriginal extends AVItem {
                 });
               }}
             ></AVFieldOriginal.styles.gazprombankInput>
+            <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || !value ? 'no-display' : ''} `}></AVIcon>
           </div>
         )
       }
       if (fieldItem.variant === 'Gazprombank-date-month-year') {
         // let gazInputRef;
         value = (value === null || value === undefined) ? '' : value;
-        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : (value ? 'border-gaz-success' : 'border-gaz');
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
         }
         inputElement = (
-          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
+          <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               this._labelFontSizeClassName = 'font-size-14px';
               this.setState({ isInputRendered: true }, () => {
@@ -1304,6 +1309,7 @@ class AVFieldOriginal extends AVItem {
                 });
               }}
             ></AVFieldOriginal.styles.gazprombankInput>
+            <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || !value ? 'no-display' : ''} `}></AVIcon>
           </div>
         )
       }
@@ -1311,12 +1317,12 @@ class AVFieldOriginal extends AVItem {
       if (fieldItem.variant === 'Gazprombank-passport-kod-podrazdelenia') {
         // let gazInputRef;
         value = (value === null || value === undefined) ? '' : value;
-        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : 'border-gaz';
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : (value ? 'border-gaz-success' : 'border-gaz');
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
         }
         inputElement = (
-          <div className={`_inputElement flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
+          <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
             onClick={() => {
               this._labelFontSizeClassName = 'font-size-14px';
               this.setState({ isInputRendered: true }, () => {
@@ -1394,6 +1400,7 @@ class AVFieldOriginal extends AVItem {
                 });
               }}
             ></AVFieldOriginal.styles.gazprombankInput>
+            <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || !value ? 'no-display' : ''} `}></AVIcon>
           </div>
         )
       }
