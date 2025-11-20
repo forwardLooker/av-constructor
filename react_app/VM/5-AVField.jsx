@@ -511,19 +511,19 @@ class AVFieldOriginal extends AVItem {
           </div>
           {this.props.fieldItem.infoMessage && (
             <div className="row align-start margin-top-6 font-size-14px color-gaz-info">
-              <AVIcon className='margin-top-2' name='informer'></AVIcon>
+              <AVIcon name='informer'></AVIcon>
               <span className='margin-left-4 line-height-16px'>{this.props.fieldItem.infoMessage}</span>
             </div>
           )}
           {this.state.isRequiredMessageRendered && (
             <div className="row align-start margin-top-4 font-size-14px color-gaz-error">
-              <AVIcon className='margin-top-2' name='informerError'></AVIcon>
+              <AVIcon name='informerError'></AVIcon>
               <span className='margin-left-4 line-height-16px'>Обязательное поле</span>
             </div>
           )}
           {this.state.isInvalidMessageRendered && (
             <div className="row align-start margin-top-4 font-size-14px color-gaz-error">
-              <AVIcon className='margin-top-2' name='informerError'></AVIcon>
+              <AVIcon name='informerError'></AVIcon>
               <span className='margin-left-4 line-height-16px'>{this.state.invalidMessage}</span>
             </div>
           )}
