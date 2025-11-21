@@ -838,7 +838,7 @@ export class AVObjectDocument extends AVItem {
       menu.splice(1, 0, 'Установить justifyMode');
     }
     if (fieldItem.viewItemType === 'icon') {
-      menu = ['Поменять иконку на', ...menu]
+      menu = ['Установить icon name', ...menu]
     }
     if (containerElement.viewItemType === 'vertical-layout') {
       menu.push('Установить style ближайшего vertical-layout');
@@ -920,7 +920,7 @@ export class AVObjectDocument extends AVItem {
     } else {
       menuResult = await this.showContextMenu(e, menu);
     }
-    if (menuResult === 'Поменять иконку на') {
+    if (menuResult === 'Установить icon name') {
       const iconName = await this.showDialog({ text: 'Введите name иконки', inputLabel: 'name', dialogInputValue: fieldItem.name });
       if (iconName) {
         fieldItem.name = iconName;
@@ -1106,7 +1106,7 @@ export class AVObjectDocument extends AVItem {
     }
     if (menuResult === 'Установить presentationGroup') {
       const presentationGroup = await this.showDialog({
-        text: ['Введите имя presentationGroup, пример: ifParamYesNeedHide',
+        text: ['Введите имя presentationGroup, пример: Регион',
           <br></br>,
           'Значение строковое, для сброса передайте пустую строку',
           <br></br>,
@@ -1128,7 +1128,7 @@ export class AVObjectDocument extends AVItem {
         containerItem = containerElement.container
       }
       const presentationGroup = await this.showDialog({
-        text: ['Введите имя presentationGroup, пример: ifParamYesNeedHide',
+        text: ['Введите имя presentationGroup, пример: Регион',
           <br></br>,
           'Значение строковое, для сброса передайте пустую строку',
           <br></br>,
@@ -1150,7 +1150,7 @@ export class AVObjectDocument extends AVItem {
         containerItem = containerElement.container
       }
       const presentationGroup = await this.showDialog({
-        text: ['Введите имя presentationGroup, пример: ifParamYesNeedHide',
+        text: ['Введите имя presentationGroup, пример: Регион',
           <br></br>,
           'Значение строковое, для сброса передайте пустую строку',
           <br></br>,
@@ -1517,7 +1517,7 @@ export class AVObjectDocument extends AVItem {
     if (this.state.designDragElementOrigin !== 'instrument panel') {
       if (this.state.designDragContainer !== dropContainer) { // растягивание элемента левее при удалении крайнего правого, или ниже при удалении крайнего нижнего
         if (cutIndex === (this.state.designDragContainer.items.length - 1) && this.state.designDragContainer.items.length > 1) {
-          if (this.state.designDragContainer.items[cutIndex - 1].style?.flexBasis) {
+          if (this.state.designDragContainer.items[cutIndex - 1].style?.flexBasis && this.state.designDragContainer.container) {
             this.state.designDragContainer.items[cutIndex - 1].style = { ...this.state.designDragContainer.items[cutIndex - 1].style, flexBasis: 0, flexGrow: 1 }
           }
         }
