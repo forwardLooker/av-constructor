@@ -12,6 +12,7 @@ export default class {
       }
     }
     $objectDocument.state.presentationGroupsHidden.push('confirmSMS');
+    $objectDocument.state.presentationGroupsHidden.push('ФИО по отдельности');
     $objectDocument.forceUpdate();
   }
   static on_newDataChange = async ({ $objectDocument, fieldItemName, value }) => {
@@ -59,6 +60,35 @@ export default class {
       }
     }
   }
+  
+  static on_fieldBlur = async ({ $objectDocument, fieldItemName, value }) => {
+    if (fieldItemName === 'Фамилия Имя Отчество') {
+      const arrWords = value.split(' ');
+      const notValidFIO = arrWords.length !== 3 || arrWords.some(w => w.length < 2) || arrWords.every(w => w.length === 2);
+      if (notValidFIO) {
+        if ($objectDocument.state.presentationGroupsHidden.includes('ФИО по отдельности')) {
+          const idxToRemove = $objectDocument.state.presentationGroupsHidden.findIndex(prGr => prGr === 'ФИО по отдельности');
+          $objectDocument.state.presentationGroupsHidden.splice(idxToRemove, 1);
+        }
+        if (!$objectDocument.state.presentationGroupsHidden.includes('Фамилия Имя Отчество')) {
+          $objectDocument.state.presentationGroupsHidden.push('Фамилия Имя Отчество');
+        }
+        $objectDocument.state._newData['Фамилия'] = arrWords[0];
+        $objectDocument.state._newData['Имя'] = arrWords[1];
+        $objectDocument.state._newData['Отчество'] = arrWords[2];
+
+        $objectDocument.forceUpdate();
+      } else {
+        const arrCapitalizedWords = arrWords.map(word => {
+          return String(word).charAt(0).toUpperCase() + String(word).slice(1)
+        });
+        const fixedFIO = arrCapitalizedWords.join(' ');
+        $objectDocument.state._newData['Фамилия Имя Отчество'] = fixedFIO;
+        $objectDocument.forceUpdate();
+      }
+    }
+  }
+
   static methods = {
     'Подтвердить данные': async ($objectDocument) => {
       console.log('Подтвердить данные успех', this.Host);
