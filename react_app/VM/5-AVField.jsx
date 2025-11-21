@@ -112,6 +112,26 @@ class AVFieldOriginal extends AVItem {
         background: white;
       }
     `,
+    gazprombankCheckbox: this.styled.div`
+      min-width: 20px;
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      color: #2b61ec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      border: 1px solid ${props => props.isInvalidState ? '#db2c24' : '#2b61ec'};
+      background-color: ${props => (!props.value ? '#fff' : '#2b61ec')};
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out 0s, border-color 0.2s ease-in-out 0s, border-width 0.2s ease-in-out 0s;
+
+      &:hover {
+        border: 2px solid;
+      }
+
+    `,
     gazprombankCheckboxSwitch: this.styled.span`
       display: block;
       top: 1px;
@@ -1540,6 +1560,26 @@ class AVFieldOriginal extends AVItem {
           })}
         ></AVFieldOriginal.styles.input>
       )
+      if (fieldItem.variant === 'Gazprombank-checkbox') {
+        inputElement = (
+          <AVFieldOriginal.styles.gazprombankCheckbox
+            className="gazprombankCheckbox"
+            value={value}
+            isInvalidState={this.state.isInvalidState}
+            onClick={e => {
+              if (readOnly) return;
+              this.setState(
+                state => ({ _value: state._value === 'notAll'? true : !state._value }),
+                () => this.props.onChangeFunc(this.state._value)
+              );
+            }
+            }
+          >
+            <AVIcon className={!value ? 'no-display' : ''} name={value === 'notAll' ? 'checkboxNotAll' : 'checkboxOk'} ></AVIcon>
+          </AVFieldOriginal.styles.gazprombankCheckbox>
+        )
+      }
+
       if (fieldItem.variant === 'Gazprombank-checkbox-switch') {
         inputElement = (
           <AVFieldOriginal.styles.gazprombankCheckboxSwitch

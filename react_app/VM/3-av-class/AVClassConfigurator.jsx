@@ -76,7 +76,7 @@ export class AVClassConfigurator extends AVItem {
             return ['input+range'];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'boolean') {
-            return ['Gazprombank-checkbox-switch'];
+            return ['Gazprombank-checkbox', 'Gazprombank-checkbox-switch'];
           }
           return [];
         }},

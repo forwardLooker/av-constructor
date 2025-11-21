@@ -23,3 +23,7 @@ html[data-color-scheme=light] {
 .benefitPassport {
   margin: 0 -14px 0 0;
 }
+.checkboxOk {
+  color: #fff;
+  height: 12px;
+}
