@@ -52,7 +52,7 @@ export class AVPropertyGrid extends AVElement {
     }
     items = items.filter(i => !(typeof i.hideIfFunc === 'function' && i.hideIfFunc()));
     return (
-      <div className={`_av-property-grid-root flex-1 col ${nestingLevel > 0 ? 'margin-left-16' : ''}`}>
+      <div className={`_av-property-grid-root flex-1 col ${nestingLevel > 0 ? 'margin-left-16' : ''} bg-ffd`}>
         {items.map((propertyItem, idx) => (
           <div className="col" key={propertyItem.name || idx}>
             <AVPropertyGrid.styles.treeRow className={`tree-row row align-center margin-top-2 ${propertyItem.selected ? 'selected' : ''}`}>

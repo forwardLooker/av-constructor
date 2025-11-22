@@ -546,6 +546,9 @@ a {
 .bg-tree {
   background: #ebedf0;
 }
+.bg-ffd {
+  background: #ffd;
+}
 .bg-folder {
   background: #f1e7a7;
 }

@@ -67,9 +67,9 @@ export class AVClassConfigurator extends AVItem {
               'Gazprombank-tel',
               'Gazprombank-email',
               'Gazprombank-passport-seria-number',
+              'Gazprombank-passport-kod-podrazdelenia',
               'Gazprombank-date',
               'Gazprombank-date-month-year',
-              'Gazprombank-passport-kod-podrazdelenia',
             ];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'number') {
