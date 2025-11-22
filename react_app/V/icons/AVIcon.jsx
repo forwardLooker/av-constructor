@@ -209,10 +209,9 @@ export class AVIcon extends AVElement {
     checkboxOk: () => ( // для Газпромбанка
       <svg className="checkboxOk" width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.65 7.03L4.42613 10.4802C4.46617 10.53 4.54196 10.5299 4.58198 10.4802L10.25 3.43" stroke="currentColor" stroke-width="2.65" stroke-linecap="round" stroke-linejoin="bevel"></path></svg>
     ),
-    checkboxNotAll: () => {
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.1274 4.5H1.87264C1.05275 4.5 0.5 5.23772 0.5 6C0.5 6.76228 1.05275 7.5 1.87264 7.5L10.1274 7.5C10.9472 7.5 11.5 6.76228 11.5 6C11.5 5.23772 10.9472 4.5 10.1274 4.5Z" fill="currentColor"></path></svg>
-    }
-    
+    checkboxMiddleLine: () => (
+      <svg className="checkboxMiddleLine" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.1274 4.5H1.87264C1.05275 4.5 0.5 5.23772 0.5 6C0.5 6.76228 1.05275 7.5 1.87264 7.5L10.1274 7.5C10.9472 7.5 11.5 6.76228 11.5 6C11.5 5.23772 10.9472 4.5 10.1274 4.5Z" fill="currentColor"></path></svg>
+    ),
   }
 
 

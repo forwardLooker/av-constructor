@@ -26,6 +26,33 @@ export default class {
         'Я даю согласие на передачу персональных данных партнёрам Банка': value,
       }}))
     }
+    
+    let checkboxArr = ['Я подтверждаю заявку и даю согласие на обработку персональных данных',
+      'Я даю согласие на передачу третьим лицам персональных данных',
+      'Я даю согласие на получение Банком информации из БКИ',
+      'Я согласен получать предложения, информацию о продуктах, услугах Банка и его партнеров',
+      'Я даю согласие на передачу персональных данных партнёрам Банка',];
+    let valuesFromCheckboxArr = [
+      $objectDocument.state._newData['Я подтверждаю заявку и даю согласие на обработку персональных данных'],
+      $objectDocument.state._newData['Я даю согласие на передачу третьим лицам персональных данных'],
+      $objectDocument.state._newData['Я даю согласие на получение Банком информации из БКИ'],
+      $objectDocument.state._newData['Я согласен получать предложения, информацию о продуктах, услугах Банка и его партнеров'],
+      $objectDocument.state._newData['Я даю согласие на передачу персональных данных партнёрам Банка'],
+    ];
+    if (checkboxArr.some(name => name === fieldItemName) && value && valuesFromCheckboxArr.some(value => !value)) {
+      $objectDocument.state._newData['Предоставляю указанные ниже согласия'] = 'middleLine';
+      $objectDocument.forceUpdate();
+    } else if (checkboxArr.some(name => name === fieldItemName) && !value && valuesFromCheckboxArr.some(value => value)) {
+      $objectDocument.state._newData['Предоставляю указанные ниже согласия'] = 'middleLine';
+      $objectDocument.forceUpdate();
+    } else if (checkboxArr.some(name => name === fieldItemName)  && valuesFromCheckboxArr.every(value => !value)) {
+      $objectDocument.state._newData['Предоставляю указанные ниже согласия'] = false;
+      $objectDocument.forceUpdate();
+    } else if (checkboxArr.some(name => name === fieldItemName)) {
+      $objectDocument.state._newData['Предоставляю указанные ниже согласия'] = true;
+      $objectDocument.forceUpdate();
+    }
+      
     if (fieldItemName === 'Я налоговый резидент только РФ') {
       if (value === 'Нет') {
         if (!$objectDocument.state.presentationGroupsHidden.includes('nalogResidentYes')) {

@@ -1569,13 +1569,13 @@ class AVFieldOriginal extends AVItem {
             onClick={e => {
               if (readOnly) return;
               this.setState(
-                state => ({ _value: state._value === 'notAll'? true : !state._value }),
+                state => ({ _value: state._value === 'middleLine'? true : !state._value }),
                 () => this.props.onChangeFunc(this.state._value)
               );
             }
             }
           >
-            <AVIcon className={!value ? 'no-display' : ''} name={value === 'notAll' ? 'checkboxNotAll' : 'checkboxOk'} ></AVIcon>
+            <AVIcon className={!value ? 'no-display' : ''} name={value === 'middleLine' ? 'checkboxMiddleLine' : 'checkboxOk'} ></AVIcon>
           </AVFieldOriginal.styles.gazprombankCheckbox>
         )
       }
