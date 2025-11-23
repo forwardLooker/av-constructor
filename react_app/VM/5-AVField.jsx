@@ -208,6 +208,8 @@ class AVFieldOriginal extends AVItem {
 
   gazInputRef;
   optionsListRef; // для Газпромбанк селекта
+  gazSelectScrollableAreaRef;
+  gazSelectItemsRefsObj = {};
   
   _eventListenerGazSelect = e => {
     if (!e.target.closest('._av-field-root')) {
@@ -249,7 +251,7 @@ class AVFieldOriginal extends AVItem {
       this.setState({ _value: this.state._value || '+7 (___) ___-__-__', isInputRendered: true });
     }
     
-    if (this.props.fieldItem.variant?.startsWith('Gazprombank') && this.state._value) {
+    if (this.props.fieldItem.variant?.startsWith('Gazprombank') && this.state._value && this._labelFontSizeClassName !== 'font-size-14px') {
       this._labelFontSizeClassName = 'font-size-14px';
       this.forceUpdate();
     }
@@ -268,6 +270,29 @@ class AVFieldOriginal extends AVItem {
         });
       }, { threshold: [0] }); // Observe when 0% of the element is visible
       observer.observe(this.props.fieldItem.domElement.parentElement);
+
+    }
+    
+    if (this.props.fieldItem.variant === 'Gazprombank-string-select') {
+      Object.values(this.gazSelectItemsRefsObj).forEach(itemDomRef => {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              if (entry.intersectionRatio === 1) {
+                entry.target.style.opacity = 1;
+              }
+              if (entry.intersectionRatio <= 0.8) {
+                entry.target.style.opacity = 0.5;
+              }
+              if (entry.intersectionRatio <= 0.6) {
+                entry.target.style.opacity = 0.25;
+              }
+            }
+
+          });
+        }, { root: this.gazSelectScrollableAreaRef, threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
+        observer.observe(itemDomRef);
+      })
 
     }
     
@@ -879,10 +904,11 @@ class AVFieldOriginal extends AVItem {
               style={{height: '195px', bottom: '-207px', padding: '8px'}}
               className='_dropdown-list pos-abs rl-0 bg-white border-radius-12px z-index-100 box-shadow cursor-default'
             >
-              <div style={{ height: '175px' }} className="bg-white z-index-100 scroll-y gaz-select-thin-scrollbar cursor-pointer">
+              <div ref={scrolllArea => this.gazSelectScrollableAreaRef = scrolllArea} style={{ height: '175px' }} className="bg-white z-index-100 scroll-y gaz-select-thin-scrollbar cursor-pointer">
                 {trimedValuesArr.map(str => (
                   <div
                     key={str}
+                    ref={selectItemRef => this.gazSelectItemsRefsObj[str] = selectItemRef}
                     style={{padding: '16px 14px'}}
                     className={`font-weight-400 ${value === str ? 'color-gaz-accent bg-gaz-field-selected' : ''} bg-gaz-field-hover cursor-pointer`}
                     onClick={(e) => {
