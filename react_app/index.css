@@ -580,11 +580,24 @@ a {
   background: linear-gradient(225deg, #3abb87, #43bb3a);
 }
 .bg-gaz-field-hover:hover {
-  background: #f4f6fa;
+  background: rgb(245, 245, 245);
 }
 .bg-gaz-field-selected {
-  background: #f4f6fa;
+  background: #0a0a0b0f;
 }
+
+.gaz-select-thin-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.gaz-select-thin-scrollbar::-webkit-scrollbar-track {
+  background: rgb(245, 245, 245);
+}
+
+.gaz-select-thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #0a0a0b50;
+}
+
 .bg-gaz-radio {
   background: #476bf0;
 }

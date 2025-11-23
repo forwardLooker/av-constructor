@@ -876,24 +876,35 @@ class AVFieldOriginal extends AVItem {
             <AVIcon className='pos-abs right-16px' name='gazSelectArrow'></AVIcon>
             <div ref={el => this.optionsListRef = el}
               hidden
-              style={{height: '160px', bottom: '-172px'}}
-              className='_dropdown-list pos-abs rl-0 pad-4 bg-white border-radius-12px scroll-y z-index-100 box-shadow'
+              style={{height: '195px', bottom: '-207px', padding: '8px'}}
+              className='_dropdown-list pos-abs rl-0 bg-white border-radius-12px z-index-100 box-shadow cursor-default'
             >
-              {trimedValuesArr.map(str => (
-                <div
-                  key={str}
-                  className={`pad-8 font-weight-400 ${value === str ? 'color-gaz-accent bg-gaz-field-selected' : ''} bg-gaz-field-hover cursor-pointer`}
-                  onClick={(e) => {
-                    setTimeout(() => { // потому что онКлик выше в диве сеттит
-                      this.optionsListRef.setAttribute('hidden', '');
-                      window.document.removeEventListener('click', this._eventListenerGazSelect);
-                      this.setState({ isFocusedState: false });
-                    })
-                    this.setState({ _value: str });
-                    this.props.onChangeFunc(str);
-                  }}
-                >{str}</div>
-              ))}
+              <div style={{ height: '175px' }} className="pos-rel bg-white z-index-100 scroll-y gaz-select-thin-scrollbar cursor-pointer">
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  left: 0,
+                  height: '14px',
+                  opacity: '0.5',
+                }}></div>
+                {trimedValuesArr.map(str => (
+                  <div
+                    key={str}
+                    style={{padding: '16px 14px'}}
+                    className={`font-weight-400 ${value === str ? 'color-gaz-accent bg-gaz-field-selected' : ''} bg-gaz-field-hover cursor-pointer`}
+                    onClick={(e) => {
+                      setTimeout(() => { // потому что онКлик выше в диве сеттит
+                        this.optionsListRef.setAttribute('hidden', '');
+                        window.document.removeEventListener('click', this._eventListenerGazSelect);
+                        this.setState({ isFocusedState: false });
+                      })
+                      this.setState({ _value: str });
+                      this.props.onChangeFunc(str);
+                    }}
+                  >{str}</div>
+                ))}
+              </div>
             </div>
           </div>
         )
