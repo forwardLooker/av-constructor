@@ -546,6 +546,9 @@ a {
 .bg-tree {
   background: #ebedf0;
 }
+.bg-property-grid {
+  background: rgb(244, 244, 244);
+}
 .bg-ffd {
   background: #ffd;
 }

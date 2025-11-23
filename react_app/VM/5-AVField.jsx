@@ -876,7 +876,8 @@ class AVFieldOriginal extends AVItem {
             <AVIcon className='pos-abs right-16px' name='gazSelectArrow'></AVIcon>
             <div ref={el => this.optionsListRef = el}
               hidden
-              className='pos-abs height-160px bottom-minus168px rl-0 pad-4 bg-white border-radius-12px scroll-y z-index-100 box-shadow'
+              style={{height: '160px', bottom: '-172px'}}
+              className='_dropdown-list pos-abs rl-0 pad-4 bg-white border-radius-12px scroll-y z-index-100 box-shadow'
             >
               {trimedValuesArr.map(str => (
                 <div
