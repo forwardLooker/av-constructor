@@ -212,6 +212,13 @@ export class AVIcon extends AVElement {
     checkboxMiddleLine: () => (
       <svg className="checkboxMiddleLine" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.1274 4.5H1.87264C1.05275 4.5 0.5 5.23772 0.5 6C0.5 6.76228 1.05275 7.5 1.87264 7.5L10.1274 7.5C10.9472 7.5 11.5 6.76228 11.5 6C11.5 5.23772 10.9472 4.5 10.1274 4.5Z" fill="currentColor"></path></svg>
     ),
+    search: () => (
+      <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="progressive_icon progressive_icon24">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M14.555 15.969a7.211 7.211 0 1 1 1.414-1.414l4.736 4.736a1 1 0 0 1-1.414 1.415l-4.736-4.737Zm1.368-5.758a5.711 5.711 0 1 1-11.423 0 5.711 5.711 0 0 1 11.423 0Z" fill="#6f6f6f"></path>
+        </svg>
+      </svg>
+    ),
   }
 
 

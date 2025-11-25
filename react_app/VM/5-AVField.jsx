@@ -211,9 +211,11 @@ class AVFieldOriginal extends AVItem {
   gazSelectScrollableAreaRef;
   gazSelectItemsRefsObj = {};
   
+  searchInClassObjectDocuments = [];
+  
   _eventListenerGazSelect = e => {
     if (!e.target.closest('._av-field-root')) {
-      if (this.props.fieldItem.variant === 'Gazprombank-string-select') {
+      if (this.props.fieldItem.variant === 'Gazprombank-string-select' || this.props.fieldItem.variant === 'Gazprombank-string') {
         if (!this.state._value) {
           this._labelFontSizeClassName = 'font-size-16px';
           this.setState({ isInputRendered: false });
@@ -227,7 +229,7 @@ class AVFieldOriginal extends AVItem {
   
   //render
   
-  componentDidMount() {
+  async componentDidMount() {
     if ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) {
       this.props.onChangeFunc(this.props.fieldItem?.defaultValue)
     }
@@ -294,6 +296,34 @@ class AVFieldOriginal extends AVItem {
         observer.observe(itemDomRef);
       })
 
+    }
+
+    if (this.props.fieldItem.searchInClassId) {
+      const classItem = this.Host.getClassById(this.props.fieldItem.searchInClassId);
+      this.searchInClassObjectDocuments = await classItem.getObjectDocuments();
+      this.searchInClassObjectDocuments.sort((a, b) => Number(a.order) - Number(b.order));
+      this.forceUpdate(() => {
+        Object.values(this.gazSelectItemsRefsObj).forEach(itemDomRef => {
+          const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                if (entry.intersectionRatio === 1) {
+                  entry.target.style.opacity = 1;
+                }
+                if (entry.intersectionRatio <= 0.8) {
+                  entry.target.style.opacity = 0.5;
+                }
+                if (entry.intersectionRatio <= 0.6) {
+                  entry.target.style.opacity = 0.25;
+                }
+              }
+
+            });
+          }, { root: this.gazSelectScrollableAreaRef, threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
+          observer.observe(itemDomRef);
+        })
+
+      })
     }
     
   }
@@ -774,11 +804,15 @@ class AVFieldOriginal extends AVItem {
         }
         inputElement = (
           <div className={`_inputElement pos-rel flex-1 col justify-center height-56px ${borderGaz} border-radius-8px cursor-text`}
-            onClick={() => {
+            onClick={async () => {
               this._labelFontSizeClassName = 'font-size-14px';
               this.setState({ isInputRendered: true }, () => {
                 this.gazInputRef.focus();
               })
+              if (this.props.fieldItem.searchInClassId) {
+                this.optionsListRef.removeAttribute('hidden');
+                window.document.addEventListener('click', this._eventListenerGazSelect);
+              }
             }}
           >
             <AVLabel className={`margin-left-16 ${this.state.isInputRendered ? 'transform-y-5px' : ''} ${this._labelFontSizeClassName} font-weight-400 ${this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label'} transition-ease z-index-10 cursor-text`} justifyMode="start">{fieldItem.label}</AVLabel>
@@ -805,7 +839,34 @@ class AVFieldOriginal extends AVItem {
                 isRequiredMessageRendered: false,
               })}
             ></AVFieldOriginal.styles.gazprombankInput>
-            <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || !value ? 'no-display' : ''} `}></AVIcon>
+            {this.props.fieldItem.icon ? (<AVIcon className={`pos-abs right-16px`} name={this.props.fieldItem.icon}></AVIcon>) : (
+              <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || !value ? 'no-display' : ''} `}></AVIcon>
+            )}
+            <div ref={el => this.optionsListRef = el}
+              hidden
+              style={{ height: '195px', bottom: '-207px', padding: '8px' }}
+              className='_dropdown-list pos-abs rl-0 bg-white border-radius-12px z-index-100 box-shadow cursor-default'
+            >
+              <div ref={scrolllArea => this.gazSelectScrollableAreaRef = scrolllArea} style={{ height: '175px' }} className="bg-white z-index-100 scroll-y gaz-select-thin-scrollbar cursor-pointer">
+                {this.searchInClassObjectDocuments?.map(o => (o.name || o.label)).map(str => (
+                  <div
+                    key={str}
+                    ref={selectItemRef => this.gazSelectItemsRefsObj[str] = selectItemRef}
+                    style={{ padding: '16px 14px' }}
+                    className={`font-weight-400 ${value === str ? 'color-gaz-accent bg-gaz-field-selected' : ''} bg-gaz-field-hover cursor-pointer`}
+                    onClick={(e) => {
+                      setTimeout(() => { // потому что онКлик выше в диве сеттит
+                        this.optionsListRef.setAttribute('hidden', '');
+                        window.document.removeEventListener('click', this._eventListenerGazSelect);
+                        this.setState({ isFocusedState: false });
+                      })
+                      this.setState({ _value: str });
+                      this.props.onChangeFunc(str);
+                    }}
+                  >{str}</div>
+                ))}
+              </div>
+            </div>
           </div>
         )
       }

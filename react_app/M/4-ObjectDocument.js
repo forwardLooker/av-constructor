@@ -24,6 +24,7 @@ export class ObjectDocument extends Item {
     return this.Class.objectDocumentDesignJson;
   }
   async saveData(data) {
+    console.log('saveData objDocData:', data);
     if (this.notExistOnServer) {
       this.serverRef = this.Class.serverRef.collection('ObjectDocuments').doc();
       await this.serverRef.set({

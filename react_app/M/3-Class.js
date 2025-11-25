@@ -6,6 +6,7 @@ import gazprombankPage2Class from '../Classes/gazprombank-page2.js';
 import gazprombankPage3Class from '../Classes/gazprombank-page3.js';
 import gazprombankPage4Class from '../Classes/gazprombank-page4.js';
 
+import scriptsClass from '../Classes/scripts.js';
 
 import {Accounting} from './Services/Accounting.js';
 
@@ -33,7 +34,8 @@ export class Class extends Item {
     gazprombankPage1Class,
     gazprombankPage2Class,
     gazprombankPage3Class,
-    gazprombankPage4Class
+    gazprombankPage4Class,
+    scriptsClass,
   ];
   classServiceDefinitions = [Accounting];
   async getObjectDocuments() {

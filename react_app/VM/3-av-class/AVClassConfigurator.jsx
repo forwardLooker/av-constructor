@@ -115,7 +115,32 @@ export class AVClassConfigurator extends AVItem {
             }
             return false
           },
-          placeholder: '(size+3)*9.5px'
+          placeholder: '(size+3)*9.5px',
+          dataType: 'number',
+        },
+        {
+          name: 'icon', hideIfFunc: () => {
+            if (
+              !this.state.selectedFieldDescriptor.variant?.startsWith('Gazprombank')
+            ) {
+              return true
+            }
+            return false
+          },
+          placeholder: 'name of icon',
+          dataType: 'string',
+        },
+        {
+          name: 'searchInClassId', hideIfFunc: () => {
+            if (
+              this.state.selectedFieldDescriptor.variant !== 'Gazprombank-string'
+            ) {
+              return true
+            }
+            return false
+          },
+          placeholder: 'copy from configurator',
+          dataType: 'string',
         },
 
         {

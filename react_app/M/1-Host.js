@@ -88,6 +88,12 @@ export class Host extends Item {
 
   }
   
+  getObjectDocumentByReference(serverRef) {
+    const objectDocument = new ObjectDocument({ serverRef });
+    return objectDocument;
+
+  }
+  
   navigate(...params) {
     this.$hostElement.props.appRef.state.router.navigate(...params);
   }
