@@ -212,6 +212,7 @@ class AVFieldOriginal extends AVItem {
   gazSelectItemsRefsObj = {};
   
   searchInClassObjectDocuments = [];
+  searchInClassObjectDocumentsFiltered = [];
   
   _eventListenerGazSelect = e => {
     if (!e.target.closest('._av-field-root')) {
@@ -824,7 +825,13 @@ class AVFieldOriginal extends AVItem {
               autoComplete="off"
               value={(value === null || value === undefined) ? '' : value}
               readOnly={readOnly}
-              onChange={onChangeFunc}
+              onChange={this.searchInClassObjectDocuments ? (e) => {
+                this.searchInClassObjectDocumentsFiltered = this.searchInClassObjectDocuments.filter(o => o.label.includes(e.target.value));
+                if (this.searchInClassObjectDocumentsFiltered.length === 0) {
+                  this.searchInClassObjectDocumentsFiltered.notFound = true;
+                }
+                onChangeFunc(e);
+              } : onChangeFunc}
               onBlur={() => {
                 if (!value) {
                   this._labelFontSizeClassName = 'font-size-16px';
@@ -832,6 +839,8 @@ class AVFieldOriginal extends AVItem {
                 }
                 this.setState({ isFocusedState: false })
                 this.props.onBlurFunc();
+                
+                this.searchInClassObjectDocumentsFiltered = [];
               }}
               onFocus={() => this.setState({
                 isFocusedState: true,
@@ -848,7 +857,12 @@ class AVFieldOriginal extends AVItem {
               className='_dropdown-list pos-abs rl-0 bg-white border-radius-12px z-index-100 box-shadow cursor-default'
             >
               <div ref={scrolllArea => this.gazSelectScrollableAreaRef = scrolllArea} style={{ height: '175px' }} className="bg-white z-index-100 scroll-y gaz-select-thin-scrollbar cursor-pointer">
-                {this.searchInClassObjectDocuments?.map(o => (o.name || o.label)).map(str => (
+                {this.searchInClassObjectDocumentsFiltered.notFound && (
+                  <div style={{ padding: '16px 14px' }}>
+                    Ничего не нашлось. Попробуйте написать по-другому
+                  </div>
+                )}
+                {(this.searchInClassObjectDocumentsFiltered?.length > 0 || this.searchInClassObjectDocumentsFiltered.notFound ? this.searchInClassObjectDocumentsFiltered : this.searchInClassObjectDocuments).map(o => (o.name || o.label)).map(str => (
                   <div
                     key={str}
                     ref={selectItemRef => this.gazSelectItemsRefsObj[str] = selectItemRef}
