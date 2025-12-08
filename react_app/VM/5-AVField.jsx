@@ -661,6 +661,7 @@ class AVFieldOriginal extends AVItem {
             className="flex-1"
             autoComplete="off"
             rows={16}
+            placeholder={fieldItem.placeholder}
             value={(value === null || value === undefined) ? '' : value}
             readOnly={readOnly}
             onChange={onChangeFunc}
@@ -862,7 +863,7 @@ class AVFieldOriginal extends AVItem {
                     Ничего не нашлось. Попробуйте написать по-другому
                   </div>
                 )}
-                {(this.searchInClassObjectDocumentsFiltered?.length > 0 || this.searchInClassObjectDocumentsFiltered.notFound ? this.searchInClassObjectDocumentsFiltered : this.searchInClassObjectDocuments).map(o => (o.name || o.label)).map(str => (
+                {(this.searchInClassObjectDocumentsFiltered?.length > 0 || this.searchInClassObjectDocumentsFiltered.notFound ? this.searchInClassObjectDocumentsFiltered : this.searchInClassObjectDocuments).map(o => (o.name || o.label || o.value)).map(str => (
                   <div
                     key={str}
                     ref={selectItemRef => this.gazSelectItemsRefsObj[str] = selectItemRef}

@@ -142,7 +142,6 @@ export class AVClassConfigurator extends AVItem {
           placeholder: 'copy from configurator',
           dataType: 'string',
         },
-
         {
           name: 'labelPosition', hideIfFunc: () => {
             if (this.state.selectedFieldDescriptor.dataType !== 'boolean') {
