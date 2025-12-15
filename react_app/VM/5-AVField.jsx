@@ -524,6 +524,7 @@ class AVFieldOriginal extends AVItem {
                   color: 'black',
                   background: '#0a0a0b0f'
                 }}
+                onClick={e => {}}         
               >
                 Изменить
               </AVButton>

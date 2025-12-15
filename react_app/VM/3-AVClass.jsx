@@ -78,7 +78,7 @@ export class AVClass extends AVItem {
   _renderGrid() {
     return (
       <div className="margin-top-8">
-        <div className={`${this.state.selectedObjectDocument ? 'invisible' : ''}`}>
+        <div className={`${this.state.selectedObjectDocument ? 'no-display' : ''}`}>
           <AVGrid
             ref={$grid => this.gridRef = $grid}
             items={this.state.objectDocuments}
