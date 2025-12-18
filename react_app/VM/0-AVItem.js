@@ -28,6 +28,14 @@ export class AVItem extends AVElement {
     //TODO
     return this.Host.$hostElement.showDialog(...params);
   }
+  
+  showCustomPopup(...params) {
+    return this.Host.$hostElement.showCustomPopup(...params);
+  }
+  
+  closeCustomPopup(...params) {
+    return this.Host.$hostElement.closeCustomPopup(...params);
+  }
 
   showContextMenu(...params) {
     return this.Host.$hostElement.showContextMenu(...params)

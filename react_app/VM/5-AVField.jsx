@@ -7,6 +7,8 @@ import {AVButton} from "../V/AVButton.jsx";
 import { AVGrid } from "../V/AVGrid.jsx";
 import { AVIcon } from "../V/icons/AVIcon.jsx";
 
+import { AVObjectDocument } from './4-AVObjectDocument.jsx';
+
 import formatNumber from 'number-format.js';
 
 const emailValidator = require('@sefinek/email-validator');
@@ -185,7 +187,9 @@ class AVFieldOriginal extends AVItem {
     $objectDocument: null,
     inspectedObject: null,
 
-    rowIdxInGrid: null
+    rowIdxInGrid: null,
+    
+    onButtonClickFunc: this.noop,
   }
   
   state = {
@@ -394,7 +398,7 @@ class AVFieldOriginal extends AVItem {
         >
           <AVButton
             style={this.props.fieldItem.buttonStyle}
-            onClick={() => {
+            onClick={(e) => {
               if (this.props.$objectDocument) {
                 const classInstance = this.props.$objectDocument.state._objectDocument.Class;
                 const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
@@ -404,6 +408,8 @@ class AVFieldOriginal extends AVItem {
                     methodOnButton(this.props.$objectDocument)
                   }
                 }
+                
+                this.props.onButtonClickFunc({label: this.props.fieldItem.label, e});
               }
             }}
           >{this.props.fieldItem.label || 'button'}</AVButton>
@@ -524,7 +530,23 @@ class AVFieldOriginal extends AVItem {
                   color: 'black',
                   background: '#0a0a0b0f'
                 }}
-                onClick={e => {}}         
+                onClick={e => {
+                  this.showCustomPopup({
+                    content: (<div style={{ background: 'rgba(10,10,11,.72)' }} className='row justify-center align-center height-100vh'>
+                      <div style={{ width: '1224px', opacity: 1 }} className="bg-white">
+                        <AVObjectDocument
+                          objectDocumentPath={'Domains/workspace/Domains/mTLA7zmXmQGvH5j3GexV/Domains/2PoyIkLXCEUWgkR7lggL/Classes/DJNEqaFDFmy5hCzOHQx1/ObjectDocuments/KE1ZI6NN9BMFZv57VjIR'}
+                          onButtonClickFunc={({ label, e }) => {
+                            if (label === 'Сохранить') {
+                              this.closeCustomPopup()
+                            }
+                          }}
+                          noOkCancelPanel
+                        ></AVObjectDocument>
+                      </div>
+                    </div>)
+                  })
+                }}         
               >
                 Изменить
               </AVButton>

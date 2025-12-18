@@ -47,7 +47,11 @@ export class AVHost extends AVItem {
     designMode: false,
     $designObjectDocument: null,
     
-    itemFullScreenMode: false
+    itemFullScreenMode: false,
+    
+    isCustomPopupOpened: false,
+    customPopupContent: null,
+    _customPopupResolveFunc: null,
   }
 
   constructor() {
@@ -116,6 +120,7 @@ export class AVHost extends AVItem {
         </div>
         {this.state.isDialogOpened && this._renderDialog()}
         {this.state.isContextMenuOpened && this._renderContextMenu()}
+        {this.state.isCustomPopupOpened && this._renderCustomPopup()}
       </div>
     )
   }
@@ -329,7 +334,7 @@ export class AVHost extends AVItem {
 
   _renderDialog() {
     return (
-      <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000 bg-transparent-45">
+      <div className="pos-fixed trbl-0 row justify-center align-center z-index-100000 bg-transparent-45">
         <div className="bg-white">
           <div>{this.state.dialogText}</div>
           {this.state.dialogContent}
@@ -357,6 +362,12 @@ export class AVHost extends AVItem {
           </div>
         </div>
       </div>
+    )
+  }
+  
+  _renderCustomPopup() {
+    return (
+      <div className='pos-fixed trl-0 z-index-1000'>{this.state.customPopupContent}</div>
     )
   }
 
@@ -609,6 +620,28 @@ export class AVHost extends AVItem {
       })
     })
   }
+  
+  async showCustomPopup({ content }) {
+    return new Promise((resolve, reject) => {
+      this.setState({
+        isCustomPopupOpened: true,
+        customPopupContent: content,
+        _customPopupResolveFunc: resolve,
+
+      })
+    })
+  }
+  
+  closeCustomPopup() {
+    this.setState({
+      isCustomPopupOpened: false,
+      customPopupContent: null,
+    }, () => {
+      this.state._customPopupResolveFunc();
+      this.state._customPopupResolveFunc = this.noop;
+    })
+  }
+
 
   _dialogSubmitted = () => {
     let resolveValue = this.state.dialogInputValue;

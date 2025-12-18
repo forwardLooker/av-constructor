@@ -55,6 +55,8 @@ export class AVObjectDocument extends AVItem {
 
     isLeftPanelOpened: false, // для инструментов дизайна
     isRightPanelOpened: false,
+    
+    onButtonClickFunc: this.noop
   }
 
   constructor(props) {
@@ -539,6 +541,7 @@ export class AVObjectDocument extends AVItem {
             }}
             labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
             $objectDocument={$objDoc}
+            onButtonClickFunc={$objDoc.props.onButtonClickFunc}
           >
             {designMode && ($objDoc._renderDesignFieldOverlay(fieldItem, idx, containerElement, this))}
           </AVField>
