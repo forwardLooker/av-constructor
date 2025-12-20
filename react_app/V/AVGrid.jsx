@@ -78,15 +78,17 @@ export class AVGrid extends AVElement {
     this.forceUpdate();
     
     // для ресайза при переключениях на весь экран
-    window.document.addEventListener('keydown', e => {
-      if (e.key === 'F7') {
-        e.preventDefault();
-        this._realignGridHeaderCells();
-        this._realignGridRows();
-        this.forceUpdate();
-      }
-    });
+    window.document.addEventListener('keydown', this._F7EventListener);
     
+  }
+  
+  _F7EventListener = e => {
+    if (e.key === 'F7') {
+      e.preventDefault();
+      this._realignGridHeaderCells();
+      this._realignGridRows();
+      this.forceUpdate();
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -115,6 +117,10 @@ export class AVGrid extends AVElement {
         })
       }
     }
+  }
+
+  componentWillUnmount() {
+    window.document.removeEventListener('keydown', this._F7EventListener);
   }
   
   realign = () => { // в AVClass
