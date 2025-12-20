@@ -84,7 +84,7 @@ export class AVAuth extends AVItem {
     } else {
       this.auth.signInWithEmailAndPassword(this.state.email, this.state.password)
         .then((userCredential) => {
-          console.log('onSignIpSuccess:', userCredential);
+          console.log('onSignInSuccess userCredential:', userCredential);
         })
         .catch((error) => {
           console.log('onLoginError:', error);
