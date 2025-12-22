@@ -94,6 +94,13 @@ export class AVHost extends AVItem {
       })
     } else {
       const config = await this.Host.getConfig();
+      if (this.user.email !== 'arta.vision.constructor@gmail.com') { //admin
+        const usersClass = this.Host.getClassByName('Пользователи');
+        const usersArr = await usersClass.getObjectDocuments();
+        const userObj = usersArr.find(o => o.uid === this.user.uid);
+        
+        this.checkForRightsOnItems(config, userObj);
+      }
       this.setState({ config });
 
       // const bodyElem = window.document.getElementsByTagName('body');
@@ -107,6 +114,17 @@ export class AVHost extends AVItem {
       });
       // bodyElem.focus();
     }
+  }
+  
+  checkForRightsOnItems = (configItems = [], userObj) => {
+    configItems.forEach(i => {
+      const itemGrantedToUser = userObj.itemsGranted?.find(item => item.name === i.name);
+      if (!(itemGrantedToUser && (!itemGrantedToUser.id || itemGrantedToUser.id === i.id))) {
+        i.userHasNotRightsOnItem = true;
+      }
+      this.checkForRightsOnItems(i.items, userObj);
+    })
+
   }
 
   render() {
