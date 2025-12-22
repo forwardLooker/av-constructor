@@ -26,6 +26,7 @@ export class AVHost extends AVItem {
   state = {
     config: [],
     selectedTreeItem: null,
+    selectedConfigItem: null,
 
     isDialogOpened: false,
     dialogText: '',
@@ -155,7 +156,7 @@ export class AVHost extends AVItem {
           {this.state.selectedTreeItem?.itemType === 'class' ?
             (<AVClass classItem={this.state.selectedTreeItem} itemFullScreenMode={this.state.itemFullScreenMode}></AVClass>) : ''}
           {this.state.selectedTreeItem?.itemType === 'domain' ?
-            (<AVDomain domainItem={this.state.selectedTreeItem}></AVDomain>)  : ''}
+            (<AVDomain domainItem={this.state.selectedTreeItem} selectedConfigItem={this.state.selectedConfigItem}></AVDomain>)  : ''}
         </div>
       </div>
     )
@@ -393,10 +394,10 @@ export class AVHost extends AVItem {
   _onTreeItemSelect = async (item) => {
     // console.log('onTreeItemSelect:', e);
     if (item.itemType === 'class') {
-      this.setState({selectedTreeItem: this.Host.getClass(item.reference)})
+      this.setState({ selectedTreeItem: this.Host.getClass(item.reference), selectedConfigItem: item })
     }
     if (item.itemType === 'domain') {
-      this.setState({selectedTreeItem: this.Host.getDomain(item.reference)})
+      this.setState({ selectedTreeItem: this.Host.getDomain(item.reference), selectedConfigItem: item })
     }
   }
 

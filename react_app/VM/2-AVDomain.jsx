@@ -1,14 +1,19 @@
 import React from 'react';
 
-import {AVItem} from './0-AVItem.js';
+import { AVItem } from './0-AVItem.js';
+
+import { JSONTree } from 'react-json-tree';
 
 export class AVDomain extends AVItem {
   static defaultProps = {
-    domainItem: null
+    domainItem: null,
+    selectedConfigItem: null,
   }
 
   render() {
-    return ''
+    return (
+      <JSONTree data={this.props.selectedConfigItem} />
+    )
   }
 
 }
