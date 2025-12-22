@@ -95,7 +95,6 @@ export class AVHost extends AVItem {
       })
     } else {
       const config = await this.Host.getConfig();
-      const fullOriginalConfig = this.deepClone(config);
       if (this.user && (this.user.email !== 'arta.vision.constructor@gmail.com')) { //admin
         const usersClass = this.Host.getClassByName('Пользователи');
         const usersArr = await usersClass.getObjectDocuments();
@@ -103,7 +102,7 @@ export class AVHost extends AVItem {
         
         this.checkForRightsOnItems(config, userObj);
       }
-      this.setState({ config, fullOriginalConfig });
+      this.setState({ config });
 
       // const bodyElem = window.document.getElementsByTagName('body');
       // console.log('bodyElem', bodyElem);
@@ -137,12 +136,12 @@ export class AVHost extends AVItem {
       <div className="_av-host-root flex-1 col">
         {this._renderHeader()}
         <div className={`flex-1 row ${this.state.itemFullScreenMode ? '' : 'border'}`}>
-          {this.user ? this._renderMain() : <AVAuth onAuthMadeFunc={(userObj) => {
-            const config = this.deepClone(this.state.fullOriginalConfig);
+          {this.user ? this._renderMain() : <AVAuth onAuthMadeFunc={async (userObj) => {
+            const config = await this.Host.getConfig();
             if (this.user.email !== 'arta.vision.constructor@gmail.com') { //admin
               this.checkForRightsOnItems(config, userObj);
             }
-            this.setState({ config, selectedTreeItem: null });
+            this.setState({ config, selectedTreeItem: null, selectedConfigItem: null });
           }}></AVAuth>}
         </div>
         {this.state.isDialogOpened && this._renderDialog()}
