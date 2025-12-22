@@ -8,7 +8,9 @@ export class AVAuth extends AVItem {
   state = {
     mode: 'sign in',  // {type: String, enum: ['sign in', 'sign up']},
     email: '',
-    password: ''
+    password: '',
+    
+    onAuthMadeFunc: this.noop,
   }
 
   render() {
@@ -75,17 +77,19 @@ export class AVAuth extends AVItem {
     console.log('signInSignUp event:', e);
     if (this.state.mode === 'sign up') {
       this.auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then((userCredential) => {
+        .then(async (userCredential) => {
           console.log('onSignUpSuccess userCredential:', userCredential);
           
           const usersClass = this.Host.getClassByName('Пользователи');
-          usersClass.createObjectDocument({
+          await usersClass.createObjectDocument({
             uid: userCredential.user.uid,
             email: userCredential.user.email,
             created: new Date().toLocaleString(),
             signedIn: new Date().toLocaleString(),
             role: 'user',
           })
+        }).then((userObj) => {
+          this.props.onAuthMadeFunc(userObj);
         })
         .catch((error) => {
           console.log('onSignUp onCreateError:', error);
@@ -98,7 +102,10 @@ export class AVAuth extends AVItem {
           const usersArr = await usersClass.getObjectDocuments();
           const userObj = usersArr.find(o => o.uid === userCredential.user.uid);
           const usersObjDocItem = this.Host.getObjectDocumentByReference(userObj.reference);
-          usersObjDocItem.saveData({ signedIn: new Date().toLocaleString() });
+          await usersObjDocItem.saveData({ signedIn: new Date().toLocaleString() });
+          return userObj;
+        }).then((userObj) => {
+          this.props.onAuthMadeFunc(userObj);
         })
         .catch((error) => {
           console.log('onSignIn onLoginError:', error);

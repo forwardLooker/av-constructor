@@ -24,7 +24,8 @@ export class AVHost extends AVItem {
   }
 
   state = {
-    config: [],
+    config: [], // то что отображается в дереве
+    fullOriginalConfig: [],
     selectedTreeItem: null,
     selectedConfigItem: null,
 
@@ -94,14 +95,15 @@ export class AVHost extends AVItem {
       })
     } else {
       const config = await this.Host.getConfig();
-      if (this.user.email !== 'arta.vision.constructor@gmail.com') { //admin
+      const fullOriginalConfig = this.deepClone(config);
+      if (this.user && (this.user.email !== 'arta.vision.constructor@gmail.com')) { //admin
         const usersClass = this.Host.getClassByName('Пользователи');
         const usersArr = await usersClass.getObjectDocuments();
         const userObj = usersArr.find(o => o.uid === this.user.uid);
         
         this.checkForRightsOnItems(config, userObj);
       }
-      this.setState({ config });
+      this.setState({ config, fullOriginalConfig });
 
       // const bodyElem = window.document.getElementsByTagName('body');
       // console.log('bodyElem', bodyElem);
@@ -135,7 +137,13 @@ export class AVHost extends AVItem {
       <div className="_av-host-root flex-1 col">
         {this._renderHeader()}
         <div className={`flex-1 row ${this.state.itemFullScreenMode ? '' : 'border'}`}>
-          {this.user ? this._renderMain() : <AVAuth></AVAuth>}
+          {this.user ? this._renderMain() : <AVAuth onAuthMadeFunc={(userObj) => {
+            const config = this.deepClone(this.state.fullOriginalConfig);
+            if (this.user.email !== 'arta.vision.constructor@gmail.com') { //admin
+              this.checkForRightsOnItems(config, userObj);
+            }
+            this.setState({ config, selectedTreeItem: null });
+          }}></AVAuth>}
         </div>
         {this.state.isDialogOpened && this._renderDialog()}
         {this.state.isContextMenuOpened && this._renderContextMenu()}
@@ -194,6 +202,9 @@ export class AVHost extends AVItem {
             onItemSelectFunc={this._onTreeItemSelect}
             onItemContextMenuFunc={this._onTreeItemContextMenu}
           ></AVTree>
+        )}
+        {this.state.config[0]?.userHasNotRightsOnItem && this.state.config[1]?.userHasNotRightsOnItem && (
+          <span>Нет прав доступа на ресурсы. Запросите права +7(915)597-86-01 Анвар Хакимов</span>
         )}
       </div>
     )
