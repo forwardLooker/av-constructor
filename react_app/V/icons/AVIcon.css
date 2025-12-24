@@ -30,3 +30,13 @@ html[data-color-scheme=light] {
 .checkboxMiddleLine {
   color: #fff;
 }
+.candy_button__dot-367 {
+  --active-dot-color: #1e222e;
+  transition: all .2s ease-in-out;
+  width: 4px;
+  height: 4px;
+  stroke: none !important;
+}
+.candy_button:hover .candy_button__dot-367 {
+ fill: #1e222e;
+}
