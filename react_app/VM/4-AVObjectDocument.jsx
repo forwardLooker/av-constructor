@@ -572,7 +572,7 @@ export class AVObjectDocument extends AVItem {
                  onDrop={(e) => this._drop(e, fieldItem, idx, containerElement)}
                  onDragEnd={e => {
                    console.log('onDragend');
-                   this.setState(state => ({ designDragStarted: false, designJson: { ...state.designJson } }))
+                   this.setState(state => ({ designDragStarted: false, }))
                  }}
                  onContextMenu={(e) => this._onDesignFieldContextMenu(e, fieldItem, idx, containerElement)}
             ></div>
@@ -1544,7 +1544,7 @@ export class AVObjectDocument extends AVItem {
     }
     this.state.designDropTargetLevel2 = null;
 
-    this.setState({designDragStarted: false, designJson: {...this.state.designJson}});
+    this.setState({designDragStarted: false,});
     // this.forceUpdate();
     // this.designJson = newDesign;
   }
