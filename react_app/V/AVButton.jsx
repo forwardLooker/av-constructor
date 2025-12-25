@@ -8,8 +8,8 @@ export class AVButton extends AVElement {
       display: inline-block;
       text-align: center;
       color: white;
-      background-color: black;
-      border-color: black;
+      background-color: #1b1c1f;
+      border-color: #1b1c1f;
       transition: 80ms cubic-bezier(0.33, 1, 0.68, 1);
       transition-property: color,background-color,box-shadow,border-color;
       padding: 5px 16px;
