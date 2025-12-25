@@ -392,7 +392,7 @@ class AVFieldOriginal extends AVItem {
     }
     if (this.props.fieldItem.viewItemType === 'button') {
       return (
-        <div className='_av-field-viewItem-root flex-1 pad-8-0'
+        <div className='_av-field-viewItem-root flex-1 col justify-center align-baseline pad-8-0'
              style={this.props.style}
              ref={this.props.refOnRootDiv}
         >
