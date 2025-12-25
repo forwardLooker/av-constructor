@@ -171,6 +171,15 @@ export class AVIcon extends AVElement {
         </svg>
       </svg>
     ),
+    threeDots: () => (
+      <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="progressive_icon progressive_icon24">
+          <path d="M6 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" fill="#6f6f6f"></path>
+          <path d="M13.5 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" fill="#6f6f6f"></path>
+          <path d="M21 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" fill="#6f6f6f"></path>
+        </svg>
+      </svg>
+    ),
     benefitSum: () => (
       <svg width="88px" height="88px" xmlns="http://www.w3.org/2000/svg" fill="none" class="benefitSum">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="progressive_icon progressive_icon24">
