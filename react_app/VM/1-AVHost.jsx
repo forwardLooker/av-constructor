@@ -83,10 +83,13 @@ export class AVHost extends AVItem {
         routesConfigArr.push({
           path: routeObjDoc.routeRelativePath,
           // element: <div>{routeObjDoc.routeRelativePath}</div>
-          element: (<AVObjectDocument
-            objectDocumentPath={routeObjDoc.targetObjectDocumentPath}
-            noOkCancelPanel
-          ></AVObjectDocument>)
+          element: (
+            <AVHost appRef={this.props.appRef}>
+              <AVObjectDocument
+                objectDocumentPath={routeObjDoc.targetObjectDocumentPath}
+                noOkCancelPanel
+              ></AVObjectDocument>
+            </AVHost>)
         })
       });
       console.log('routesConfigArr:', routesConfigArr);
@@ -134,16 +137,19 @@ export class AVHost extends AVItem {
     }
     return (
       <div className="_av-host-root flex-1 col">
-        {this._renderHeader()}
-        <div className={`flex-1 row ${this.state.itemFullScreenMode ? '' : 'border'}`}>
-          {this.user ? this._renderMain() : <AVAuth onAuthMadeFunc={async (userObj) => {
-            const config = await this.Host.getConfig();
-            if (this.user.email !== 'arta.vision.constructor@gmail.com') { //admin
-              this.checkForRightsOnItems(config, userObj);
-            }
-            this.setState({ config, selectedTreeItem: null, selectedConfigItem: null });
-          }}></AVAuth>}
-        </div>
+        {!this.props.children && this._renderHeader()}
+        {!this.props.children && (
+          <div className={`flex-1 row ${this.state.itemFullScreenMode ? '' : 'border'}`}>
+            {this.user ? this._renderMain() : <AVAuth onAuthMadeFunc={async (userObj) => {
+              const config = await this.Host.getConfig();
+              if (this.user.email !== 'arta.vision.constructor@gmail.com') { //admin
+                this.checkForRightsOnItems(config, userObj);
+              }
+              this.setState({ config, selectedTreeItem: null, selectedConfigItem: null });
+            }}></AVAuth>}
+          </div>
+        )}
+        {this.props.children}
         {this.state.isDialogOpened && this._renderDialog()}
         {this.state.isContextMenuOpened && this._renderContextMenu()}
         {this.state.isCustomPopupOpened && this._renderCustomPopup()}
