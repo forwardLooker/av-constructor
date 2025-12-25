@@ -412,7 +412,7 @@ class AVFieldOriginal extends AVItem {
                 this.props.onButtonClickFunc({label: this.props.fieldItem.label, e});
               }
             }}
-          >{this.props.fieldItem.label || 'button'}</AVButton>
+          >{(this.props.fieldItem.iconName && (<AVIcon name={this.props.fieldItem.iconName}></AVIcon>)) || this.props.fieldItem.label || 'button'}</AVButton>
           {this.props.children}
         </div>
       )

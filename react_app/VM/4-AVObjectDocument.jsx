@@ -869,6 +869,7 @@ export class AVObjectDocument extends AVItem {
       menu.push('Задать url фоновой картинки');
     }
     if (fieldItem.viewItemType === 'button') {
+      menu.push('Установить iconName вместо label');
       menu.push('Установить buttonStyle');
       menu.push('Сбросить buttonStyle');
     }
@@ -894,6 +895,13 @@ export class AVObjectDocument extends AVItem {
         const newLabel = await this.showDialog({ text: 'Введите новый label', inputLabel: 'label', dialogInputValue: fieldItem.label });
         if (newLabel) {
           fieldItem.label = newLabel;
+          this.forceUpdate();
+        }
+      }
+      if (menuResult === 'Установить iconName вместо label') {
+        const iconName = await this.showDialog({ text: 'Введите новый iconName', inputLabel: 'iconName', dialogInputValue: fieldItem.iconName });
+        if (iconName) {
+          fieldItem.iconName = iconName;
           this.forceUpdate();
         }
       }
