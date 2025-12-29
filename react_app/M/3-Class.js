@@ -5,6 +5,8 @@ import gazprombankPage1Class from '../Classes/gazprombank-page1.js';
 import gazprombankPage2Class from '../Classes/gazprombank-page2.js';
 import gazprombankPage3Class from '../Classes/gazprombank-page3.js';
 import gazprombankPage4Class from '../Classes/gazprombank-page4.js';
+import gazprombankMainPageClass from '../Classes/gazprombank-main-page.js';
+
 
 import scriptsClass from '../Classes/scripts.js';
 
@@ -35,6 +37,7 @@ export class Class extends Item {
     gazprombankPage2Class,
     gazprombankPage3Class,
     gazprombankPage4Class,
+    gazprombankMainPageClass,
     scriptsClass,
   ];
   classServiceDefinitions = [Accounting];

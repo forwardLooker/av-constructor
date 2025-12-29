@@ -117,7 +117,7 @@ export default class {
   }
 
   static methods = {
-    'Подтвердить данные': async ($objectDocument) => {
+    'Подтвердить данные': async ({ $objectDocument }) => {
       console.log('Подтвердить данные успех', this.Host);
       let stopNavigate;
       // проверки полей на наличие
@@ -202,7 +202,7 @@ export default class {
       // $objectDocument.closeWithoutSave();
       // this.Host.$hostElement.setState({ selectedTreeItem: await this.Host.getClassByName('Сотрудники') })
     },
-    'Подтвердить': async ($objectDocument) => {
+    'Подтвердить': async ({ $objectDocument }) => {
       if ($objectDocument.state._newData['Код из СМС'] === '1111') {
         $objectDocument.Host.gazCreditFirstPageData = $objectDocument.state._newData;
         this.Host.navigate('/gaz2');

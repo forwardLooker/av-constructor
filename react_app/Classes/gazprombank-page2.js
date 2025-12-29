@@ -93,7 +93,7 @@ export default class {
   }
 
   static methods = {
-    'Далее': async ($objectDocument) => {
+    'Далее': async ({ $objectDocument }) => {
       console.log('Далее', this.Host);
       let stopNavigate;
       // проверки полей на наличие

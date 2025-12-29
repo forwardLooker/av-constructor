@@ -405,7 +405,7 @@ class AVFieldOriginal extends AVItem {
                 if (moduleDefinition) {
                   const methodOnButton = moduleDefinition.methods[this.props.fieldItem.label];
                   if (methodOnButton) {
-                    methodOnButton(this.props.$objectDocument)
+                    methodOnButton({ $objectDocument: this.props.$objectDocument, e })
                   }
                 }
                 
