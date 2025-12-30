@@ -39,10 +39,10 @@ export default class {
           <div className="pos-abs bg-tree z-index-1000" style={{ top: hrzRect.bottom + 1, right: 0, left: 0, height: '500px' }} >
             <AVObjectDocument
               objectDocumentPath={'Domains/workspace/Domains/mTLA7zmXmQGvH5j3GexV/Domains/2PoyIkLXCEUWgkR7lggL/Classes/DSqVNzRZxNpg8aKdWRd4/ObjectDocuments/93b5Ld0pnnc350FEEy1r'}
-              onButtonClickFunc={({ label, e }) => {
-                // if (label === 'Сохранить') {
-                //   this.closeCustomPopup()
-                // }
+              onLabelClickFunc={({ label, e }) => {
+                if (label === 'Онлайн - заявка на кредит наличными') {
+                  this.Host.navigate('/gazprombank-credit-1')
+                }
               }}
               // noOkCancelPanel
             ></AVObjectDocument>

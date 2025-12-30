@@ -21,6 +21,9 @@ export class AVObjectDocument extends AVItem {
     noOkCancelPanel: false,
     
     itemFullScreenMode: false,
+    
+    onButtonClickFunc: this.noop,
+    onLabelClickFunc: this.noop,
   }
   // componentDidMount() {
   //   this.setState({
@@ -56,8 +59,6 @@ export class AVObjectDocument extends AVItem {
     isLeftPanelOpened: false, // для инструментов дизайна
     isRightPanelOpened: false,
     
-    onButtonClickFunc: this.noop,
-
     customDivContent: null,
   }
   
@@ -547,6 +548,7 @@ export class AVObjectDocument extends AVItem {
             labelPosition={fieldItem.dataType === 'array' ? 'top' : 'left'}
             $objectDocument={$objDoc}
             onButtonClickFunc={$objDoc.props.onButtonClickFunc}
+            onLabelClickFunc={$objDoc.props.onLabelClickFunc}
           >
             {designMode && ($objDoc._renderDesignFieldOverlay(fieldItem, idx, containerElement, this))}
           </AVField>

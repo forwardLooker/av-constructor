@@ -190,6 +190,7 @@ class AVFieldOriginal extends AVItem {
     rowIdxInGrid: null,
     
     onButtonClickFunc: this.noop,
+    onLabelClickFunc: this.noop,
   }
   
   state = {
@@ -394,7 +395,8 @@ class AVFieldOriginal extends AVItem {
                     labelClick({ fieldItem: this.props.fieldItem, $objectDocument: this.props.$objectDocument, e })
                   }
                 }
-
+                
+                this.props.onLabelClickFunc({ label: this.props.fieldItem.label, e });
               }
             }}
           >
