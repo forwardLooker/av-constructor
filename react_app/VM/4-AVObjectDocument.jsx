@@ -56,8 +56,12 @@ export class AVObjectDocument extends AVItem {
     isLeftPanelOpened: false, // для инструментов дизайна
     isRightPanelOpened: false,
     
-    onButtonClickFunc: this.noop
+    onButtonClickFunc: this.noop,
+
+    customDivContent: null,
   }
+  
+  $rootDivDomElement;
 
   constructor(props) {
     super(props);
@@ -194,7 +198,7 @@ export class AVObjectDocument extends AVItem {
       return null
     }
     return (
-      <div className={`_av-object-document-root flex-1 col line-height-20px ${this.state.designMode ?  'bg-white' : 'bg-app-back'}`}>
+      <div ref={domEl => this.$rootDivDomElement = domEl} className={`_av-object-document-root pos-rel flex-1 col line-height-20px ${this.state.designMode ?  'bg-white' : 'bg-app-back'}`}>
         <div className="flex-1 col space-between">
           {this.state.isJSONshowed ? (
             <JSONTree data={this.state._newData}/>
@@ -237,6 +241,7 @@ export class AVObjectDocument extends AVItem {
         )}
         {(this.state.designMode && this.props.itemFullScreenMode) && (this._renderLeftPanel())}
         {(this.state.designMode && this.props.itemFullScreenMode) && (this._renderRightPanel())}
+        {this.state.customDivContent}
       </div>
     )
   }
@@ -607,6 +612,10 @@ export class AVObjectDocument extends AVItem {
       })
     }
     return ButtonsAddedByServices;
+  }
+  
+  renderCustomDiv = ({ content }) => {
+    this.setState({ customDivContent: content });
   }
 
   showClass = async (id, onObjectDocumentSelected) => { // используется в Филде для линков на объекты
