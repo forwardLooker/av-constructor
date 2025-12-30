@@ -383,7 +383,21 @@ class AVFieldOriginal extends AVItem {
                style={this.props.style}
                ref={this.props.refOnRootDiv}
         >
-          <AVLabel className="flex-1" justifyMode={this.props.fieldItem.justifyMode || 'start'} color={this.props.fieldItem?.style?.color}>
+          <AVLabel className="flex-1" justifyMode={this.props.fieldItem.justifyMode || 'start'} color={this.props.fieldItem?.style?.color}
+            onClick={(e) => {
+              if (this.props.$objectDocument) {
+                const classInstance = this.props.$objectDocument.state._objectDocument.Class;
+                const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+                if (moduleDefinition) {
+                  const labelClick = moduleDefinition.labelClicks[this.props.fieldItem.label];
+                  if (labelClick) {
+                    labelClick({ fieldItem: this.props.fieldItem, $objectDocument: this.props.$objectDocument, e })
+                  }
+                }
+
+              }
+            }}
+          >
             {this.props.fieldItem.label || 'label'}
           </AVLabel>
           {this.props.children}

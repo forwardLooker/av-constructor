@@ -172,7 +172,7 @@ export default class {
 
       if (!stopNavigate) {
         $objectDocument.Host.gazCreditSecondPageData = $objectDocument.state._newData;
-        this.Host.navigate('/gaz3');
+        this.Host.navigate('/gazprombank-credit-3');
       }
     },
   };
