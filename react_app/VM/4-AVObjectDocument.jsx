@@ -73,6 +73,7 @@ export class AVObjectDocument extends AVItem {
   //render
   
   async componentDidMount() {
+    console.log('AVObjectDocument componentDidMount, props:', this.props);
     if (this.props.objectDocumentPath) {
       const objectDocument = this.Host.getObjectDocumentByPath(this.props.objectDocumentPath);
       await objectDocument.getData();

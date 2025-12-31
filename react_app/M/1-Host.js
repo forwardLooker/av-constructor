@@ -14,7 +14,7 @@ export class Host extends Item {
     this.storageRoot = this.firebase.storage().ref();
     this.auth = this.firebase.auth()
     this.auth.onAuthStateChanged((user) => {
-      console.log('firebase onAuthStateChanged user:', user);
+      console.log('firebase.auth onAuthStateChanged user:', user);
       if (user) {
         // this.user = user;
         Item.user = user;

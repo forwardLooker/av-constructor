@@ -31,6 +31,7 @@ export class AVClass extends AVItem {
   //render
   
   async componentDidMount() {
+    console.log('AVClass componentDidMount, props:', this.props);
     if (this.props.classItem) {
       await this._loadGridData();
       this.setState({ currentViewName: this.props.classItem.defaultViewName })

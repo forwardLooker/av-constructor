@@ -9,6 +9,7 @@ export class AVItem extends AVElement {
     if (!this._userFromHost?.listenerHasSet) {
       let listenerId = this.Host.addEventListener('user-state-changed', () => {
         this._userFromHost.value = this.Host.user;
+        console.log('user set on AVItem, user:', this._userFromHost.value);
         this.forceUpdate();
       })
       this._userFromHost = { value: this.Host.user, listenerHasSet: true, listenerId }

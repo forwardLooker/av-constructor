@@ -44,7 +44,7 @@ export default class {
                   this.Host.navigate('/gazprombank-credit-1')
                 }
               }}
-              // noOkCancelPanel
+              noOkCancelPanel
             ></AVObjectDocument>
           </div>
         )

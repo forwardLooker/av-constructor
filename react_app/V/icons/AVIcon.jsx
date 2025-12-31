@@ -398,7 +398,7 @@ export class AVIcon extends AVElement {
   render() {
     const SVG = this.iconSet[this.props.name]();
     return (
-      <div className={`_av-icon-root flex-shrink-0 row align-center justify-center overflow-hidden ${this.props.className}`} {...this.R.omit(['className'], this.props)}>
+      <div className={`_av-icon-root flex-shrink-0 row align-center justify-center overflow-hidden ${this.props.className}`} {...this.R.omit(['className', 'fillColor'], this.props)}>
         {SVG}
       </div>
     )

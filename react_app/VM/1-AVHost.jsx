@@ -64,10 +64,13 @@ export class AVHost extends AVItem {
   //render
   
   async componentDidMount() {
+    console.log('AVHost componentDidMount, props:', this.props);
     if (!this.props.appRef.state.router) {
       const config = await this.Host.getConfig(); // Чтобы получить роуты требуется на Хосте сначала Конфиг
+      console.log('without router config loaded, config:', config);
       const classItemRoutes = this.Host.getClassByName('Роуты');
       const routesArr = await classItemRoutes.getObjectDocuments();
+      console.log('routes loaded, ObjectDocuments:', routesArr);
       let routesConfigArr = [
         {
           path: "/",
@@ -75,7 +78,6 @@ export class AVHost extends AVItem {
         },
       ];
       routesArr.forEach(async routeObjDoc => {
-        console.log('routeObjDoc', routeObjDoc);
         // const classItem = this.Host.getClassByPath(routeObjDoc.targetClassPath);
         // const fieldDescriptors = await classItem.getFieldDescriptors();
         // const objectDocument = this.Host.getObjectDocumentByPath(routeObjDoc.targetObjectDocumentPath);
@@ -92,9 +94,10 @@ export class AVHost extends AVItem {
             </AVHost>)
         })
       });
-      console.log('routesConfigArr:', routesConfigArr);
       this.props.appRef.setState({
         router: createBrowserRouter(routesConfigArr)
+      }, () => {
+        console.log('router set on App Component, router:', this.props.appRef.state.router);
       })
     } else {
       const config = await this.Host.getConfig();
@@ -104,8 +107,11 @@ export class AVHost extends AVItem {
         const userObj = usersArr.find(o => o.uid === this.user.uid);
         
         this.checkForRightsOnItems(config, userObj);
+        console.log('config transformed by checkForRightsOnItems, config:', config);
       }
-      this.setState({ config });
+      this.setState({ config }, () => {
+        console.log('config set on AvHost, config:', this.state.config)
+      });
 
       // const bodyElem = window.document.getElementsByTagName('body');
       // console.log('bodyElem', bodyElem);
@@ -167,7 +173,7 @@ export class AVHost extends AVItem {
           <div className="pad-0-4">
             <AVIcon name="globe"></AVIcon>
           </div>
-          <h3>Хост тест</h3>
+          <h3 className='margin-left-8'>Хост тест</h3>
         </div>
         {this.user && (
           <div className="col align-center justify-center">
