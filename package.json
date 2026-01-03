@@ -1,8 +1,8 @@
 {
   "name": "av-constructor",
   "private": true,
-  "version": "0.9.1",
-  "description": "Audio Visual",
+  "version": "1.2.2",
+  "description": "AnVar Constructor",
   "babel": {
     "presets": [
       "@babel/preset-env",
@@ -22,7 +22,7 @@
   "author": "Anvar Khakimov",
   "license": "Private",
   "dependencies": {
-    "@sefinek/email-validator": "^1.0.3",
+    "email-validator": "^2.0.4",
     "firebase": "^9.22.1",
     "number-format.js": "^2.0.9",
     "ramda": "^0.30.1",

@@ -11,7 +11,7 @@ import { AVObjectDocument } from './4-AVObjectDocument.jsx';
 
 import formatNumber from 'number-format.js';
 
-const emailValidator = require('@sefinek/email-validator');
+const validator = require('email-validator');
 
 const AVField = React.forwardRef((props, ref) => (
   <AVFieldWrapper {...props} forwardedRef={ref}></AVFieldWrapper>
@@ -1072,7 +1072,7 @@ class AVFieldOriginal extends AVItem {
                   this.setState({ isInputRendered: false })
                 }
                 if (value) {
-                  if (!emailValidator.test(value)) {
+                  if (!validator.validate(value)) {
                     this.setState({
                       isInvalidState: true,
                       isInvalidMessageRendered: true,
