@@ -369,6 +369,19 @@ export class AVHost extends AVItem {
           >
             gazprombank change credit parameters
           </div>
+          <div
+            className="border pad-4"
+            draggable="true"
+            onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+              e,
+              {
+                designDragElement: { viewItemType: 'gazprombank carusel banners' },
+                designDragElementOrigin: 'instrument panel'
+              }
+            )}
+          >
+            gazprombank carusel banners
+          </div>
         </div>
     )
   }
