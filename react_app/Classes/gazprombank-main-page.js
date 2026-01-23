@@ -49,7 +49,72 @@ export default class {
           </div>
         )
       })
+    },
+    'Карты': async ({ fieldItem, $objectDocument, e }) => {
+      e.persist();
+      console.log('Стать клиентом e', e);
+      const hrzRect = fieldItem.domElement.getBoundingClientRect();
+      // const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
+      $objectDocument.renderCustomDiv({
+        content: (
+          <div className="pos-abs bg-tree z-index-1000" style={{ top: hrzRect.bottom + 1, right: 0, left: 0, height: '500px' }} >
+            <AVObjectDocument
+              objectDocumentPath={'Domains/workspace/Domains/mTLA7zmXmQGvH5j3GexV/Domains/2PoyIkLXCEUWgkR7lggL/Classes/ZRlaz49Aw4OlMqVmG8gd/ObjectDocuments/mRizTVfxh4b1jx1cnnKl'}
+              onLabelClickFunc={({ label, e }) => {
+                // if (label === 'Онлайн - заявка на кредит наличными') {
+                //   this.Host.navigate('/gazprombank-credit-1')
+                // }
+              }}
+              noOkCancelPanel
+            ></AVObjectDocument>
+          </div>
+        )
+      })
+    },
+    'Вклады и счета': async ({ fieldItem, $objectDocument, e }) => {
+      e.persist();
+      console.log('Стать клиентом e', e);
+      const hrzRect = fieldItem.domElement.getBoundingClientRect();
+      // const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
+      $objectDocument.renderCustomDiv({
+        content: (
+          <div className="pos-abs bg-tree z-index-1000" style={{ top: hrzRect.bottom + 1, right: 0, left: 0, height: '500px' }} >
+            <AVObjectDocument
+              objectDocumentPath={'Domains/workspace/Domains/mTLA7zmXmQGvH5j3GexV/Domains/2PoyIkLXCEUWgkR7lggL/Classes/RtKUjsHuCPo4Xvu0CFT5/ObjectDocuments/Z9cTQ8oeBcBnYV9YvKVZ'}
+              onLabelClickFunc={({ label, e }) => {
+                // if (label === 'Онлайн - заявка на кредит наличными') {
+                //   this.Host.navigate('/gazprombank-credit-1')
+                // }
+              }}
+              noOkCancelPanel
+            ></AVObjectDocument>
+          </div>
+        )
+      })
+    },
+    
+    'Премиум': async ({ fieldItem, $objectDocument, e }) => {
+      e.persist();
+      console.log('Стать клиентом e', e);
+      const hrzRect = fieldItem.domElement.getBoundingClientRect();
+      // const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
+      $objectDocument.renderCustomDiv({
+        content: (
+          <div className="pos-abs bg-tree z-index-1000" style={{ top: hrzRect.bottom + 1, right: 0, left: 0, height: '500px' }} >
+            <AVObjectDocument
+              objectDocumentPath={'Domains/workspace/Domains/mTLA7zmXmQGvH5j3GexV/Domains/2PoyIkLXCEUWgkR7lggL/Classes/CuHoisPqeNijprVKaTI1/ObjectDocuments/39Z4SAxDCRdOdUl2RP9v'}
+              onLabelClickFunc={({ label, e }) => {
+                // if (label === 'Онлайн - заявка на кредит наличными') {
+                //   this.Host.navigate('/gazprombank-credit-1')
+                // }
+              }}
+              noOkCancelPanel
+            ></AVObjectDocument>
+          </div>
+        )
+      })
     }
+    
   };
 
 }

@@ -579,21 +579,21 @@ class AVFieldOriginal extends AVItem {
           style={this.props.style}
           ref={this.props.refOnRootDiv}>
           <div className="row space-around">
-            <div className='pos-rel col align-center' style={{ height: '560px', width: '400px', background: '#7b73fc' }}>
-              <button className='margin-top-32' style={{ padding: '5px 10px' }}>Сбережения</button>
+            <div className='pos-rel col align-center' style={{ height: '560px', width: '400px', background: '#7b73fc', borderRadius: '16px' }}>
+              <button className='margin-top-32' style={{ padding: '5px 10px', border: 'none', borderRadius: '8px' }}>Сбережения</button>
               <div className='row justify-center margin-top-16 text-center' style={{ fontSize: '28px', lineHeight: '32px', fontWeight: '600', color: '#1e222e' }}>Накопительный счет</div>
               <div className='margin-top-12'>Повышенная ставка новым клиентам</div>
               <img className="pos-abs" style={{ top: 0, left: 0, width: '100%', height: '100%' }} src="https://cdn.gpb.ru/upload/files/bve/5a5/7anfqgs36p7t0chnp2l6n376f4s3brtv/x1_Head-banner-Desktop_960x1120px_FRK-NS-16_5_9.12.25.png" alt="Накопительный счет "></img>
             </div>
-            <div className='pos-rel col align-center' style={{ height: '560px', width: '400px', background: '#3356d7' }}>
-              <button className='margin-top-32' style={{ padding: '5px 10px' }}>Акция</button>
+            <div className='pos-rel col align-center' style={{ height: '560px', width: '400px', background: '#3356d7', borderRadius: '16px' }}>
+              <button className='margin-top-32' style={{ padding: '5px 10px', border: 'none', borderRadius: '8px' }}>Акция</button>
               <label className='row justify-center margin-top-16 text-center' style={{ fontSize: '28px', lineHeight: '32px', fontWeight: '600', color: '#1e222e' }}>
                 100% кэшбэк в супермаркетах</label>
               <div className='margin-top-12'>По дебетовой карте</div>
               <img className="pos-abs" style={{top: 0, left: 0, width: '100%', height: '100%'}} src="https://cdn.gpb.ru/upload/files/bve/dc5/ntputyar9cd1dyed7yd6us6eqcdnk2wh/x1_Head-banner-Desktop_960x1120px_DK-cashback-100_.png" alt="100% кэшбэк в супермаркетах"></img>
             </div>
-            <div className='pos-rel col align-center' style={{ height: '560px', width: '400px', background: '#5e81ff' }}>
-              <button className='margin-top-32' style={{ padding: '5px 10px' }}>Валюта</button>
+            <div className='pos-rel col align-center' style={{ height: '560px', width: '400px', background: '#5e81ff', borderRadius: '16px' }}>
+              <button className='margin-top-32' style={{ padding: '5px 10px', border: 'none', borderRadius: '8px' }}>Валюта</button>
               <div className='row justify-center margin-top-16 text-center' style={{ fontSize: '28px', lineHeight: '32px', fontWeight: '600', color: '#1e222e' }}>Доллары нового образца</div>
               <div className='margin-top-12'>Без комиссии в офисах Газпромбанка</div>
               <img className="pos-abs" style={{ top: 0, left: 0, width: '100%', height: '100%' }} src="https://cdn.gpb.ru/upload/files/bve/8ea/h6rqo6uimcrpxv7uzd36u1di5tcqruj3/x1_Head-banner-Desktop-960x1120px_Dollary-novogo-obraztsa.png" alt="Доллары нового образца"></img>
