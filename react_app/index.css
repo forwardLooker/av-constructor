@@ -221,6 +221,9 @@ a {
   display: flex;
   flex-direction: column;
 }
+.flex-wrap {
+  flex-wrap: wrap;
+}
 .flex-0 {
   flex: 0;
 }

@@ -36,6 +36,7 @@ export class AVClass extends AVItem {
       await this._loadGridData();
       this.setState({ currentViewName: this.props.classItem.defaultViewName })
     }
+
   }
 
   async componentDidUpdate(prevProps) {
@@ -46,6 +47,68 @@ export class AVClass extends AVItem {
     
     if (!this.state.selectedObjectDocument && this.gridRef) {
       this.gridRef.realign()
+    }
+
+    if (this.state.currentViewName === 'Charts') {
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', { 'packages': ['corechart'] });
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart.bind(this));
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        // var data = new google.visualization.DataTable();
+        // data.addColumn('string', 'Topping');
+        // data.addColumn('number', 'Slices');
+        // data.addRows([
+        //   ['Mushrooms', 3],
+        //   ['Onions', 1],
+        //   ['Olives', 1],
+        //   ['Zucchini', 1],
+        //   ['Pepperoni', 2]
+        // ]);
+
+        // // Set chart options
+        // var options = {
+        //   'title': 'How Much Pizza I Ate Last Night',
+        //   'width': 400,
+        //   'height': 300
+        // };
+        this.state.fieldDescriptors.forEach(fd => {
+          var data = new google.visualization.DataTable();
+          data.addColumn('string',fd.name);
+          data.addColumn('number', 'Slices');
+          data.addRows(this.state.objectDocuments.reduce((acc, currentObj, idx, arr) => {
+            if (acc.every(row => row[0] !== currentObj[fd.name])) {
+              acc.push([
+                currentObj[fd.name],
+                arr.filter(o => o[fd.name] === currentObj[fd.name]).length
+              ])
+            }
+            return acc;
+          }, []));
+
+          // Set chart options
+          var options = {
+            'title': fd.name,
+            'width': 400,
+            'height': 300
+          };
+
+          // Instantiate and draw our chart, passing in some options.
+          var chart = new google.visualization.PieChart(document.getElementById(`chart_div_${fd.name}`));
+          chart.draw(data, options);
+
+        })
+
+      }
+
     }
   }
 
@@ -72,6 +135,9 @@ export class AVClass extends AVItem {
     }
     if (this.state.currentViewName === 'JSON') {
       return this._renderJSON()
+    }
+    if (this.state.currentViewName === 'Charts') {
+      return this._renderCharts()
     }
     return this.props.classItem.getViewComponentByName(this.state.currentViewName, this);
   }
@@ -123,6 +189,18 @@ export class AVClass extends AVItem {
     return (
       <JSONTree data={this.props.classItem.metadata}/>
     );
+  }
+
+  _renderCharts() {
+    return (
+      <div className="row flex-wrap">
+        {this.state.fieldDescriptors.map(fd => {
+          return (
+            <div className="margin-left-16" id={`chart_div_${fd.name}`}>Charts</div>
+          )
+        })}
+      </div>
+    )
   }
 
   _renderParametersPanel(renderBody) {
