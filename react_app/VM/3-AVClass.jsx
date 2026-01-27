@@ -6,7 +6,10 @@ import {AVClassPanel} from "./3-av-class/AVClassPanel.jsx";
 import {AVGrid} from "../V/AVGrid.jsx";
 import {AVObjectDocument} from './4-AVObjectDocument.jsx';
 import {AVClassConfigurator} from "./3-av-class/AVClassConfigurator.jsx";
-import {AVButton} from "../V/AVButton.jsx";
+import { AVButton } from "../V/AVButton.jsx";
+import { AVLabel } from "../V/AVLabel.jsx";
+
+import { AVField } from './5-AVField.jsx';
 
 import { JSONTree } from 'react-json-tree';
 
@@ -23,7 +26,11 @@ export class AVClass extends AVItem {
     selectedObjectDocument: null,
 
     isParametersPanelOpened: false, // Пока нигде не используется
-    ParametersPanelrender: this.noop
+    ParametersPanelrender: this.noop,
+    
+    linearChartDate: null, // для вьюхи Charts
+    linearChartAmount: null,
+    isLinearChartVisible: false,
   }
   
   gridRef;
@@ -56,6 +63,49 @@ export class AVClass extends AVItem {
 
       // Set a callback to run when the Google Visualization API is loaded.
       google.charts.setOnLoadCallback(drawChart.bind(this));
+
+
+
+      google.charts.setOnLoadCallback(drawChartLine.bind(this));
+
+      function drawChartLine() {
+        // var data = google.visualization.arrayToDataTable([
+        //   ['Year', 'Sales', 'Expenses'],
+        //   ['2004', 1000, 400],
+        //   ['2005', 1170, 460],
+        //   ['2006', 660, 1120],
+        //   ['2007', 1030, 540]
+        // ]);
+        
+        let dataset = this.state.objectDocuments.map(obj => ([obj['Дата'], Number(obj['Сумма'])]));
+        dataset = dataset.sort((a, b) => {
+          if (((new Date(a[0])) < (new Date(b[0])))) {
+            return -1
+          }
+          if (((new Date(a[0])) > (new Date(b[0])))) {
+            return 1
+          }
+          return 0
+          // return (a[1] - b[1])
+        })
+        console.log('dataset', dataset);
+        
+        var data = google.visualization.arrayToDataTable([
+          ['Date', 'Amount'],
+          ...dataset
+        ]);
+
+        var options = {
+          title: 'Amount',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+      }
+
 
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
@@ -193,12 +243,43 @@ export class AVClass extends AVItem {
 
   _renderCharts() {
     return (
-      <div className="row flex-wrap">
-        {this.state.fieldDescriptors.map(fd => {
-          return (
-            <div className="margin-left-16" id={`chart_div_${fd.name}`}>Charts</div>
-          )
-        })}
+      <div className='col'>
+        <div className="row flex-wrap">
+          {this.state.fieldDescriptors.map(fd => {
+            return (
+              <div className="margin-left-16" id={`chart_div_${fd.name}`}>Charts</div>
+            )
+          })}
+        </div>
+        
+        <div className="row">
+          <div className="flex-1 col">
+            <AVLabel className="margin-bottom-8">Линейный график</AVLabel>
+            <div className='row'>
+              <AVField
+                fieldItem={{
+                  label: 'name Даты',
+                  dataType: 'string',
+                }}
+                value={this.state.linearChartDate}
+                onChangeFunc={(value) => this.setState({ linearChartDate: value })}
+              ></AVField>
+              <AVField
+                fieldItem={{
+                  label: 'name Суммы',
+                  dataType: 'string',
+                }}
+                value={this.state.linearChartAmount}
+                onChangeFunc={(value) => this.setState({ linearChartAmount: value })}
+              ></AVField>
+              <AVButton onClick={() => {this.setState({isLinearChartVisible: true})}}>Построить</AVButton>
+            </div>
+          </div>
+        </div>
+        {this.state.isLinearChartVisible && (
+          <div id="curve_chart" style={{ width: '900px', height: '500px' }}>LineChart</div>
+        )}
+
       </div>
     )
   }
