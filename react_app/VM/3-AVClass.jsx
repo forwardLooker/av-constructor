@@ -247,7 +247,7 @@ export class AVClass extends AVItem {
         <div className="row flex-wrap">
           {this.state.fieldDescriptors.map(fd => {
             return (
-              <div className="margin-left-16" id={`chart_div_${fd.name}`}>Charts</div>
+              <div key={fd.name} className="margin-left-16" id={`chart_div_${fd.name}`}>Charts</div>
             )
           })}
         </div>

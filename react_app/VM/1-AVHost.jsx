@@ -410,7 +410,7 @@ export class AVHost extends AVItem {
               onItemSelectFunc={(item) => this.setState({dialogInputValue: item})}
             ></AVTree>
           )}
-          <div>
+          <div className='row justify-end'>
             <AVButton onClick={this._dialogSubmitted}>OK</AVButton>
             <AVButton onClick={this._dialogCanceled}>Отмена</AVButton>
           </div>

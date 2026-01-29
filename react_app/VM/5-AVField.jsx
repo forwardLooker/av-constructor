@@ -197,7 +197,7 @@ class AVFieldOriginal extends AVItem {
     _value: ((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) || this.props.value,
     isFocusedState: false, // для Газпромбанк инпутов
     isInvalidState: false,
-    isInputRendered: !this.props.fieldItem.variant?.startsWith('Gazprombank') || !!(((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) || this.props.value),
+    isInputRendered: !this.props.fieldItem.variant?.startsWith('Gazprombank') || !!(((this.props.value === null || this.props.value === undefined) && this.props.fieldItem?.defaultValue) || this.props.value) || this.props.value === 0,
     isRequiredMessageRendered: false,
     
     isInvalidMessageRendered: false,
@@ -870,7 +870,7 @@ class AVFieldOriginal extends AVItem {
       if (fieldItem.variant === 'Gazprombank-string') {
         // let gazInputRef;
         this._labelFontSizeClassName = this.state._value ? 'font-size-14px' : this._labelFontSizeClassName;
-        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : (value ? 'border-gaz-success' : 'border-gaz');
+        let borderGaz = this.state.isInvalidState ? 'border-gaz-error' : ((value || value === 0) ? 'border-gaz-success' : 'border-gaz');
         if (this.state.isFocusedState) {
           borderGaz = 'border-gaz-accent'
         }
@@ -904,7 +904,7 @@ class AVFieldOriginal extends AVItem {
                 onChangeFunc(e);
               } : onChangeFunc}
               onBlur={() => {
-                if (!value) {
+                if (!value && value !== 0) {
                   this._labelFontSizeClassName = 'font-size-16px';
                   this.setState({ isInputRendered: false })
                 }
@@ -920,7 +920,7 @@ class AVFieldOriginal extends AVItem {
               })}
             ></AVFieldOriginal.styles.gazprombankInput>
             {this.props.fieldItem.icon ? (<AVIcon className={`pos-abs right-16px`} name={this.props.fieldItem.icon}></AVIcon>) : (
-              <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || !value ? 'no-display' : ''} `}></AVIcon>
+              <AVIcon name="fieldSuccess" className={`pos-abs right-16px ${this.state.isInvalidState || this.state.isFocusedState || (!value && value !== 0) ? 'no-display' : ''} `}></AVIcon>
             )}
             <div ref={el => this.optionsListRef = el}
               hidden
