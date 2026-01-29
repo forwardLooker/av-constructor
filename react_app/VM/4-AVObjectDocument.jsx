@@ -995,368 +995,12 @@ export class AVObjectDocument extends AVItem {
         this.forceUpdate();
       }
     }
-    if (menuResult === 'Установить style') {
-      let newStyle = { ...fieldItem.style };
-      const ok = await this.showDialog({
-        // text: ['Введите объект style,пример: {"background": "inherit"}',
-        //   <br></br>,
-        //   'Происходит мерджинг объекта, а не замена',
-        //   <br></br>,
-        //   `Текущий style: ${JSON.stringify(fieldItem.style)}`,
-        //   <br></br>,
-        //   'Пример удаления: {"position": "delete"}'
-        // ],
-        content: (
-          <div style={{ width: '100vw', height: '90vh' }}>
-            <div>
-              {[<br></br>,
-                `Установка style. Текущий style: ${JSON.stringify(fieldItem.style)}`,
-                <div className='margin-bottom-8'></div>,
-              ]}
-            </div>
-            <div className='col'>
-              <div className='row'>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'flexGrow',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.flexGrow}
-                  onChangeFunc={(value) => newStyle.flexGrow = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'flexBasis',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.flexBasis}
-                  onChangeFunc={(value) => newStyle.flexBasis = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'width',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.width}
-                  onChangeFunc={(value) => newStyle.width = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'height',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.height}
-                  onChangeFunc={(value) => newStyle.height = value}
-                ></AVField>
-              </div>
-              <div className='row'>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'fontSize',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.fontSize}
-                  onChangeFunc={(value) => newStyle.fontSize = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'fontWeight',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.fontWeight}
-                  onChangeFunc={(value) => newStyle.fontWeight = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'color',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.color}
-                  onChangeFunc={(value) => newStyle.color = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'background',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.background}
-                  onChangeFunc={(value) => newStyle.background = value}
-                ></AVField>
-
-              </div>
-              <div className='row'>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'padding',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.padding}
-                  onChangeFunc={(value) => newStyle.padding = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'margin',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.margin}
-                  onChangeFunc={(value) => newStyle.margin = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'border',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.border}
-                  onChangeFunc={(value) => newStyle.border = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'borderRadius',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.borderRadius}
-                  onChangeFunc={(value) => newStyle.borderRadius = value}
-                ></AVField>
-              </div>
-              <div className='row'>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'boxShadow',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.boxShadow}
-                  onChangeFunc={(value) => newStyle.boxShadow = value}
-                ></AVField>
-              </div>
-              <div className='row'>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'display',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.display}
-                  onChangeFunc={(value) => newStyle.display = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'flexDirection',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.flexDirection}
-                  onChangeFunc={(value) => newStyle.flexDirection = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'alignItems',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.alignItems}
-                  onChangeFunc={(value) => newStyle.alignItems = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'justifyContent',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.justifyContent}
-                  onChangeFunc={(value) => newStyle.justifyContent = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'flexWrap',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.flexWrap}
-                  onChangeFunc={(value) => newStyle.flexWrap = value}
-                ></AVField>
-              </div>
-              <div className='row'>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'position',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.position}
-                  onChangeFunc={(value) => newStyle.position = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'top',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.top}
-                  onChangeFunc={(value) => newStyle.top = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'right',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.right}
-                  onChangeFunc={(value) => newStyle.right = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'bottom',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.bottom}
-                  onChangeFunc={(value) => newStyle.bottom = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'left',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.left}
-                  onChangeFunc={(value) => newStyle.left = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'transform',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.transform}
-                  onChangeFunc={(value) => newStyle.transform = value}
-                ></AVField>
-              </div>
-              <div className='row'>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'cursor',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.cursor}
-                  onChangeFunc={(value) => newStyle.cursor = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'textAlign',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.textAlign}
-                  onChangeFunc={(value) => newStyle.textAlign = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'lineHeight',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.lineHeight}
-                  onChangeFunc={(value) => newStyle.lineHeight = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'zIndex',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.zIndex}
-                  onChangeFunc={(value) => newStyle.zIndex = value}
-                ></AVField>
-                <AVField
-                  style={{ width: '150px' }}
-                  fieldItem={{
-                    label: 'opacity',
-                    dataType: 'string',
-                    variant: 'Gazprombank-string',
-                    size: 7,
-                  }}
-                  value={fieldItem.style?.opacity}
-                  onChangeFunc={(value) => newStyle.opacity = value}
-                ></AVField>
-              </div>
-            </div>
-          </div>
-        ),
-        // inputLabel: 'style object'
-      });
-      if (ok) {
+    if (menuResult === 'Установить style') {      
+      let styleAfterDialog = await this._enterNewStyleObj(fieldItem.style);
+      
+      if (styleAfterDialog) {
         if (!fieldItem.style) fieldItem.style = {};
-        const styleObj = newStyle;
+        const styleObj = styleAfterDialog;
         fieldItem.style = { ...fieldItem.style, ...styleObj };
         Object.keys(styleObj).forEach(propName => {
           if (styleObj[propName] === 'delete' || styleObj[propName] === '') {
@@ -1371,23 +1015,14 @@ export class AVObjectDocument extends AVItem {
         this.forceUpdate();
     }
     if (menuResult === 'Установить buttonStyle') {
-      const style = await this.showDialog({
-        text: ['Введите объект style,пример: {"background": "inherit"}',
-          <br></br>,
-          'Происходит мерджинг объекта, а не замена',
-          <br></br>,
-          `Текущий style: ${JSON.stringify(fieldItem.buttonStyle)}`,
-          <br></br>,
-          'Пример удаления: {"position": "delete"}',
-        ],
-        inputLabel: 'style object'
-      });
-      if (style) {
+      let styleAfterDialog = await this._enterNewStyleObj(fieldItem.buttonStyle);
+
+      if (styleAfterDialog) {
         if (!fieldItem.buttonStyle) fieldItem.buttonStyle = {};
-        const styleObj = JSON.parse(style);
+        const styleObj = styleAfterDialog;
         fieldItem.buttonStyle = { ...fieldItem.buttonStyle, ...styleObj };
         Object.keys(styleObj).forEach(propName => {
-          if (styleObj[propName] === 'delete') {
+          if (styleObj[propName] === 'delete' || styleObj[propName] === '') {
             delete fieldItem.buttonStyle[propName];
           }
         })
@@ -1405,23 +1040,15 @@ export class AVObjectDocument extends AVItem {
       } else {
         containerItem = containerElement.container
       }
-      const style = await this.showDialog({
-        text: ['Введите объект style,пример: {"background": "inherit"}',
-          <br></br>,
-          'Происходит мерджинг объекта, а не замена',
-          <br></br>,
-          `Текущий style: ${JSON.stringify(containerItem.style)}`,
-          <br></br>,
-          'Пример удаления: {"position": "delete"}',
-        ],
-        inputLabel: 'style object'
-      });
-      if (style) {
+
+      let styleAfterDialog = await this._enterNewStyleObj(containerItem.style);
+
+      if (styleAfterDialog) {
         if (!containerItem.style) containerItem.style = {};
-        const styleObj = JSON.parse(style);
+        const styleObj = styleAfterDialog;
         containerItem.style = { ...containerItem.style, ...styleObj };
         Object.keys(styleObj).forEach(propName => {
-          if (styleObj[propName] === 'delete') {
+          if (styleObj[propName] === 'delete' || styleObj[propName] === '') {
             delete containerItem.style[propName];
           }
         })
@@ -1445,23 +1072,15 @@ export class AVObjectDocument extends AVItem {
       } else {
         containerItem = containerElement.container
       }
-      const style = await this.showDialog({
-        text: ['Введите объект style,пример: {"background": "inherit"}',
-          <br></br>,
-          'Происходит мерджинг объекта, а не замена',
-          <br></br>,
-          `Текущий style: ${JSON.stringify(containerItem.style)}`,
-          <br></br>,
-          'Пример удаления: {"position": "delete"}',
-        ],
-        inputLabel: 'style object'
-      });
-      if (style) {
+
+      let styleAfterDialog = await this._enterNewStyleObj(containerItem.style);
+
+      if (styleAfterDialog) {
         if (!containerItem.style) containerItem.style = {};
-        const styleObj = JSON.parse(style);
+        const styleObj = styleAfterDialog;
         containerItem.style = { ...containerItem.style, ...styleObj };
         Object.keys(styleObj).forEach(propName => {
-          if (styleObj[propName] === 'delete') {
+          if (styleObj[propName] === 'delete' || styleObj[propName] === '') {
             delete containerItem.style[propName];
           }
         })
@@ -1537,6 +1156,373 @@ export class AVObjectDocument extends AVItem {
         containerItem.presentationGroup = presentationGroup;
         this.forceUpdate();
       }
+    }
+  }
+
+  _enterNewStyleObj = async (oldStyleObj) => {
+    let newStyleObj = { ...oldStyleObj };
+    
+    const ok = await this.showDialog({
+      // text: ['Введите объект style,пример: {"background": "inherit"}',
+      //   <br></br>,
+      //   'Происходит мерджинг объекта, а не замена',
+      //   <br></br>,
+      //   `Текущий style: ${JSON.stringify(fieldItem.style)}`,
+      //   <br></br>,
+      //   'Пример удаления: {"position": "delete"}'
+      // ],
+      content: (
+        <div style={{ width: '100vw', height: '90vh' }}>
+          <div>
+            {[<br></br>,
+              `Установка style. Текущий style: ${JSON.stringify(oldStyleObj)}`,
+              <div className='margin-bottom-8'></div>,
+            ]}
+          </div>
+          <div className='col'>
+            <div className='row'>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'flexGrow',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.flexGrow}
+                onChangeFunc={(value) => newStyleObj.flexGrow = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'flexBasis',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.flexBasis}
+                onChangeFunc={(value) => newStyleObj.flexBasis = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'width',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.width}
+                onChangeFunc={(value) => newStyleObj.width = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'height',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={oldStyleObj?.height}
+                onChangeFunc={(value) => newStyleObj.height = value}
+              ></AVField>
+            </div>
+            <div className='row'>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'fontSize',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.fontSize}
+                onChangeFunc={(value) => newStyleObj.fontSize = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'fontWeight',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.fontWeight}
+                onChangeFunc={(value) => newStyleObj.fontWeight = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'color',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.color}
+                onChangeFunc={(value) => newStyleObj.color = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'background',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.background}
+                onChangeFunc={(value) => newStyleObj.background = value}
+              ></AVField>
+
+            </div>
+            <div className='row'>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'padding',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.padding}
+                onChangeFunc={(value) => newStyleObj.padding = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'margin',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.margin}
+                onChangeFunc={(value) => newStyleObj.margin = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'border',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.border}
+                onChangeFunc={(value) => newStyleObj.border = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'borderRadius',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.borderRadius}
+                onChangeFunc={(value) => newStyleObj.borderRadius = value}
+              ></AVField>
+            </div>
+            <div className='row'>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'boxShadow',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.boxShadow}
+                onChangeFunc={(value) => newStyleObj.boxShadow = value}
+              ></AVField>
+            </div>
+            <div className='row'>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'display',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.display}
+                onChangeFunc={(value) => newStyleObj.display = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'flexDirection',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.flexDirection}
+                onChangeFunc={(value) => newStyleObj.flexDirection = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'alignItems',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.alignItems}
+                onChangeFunc={(value) => newStyleObj.alignItems = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'justifyContent',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.justifyContent}
+                onChangeFunc={(value) => newStyleObj.justifyContent = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'flexWrap',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.flexWrap}
+                onChangeFunc={(value) => newStyleObj.flexWrap = value}
+              ></AVField>
+            </div>
+            <div className='row'>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'position',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.position}
+                onChangeFunc={(value) => newStyleObj.position = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'top',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.top}
+                onChangeFunc={(value) => newStyleObj.top = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'right',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.right}
+                onChangeFunc={(value) => newStyleObj.right = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'bottom',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.bottom}
+                onChangeFunc={(value) => newStyleObj.bottom = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'left',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.left}
+                onChangeFunc={(value) => newStyleObj.left = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'transform',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.transform}
+                onChangeFunc={(value) => newStyleObj.transform = value}
+              ></AVField>
+            </div>
+            <div className='row'>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'cursor',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.cursor}
+                onChangeFunc={(value) => newStyleObj.cursor = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'textAlign',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.textAlign}
+                onChangeFunc={(value) => newStyleObj.textAlign = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'lineHeight',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.lineHeight}
+                onChangeFunc={(value) => newStyleObj.lineHeight = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'zIndex',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.zIndex}
+                onChangeFunc={(value) => newStyleObj.zIndex = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'opacity',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.opacity}
+                onChangeFunc={(value) => newStyleObj.opacity = value}
+              ></AVField>
+            </div>
+          </div>
+        </div>
+      ),
+      // inputLabel: 'style object'
+    });
+    if (ok) {
+      return newStyleObj
+    } else {
+      return false
     }
   }
 
