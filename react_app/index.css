@@ -477,6 +477,9 @@ a {
 .z-index-100000 {
   z-index: 100000;
 }
+.z-index-1000000 {
+  z-index: 1000000;
+}
 .trbl-0 {
   top: 0;
   right: 0;

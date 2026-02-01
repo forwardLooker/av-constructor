@@ -1004,6 +1004,58 @@ export class AVObjectDocument extends AVItem {
       let oldStyleObj = fieldItem.style;
 
       let newStyleObj = { ...oldStyleObj };
+      
+      let testStruct = [
+        {
+          viewItemType: 'd', items: [
+            {
+              viewItemType: 'd', items: [
+                { viewItemType: 'b' },
+                {
+                  viewItemType: 'd', items: [
+                    { viewItemType: 'b' },
+                    { viewItemType: 'b' },
+                    { viewItemType: 'b' },
+                  ]
+                },
+                { viewItemType: 'd' },
+                { viewItemType: 'img' },
+              ]
+            },
+            { viewItemType: 'd' },
+          ]
+        },
+        { viewItemType: 'd' },
+        { viewItemType: 'd' },
+      ];
+      
+      let _renderDivInItem = (i, idx, arr) => {
+        return (
+          <div className='col'>
+
+            <div className='d+ col'>
+              <div className='row'>
+                <div>{i.viewItemType}</div>
+                <div onClick={async e => {
+                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
+                  if (newItemType) {
+                    arr.splice(idx + 1, 0, { viewItemType: newItemType });
+                    this.Host.$hostElement.forceUpdate();
+                  }
+                }}> +</div>
+              </div>
+              <div>+</div>
+            </div>
+            {i.items && i.items.length > 0 && (
+              <div className='row'>
+                {i.items.map((i2, idx2, arr2) => {
+                  return (_renderDivInItem(i2, idx2, arr2))
+                })}
+              </div>
+            )}    
+          </div>
+        )
+      }
 
       const ok = await this.showDialog({
         content: (
@@ -1014,10 +1066,18 @@ export class AVObjectDocument extends AVItem {
               <div className='margin-bottom-8'></div>,
               ]}
             </div>
-            <div className='margin-left-16'>
+            <div className='row margin-left-16'>
               <div onClick={e => {
                 e.target.setAttribute('contenteditable', '');
               }}>+</div>
+              <div className='flex-1'></div>
+            </div>
+            <div className='margin-left-16'>
+              <div className='row'>
+                {testStruct.map((i, idx, arr) => {
+                  return (_renderDivInItem(i, idx, arr))
+                })}
+              </div>
             </div>
             <div style={{ height: '200px' }}></div>
             <div className='col'>

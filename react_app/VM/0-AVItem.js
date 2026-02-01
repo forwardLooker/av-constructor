@@ -30,6 +30,11 @@ export class AVItem extends AVElement {
     return this.Host.$hostElement.showDialog(...params);
   }
   
+  showDialog2(...params) {
+    //TODO
+    return this.Host.$hostElement.showDialog2(...params);
+  }
+  
   showCustomPopup(...params) {
     return this.Host.$hostElement.showCustomPopup(...params);
   }

@@ -157,6 +157,7 @@ export class AVHost extends AVItem {
         )}
         {this.props.children}
         {this.state.isDialogOpened && this._renderDialog()}
+        {this.state.isDialogOpened2 && this._renderDialog2()}
         {this.state.isContextMenuOpened && this._renderContextMenu()}
         {this.state.isCustomPopupOpened && this._renderCustomPopup()}
       </div>
@@ -419,6 +420,39 @@ export class AVHost extends AVItem {
     )
   }
   
+  _renderDialog2() {
+    return (
+      <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000000 bg-transparent-45">
+        <div className="bg-white">
+          <div>{this.state.dialogText2}</div>
+          {this.state.dialogContent2}
+          {this.state.dialogInputLabel2 && (
+            <div className='row'>
+              <AVLabel>{this.state.dialogInputLabel2}</AVLabel>
+              <textarea
+                className='flex-1'
+                rows={8}
+                value={this.state.dialogInputValue2}
+                onChange={e => this.setState({ dialogInputValue2: e.target.value })}>
+              </textarea>
+            </div>
+          )}
+          {this.state.dialogItemTreeStructure2 && (
+            <AVTree
+              items={this.state.dialogItemTreeStructure2.items}
+              expandAllRowsNestedLevel={1}
+              onItemSelectFunc={(item) => this.setState({ dialogInputValue2: item })}
+            ></AVTree>
+          )}
+          <div className='row justify-end'>
+            <AVButton onClick={this._dialog2Submitted}>OK</AVButton>
+            <AVButton onClick={this._dialog2Canceled}>Отмена</AVButton>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
   _renderCustomPopup() {
     return (
       <div className='pos-fixed trl-0 z-index-1000'>{this.state.customPopupContent}</div>
@@ -674,6 +708,21 @@ export class AVHost extends AVItem {
       })
     })
   }
+
+  async showDialog2({ text, inputLabel, itemTreeStructure, content, dialogInputValue }) {
+    return new Promise((resolve, reject) => {
+      this.setState({
+        isDialogOpened2: true,
+        dialogText2: text,
+        dialogInputLabel2: inputLabel,
+        dialogInputValue2: dialogInputValue,
+        dialogContent2: content,
+        _dialogResolveFunc2: resolve,
+
+        dialogItemTreeStructure2: itemTreeStructure
+      })
+    })
+  }
   
   async showCustomPopup({ content }) {
     return new Promise((resolve, reject) => {
@@ -727,5 +776,37 @@ export class AVHost extends AVItem {
     });
     resolveFunc(false);
   }
+  
+  _dialog2Submitted = () => {
+    let resolveValue = this.state.dialogInputValue2;
+    if (!this.state.dialogInputLabel2) {
+      resolveValue = true
+    }
+    const resolveFunc = this.state._dialogResolveFunc2;
+    this.setState({
+      isDialogOpened2: false,
+      dialogText2: '',
+      dialogInputLabel2: '',
+      dialogInputValue2: '',
+      dialogContent2: null,
+      _dialogResolveFunc2: null,
+
+      dialogItemTreeStructure2: null
+    });
+    resolveFunc(resolveValue);
+  }
+
+  _dialog2Canceled = () => {
+    const resolveFunc = this.state._dialogResolveFunc2;
+    this.setState({
+      isDialogOpened2: false,
+      dialogText2: '',
+      dialogInputLabel2: '',
+      dialogInputValue2: '',
+      _dialogResolveFunc2: null
+    });
+    resolveFunc(false);
+  }
+
 
 }
