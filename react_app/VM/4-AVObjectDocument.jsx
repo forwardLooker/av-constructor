@@ -1004,71 +1004,65 @@ export class AVObjectDocument extends AVItem {
       let oldStyleObj = fieldItem.style;
 
       let newStyleObj = { ...oldStyleObj };
-      
-      // let testStruct = [
-      //   {
-      //     viewItemType: 'd', items: [
-      //       {
-      //         viewItemType: 'd', items: [
-      //           { viewItemType: 'b' },
-      //           {
-      //             viewItemType: 'd', items: [
-      //               { viewItemType: 'b' },
-      //               { viewItemType: 'b' },
-      //               { viewItemType: 'b' },
-      //             ]
-      //           },
-      //           { viewItemType: 'd' },
-      //           { viewItemType: 'img' },
-      //         ]
-      //       },
-      //       { viewItemType: 'd' },
-      //     ]
-      //   },
-      //   { viewItemType: 'd' },
-      //   { viewItemType: 'd' },
-      // ];
-      
+      let rootStyleObj = newStyleObj;
+            
       let innerStruct = this.deepClone(fieldItem.items) || [];
+      let setStyleEmpty = (struct) => {
+        struct.forEach(i => {
+          if (!i.style) {
+            i.style = {}
+          }
+          if (i.items?.length > 0) {
+            setStyleEmpty(i.items)
+          }
+        })
+      };
+      setStyleEmpty(innerStruct);
+      
       let itemSelected = fieldItem;
       
       let _renderDivInItem = (i, idx, arr) => {
         return (
-          <div className='col border'>
+          <div key={i.viewItemType + idx} className='col border'>
 
             <div className='d+ col'>
               <div className='row'>
-                <div className={`_viewItemType ${itemSelected === i ? 'font-bold' : ''} cursor-pointer`} onContextMenu={async e => {
-                  let menuResult = await this.showContextMenu(e, ['Удалить', 'Переименовать']);
-                  if (menuResult === 'Удалить') {
-                    let ok = await this.showDialog2({ text: `Точно хотите удалить ${i.viewItemType}?` });
-                    if (ok) {
-                      arr.splice(idx, 1);
+                <div className={`_viewItemType ${itemSelected === i ? 'font-bold' : ''} cursor-pointer`}
+                  onContextMenu={async e => {
+                    let menuResult = await this.showContextMenu(e, ['Удалить', 'Переименовать']);
+                    if (menuResult === 'Удалить') {
+                      let ok = await this.showDialog2({ text: `Точно хотите удалить ${i.viewItemType}?` });
+                      if (ok) {
+                        arr.splice(idx, 1);
+                      }
                     }
-                  }
-                  if (menuResult === 'Переименовать') {
-                    let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType', inputValue: i.viewItemType });
-                    if (newItemType) {
-                      i.viewItemType = newItemType
+                    if (menuResult === 'Переименовать') {
+                      let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType', inputValue: i.viewItemType });
+                      if (newItemType) {
+                        i.viewItemType = newItemType
+                      }
                     }
-                  }
-                  this.Host.$hostElement.forceUpdate();
-                }} onClick={e => {
-                  itemSelected = i;
-                  this.Host.$hostElement.forceUpdate();
-                }}>{i.viewItemType}</div>
-                <div className='cursor-default' onClick={async e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                  onClick={e => {
+                    itemSelected = i;
+                    newStyleObj = itemSelected.style;
+                    this.Host.$hostElement.forceUpdate();
+                  }}>
+                  {i.viewItemType}
+                </div>
+                <div className='_toRight+ cursor-default' onClick={async e => {
                   let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
                   if (newItemType) {
-                    arr.splice(idx + 1, 0, { viewItemType: newItemType });
+                    arr.splice(idx + 1, 0, { viewItemType: newItemType, style: {} });
                     this.Host.$hostElement.forceUpdate();
                   }
                 }}> +</div>
               </div>
-              <div className='cursor-default' onClick={async e => {
+              <div className='_toDown+ cursor-default' onClick={async e => {
                 let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
                 if (newItemType) {
-                  i.items = [{ viewItemType: newItemType, items: i.items || [] }];
+                  i.items = [{ viewItemType: newItemType, style: {}, items: i.items || [] }];
                   this.Host.$hostElement.forceUpdate();
                 }
               }}>+</div>
@@ -1089,7 +1083,7 @@ export class AVObjectDocument extends AVItem {
           <div className='scroll-y' style={{ width: '100vw', height: '90vh' }}>
             <div className='margin-left-16'>
               {[<br></br>,
-                `Дизайнер div в div-е. Текущий ${itemSelected === fieldItem ? 'root(space div)' : ((itemSelected.label && (itemSelected.viewItemType + '('+ itemSelected.label + ')')) || (itemSelected.viewItemType + '(' + itemSelected.items?.map(o=>o.viewItemType).toString() + ')'))} style: ${JSON.stringify(oldStyleObj)}`,
+                `Дизайнер div в div-е. Текущий ${itemSelected === fieldItem ? 'root(space div)' : ((itemSelected.label && (itemSelected.viewItemType + '(' + itemSelected.label + ')')) || (itemSelected.viewItemType + '(' + itemSelected.items?.map(o => o.viewItemType).toString() + ')'))} style: ${JSON.stringify(newStyleObj)}`,
               <div className='margin-bottom-8'></div>,
               ]}
             </div>
@@ -1097,6 +1091,7 @@ export class AVObjectDocument extends AVItem {
               <div className='col'>
                 <div className={`${itemSelected === fieldItem ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
                   itemSelected = fieldItem;
+                  newStyleObj = rootStyleObj;
                   this.Host.$hostElement.forceUpdate();
                 }}>root(space div)</div>
                 <div onClick={async e => {
@@ -1134,6 +1129,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.flexGrow}
                   onChangeFunc={(value) => newStyleObj.flexGrow = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1145,6 +1143,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.flexBasis}
                   onChangeFunc={(value) => newStyleObj.flexBasis = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1156,6 +1157,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.width}
                   onChangeFunc={(value) => newStyleObj.width = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1165,8 +1169,11 @@ export class AVObjectDocument extends AVItem {
                     variant: 'Gazprombank-string',
                     size: 7,
                   }}
-                  value={oldStyleObj?.height}
+                  value={newStyleObj?.height}
                   onChangeFunc={(value) => newStyleObj.height = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
               </div>
               <div className='row'>
@@ -1180,6 +1187,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.fontSize}
                   onChangeFunc={(value) => newStyleObj.fontSize = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1191,6 +1201,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.fontWeight}
                   onChangeFunc={(value) => newStyleObj.fontWeight = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1202,6 +1215,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.color}
                   onChangeFunc={(value) => newStyleObj.color = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1213,6 +1229,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.background}
                   onChangeFunc={(value) => newStyleObj.background = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
 
               </div>
@@ -1227,6 +1246,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.padding}
                   onChangeFunc={(value) => newStyleObj.padding = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1238,6 +1260,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.margin}
                   onChangeFunc={(value) => newStyleObj.margin = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1249,6 +1274,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.border}
                   onChangeFunc={(value) => newStyleObj.border = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1260,6 +1288,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.borderRadius}
                   onChangeFunc={(value) => newStyleObj.borderRadius = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
               </div>
               <div className='row'>
@@ -1273,6 +1304,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.boxShadow}
                   onChangeFunc={(value) => newStyleObj.boxShadow = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
               </div>
               <div className='row'>
@@ -1286,6 +1320,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.display}
                   onChangeFunc={(value) => newStyleObj.display = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1297,6 +1334,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.flexDirection}
                   onChangeFunc={(value) => newStyleObj.flexDirection = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1308,6 +1348,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.alignItems}
                   onChangeFunc={(value) => newStyleObj.alignItems = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1319,6 +1362,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.justifyContent}
                   onChangeFunc={(value) => newStyleObj.justifyContent = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1330,6 +1376,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.flexWrap}
                   onChangeFunc={(value) => newStyleObj.flexWrap = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
               </div>
               <div className='row'>
@@ -1343,6 +1392,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.position}
                   onChangeFunc={(value) => newStyleObj.position = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1354,6 +1406,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.top}
                   onChangeFunc={(value) => newStyleObj.top = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1365,6 +1420,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.right}
                   onChangeFunc={(value) => newStyleObj.right = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1376,6 +1434,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.bottom}
                   onChangeFunc={(value) => newStyleObj.bottom = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1387,6 +1448,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.left}
                   onChangeFunc={(value) => newStyleObj.left = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1398,6 +1462,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.transform}
                   onChangeFunc={(value) => newStyleObj.transform = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
               </div>
               <div className='row'>
@@ -1411,6 +1478,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.cursor}
                   onChangeFunc={(value) => newStyleObj.cursor = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1422,6 +1492,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.textAlign}
                   onChangeFunc={(value) => newStyleObj.textAlign = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1433,6 +1506,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.lineHeight}
                   onChangeFunc={(value) => newStyleObj.lineHeight = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1444,6 +1520,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.zIndex}
                   onChangeFunc={(value) => newStyleObj.zIndex = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
                 <AVField
                   style={{ width: '150px' }}
@@ -1455,6 +1534,9 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.opacity}
                   onChangeFunc={(value) => newStyleObj.opacity = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
                 ></AVField>
               </div>
             </div>
