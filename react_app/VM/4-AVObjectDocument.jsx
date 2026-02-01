@@ -1005,38 +1005,59 @@ export class AVObjectDocument extends AVItem {
 
       let newStyleObj = { ...oldStyleObj };
       
-      let testStruct = [
-        {
-          viewItemType: 'd', items: [
-            {
-              viewItemType: 'd', items: [
-                { viewItemType: 'b' },
-                {
-                  viewItemType: 'd', items: [
-                    { viewItemType: 'b' },
-                    { viewItemType: 'b' },
-                    { viewItemType: 'b' },
-                  ]
-                },
-                { viewItemType: 'd' },
-                { viewItemType: 'img' },
-              ]
-            },
-            { viewItemType: 'd' },
-          ]
-        },
-        { viewItemType: 'd' },
-        { viewItemType: 'd' },
-      ];
+      // let testStruct = [
+      //   {
+      //     viewItemType: 'd', items: [
+      //       {
+      //         viewItemType: 'd', items: [
+      //           { viewItemType: 'b' },
+      //           {
+      //             viewItemType: 'd', items: [
+      //               { viewItemType: 'b' },
+      //               { viewItemType: 'b' },
+      //               { viewItemType: 'b' },
+      //             ]
+      //           },
+      //           { viewItemType: 'd' },
+      //           { viewItemType: 'img' },
+      //         ]
+      //       },
+      //       { viewItemType: 'd' },
+      //     ]
+      //   },
+      //   { viewItemType: 'd' },
+      //   { viewItemType: 'd' },
+      // ];
+      
+      let innerStruct = this.deepClone(fieldItem.items) || [];
+      let itemSelected = fieldItem;
       
       let _renderDivInItem = (i, idx, arr) => {
         return (
-          <div className='col'>
+          <div className='col border'>
 
             <div className='d+ col'>
               <div className='row'>
-                <div>{i.viewItemType}</div>
-                <div onClick={async e => {
+                <div className='_viewItemType cursor-pointer' onContextMenu={async e => {
+                  let menuResult = await this.showContextMenu(e, ['Удалить', 'Переименовать']);
+                  if (menuResult === 'Удалить') {
+                    let ok = await this.showDialog2({ text: `Точно хотите удалить ${i.viewItemType}?` });
+                    if (ok) {
+                      arr.splice(idx, 1);
+                    }
+                  }
+                  if (menuResult === 'Переименовать') {
+                    let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType', inputValue: i.viewItemType });
+                    if (newItemType) {
+                      i.viewItemType = newItemType
+                    }
+                  }
+                  this.Host.$hostElement.forceUpdate();
+                }} onClick={e => {
+                  itemSelected = i;
+                  this.Host.$hostElement.forceUpdate();
+                }}>{i.viewItemType}</div>
+                <div className='cursor-default' onClick={async e => {
                   let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
                   if (newItemType) {
                     arr.splice(idx + 1, 0, { viewItemType: newItemType });
@@ -1044,10 +1065,10 @@ export class AVObjectDocument extends AVItem {
                   }
                 }}> +</div>
               </div>
-              <div onClick={async e => {
+              <div className='cursor-default' onClick={async e => {
                 let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
                 if (newItemType) {
-                  i.items = [{ viewItemType: newItemType, items: i.items }];
+                  i.items = [{ viewItemType: newItemType, items: i.items || [] }];
                   this.Host.$hostElement.forceUpdate();
                 }
               }}>+</div>
@@ -1066,26 +1087,38 @@ export class AVObjectDocument extends AVItem {
       const ok = await this.showDialog({
         content: () => (
           <div className='scroll-y' style={{ width: '100vw', height: '90vh' }}>
-            <div>
+            <div className='margin-left-16'>
               {[<br></br>,
-              `Установка style. Текущий style: ${JSON.stringify(oldStyleObj)}`,
+                `Дизайнер div в div-е. Текущий ${itemSelected === fieldItem ? 'root(space div)' : (itemSelected.label || (itemSelected.viewItemType + itemSelected.items?.map(o=>o.viewItemType).toString()))} style: ${JSON.stringify(oldStyleObj)}`,
               <div className='margin-bottom-8'></div>,
               ]}
             </div>
             <div className='row margin-left-16'>
-              <div onClick={e => {
-                e.target.setAttribute('contenteditable', '');
-              }}>+</div>
+              <div className='col'>
+                <div className='cursor-pointer'>root(space div)</div>
+                <div onClick={async e => {
+                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
+                  if (newItemType) {
+                    if (innerStruct.length === 0) {
+                      innerStruct = [{ viewItemType: newItemType }]
+                    } else {
+                      innerStruct = [{ viewItemType: newItemType, items: innerStruct }]
+                    }
+                    this.Host.$hostElement.forceUpdate();
+
+                  }
+                }}>+</div>
+              </div>
               <div className='flex-1'></div>
             </div>
             <div className='margin-left-16'>
               <div className='row'>
-                {testStruct.map((i, idx, arr) => {
+                {innerStruct.map((i, idx, arr) => {
                   return (_renderDivInItem(i, idx, arr))
                 })}
               </div>
             </div>
-            <div style={{ height: '200px' }}></div>
+            <div style={{ height: '16px' }}></div>
             <div className='col'>
               <div className='row'>
                 <AVField
@@ -1426,7 +1459,12 @@ export class AVObjectDocument extends AVItem {
         ),
         // inputLabel: 'style object'
       });
-
+      if (ok) {
+        if (innerStruct.length > 0) {
+          fieldItem.items = innerStruct;
+          this.forceUpdate();
+        }
+      }
     }
     if (menuResult === 'Установить style') {      
       let styleAfterDialog = await this._enterNewStyleObj(fieldItem.style);
