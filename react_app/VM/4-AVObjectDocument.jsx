@@ -1038,7 +1038,7 @@ export class AVObjectDocument extends AVItem {
 
             <div className='d+ col'>
               <div className='row'>
-                <div className='_viewItemType cursor-pointer' onContextMenu={async e => {
+                <div className={`_viewItemType ${itemSelected === i ? 'font-bold' : ''} cursor-pointer`} onContextMenu={async e => {
                   let menuResult = await this.showContextMenu(e, ['Удалить', 'Переименовать']);
                   if (menuResult === 'Удалить') {
                     let ok = await this.showDialog2({ text: `Точно хотите удалить ${i.viewItemType}?` });
@@ -1089,13 +1089,16 @@ export class AVObjectDocument extends AVItem {
           <div className='scroll-y' style={{ width: '100vw', height: '90vh' }}>
             <div className='margin-left-16'>
               {[<br></br>,
-                `Дизайнер div в div-е. Текущий ${itemSelected === fieldItem ? 'root(space div)' : (itemSelected.label || (itemSelected.viewItemType + itemSelected.items?.map(o=>o.viewItemType).toString()))} style: ${JSON.stringify(oldStyleObj)}`,
+                `Дизайнер div в div-е. Текущий ${itemSelected === fieldItem ? 'root(space div)' : ((itemSelected.label && (itemSelected.viewItemType + '('+ itemSelected.label + ')')) || (itemSelected.viewItemType + '(' + itemSelected.items?.map(o=>o.viewItemType).toString() + ')'))} style: ${JSON.stringify(oldStyleObj)}`,
               <div className='margin-bottom-8'></div>,
               ]}
             </div>
             <div className='row margin-left-16'>
               <div className='col'>
-                <div className='cursor-pointer'>root(space div)</div>
+                <div className={`${itemSelected === fieldItem ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
+                  itemSelected = fieldItem;
+                  this.Host.$hostElement.forceUpdate();
+                }}>root(space div)</div>
                 <div onClick={async e => {
                   let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
                   if (newItemType) {
