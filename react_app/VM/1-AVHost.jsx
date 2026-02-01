@@ -33,7 +33,7 @@ export class AVHost extends AVItem {
     dialogText: '',
     dialogInputLabel: '',
     dialogInputValue: '',
-    dialogContent: null,
+    dialogContent: this.noop,
     _dialogResolveFunc: null,
 
     dialogItemTreeStructure: null,
@@ -392,7 +392,7 @@ export class AVHost extends AVItem {
       <div className="pos-fixed trbl-0 row justify-center align-center z-index-100000 bg-transparent-45">
         <div className="bg-white">
           <div>{this.state.dialogText}</div>
-          {this.state.dialogContent}
+          {this.state.dialogContent && this.state.dialogContent()}
           {this.state.dialogInputLabel && (
             <div className='row'>
               <AVLabel>{this.state.dialogInputLabel}</AVLabel>
@@ -425,7 +425,7 @@ export class AVHost extends AVItem {
       <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000000 bg-transparent-45">
         <div className="bg-white">
           <div>{this.state.dialogText2}</div>
-          {this.state.dialogContent2}
+          {this.state.dialogContent2 && this.state.dialogContent2()}
           {this.state.dialogInputLabel2 && (
             <div className='row'>
               <AVLabel>{this.state.dialogInputLabel2}</AVLabel>

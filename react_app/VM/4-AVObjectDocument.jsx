@@ -1044,7 +1044,13 @@ export class AVObjectDocument extends AVItem {
                   }
                 }}> +</div>
               </div>
-              <div>+</div>
+              <div onClick={async e => {
+                let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
+                if (newItemType) {
+                  i.items = [{ viewItemType: newItemType, items: i.items }];
+                  this.Host.$hostElement.forceUpdate();
+                }
+              }}>+</div>
             </div>
             {i.items && i.items.length > 0 && (
               <div className='row'>
@@ -1058,7 +1064,7 @@ export class AVObjectDocument extends AVItem {
       }
 
       const ok = await this.showDialog({
-        content: (
+        content: () => (
           <div className='scroll-y' style={{ width: '100vw', height: '90vh' }}>
             <div>
               {[<br></br>,
