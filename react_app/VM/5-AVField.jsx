@@ -336,7 +336,7 @@ class AVFieldOriginal extends AVItem {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.value !== prevProps.value || this.props.inspectedObject !== prevProps.inspectedObject) {
-      this.setState({ _value: this.props.value });
+      this.setState({ _value: this.props.value, isInputRendered: (this.props.value || this.props.value === 0) ? true : false });
     }
     if (this._sliderFreeSpaceRef && this.state._value !== prevState._value) {
       this.calcSliderFillSpaceWidth();

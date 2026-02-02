@@ -1549,6 +1549,10 @@ export class AVObjectDocument extends AVItem {
           fieldItem.items = innerStruct;
           this.forceUpdate();
         }
+        if (!this.isDeepEqual(rootStyleObj, oldStyleObj)) {
+          fieldItem.style = { ...rootStyleObj };
+          this.forceUpdate();
+        }
       }
     }
     if (menuResult === 'Установить style') {      
