@@ -1001,11 +1001,11 @@ export class AVObjectDocument extends AVItem {
     }
     
     if (menuResult === 'Дизайнер div в div-е') {
-      let oldStyleObj = fieldItem.style;
+      let oldStyleObj = fieldItem.viewItemRootStyle;
 
       let newStyleObj = { ...oldStyleObj };
       let rootStyleObj = newStyleObj;
-            
+
       let innerStruct = this.deepClone(fieldItem.items) || [];
       let setStyleEmpty = (struct) => {
         struct.forEach(i => {
@@ -1049,7 +1049,7 @@ export class AVObjectDocument extends AVItem {
                     newStyleObj = itemSelected.style;
                     this.Host.$hostElement.forceUpdate();
                   }}>
-                  {i.viewItemType}
+                  {'<' + i.viewItemType + '>'}
                 </div>
                 <div className='_toRight+ cursor-default' onClick={async e => {
                   let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
@@ -1057,7 +1057,7 @@ export class AVObjectDocument extends AVItem {
                     arr.splice(idx + 1, 0, { viewItemType: newItemType, style: {} });
                     this.Host.$hostElement.forceUpdate();
                   }
-                }}> +</div>
+                }}>+</div>
               </div>
               <div className='_toDown+ cursor-default' onClick={async e => {
                 let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
@@ -1118,6 +1118,24 @@ export class AVObjectDocument extends AVItem {
             </div>
             <div style={{ height: '16px' }}></div>
             <div className='col'>
+              {itemSelected !== fieldItem && (
+                <div className='row'>
+                  <AVField
+                    style={{ width: '150px' }}
+                    fieldItem={{
+                      label: 'label',
+                      dataType: 'string',
+                      variant: 'Gazprombank-string',
+                      size: 7,
+                    }}
+                    value={itemSelected.label}
+                    onChangeFunc={(value) => itemSelected.label = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+                </div>
+              )}
               <div className='row'>
                 <AVField
                   style={{ width: '150px' }}
@@ -1550,7 +1568,11 @@ export class AVObjectDocument extends AVItem {
           this.forceUpdate();
         }
         if (!this.isDeepEqual(rootStyleObj, oldStyleObj)) {
-          fieldItem.style = { ...rootStyleObj };
+          fieldItem.viewItemRootStyle = { ...rootStyleObj };
+          this.forceUpdate();
+        }
+        if (newLabel !== fieldItem.label) {
+          fieldItem.label = newLabel;
           this.forceUpdate();
         }
       }

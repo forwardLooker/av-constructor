@@ -358,6 +358,20 @@ class AVFieldOriginal extends AVItem {
     }
   }
 
+  _renderDivInDivItems = (items = []) => {
+    return items.map(i => {
+      if (i.viewItemType === 'd') {
+        return (<div style={i.style}>{i.label}{this._renderDivInDivItems(i.items)}</div>)
+      }
+      if (i.viewItemType === 'b') {
+        return (<button style={i.style}>{i.label}{this._renderDivInDivItems(i.items)}</button>)
+      }
+      if (i.viewItemType === 'img') {
+        return (<img style={i.style}>{i.label}</img>)
+      }
+    })
+  }
+
   render() {
     if (this.props.fieldItem.viewItemType === 'space div') {
       let flexBasisNumber = this.getPureValueFromFormatted(this.props.fieldItem?.style?.flexBasis);
@@ -371,9 +385,10 @@ class AVFieldOriginal extends AVItem {
       };
       return (
         <div className={`_av-field-viewItem-root flex-1 ${(flexBasisNumber > 16 || !flexBasisNumber) ? 'pad-8' : ''}`}
-          style={(flexBasisNumber > 16 || !flexBasisNumber) ? null : getStyleObj()}
+          style={(flexBasisNumber > 16 || !flexBasisNumber) ? this.props.fieldItem.viewItemRootStyle : getStyleObj()}
           ref={this.props.refOnRootDiv}
         >
+          {this._renderDivInDivItems(this.props.fieldItem.items)}
           {this.props.children}
         </div>
       )
