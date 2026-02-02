@@ -889,9 +889,9 @@ export class AVObjectDocument extends AVItem {
       menu.push('Установить buttonStyle');
       menu.push('Сбросить buttonStyle');
     }
-    if (fieldItem.viewItemType === 'label' && !fieldItem.withoutPaddingAndMargin) {
+    if ((fieldItem.viewItemType === 'label' || fieldItem.viewItemType === 'button') && !fieldItem.withoutPaddingAndMargin) {
       menu.push('Убрать margin-top-2 и pad-8');
-    } else if (fieldItem.viewItemType === 'label' && fieldItem.withoutPaddingAndMargin) {
+    } else if ((fieldItem.viewItemType === 'label' || fieldItem.viewItemType === 'button') && fieldItem.withoutPaddingAndMargin) {
       menu.push('Вернуть margin-top-2 и pad-8');
     }
     if (fieldItem.viewItemType !== 'tabs' && fieldItem.viewItemType && fieldItem.viewItemType !== 'field') {
