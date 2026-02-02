@@ -1769,7 +1769,7 @@ export class AVObjectDocument extends AVItem {
       //   <br></br>,
       //   'Пример удаления: {"position": "delete"}'
       // ],
-      content: (
+      content: () => (
         <div style={{ width: '100vw', height: '90vh' }}>
           <div>
             {[<br></br>,
