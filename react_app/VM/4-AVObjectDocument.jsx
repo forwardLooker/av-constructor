@@ -1134,6 +1134,22 @@ export class AVObjectDocument extends AVItem {
                       this.Host.$hostElement.forceUpdate();
                     }}
                   ></AVField>
+                  {itemSelected.viewItemType === 'img' && (
+                    <AVField
+                      style={{ width: '150px' }}
+                      fieldItem={{
+                        label: 'src',
+                        dataType: 'string',
+                        variant: 'Gazprombank-string',
+                        size: 7,
+                      }}
+                      value={itemSelected.src}
+                      onChangeFunc={(value) => itemSelected.src = value}
+                      onBlurFunc={e => {
+                        this.Host.$hostElement.forceUpdate();
+                      }}
+                    ></AVField>
+                  )}
                 </div>
               )}
               <div className='row'>

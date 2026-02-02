@@ -367,7 +367,7 @@ class AVFieldOriginal extends AVItem {
         return (<button style={i.style}>{i.label}{this._renderDivInDivItems(i.items)}</button>)
       }
       if (i.viewItemType === 'img') {
-        return (<img style={i.style}>{i.label}</img>)
+        return (<img style={i.style} src={i.src}>{i.label}</img>)
       }
     })
   }
