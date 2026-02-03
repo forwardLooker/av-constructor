@@ -473,14 +473,15 @@ export class AVObjectDocument extends AVItem {
             key={fieldItem.name || fieldItem.label || idx}
             ref={fieldDomElement => fieldItem.domElement = fieldDomElement}
           >
-            <div className='_av-field-viewItem-root flex-1 pad-8'>
-              <div className='_tab-head row'>
+            <div className='_av-field-viewItem-root flex-1 pad-8' style={fieldItem.viewItemRootStyle}>
+              <div className='_tab-head row' style={fieldItem.tabHeadStyle}>
                 {fieldItem.items.map(tab => (
                   <div
                     className={['_tab-head-item', 'pad-0-4',
                       (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'border-2' : 'border',
                       (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'font-bold' : ''
                     ].join(' ')}
+                    style={fieldItem.tabHeadItemStyle}
                     key={tab.label}
                     onClick={() => {
                       if (tab.redirectToUrl) {
@@ -494,10 +495,9 @@ export class AVObjectDocument extends AVItem {
                     onContextMenu={e => $objDoc._onTabContextMenu(e, tab, fieldItem, idx, containerElement)}
                   >{tab.label || 'tab1'}</div>
                 ))}
-                <div className='flex-1'></div>
               </div>
               {$objDoc.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl)) ? null : (
-                <div className='_tabs-body-container pad-8 border'>
+                <div className='_tabs-body-container pad-8 border' style={fieldItem.tabBodyContainerStyle}>
                   {fieldItem.items.map(tab => (
                     <div className="_tab-body" key={tab.label} hidden={fieldItem.selectedTabLabel !== tab.label}>
                       {$objDoc._renderVerticalLayout(tab.items[0])}
@@ -898,6 +898,7 @@ export class AVObjectDocument extends AVItem {
       menu.push('Убрать элемент')
     }
     if (fieldItem.fullOverlayMode) {
+      menu.push('Установить style для tabs структуры')
       menu.push('Убрать экранирование');
     }
 
@@ -1593,6 +1594,503 @@ export class AVObjectDocument extends AVItem {
         }
       }
     }
+    
+    if (menuResult === 'Установить style для tabs структуры') {
+      let oldViewItemRootStyleObj = fieldItem.viewItemRootStyle;
+      let oldTabHeadStyleObj = fieldItem.tabHeadStyle;
+      let oldTabHeadItemStyleObj = fieldItem.tabHeadItemStyle;
+      let oldTabBodyContainerStyleObj = fieldItem.tabBodyContainerStyle;
+
+      let newStyleObj = { ...oldViewItemRootStyleObj };
+      
+      let rootStyleObj = newStyleObj;
+      let tabHeadStyleObj = { ...oldTabHeadStyleObj };
+      let tabHeadItemStyleObj = { ...oldTabHeadItemStyleObj };
+      let tabBodyContainerStyleObj = { ...oldTabBodyContainerStyleObj };
+
+      const ok = await this.showDialog({
+        content: () => (
+          <div className='scroll-y' style={{ width: '100vw', height: '90vh' }}>
+            <div className='margin-left-16'>
+              {[<br></br>,
+                `Установить style для tabs структуры. Текущий style: ${JSON.stringify(newStyleObj)}`,
+              <div className='margin-bottom-8'></div>,
+              ]}
+            </div>
+            <div className='row margin-left-16'>
+              <div className='col'>
+                <div className={`${newStyleObj === rootStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
+                  newStyleObj = rootStyleObj;
+                  this.Host.$hostElement.forceUpdate();
+                }}>root(tabs)</div>
+                
+                <div className={`${newStyleObj === tabHeadStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
+                  newStyleObj = tabHeadStyleObj;
+                  this.Host.$hostElement.forceUpdate();
+                }}>tabHeadStyleObj(tabs)</div>
+                <div className={`${newStyleObj === tabHeadItemStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
+                  newStyleObj = tabHeadItemStyleObj;
+                  this.Host.$hostElement.forceUpdate();
+                }}>tabHeadItemStyleObj(tabs)</div>
+                <div className={`${newStyleObj === tabBodyContainerStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
+                  newStyleObj = tabBodyContainerStyleObj;
+                  this.Host.$hostElement.forceUpdate();
+                }}>tabBodyContainerStyleObj(tabs)</div>
+
+              </div>
+              <div className='flex-1'></div>
+            </div>
+            <div style={{ height: '16px' }}></div>
+            <div className='col'>
+              <div className='row'>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'flexGrow',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.flexGrow}
+                  onChangeFunc={(value) => newStyleObj.flexGrow = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'flexBasis',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.flexBasis}
+                  onChangeFunc={(value) => newStyleObj.flexBasis = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'width',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.width}
+                  onChangeFunc={(value) => newStyleObj.width = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'height',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.height}
+                  onChangeFunc={(value) => newStyleObj.height = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+              </div>
+              <div className='row'>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'fontSize',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.fontSize}
+                  onChangeFunc={(value) => newStyleObj.fontSize = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'fontWeight',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.fontWeight}
+                  onChangeFunc={(value) => newStyleObj.fontWeight = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'color',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.color}
+                  onChangeFunc={(value) => newStyleObj.color = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'background',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.background}
+                  onChangeFunc={(value) => newStyleObj.background = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+
+              </div>
+              <div className='row'>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'padding',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.padding}
+                  onChangeFunc={(value) => newStyleObj.padding = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'margin',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.margin}
+                  onChangeFunc={(value) => newStyleObj.margin = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'border',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.border}
+                  onChangeFunc={(value) => newStyleObj.border = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'borderRadius',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.borderRadius}
+                  onChangeFunc={(value) => newStyleObj.borderRadius = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+              </div>
+              <div className='row'>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'boxShadow',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.boxShadow}
+                  onChangeFunc={(value) => newStyleObj.boxShadow = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+              </div>
+              <div className='row'>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'display',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.display}
+                  onChangeFunc={(value) => newStyleObj.display = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'flexDirection',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.flexDirection}
+                  onChangeFunc={(value) => newStyleObj.flexDirection = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'alignItems',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.alignItems}
+                  onChangeFunc={(value) => newStyleObj.alignItems = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'justifyContent',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.justifyContent}
+                  onChangeFunc={(value) => newStyleObj.justifyContent = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'flexWrap',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.flexWrap}
+                  onChangeFunc={(value) => newStyleObj.flexWrap = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+              </div>
+              <div className='row'>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'position',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.position}
+                  onChangeFunc={(value) => newStyleObj.position = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'top',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.top}
+                  onChangeFunc={(value) => newStyleObj.top = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'right',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.right}
+                  onChangeFunc={(value) => newStyleObj.right = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'bottom',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.bottom}
+                  onChangeFunc={(value) => newStyleObj.bottom = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'left',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.left}
+                  onChangeFunc={(value) => newStyleObj.left = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'transform',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.transform}
+                  onChangeFunc={(value) => newStyleObj.transform = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+              </div>
+              <div className='row'>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'cursor',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.cursor}
+                  onChangeFunc={(value) => newStyleObj.cursor = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'textAlign',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.textAlign}
+                  onChangeFunc={(value) => newStyleObj.textAlign = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'lineHeight',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.lineHeight}
+                  onChangeFunc={(value) => newStyleObj.lineHeight = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'zIndex',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.zIndex}
+                  onChangeFunc={(value) => newStyleObj.zIndex = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'opacity',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.opacity}
+                  onChangeFunc={(value) => newStyleObj.opacity = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+              </div>
+            </div>
+          </div>
+        ),
+        // inputLabel: 'style object'
+      });
+      if (ok) {
+
+        if (!this.isDeepEqual(rootStyleObj, oldViewItemRootStyleObj)) {
+          fieldItem.viewItemRootStyle = { ...rootStyleObj };
+          this.forceUpdate();
+        }
+        
+        if (!this.isDeepEqual(tabHeadStyleObj, oldTabHeadStyleObj)) {
+          fieldItem.tabHeadStyle = { ...tabHeadStyleObj };
+          this.forceUpdate();
+        }
+        if (!this.isDeepEqual(tabHeadItemStyleObj, oldTabHeadItemStyleObj)) {
+          fieldItem.tabHeadItemStyle = { ...tabHeadItemStyleObj };
+          this.forceUpdate();
+        }
+        if (!this.isDeepEqual(tabBodyContainerStyleObj, oldTabBodyContainerStyleObj)) {
+          fieldItem.tabBodyContainerStyle = { ...tabBodyContainerStyleObj };
+          this.forceUpdate();
+        }
+
+      }
+    }
+    
     if (menuResult === 'Установить style') {      
       let styleAfterDialog = await this._enterNewStyleObj(fieldItem.style);
       
