@@ -1581,11 +1581,28 @@ export class AVObjectDocument extends AVItem {
       });
       if (ok) {
         if (innerStruct.length > 0) {
+          let cleanEmptyProps = (arr = []) => {
+            arr.forEach(i => {
+              Object.keys(i.style).forEach(propName => {
+                if (i.style[propName] === 'delete' || i.style[propName] === '') {
+                  delete i.style[propName];
+                }
+              })
+              cleanEmptyProps(i.items)
+            })
+          }
+          cleanEmptyProps(innerStruct)
+
           fieldItem.items = innerStruct;
           this.forceUpdate();
         }
         if (!this.isDeepEqual(rootStyleObj, oldStyleObj)) {
           fieldItem.viewItemRootStyle = { ...rootStyleObj };
+          Object.keys(rootStyleObj).forEach(propName => {
+            if (rootStyleObj[propName] === 'delete' || rootStyleObj[propName] === '') {
+              delete fieldItem.viewItemRootStyle[propName];
+            }
+          })
           this.forceUpdate();
         }
         if (newLabel !== fieldItem.label) {
@@ -2072,19 +2089,42 @@ export class AVObjectDocument extends AVItem {
 
         if (!this.isDeepEqual(rootStyleObj, oldViewItemRootStyleObj)) {
           fieldItem.viewItemRootStyle = { ...rootStyleObj };
+          Object.keys(rootStyleObj).forEach(propName => {
+            if (rootStyleObj[propName] === 'delete' || rootStyleObj[propName] === '') {
+              delete fieldItem.viewItemRootStyle[propName];
+            }
+          })
+
           this.forceUpdate();
         }
         
         if (!this.isDeepEqual(tabHeadStyleObj, oldTabHeadStyleObj)) {
           fieldItem.tabHeadStyle = { ...tabHeadStyleObj };
+          Object.keys(tabHeadStyleObj).forEach(propName => {
+            if (tabHeadStyleObj[propName] === 'delete' || tabHeadStyleObj[propName] === '') {
+              delete fieldItem.tabHeadStyle[propName];
+            }
+          })
+
           this.forceUpdate();
         }
         if (!this.isDeepEqual(tabHeadItemStyleObj, oldTabHeadItemStyleObj)) {
           fieldItem.tabHeadItemStyle = { ...tabHeadItemStyleObj };
+          Object.keys(tabHeadItemStyleObj).forEach(propName => {
+            if (tabHeadItemStyleObj[propName] === 'delete' || tabHeadItemStyleObj[propName] === '') {
+              delete fieldItem.tabHeadItemStyle[propName];
+            }
+          })
+
           this.forceUpdate();
         }
         if (!this.isDeepEqual(tabBodyContainerStyleObj, oldTabBodyContainerStyleObj)) {
           fieldItem.tabBodyContainerStyle = { ...tabBodyContainerStyleObj };
+          Object.keys(tabBodyContainerStyleObj).forEach(propName => {
+            if (tabBodyContainerStyleObj[propName] === 'delete' || tabBodyContainerStyleObj[propName] === '') {
+              delete fieldItem.tabBodyContainerStyle[propName];
+            }
+          })
           this.forceUpdate();
         }
 
