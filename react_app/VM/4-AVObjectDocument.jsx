@@ -1185,6 +1185,20 @@ export class AVObjectDocument extends AVItem {
                 <AVField
                   style={{ width: '150px' }}
                   fieldItem={{
+                    label: 'alignSelf',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.alignSelf}
+                  onChangeFunc={(value) => newStyleObj.alignSelf = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
                     label: 'width',
                     dataType: 'string',
                     variant: 'Gazprombank-string',
@@ -1644,15 +1658,15 @@ export class AVObjectDocument extends AVItem {
                 <div className={`${newStyleObj === tabHeadStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
                   newStyleObj = tabHeadStyleObj;
                   this.Host.$hostElement.forceUpdate();
-                }}>tabHeadStyleObj(tabs)</div>
+                }}>tabHead(tabs)</div>
                 <div className={`${newStyleObj === tabHeadItemStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
                   newStyleObj = tabHeadItemStyleObj;
                   this.Host.$hostElement.forceUpdate();
-                }}>tabHeadItemStyleObj(tabs)</div>
+                }}>tabHeadItem(tabs)</div>
                 <div className={`${newStyleObj === tabBodyContainerStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
                   newStyleObj = tabBodyContainerStyleObj;
                   this.Host.$hostElement.forceUpdate();
-                }}>tabBodyContainerStyleObj(tabs)</div>
+                }}>tabBodyContainer(tabs)</div>
 
               </div>
               <div className='flex-1'></div>
@@ -1684,6 +1698,20 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.flexBasis}
                   onChangeFunc={(value) => newStyleObj.flexBasis = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'alignSelf',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.alignSelf}
+                  onChangeFunc={(value) => newStyleObj.alignSelf = value}
                   onBlurFunc={e => {
                     this.Host.$hostElement.forceUpdate();
                   }}
@@ -2338,6 +2366,20 @@ export class AVObjectDocument extends AVItem {
                 }}
                 value={newStyleObj?.flexBasis}
                 onChangeFunc={(value) => newStyleObj.flexBasis = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'alignSelf',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.alignSelf}
+                onChangeFunc={(value) => newStyleObj.alignSelf = value}
+                onBlurFunc={e => {
+                  this.Host.$hostElement.forceUpdate();
+                }}
               ></AVField>
               <AVField
                 style={{ width: '150px' }}
