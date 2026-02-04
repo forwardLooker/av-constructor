@@ -1424,6 +1424,20 @@ export class AVObjectDocument extends AVItem {
                 <AVField
                   style={{ width: '150px' }}
                   fieldItem={{
+                    label: 'gap',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.gap}
+                  onChangeFunc={(value) => newStyleObj.gap = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
                     label: 'flexWrap',
                     dataType: 'string',
                     variant: 'Gazprombank-string',
@@ -1962,6 +1976,20 @@ export class AVObjectDocument extends AVItem {
                   }}
                   value={newStyleObj?.justifyContent}
                   onChangeFunc={(value) => newStyleObj.justifyContent = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'gap',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.gap}
+                  onChangeFunc={(value) => newStyleObj.gap = value}
                   onBlurFunc={e => {
                     this.Host.$hostElement.forceUpdate();
                   }}
@@ -2619,6 +2647,20 @@ export class AVObjectDocument extends AVItem {
                 }}
                 value={newStyleObj?.justifyContent}
                 onChangeFunc={(value) => newStyleObj.justifyContent = value}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'gap',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.gap}
+                onChangeFunc={(value) => newStyleObj.gap = value}
+                onBlurFunc={e => {
+                  this.Host.$hostElement.forceUpdate();
+                }}
               ></AVField>
               <AVField
                 style={{ width: '150px' }}
