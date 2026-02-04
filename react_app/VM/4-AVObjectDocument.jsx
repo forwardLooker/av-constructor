@@ -483,7 +483,7 @@ export class AVObjectDocument extends AVItem {
                   <div
                     className={['_tab-head-item', 'pad-0-4',
                       (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'border-2' : 'border',
-                      (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'font-bold' : ''
+                      (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'font-weight-500' : ''
                     ].join(' ')}
                     style={fieldItem.selectedTabLabel === tab.label ? { ...fieldItem.tabHeadItemStyle, ...fieldItem.selectedTabHeadItemStyle, ...(this.state.tabLabelHovered === tab.label ? fieldItem.selectedTabHeadItemHoveredStyle : {}) } : { ...fieldItem.tabHeadItemStyle, ...(this.state.tabLabelHovered === tab.label ? fieldItem.tabHeadItemHoveredStyle : {}) } }
                     onMouseEnter={e => { this.setState({ tabLabelHovered: tab.label }) }}
