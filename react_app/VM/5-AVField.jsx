@@ -651,7 +651,7 @@ class AVFieldOriginal extends AVItem {
               <AVLabel
                 className={`pad-0-4-0-0 ${this.props.fieldItem.variant === 'input+range' ? (this.state.isFocusedState ? 'color-gaz-label-focused' : 'color-gaz-label') : ''}`}
                 color={this.props.fieldItem?.style?.color}
-                justifyMode={(this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'binary-buttons' || this.props.fieldItem.variant === 'radio-buttons') ? 'start' : 'center'}
+                justifyMode={(this.props.fieldItem.variant === 'input+range' || this.props.fieldItem.variant === 'tags-buttons' || this.props.fieldItem.variant === 'radio-buttons') ? 'start' : 'center'}
               >{this._buildLabel()}</AVLabel>
             )}
             {this._renderInput(
@@ -781,7 +781,7 @@ class AVFieldOriginal extends AVItem {
           </AVFieldOriginal.styles.select>
         )
       }
-      if (fieldItem.variant === 'binary-buttons' && fieldItem.valuesList) {
+      if (fieldItem.variant === 'tags-buttons' && fieldItem.valuesList) {
         let valuesArr
         if (Array.isArray(fieldItem.valuesList)) {
           valuesArr = fieldItem.valuesList;
@@ -794,13 +794,30 @@ class AVFieldOriginal extends AVItem {
         
         const selectedStyle = { padding: '12px 16px', color: '#fff', fontWeight: 400, background: '#1e222e', border: 'none', borderRadius: '100px', transition: 'background .2s' };
         const unselectedStyle = { padding: '12px 16px', color: '#1e222e', fontWeight: 400, background: '#eaecf4', border: 'none', borderRadius: '100px', transition: 'background .2s' };
-        const firstButtonStyle = trimedValuesArr[0] === value ? selectedStyle : unselectedStyle;
-        let secondButtonStyle = trimedValuesArr[1] === value ? selectedStyle : unselectedStyle;
-        secondButtonStyle = this.deepClone(secondButtonStyle); // клон чтобы к соседу не применялось
-        secondButtonStyle.marginLeft = '8px'; 
+        // const firstButtonStyle = trimedValuesArr[0] === value ? selectedStyle : unselectedStyle;
+        // let secondButtonStyle = trimedValuesArr[1] === value ? selectedStyle : unselectedStyle;
+        // secondButtonStyle = this.deepClone(secondButtonStyle); // клон чтобы к соседу не применялось
+        // secondButtonStyle.marginLeft = '8px'; 
         inputElement = (
-          <div className='margin-top-12'>
-            <AVButton
+          <div className={`row flex-wrap gap-8-8 ${!fieldItem.isLabelHidden ? 'margin-top-12' : ''}`}>
+            {trimedValuesArr.map(str => {
+              return (
+                <AVButton
+                  key={str}
+                  style={str === value ? selectedStyle : unselectedStyle}
+                  onClick={() => {
+                    this.setState({
+                      _value: str,
+                      isInvalidState: false,
+                      isInvalidMessageRendered: false,
+                    });
+                    this.props.onChangeFunc(str)
+                  }}
+                  disabled={readOnly}
+                >{str}</AVButton>
+              )
+            })}
+            {/* <AVButton
               style={firstButtonStyle}
               onClick={() => {
                 this.setState({
@@ -823,7 +840,7 @@ class AVFieldOriginal extends AVItem {
                 this.props.onChangeFunc(trimedValuesArr[1])
               }}
               disabled={readOnly}
-            >{trimedValuesArr[1]}</AVButton>
+            >{trimedValuesArr[1]}</AVButton> */}
           </div>
         )
       }
@@ -1974,7 +1991,7 @@ class AVFieldOriginal extends AVItem {
     if (this.props.fieldItem.variant === 'input+range' ||
       this.props.fieldItem.variant === 'Gazprombank-string' ||
       this.props.fieldItem.variant === 'Gazprombank-tel' ||
-      this.props.fieldItem.variant === 'binary-buttons' ||
+      this.props.fieldItem.variant === 'tags-buttons' ||
       this.props.fieldItem.variant === 'radio-buttons'
     ) {
       return 'top'
@@ -1986,7 +2003,7 @@ class AVFieldOriginal extends AVItem {
     if (this.props.fieldItem.variant && this.props.fieldItem.variant.includes('Gazprombank')) {
       return true
     }
-    return this.props.isLabelHidden
+    return (this.props.isLabelHidden || this.props.fieldItem.isLabelHidden)
   }
   
   _startHorizontalResize = (msDownEvent) => { // для input+ranger slider resize

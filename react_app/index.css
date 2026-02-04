@@ -270,6 +270,9 @@ a {
 .space-evenly {
   justify-content: space-evenly;
 }
+.gap-8-8 {
+  gap: 8px 8px
+}
 .pos-abs {
   position: absolute;
 }
