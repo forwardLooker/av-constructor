@@ -392,6 +392,13 @@ export class AVIcon extends AVElement {
         </svg>
       </svg>
     ),
+    arrowRight: () => (
+      <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="progressive_icon progressive_icon20">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M10.524 15.665a.75.75 0 0 0 1.06 0l5.136-5.135a.75.75 0 0 0 0-1.06l-5.135-5.135a.75.75 0 0 0-1.06 1.06l3.854 3.855H3.81a.75.75 0 0 0 0 1.5H14.38l-3.855 3.855a.75.75 0 0 0 0 1.06Z" fill="#1C1C1E"></path>
+        </svg>
+      </svg>
+    ),
   }
 
 

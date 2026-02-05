@@ -1127,7 +1127,7 @@ export class AVObjectDocument extends AVItem {
             <div className='col'>
               {itemSelected !== fieldItem && (
                 <div className='row'>
-                  {itemSelected.viewItemType !== 'img' && (
+                  {itemSelected.viewItemType !== 'img' && itemSelected.viewItemType !== 'AVIcon'  && (
                     <AVField
                       style={{ width: '150px' }}
                       fieldItem={{
@@ -1169,6 +1169,24 @@ export class AVObjectDocument extends AVItem {
                         }}
                         value={newStyleObj.objectFit}
                         onChangeFunc={(value) => newStyleObj.objectFit = value}
+                        onBlurFunc={e => {
+                          this.Host.$hostElement.forceUpdate();
+                        }}
+                      ></AVField>
+                    </div>
+                  )}
+                  {itemSelected.viewItemType === 'AVIcon' && (
+                    <div className='flex-1 row'>
+                      <AVField
+                        style={{ width: '150px' }}
+                        fieldItem={{
+                          label: 'name',
+                          dataType: 'string',
+                          variant: 'Gazprombank-string',
+                          size: 7,
+                        }}
+                        value={itemSelected.name}
+                        onChangeFunc={(value) => itemSelected.name = value}
                         onBlurFunc={e => {
                           this.Host.$hostElement.forceUpdate();
                         }}

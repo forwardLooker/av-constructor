@@ -369,6 +369,9 @@ class AVFieldOriginal extends AVItem {
       if (i.viewItemType === 'img') {
         return (<img style={i.style} src={i.src}>{i.label}</img>)
       }
+      if (i.viewItemType = 'AVIcon') {
+        return (<AVIcon name={i.name} style={i.style}></AVIcon>)
+      }
     })
   }
 
