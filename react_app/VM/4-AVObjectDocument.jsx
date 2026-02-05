@@ -3159,7 +3159,10 @@ export class AVObjectDocument extends AVItem {
             }
             // delete dropContainer.items[dropElementIndex].style.flexBasis;
             // delete dropContainer.items[dropElementIndex].style.flexGrow;
-            dropFieldItem.style = {};
+            let newDropFieldItemStyle = { ...dropFieldItem.style };
+            delete newDropFieldItemStyle.flexBasis;
+            delete newDropFieldItemStyle.flexGrow;
+            dropFieldItem.style = newDropFieldItemStyle;
           }
 
           dropContainer.items.splice(insertIndex, 1)
