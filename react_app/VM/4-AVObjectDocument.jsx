@@ -1617,11 +1617,13 @@ export class AVObjectDocument extends AVItem {
         if (innerStruct.length > 0) {
           let cleanEmptyProps = (arr = []) => {
             arr.forEach(i => {
-              Object.keys(i.style).forEach(propName => {
-                if (i.style[propName] === 'delete' || i.style[propName] === '') {
-                  delete i.style[propName];
-                }
-              })
+              if (i.style) {
+                Object.keys(i.style).forEach(propName => {
+                  if (i.style[propName] === 'delete' || i.style[propName] === '') {
+                    delete i.style[propName];
+                  }
+                })
+              }
               cleanEmptyProps(i.items)
             })
           }
