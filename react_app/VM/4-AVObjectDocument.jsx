@@ -1105,9 +1105,9 @@ export class AVObjectDocument extends AVItem {
                   let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
                   if (newItemType) {
                     if (innerStruct.length === 0) {
-                      innerStruct = [{ viewItemType: newItemType }]
+                      innerStruct = [{ viewItemType: newItemType, style: {} }]
                     } else {
-                      innerStruct = [{ viewItemType: newItemType, items: innerStruct }]
+                      innerStruct = [{ viewItemType: newItemType, style: {}, items: innerStruct }]
                     }
                     this.Host.$hostElement.forceUpdate();
 
@@ -1127,35 +1127,53 @@ export class AVObjectDocument extends AVItem {
             <div className='col'>
               {itemSelected !== fieldItem && (
                 <div className='row'>
-                  <AVField
-                    style={{ width: '150px' }}
-                    fieldItem={{
-                      label: 'label',
-                      dataType: 'string',
-                      variant: 'Gazprombank-string',
-                      size: 7,
-                    }}
-                    value={itemSelected.label}
-                    onChangeFunc={(value) => itemSelected.label = value}
-                    onBlurFunc={e => {
-                      this.Host.$hostElement.forceUpdate();
-                    }}
-                  ></AVField>
-                  {itemSelected.viewItemType === 'img' && (
+                  {itemSelected.viewItemType !== 'img' && (
                     <AVField
                       style={{ width: '150px' }}
                       fieldItem={{
-                        label: 'src',
+                        label: 'label',
                         dataType: 'string',
                         variant: 'Gazprombank-string',
                         size: 7,
                       }}
-                      value={itemSelected.src}
-                      onChangeFunc={(value) => itemSelected.src = value}
+                      value={itemSelected.label}
+                      onChangeFunc={(value) => itemSelected.label = value}
                       onBlurFunc={e => {
                         this.Host.$hostElement.forceUpdate();
                       }}
                     ></AVField>
+                  )}
+                  {itemSelected.viewItemType === 'img' && (
+                    <div className='flex-1 row'>
+                      <AVField
+                        style={{ width: '150px' }}
+                        fieldItem={{
+                          label: 'src',
+                          dataType: 'string',
+                          variant: 'Gazprombank-string',
+                          size: 7,
+                        }}
+                        value={itemSelected.src}
+                        onChangeFunc={(value) => itemSelected.src = value}
+                        onBlurFunc={e => {
+                          this.Host.$hostElement.forceUpdate();
+                        }}
+                      ></AVField>
+                      <AVField
+                        style={{ width: '150px' }}
+                        fieldItem={{
+                          label: 'objectFit',
+                          dataType: 'string',
+                          variant: 'Gazprombank-string',
+                          size: 7,
+                        }}
+                        value={newStyleObj.objectFit}
+                        onChangeFunc={(value) => newStyleObj.objectFit = value}
+                        onBlurFunc={e => {
+                          this.Host.$hostElement.forceUpdate();
+                        }}
+                      ></AVField>
+                    </div>
                   )}
                 </div>
               )}
