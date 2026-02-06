@@ -314,6 +314,45 @@ export class AVIcon extends AVElement {
         </svg>
       </svg>
     ),
+    gazprombankPremiumCard: () => (
+      <svg width="100" height="88" viewBox="0 0 132 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <mask id="mask0_5859_8081" maskUnits="userSpaceOnUse" x="0" y="0" width="132" height="88" style={{ maskType: 'alpha' }}>
+          <path d="M0 16C0 7.16344 7.16344 0 16 0H116C124.837 0 132 7.16344 132 16V72C132 80.8366 124.837 88 116 88H16C7.16344 88 0 80.8366 0 72V16Z" fill="url(#paint0_linear_5859_8081)"></path>
+        </mask>
+        <g mask="url(#mask0_5859_8081)">
+          <path d="M0 16C0 7.16344 7.16344 0 16 0H116C124.837 0 132 7.16344 132 16V72C132 80.8366 124.837 88 116 88H16C7.16344 88 0 80.8366 0 72V16Z" fill="url(#paint1_linear_5859_8081)"></path>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M114.612 57.25H105.502C105.992 60.2393 108.931 63.0357 112.163 63.0357H119.412C119.51 62.7464 119.51 62.3607 119.51 62.0714C119.51 59.3714 117.355 57.25 114.612 57.25Z" fill="white"></path>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M106.286 63.5178V70.75H110.694V66.8928H114.612C116.767 66.8928 118.629 65.4464 119.216 63.5178H106.286Z" fill="white"></path>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M90.6123 57.25V70.75H94.5307C94.5307 70.75 95.5103 70.75 96.0001 69.7857C98.645 64.5786 99.4286 63.0357 99.4286 63.0357H99.9184V70.75H104.327V57.25H100.408C100.408 57.25 99.4286 57.3464 98.9388 58.2143C96.6858 62.65 95.5103 64.9643 95.5103 64.9643H95.0205V57.25H90.6123Z" fill="white"></path>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M72 70.75V57.25H76.4082C76.4082 57.25 77.6816 57.25 78.3673 59.1786C80.1306 64.2893 80.3265 64.9643 80.3265 64.9643C80.3265 64.9643 80.7184 63.7107 82.2857 59.1786C82.9714 57.25 84.2449 57.25 84.2449 57.25H88.6531V70.75H84.2449V63.5179H83.7551L81.3061 70.75H79.3469L76.898 63.5179H76.4082V70.75H72Z" fill="white"></path>
+          <g opacity="0.05">
+            <path d="M114 88H82.0401C81.3611 85.4429 81 82.7623 81 80H114V88Z" fill="white"></path>
+            <path d="M132 9.53955V42.3689C126.575 45.9241 120.037 48 113 48V15C120.037 15 126.575 12.987 132 9.53955Z" fill="white"></path>
+            <path d="M113 15C94.7774 15 80 29.7773 80 48V15H113Z" fill="white"></path>
+          </g>
+          <g opacity="0.08">
+            <path d="M132 51.7402V80H114C114 67.7084 121.289 57.1062 132 51.7402Z" fill="white"></path>
+            <path d="M51.1909 0H80V15C67.8613 15 57.2065 9.01006 51.1909 0Z" fill="white"></path>
+            <path d="M46 80C64.7748 80 80 65.3748 80 48H46V80Z" fill="white"></path>
+          </g>
+          <g opacity="0.12">
+            <path d="M68.4928 88H46V80C54.6236 80 62.4983 83.0203 68.4928 88Z" fill="white"></path>
+            <path d="M85.0382 0H113V15C101.218 15 90.8769 9.01006 85.0382 0Z" fill="white"></path>
+            <path d="M80 15C61.2252 15 46 29.7774 46 48H80V15Z" fill="white"></path>
+          </g>
+        </g>
+        <defs>
+          <linearGradient id="paint0_linear_5859_8081" x1="9.83477e-07" y1="-22" x2="-33" y2="77" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#3B3E44"></stop>
+            <stop offset="1" stop-color="#0D0E10"></stop>
+          </linearGradient>
+          <linearGradient id="paint1_linear_5859_8081" x1="9.83477e-07" y1="-22" x2="-33" y2="77" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#393C44"></stop>
+            <stop offset="1" stop-color="#070708"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+    ),
     benefitSum: () => (
       <svg width="88px" height="88px" xmlns="http://www.w3.org/2000/svg" fill="none" class="benefitSum">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="progressive_icon progressive_icon24">
