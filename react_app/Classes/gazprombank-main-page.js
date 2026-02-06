@@ -28,12 +28,23 @@ export default class {
     }
   };
   
+  static _eventListenerGazOutClick = (e) => {
+    if (!e.target.closest('._gazprombank-menu')) {
+      this.$objectDocument.renderCustomDiv({ content: null });
+      window.document.removeEventListener('click', this._eventListenerGazOutClick);
+    }
+
+  }
+  
   static labelClicks = {
     'Карты': async ({ fieldItem, $objectDocument, e }) => {
+      window.document.removeEventListener('click', this._eventListenerGazOutClick);
+
       // e.persist();
       // console.log('Карты e', e);
       const hrzRect = fieldItem.domElement.getBoundingClientRect();
       // const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
+
       $objectDocument.renderCustomDiv({
         content: (
           <div className="pos-abs bg-tree z-index-1000" style={{ top: hrzRect.bottom + 1, right: 0, left: 0, height: '500px' }} >
@@ -44,13 +55,19 @@ export default class {
                 //   this.Host.navigate('/gazprombank-credit-1')
                 // }
               }}
-              // noOkCancelPanel
+            // noOkCancelPanel
             ></AVObjectDocument>
           </div>
         )
-      })
+      });
+      
+      window.document.addEventListener('click', this._eventListenerGazOutClick);
+      this.$objectDocument = $objectDocument;
+
     },
     'Вклады и счета': async ({ fieldItem, $objectDocument, e }) => {
+      window.document.removeEventListener('click', this._eventListenerGazOutClick);
+
       // e.persist();
       // console.log('Вклады и счета e', e);
       const hrzRect = fieldItem.domElement.getBoundingClientRect();
@@ -65,22 +82,29 @@ export default class {
                 //   this.Host.navigate('/gazprombank-credit-1')
                 // }
               }}
-              // noOkCancelPanel
+            // noOkCancelPanel
             ></AVObjectDocument>
           </div>
         )
-      })
-    },
+      });
+      window.document.addEventListener('click', this._eventListenerGazOutClick);
+      this.$objectDocument = $objectDocument;
+    },       
     
     'Кредиты': async ({ fieldItem, $objectDocument, e }) => {
+      window.document.removeEventListener('click', this._eventListenerGazOutClick);
+      
       // e.persist();
       // console.log('Кредиты e', e);
       const hrzRect = fieldItem.domElement.getBoundingClientRect();
       // const hrzRect = {bottom: 0};
       // const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
+      window.document.addEventListener('click', this._eventListenerGazOutClick);
+      this.$objectDocument = $objectDocument;
+      
       $objectDocument.renderCustomDiv({
         content: (
-          <div className="pos-abs bg-tree z-index-1000" style={{ top: hrzRect.bottom + 1, right: 0, left: 0, height: '500px' }} >
+          <div className="_gazprombank-menu pos-abs bg-tree z-index-1000" style={{ top: hrzRect.bottom + 1, right: 0, left: 0, height: '500px' }} >
             <AVObjectDocument
               objectDocumentPath={'Domains/workspace/Domains/mTLA7zmXmQGvH5j3GexV/Domains/2PoyIkLXCEUWgkR7lggL/Classes/DSqVNzRZxNpg8aKdWRd4/ObjectDocuments/93b5Ld0pnnc350FEEy1r'}
               onLabelClickFunc={({ label, e }) => {
@@ -92,10 +116,15 @@ export default class {
             ></AVObjectDocument>
           </div>
         )
-      })
+      });
+      window.document.addEventListener('click', this._eventListenerGazOutClick);
+      this.$objectDocument = $objectDocument;
+
     },
     
     'Премиум': async ({ fieldItem, $objectDocument, e }) => {
+      window.document.removeEventListener('click', this._eventListenerGazOutClick);
+
       // e.persist();
       // console.log('Премиум e', e);
       const hrzRect = fieldItem.domElement.getBoundingClientRect();
@@ -110,11 +139,14 @@ export default class {
                 //   this.Host.navigate('/gazprombank-credit-1')
                 // }
               }}
-              // noOkCancelPanel
+            // noOkCancelPanel
             ></AVObjectDocument>
           </div>
         )
-      })
+      });
+      window.document.addEventListener('click', this._eventListenerGazOutClick);
+      this.$objectDocument = $objectDocument;
+
     }
     
   };
