@@ -76,10 +76,14 @@ export class AVObjectDocument extends AVItem {
     console.log('AVObjectDocument componentDidMount, props:', this.props);
     if (this.props.objectDocumentPath) {
       const objectDocument = this.Host.getObjectDocumentByPath(this.props.objectDocumentPath);
-      await objectDocument.getData();
-      const classItem = this.Host.getClass(objectDocument.data.classReference);
-      const fieldDescriptors = await classItem.getFieldDescriptors();
-      objectDocument.Class = classItem;
+      let fieldDescriptors = objectDocument.Class?.metadata?.fieldDescriptors;
+      if (!objectDocument.preloaded) {
+        console.log('not preloaded objectDocumentPath');
+        await objectDocument.getData();
+        const classItem = this.Host.getClass(objectDocument.data.classReference);
+        fieldDescriptors = await classItem.getFieldDescriptors();
+        objectDocument.Class = classItem;
+      }
 
       this.setState({
         _newData: this.deepClone(objectDocument.data),
@@ -114,10 +118,14 @@ export class AVObjectDocument extends AVItem {
   async componentDidUpdate(prevProps) {
     if (this.props.objectDocumentPath !== prevProps.objectDocumentPath) {
       const objectDocument = this.Host.getObjectDocumentByPath(this.props.objectDocumentPath);
-      await objectDocument.getData();
-      const classItem = this.Host.getClass(objectDocument.data.classReference);
-      const fieldDescriptors = await classItem.getFieldDescriptors();
-      objectDocument.Class = classItem;
+      let fieldDescriptors = objectDocument.Class?.metadata?.fieldDescriptors;
+      if (!objectDocument.preloaded) {
+        console.log('not preloaded objectDocumentPath');
+        await objectDocument.getData();
+        const classItem = this.Host.getClass(objectDocument.data.classReference);
+        fieldDescriptors = await classItem.getFieldDescriptors();
+        objectDocument.Class = classItem;
+      }
 
       this.state._newData = this.deepClone(objectDocument.data),
       this.state._newDataBeforeUpdate = this.deepClone(objectDocument.data),

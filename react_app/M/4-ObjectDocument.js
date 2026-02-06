@@ -5,10 +5,16 @@ export class ObjectDocument extends Item {
     super();
     if (initObj) {
       this.serverRef = initObj.serverRef;
+      this.path = initObj.path;
+      this.data = initObj.data;
+      this.preloaded = initObj.preloaded;
+      this.Class = initObj.Class;
     }
   }
   itemType = 'objectDocument';
   serverRef;
+  path;
+  preloaded;
   get id() {
     return this.serverRef.id;
   }

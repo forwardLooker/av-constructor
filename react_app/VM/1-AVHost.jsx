@@ -113,6 +113,15 @@ export class AVHost extends AVItem {
         console.log('config set on AvHost, config:', this.state.config)
       });
 
+      // Загрузка объектов которые нужно сразу загрузить, для рендеринга
+      const domainItemWithInstantClassesToLoad = this.findDeepObjInItemsBy({ name: (name) => name.includes('сразу'), itemType: 'domain' }, { items: config });
+      console.log('from config, domainItemWithInstantClassesToLoad:', domainItemWithInstantClassesToLoad);
+      if (domainItemWithInstantClassesToLoad) {
+        domainItemWithInstantClassesToLoad.items?.forEach(i => {
+          this.Host.preloadObjectDocumentsByClassReference(i.reference);
+        })
+      }
+
       // const bodyElem = window.document.getElementsByTagName('body');
       // console.log('bodyElem', bodyElem);
       window.document.addEventListener('keydown', e => {

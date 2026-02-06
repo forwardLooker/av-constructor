@@ -37,7 +37,12 @@ export class UtilFunctions {
     let resultObj;
     if (this.notEmpty(dataObjWithItems.items)) {
       resultObj = dataObjWithItems.items.find(i => {
-        return keys.every(key => i[key] === queryObj[key])
+        return keys.every(key => {
+          if (typeof queryObj[key] === 'function') {
+            return queryObj[key](i[key]);
+          }
+          return i[key] === queryObj[key]
+        })
       })
     }
     if (!resultObj && this.notEmpty(dataObjWithItems.items)) {

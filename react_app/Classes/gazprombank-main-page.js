@@ -9,8 +9,8 @@ export default class {
 
   static methods = {
     'Стать клиентом': async ({ $objectDocument, e }) => {
-      e.persist();
-      console.log('Стать клиентом e', e);
+      // e.persist();
+      // console.log('Стать клиентом e', e);
       const btnRect = e.target.getBoundingClientRect();
       const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
       $objectDocument.renderCustomDiv({
@@ -30,8 +30,8 @@ export default class {
   
   static labelClicks = {
     'Карты': async ({ fieldItem, $objectDocument, e }) => {
-      e.persist();
-      console.log('Стать клиентом e', e);
+      // e.persist();
+      // console.log('Карты e', e);
       const hrzRect = fieldItem.domElement.getBoundingClientRect();
       // const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
       $objectDocument.renderCustomDiv({
@@ -51,8 +51,8 @@ export default class {
       })
     },
     'Вклады и счета': async ({ fieldItem, $objectDocument, e }) => {
-      e.persist();
-      console.log('Стать клиентом e', e);
+      // e.persist();
+      // console.log('Вклады и счета e', e);
       const hrzRect = fieldItem.domElement.getBoundingClientRect();
       // const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
       $objectDocument.renderCustomDiv({
@@ -73,8 +73,8 @@ export default class {
     },
     
     'Кредиты': async ({ fieldItem, $objectDocument, e }) => {
-      e.persist();
-      console.log('Стать клиентом e', e);
+      // e.persist();
+      // console.log('Кредиты e', e);
       const hrzRect = fieldItem.domElement.getBoundingClientRect();
       // const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
       $objectDocument.renderCustomDiv({
@@ -95,8 +95,8 @@ export default class {
     },
     
     'Премиум': async ({ fieldItem, $objectDocument, e }) => {
-      e.persist();
-      console.log('Стать клиентом e', e);
+      // e.persist();
+      // console.log('Премиум e', e);
       const hrzRect = fieldItem.domElement.getBoundingClientRect();
       // const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
       $objectDocument.renderCustomDiv({

@@ -44,6 +44,7 @@ export class Host extends Item {
   storageRoot;
   auth;
   config;
+  preloadedObjectDocuments = [];
   async getConfig() {
     const rootDomainsSnap = await this.db.collection('Domains').get();
     this.config = rootDomainsSnap.docs.map(doc => doc.data());
@@ -83,6 +84,11 @@ export class Host extends Item {
   }
 
   getObjectDocumentByPath(path) {
+    const preloadedObjDoc = this.preloadedObjectDocuments.find(o => o.path === path);
+    if (preloadedObjDoc) {
+      console.log('getObjectDocumentByPath, found preloadedObjDoc:', preloadedObjDoc);
+      return preloadedObjDoc;
+    }
     const objRef = this.db.doc(path);
     const objectDocument = new ObjectDocument({serverRef: objRef});
     return objectDocument;
@@ -97,6 +103,17 @@ export class Host extends Item {
   
   navigate(...params) {
     this.$hostElement.props.appRef.state.router.navigate(...params);
+  }
+  
+  async preloadObjectDocumentsByClassReference(serverRef) {
+    const classItem = this.getClass(serverRef);
+    const fieldDescriptors = await classItem.getFieldDescriptors();
+    const objectDocuments = await classItem.getObjectDocuments();
+    const objDocsItems = objectDocuments.map(o => {
+      return new ObjectDocument({ serverRef: o.reference, path: o.path, data: o, preloaded: true, Class: classItem })
+    });
+    this.preloadedObjectDocuments = [...this.preloadedObjectDocuments, ...objDocsItems];
+    console.log('preloadObjectDocumentsByClassReference finished, preloadedObjectDocuments:', this.preloadedObjectDocuments);
   }
 
 };
