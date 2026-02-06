@@ -116,6 +116,7 @@ export class AVObjectDocument extends AVItem {
   }
 
   async componentDidUpdate(prevProps) {
+    console.log('AVObjectDocument componentDidUpdate, props:', this.props, 'prevProps:', prevProps);
     if (this.props.objectDocumentPath !== prevProps.objectDocumentPath) {
       const objectDocument = this.Host.getObjectDocumentByPath(this.props.objectDocumentPath);
       let fieldDescriptors = objectDocument.Class?.metadata?.fieldDescriptors;

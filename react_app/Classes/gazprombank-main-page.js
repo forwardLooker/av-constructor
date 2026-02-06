@@ -76,6 +76,7 @@ export default class {
       // e.persist();
       // console.log('Кредиты e', e);
       const hrzRect = fieldItem.domElement.getBoundingClientRect();
+      // const hrzRect = {bottom: 0};
       // const objRootDivRect = $objectDocument.$rootDivDomElement.getBoundingClientRect();
       $objectDocument.renderCustomDiv({
         content: (
