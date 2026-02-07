@@ -243,6 +243,22 @@ class AVFieldOriginal extends AVItem {
       this.calcSliderFillSpaceWidth();
       this.forceUpdate();
     }
+
+    if (this.props.fieldItem.domElement) {
+      const clientRect = this.props.fieldItem.domElement.getBoundingClientRect();
+      this.props.fieldItem.domElement.style.setProperty('--viewItem-root-left', clientRect.left+'px');
+      this.props.fieldItem.domElement.style.setProperty('--viewItem-root-top', clientRect.top + 'px');
+      
+      window.document.addEventListener('keydown', e => {
+        if (e.key === 'F7') {
+          e.preventDefault();
+          const clientRect = this.props.fieldItem.domElement.getBoundingClientRect();
+          this.props.fieldItem.domElement.style.setProperty('--viewItem-root-left', clientRect.left + 'px');
+          this.props.fieldItem.domElement.style.setProperty('--viewItem-root-top', clientRect.top + 'px');
+        }
+      });
+
+    }
     
     // для ресайза при переключениях на весь экран
     window.document.addEventListener('keydown', e => {
