@@ -114,11 +114,13 @@ export class AVHost extends AVItem {
       });
 
       // Загрузка объектов которые нужно сразу загрузить, для рендеринга
-      const domainItemWithInstantClassesToLoad = this.findDeepObjInItemsBy({ name: (name) => name.includes('сразу'), itemType: 'domain' }, { items: config });
-      console.log('from config, domainItemWithInstantClassesToLoad:', domainItemWithInstantClassesToLoad);
-      if (domainItemWithInstantClassesToLoad) {
-        domainItemWithInstantClassesToLoad.items?.forEach(i => {
-          this.Host.preloadObjectDocumentsByClassReference(i.reference);
+      const domainItemsWithInstantClassesToLoad = this.findDeepObjInItemsArrBy({ name: (name) => name.includes('сразу'), itemType: 'domain' }, { items: config });
+      console.log('from config, domainItemsWithInstantClassesToLoad:', domainItemsWithInstantClassesToLoad);
+      if (domainItemsWithInstantClassesToLoad.length > 0) {
+        domainItemsWithInstantClassesToLoad.forEach(d => {
+          d.items?.forEach(i => {
+            this.Host.preloadObjectDocumentsByClassReference(i.reference);
+          })
         })
       }
 

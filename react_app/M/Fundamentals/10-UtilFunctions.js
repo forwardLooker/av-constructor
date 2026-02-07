@@ -54,6 +54,35 @@ export class UtilFunctions {
     }
     return resultObj;
   };
+  
+  static findDeepObjInItemsArrBy(queryObj, dataObjWithItems) {
+    const keys = Object.keys(queryObj);
+    let resultArr = [];
+    if (this.notEmpty(dataObjWithItems.items)) {
+      dataObjWithItems.items.forEach(i => {
+        if (keys.every(key => {
+          if (typeof queryObj[key] === 'function') {
+            return queryObj[key](i[key]);
+          }
+          return i[key] === queryObj[key]
+        })) {
+          resultArr.push(i);
+        }
+      })
+
+    }
+    if (this.notEmpty(dataObjWithItems.items)) {
+      dataObjWithItems.items.forEach(i => {
+        if (this.notEmpty(i.items)) {
+          let innerResultArr = this.findDeepObjInItemsArrBy(queryObj, i);
+          if (this.notEmpty(innerResultArr)) {
+            resultArr = [...resultArr, ...innerResultArr];
+          }
+        }
+      })
+    }
+    return resultArr;
+  };
 
   static findDeepContainerInItemsBy(queryObj, dataObjWithItems) {
     const keys = Object.keys(queryObj);
