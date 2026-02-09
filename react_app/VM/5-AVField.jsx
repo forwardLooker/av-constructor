@@ -377,16 +377,64 @@ class AVFieldOriginal extends AVItem {
   _renderDivInDivItems = (items = []) => {
     return items.map(i => {
       if (i.viewItemType === 'd') {
-        return (<div style={i.style}>{i.label}{this._renderDivInDivItems(i.items)}</div>)
+        return (
+          <div style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }}
+            onMouseEnter={() => {
+              i.isHovered = true;
+              this.forceUpdate();
+            }}
+            onMouseLeave={() => {
+              i.isHovered = false;
+              this.forceUpdate();
+            }}  
+          >
+            {i.label}{this._renderDivInDivItems(i.items)}
+          </div>
+        )
       }
       if (i.viewItemType === 'b') {
-        return (<button style={i.style}>{i.label}{this._renderDivInDivItems(i.items)}</button>)
+        return (
+          <button style={i.style}
+            onMouseEnter={() => {
+              i.isHovered = true;
+              this.forceUpdate();
+            }}
+            onMouseLeave={() => {
+              i.isHovered = false;
+              this.forceUpdate();
+            }}  
+          >
+            {i.label}{this._renderDivInDivItems(i.items)}
+          </button>
+        )  
       }
       if (i.viewItemType === 'img') {
-        return (<img style={i.style} src={i.src}>{i.label}</img>)
+        return (
+          <img style={i.style}
+            onMouseEnter={() => {
+              i.isHovered = true;
+              this.forceUpdate();
+            }}
+            onMouseLeave={() => {
+              i.isHovered = false;
+              this.forceUpdate();
+            }}  
+            src={i.src}>{i.label}</img>
+        )
       }
       if (i.viewItemType = 'AVIcon') {
-        return (<AVIcon name={i.name} style={i.style}></AVIcon>)
+        return (
+          <AVIcon name={i.name} style={i.style}
+            onMouseEnter={() => {
+              i.isHovered = true;
+              this.forceUpdate();
+            }}
+            onMouseLeave={() => {
+              i.isHovered = false;
+              this.forceUpdate();
+            }}  
+          ></AVIcon>
+        )
       }
     })
   }
