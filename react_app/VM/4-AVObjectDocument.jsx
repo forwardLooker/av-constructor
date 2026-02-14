@@ -1024,7 +1024,14 @@ export class AVObjectDocument extends AVItem {
 
       let newStyleObj = { ...oldStyleObj };
       let rootStyleObj = newStyleObj;
-      let rootHoverStyleObj = {...fieldItem.viewItemRootHoverStyle}
+      let rootHoverStyleObj = { ...fieldItem.viewItemRootHoverStyle };
+
+      let newOnActionsObj = { ...(fieldItem.viewItemRootOnActions || {}) };
+      let rootOnActionsObj = newOnActionsObj;
+      
+      let newActionListenersArr = [...(fieldItem.viewItemRootActionListeners || []) ];
+      let rootActionListenersArr = newActionListenersArr;
+      
 
       let innerStruct = this.deepClone(fieldItem.items) || [];
       let setStyleEmpty = (struct) => {
@@ -1067,6 +1074,8 @@ export class AVObjectDocument extends AVItem {
                   onClick={e => {
                     itemSelected = i;
                     newStyleObj = itemSelected.style;
+                    newOnActionsObj = itemSelected.onActions
+                    newActionListenersArr = itemSelected.actionListeners;
                     tabItemForFieldWrapper.selectedTabLabel = tabItemForFieldWrapper.items[0].label
                     this.Host.$hostElement.forceUpdate();
                   }}>
@@ -1075,7 +1084,7 @@ export class AVObjectDocument extends AVItem {
                 <div className='_toRight+ cursor-default' onClick={async e => {
                   let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon)', inputLabel: 'viewItemType' });
                   if (newItemType) {
-                    arr.splice(idx + 1, 0, { viewItemType: newItemType, style: {} });
+                    arr.splice(idx + 1, 0, { viewItemType: newItemType, style: {}, onActions: {}, actionListeners: [] });
                     this.Host.$hostElement.forceUpdate();
                   }
                 }}>+</div>
@@ -1083,7 +1092,7 @@ export class AVObjectDocument extends AVItem {
               <div className='_toDown+ cursor-default' onClick={async e => {
                 let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon)', inputLabel: 'viewItemType' });
                 if (newItemType) {
-                  i.items = [{ viewItemType: newItemType, style: {}, items: i.items || [] }];
+                  i.items = [{ viewItemType: newItemType, style: {}, items: i.items || [], onActions: {}, actionListeners: [] }];
                   this.Host.$hostElement.forceUpdate();
                 }
               }}>+</div>
@@ -1657,15 +1666,67 @@ export class AVObjectDocument extends AVItem {
           {
             viewItemType: 'tab',
             label: 'onActions',
+            onClickFunc: () => {
+              if (!itemSelected.onActions) {
+                itemSelected.onActions = {}
+              }
+
+              newOnActionsObj = itemSelected === fieldItem ? rootOnActionsObj : itemSelected.onActions;
+              this.Host.$hostElement.forceUpdate();
+            },
             renderCustomBody: () => {
-              return (<div>first paint</div>)
+              return (
+                <div>
+                  <AVField
+                    fieldItem={{
+                      label: 'onClick',
+                      dataType: 'string',
+                    }}
+                    value={newOnActionsObj?.onClick}
+                    onChangeFunc={(value) => newOnActionsObj.onClick = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+                </div>
+              )
             },
           },
           {
             viewItemType: 'tab',
             label: 'Action Listeners',
+            onClickFunc: () => {
+              if (!itemSelected.actionListeners) {
+                itemSelected.actionListeners = []
+              }
+
+              newOnActionsObj = itemSelected === fieldItem ? rootActionListenersArr : itemSelected.actionListeners;
+              this.Host.$hostElement.forceUpdate();
+            },
             renderCustomBody: () => {
-              return (<div>first paint</div>)
+              return (
+                <div>
+                  <AVField
+                    fieldItem={{
+                      label: 'Action Listeners',
+                      dataType: 'array',
+                      labelPostion: 'top',
+                      items: [{
+                        name: 'actionName'
+                      }, {
+                        name: 'actionHandlerFunction',
+                        dataType: 'string',
+                        variant: 'textarea'
+                        }]
+                    }}
+                    value={newActionListenersArr}
+                    onChangeFunc={(value) => newActionListenersArr = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+                </div>
+              )
             },
           },
         ]
@@ -1685,6 +1746,8 @@ export class AVObjectDocument extends AVItem {
                 <div className={`${itemSelected === fieldItem ? 'font-bold border-bottom-2' : ''} cursor-pointer`} onClick={e => {
                   itemSelected = fieldItem;
                   newStyleObj = rootStyleObj;
+                  newOnActionsObj = rootOnActionsObj;
+                  newActionListenersArr = rootActionListenersArr;
                   tabItemForFieldWrapper.selectedTabLabel = tabItemForFieldWrapper.items[0].label
                   this.Host.$hostElement.forceUpdate();
                 }}>root(space div)</div>
@@ -1692,9 +1755,9 @@ export class AVObjectDocument extends AVItem {
                   let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
                   if (newItemType) {
                     if (innerStruct.length === 0) {
-                      innerStruct = [{ viewItemType: newItemType, style: {} }]
+                      innerStruct = [{ viewItemType: newItemType, style: {}, onActions: {}, actionListeners: [] }]
                     } else {
-                      innerStruct = [{ viewItemType: newItemType, style: {}, items: innerStruct }]
+                      innerStruct = [{ viewItemType: newItemType, style: {}, onActions: {}, actionListeners: [], items: innerStruct }]
                     }
                     this.Host.$hostElement.forceUpdate();
 
@@ -1757,11 +1820,22 @@ export class AVObjectDocument extends AVItem {
           })
           this.forceUpdate();
         }
-
-        if (newLabel !== fieldItem.label) {
-          fieldItem.label = newLabel;
+        
+        if (!this.isDeepEqual(rootOnActionsObj, fieldItem.viewItemRootOnActions)) {
+          fieldItem.viewItemRootOnActions = { ...rootOnActionsObj };
+          Object.keys(rootHoverStyleObj).forEach(propName => {
+            if (rootOnActionsObj[propName] === 'delete' || rootOnActionsObj[propName] === '') {
+              delete fieldItem.viewItemRootOnActions[propName];
+            }
+          })
           this.forceUpdate();
         }
+        
+        if (!this.isDeepEqual(rootActionListenersArr, fieldItem.viewItemRootActionListeners)) {
+          fieldItem.viewItemRootActionListeners = [...rootActionListenersArr];
+          this.forceUpdate();
+        }
+
       }
     }
     

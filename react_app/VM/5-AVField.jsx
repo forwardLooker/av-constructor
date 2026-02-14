@@ -270,6 +270,10 @@ class AVFieldOriginal extends AVItem {
         }
       }
     });
+    
+    if (this.props.fieldItem.viewItemType === 'space div') {
+      
+    }
 
     if (this.props.fieldItem.variant === 'Gazprombank-tel') {
       this.setState({ _value: this.state._value || '+7 (___) ___-__-__', isInputRendered: true });
