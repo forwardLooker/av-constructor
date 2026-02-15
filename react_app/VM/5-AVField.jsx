@@ -427,7 +427,13 @@ class AVFieldOriginal extends AVItem {
             onMouseLeave={() => {
               i.isHovered = false;
               this.forceUpdate();
-            }}  
+            }}
+            onClick={(e) => {
+              console.log('AVField _renderDivInDivItems onClick item', i)
+              if (i.onActions?.onClick) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, AVFieldComponent: this })
+              }
+            }}                        
           >
             {i.label}{this._renderDivInDivItems(i.items)}
           </button>
@@ -443,7 +449,13 @@ class AVFieldOriginal extends AVItem {
             onMouseLeave={() => {
               i.isHovered = false;
               this.forceUpdate();
-            }}  
+            }}
+            onClick={(e) => {
+              console.log('AVField _renderDivInDivItems onClick item', i)
+              if (i.onActions?.onClick) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, AVFieldComponent: this })
+              }
+            }}                        
             src={i.src}>{i.label}</img>
         )
       }
@@ -457,7 +469,13 @@ class AVFieldOriginal extends AVItem {
             onMouseLeave={() => {
               i.isHovered = false;
               this.forceUpdate();
-            }}  
+            }}
+            onClick={(e) => {
+              console.log('AVField _renderDivInDivItems onClick item', i)
+              if (i.onActions?.onClick) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, AVFieldComponent: this })
+              }
+            }}                        
           ></AVIcon>
         )
       }
