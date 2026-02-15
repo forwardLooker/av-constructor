@@ -272,7 +272,22 @@ class AVFieldOriginal extends AVItem {
     });
     
     if (this.props.fieldItem.viewItemType === 'space div') {
-      
+      if (this.props.fieldItem.actionListeners) {
+        this.props.fieldItem.actionListeners.forEach(listenerObj => {
+          this.props.$objectDocument.registerActionHandler(listenerObj);
+        })
+      }
+      const registerActionHandler = (items = []) => {
+        items.forEach(i => {
+          if (i.actionListeners) {
+            i.actionListeners.forEach(listenerObj => {
+              this.props.$objectDocument.registerActionHandler(listenerObj, i);
+            })
+          }
+          registerActionHandler(i.items)
+        })
+      }
+      registerActionHandler(this.props.fieldItem.items)
     }
 
     if (this.props.fieldItem.variant === 'Gazprombank-tel') {
@@ -379,10 +394,10 @@ class AVFieldOriginal extends AVItem {
   }
 
   _renderDivInDivItems = (items = []) => {
-    return items.map(i => {
+    return items.map((i, idx) => {
       if (i.viewItemType === 'd') {
         return (
-          <div style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }}
+          <div key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }}
             onMouseEnter={() => {
               i.isHovered = true;
               this.forceUpdate();
@@ -390,7 +405,13 @@ class AVFieldOriginal extends AVItem {
             onMouseLeave={() => {
               i.isHovered = false;
               this.forceUpdate();
-            }}  
+            }}
+            onClick={(e) => {
+              console.log('AVField _renderDivInDivItems onClick item', i)
+              if (i.onActions?.onClick) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, AVFieldComponent: this })
+              }
+            }}            
           >
             {i.label}{this._renderDivInDivItems(i.items)}
           </div>
@@ -398,7 +419,7 @@ class AVFieldOriginal extends AVItem {
       }
       if (i.viewItemType === 'b') {
         return (
-          <button style={i.style}
+          <button key={idx} style={i.style}
             onMouseEnter={() => {
               i.isHovered = true;
               this.forceUpdate();
@@ -414,7 +435,7 @@ class AVFieldOriginal extends AVItem {
       }
       if (i.viewItemType === 'img') {
         return (
-          <img style={i.style}
+          <img key={idx} style={i.style}
             onMouseEnter={() => {
               i.isHovered = true;
               this.forceUpdate();
@@ -428,7 +449,7 @@ class AVFieldOriginal extends AVItem {
       }
       if (i.viewItemType = 'AVIcon') {
         return (
-          <AVIcon name={i.name} style={i.style}
+          <AVIcon key={idx} name={i.name} style={i.style}
             onMouseEnter={() => {
               i.isHovered = true;
               this.forceUpdate();

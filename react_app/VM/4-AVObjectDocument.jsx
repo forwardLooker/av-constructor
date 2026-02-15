@@ -63,6 +63,8 @@ export class AVObjectDocument extends AVItem {
   }
   
   $rootDivDomElement;
+  
+  actionHandlerList = {};
 
   constructor(props) {
     super(props);
@@ -3528,4 +3530,25 @@ export class AVObjectDocument extends AVItem {
   }
 
   _forceUpdateDebounced1Sec = this.makeDebounced(() => this.forceUpdate(), 1000)
+  
+  // Для Филдов
+  registerActionHandler = (listenerObj, item) => {
+    if (!this.actionHandlerList[listenerObj.actionName]) {
+      this.actionHandlerList[listenerObj.actionName] = [{ item, actionHandlerFunction: listenerObj.actionHandlerFunction }];
+    } else {
+      this.actionHandlerList[listenerObj.actionName].push({ item, actionHandlerFunction: listenerObj.actionHandlerFunction });
+    }
+  }
+  
+  activateActionHandler = ({ e, actionName, AVFieldComponent }) => {
+    console.log('AVObjectDocument activateActionHandler actionHandlerList', this.actionHandlerList);
+    if (this.actionHandlerList[actionName]) {
+      this.actionHandlerList[actionName].forEach(({ item, actionHandlerFunction }) => {
+        let f = new Function('item', '$objectDocument', 'e', actionHandlerFunction);
+        f = f.bind(AVFieldComponent);
+        f(item, this, e);
+
+      })
+    }
+  }
 }
