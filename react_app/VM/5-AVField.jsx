@@ -398,12 +398,22 @@ class AVFieldOriginal extends AVItem {
       if (i.viewItemType === 'd') {
         return (
           <div key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }}
-            onMouseEnter={() => {
+            onMouseEnter={(e) => {
               i.isHovered = true;
+              
+              if (i.onActions?.onMouseEnter) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, AVFieldComponent: this })
+              }
+
               this.forceUpdate();
             }}
-            onMouseLeave={() => {
+            onMouseLeave={(e) => {
               i.isHovered = false;
+              
+              if (i.onActions?.onMouseLeave) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, AVFieldComponent: this })
+              }
+
               this.forceUpdate();
             }}
             onClick={(e) => {
@@ -422,10 +432,20 @@ class AVFieldOriginal extends AVItem {
           <button key={idx} style={i.style}
             onMouseEnter={() => {
               i.isHovered = true;
+              
+              if (i.onActions?.onMouseEnter) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, AVFieldComponent: this })
+              }
+
               this.forceUpdate();
             }}
             onMouseLeave={() => {
               i.isHovered = false;
+              
+              if (i.onActions?.onMouseLeave) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, AVFieldComponent: this })
+              }
+
               this.forceUpdate();
             }}
             onClick={(e) => {
@@ -444,10 +464,20 @@ class AVFieldOriginal extends AVItem {
           <img key={idx} style={i.style}
             onMouseEnter={() => {
               i.isHovered = true;
+              
+              if (i.onActions?.onMouseEnter) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, AVFieldComponent: this })
+              }
+
               this.forceUpdate();
             }}
             onMouseLeave={() => {
               i.isHovered = false;
+              
+              if (i.onActions?.onMouseLeave) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, AVFieldComponent: this })
+              }
+
               this.forceUpdate();
             }}
             onClick={(e) => {
@@ -464,10 +494,20 @@ class AVFieldOriginal extends AVItem {
           <AVIcon key={idx} name={i.name} style={i.style}
             onMouseEnter={() => {
               i.isHovered = true;
+              
+              if (i.onActions?.onMouseEnter) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, AVFieldComponent: this })
+              }
+
               this.forceUpdate();
             }}
             onMouseLeave={() => {
               i.isHovered = false;
+              
+              if (i.onActions?.onMouseLeave) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, AVFieldComponent: this })
+              }
+
               this.forceUpdate();
             }}
             onClick={(e) => {
