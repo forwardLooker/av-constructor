@@ -147,12 +147,14 @@ export class AVObjectDocument extends AVItem {
 
   _makeDidMountByModule = () => {
     // вызывается в модуле конкретного класса
-    const classInstance = this.state._objectDocument.Class;
-    const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
-    if (moduleDefinition) {
-      const methodOnComponentDidMount = moduleDefinition.onComponentDidMount;
-      if (methodOnComponentDidMount) {
-        methodOnComponentDidMount(this)
+    if (this.state._objectDocument) {
+      const classInstance = this.state._objectDocument.Class;
+      const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+      if (moduleDefinition) {
+        const methodOnComponentDidMount = moduleDefinition.onComponentDidMount;
+        if (methodOnComponentDidMount) {
+          methodOnComponentDidMount(this)
+        }
       }
     }
   }
@@ -1066,7 +1068,7 @@ export class AVObjectDocument extends AVItem {
                       }
                     }
                     if (menuResult === 'Переименовать') {
-                      let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon)', inputLabel: 'viewItemType', inputValue: i.viewItemType });
+                      let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument)', inputLabel: 'viewItemType', inputValue: i.viewItemType });
                       if (newItemType) {
                         i.viewItemType = newItemType
                       }
@@ -1084,7 +1086,7 @@ export class AVObjectDocument extends AVItem {
                   {'<' + i.viewItemType + '>'}
                 </div>
                 <div className='_toRight+ cursor-default' onClick={async e => {
-                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon)', inputLabel: 'viewItemType' });
+                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument)', inputLabel: 'viewItemType' });
                   if (newItemType) {
                     arr.splice(idx + 1, 0, { viewItemType: newItemType, style: {}, onActions: {}, actionListeners: [] });
                     this.Host.$hostElement.forceUpdate();
@@ -1092,7 +1094,7 @@ export class AVObjectDocument extends AVItem {
                 }}>+</div>
               </div>
               <div className='_toDown+ cursor-default' onClick={async e => {
-                let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon)', inputLabel: 'viewItemType' });
+                let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument)', inputLabel: 'viewItemType' });
                 if (newItemType) {
                   i.items = [{ viewItemType: newItemType, style: {}, items: i.items || [], onActions: {}, actionListeners: [] }];
                   this.Host.$hostElement.forceUpdate();
@@ -1115,7 +1117,7 @@ export class AVObjectDocument extends AVItem {
           <div className='col'>
             {!p?.withoutContent && itemSelected !== fieldItem && (
               <div className='row'>
-                {itemSelected.viewItemType !== 'img' && itemSelected.viewItemType !== 'AVIcon' && (
+                {itemSelected.viewItemType !== 'img' && itemSelected.viewItemType !== 'AVIcon' && itemSelected.viewItemType !== 'AVObjectDocument' && (
                   <AVField
                     style={{ width: '150px' }}
                     fieldItem={{
@@ -1131,6 +1133,24 @@ export class AVObjectDocument extends AVItem {
                     }}
                   ></AVField>
                 )}
+                
+                {itemSelected.viewItemType === 'AVObjectDocument' && (
+                  <AVField
+                    style={{ width: '150px' }}
+                    fieldItem={{
+                      label: 'objectDocumentPath',
+                      dataType: 'string',
+                      variant: 'Gazprombank-string',
+                      size: 7,
+                    }}
+                    value={itemSelected.objectDocumentPath}
+                    onChangeFunc={(value) => itemSelected.objectDocumentPath = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+                )}
+
                 {itemSelected.viewItemType === 'img' && (
                   <div className='flex-1 row'>
                     <AVField
@@ -1879,7 +1899,7 @@ export class AVObjectDocument extends AVItem {
                   this.Host.$hostElement.forceUpdate();
                 }}>root(space div)</div>
                 <div onClick={async e => {
-                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img)', inputLabel: 'viewItemType' });
+                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument)', inputLabel: 'viewItemType' });
                   if (newItemType) {
                     if (innerStruct.length === 0) {
                       innerStruct = [{ viewItemType: newItemType, style: {}, onActions: {}, actionListeners: [] }]

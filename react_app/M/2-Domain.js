@@ -70,6 +70,7 @@ export class Domain extends Item {
       lastModifiedAuthor: this.user.email,
     };
     await newClass.set(classInitData);
+    console.log('Domain.js createClassCopyFromReference newClass from Copy set in Database');
     // update config
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
     const workspaceDoc = await workspaceDocRef.get();
@@ -80,12 +81,17 @@ export class Domain extends Item {
     } else {
       targetDomainToAddNewClass = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
     }
+    let classInitDataInConfig = { ...classInitData };
+    delete classInitDataInConfig.fieldDescriptors;
+    delete classInitDataInConfig.objectDocumentDesignJson;
     if (Array.isArray(targetDomainToAddNewClass.items)) {
-      targetDomainToAddNewClass.items.push(classInitData);
+      targetDomainToAddNewClass.items.push(classInitDataInConfig);
     } else {
-      targetDomainToAddNewClass.items = [classInitData]
+      targetDomainToAddNewClass.items = [classInitDataInConfig]
     }
-    await workspaceDocRef.update({items: workspaceConfig.items});
+    console.log('targetDomainToAddNewClass', targetDomainToAddNewClass);
+    await workspaceDocRef.update({ items: workspaceConfig.items });
+    console.log('Domain.js createClassCopyFromReference newClass from Copy updated in Config');
 
   }
 
@@ -107,6 +113,7 @@ export class Domain extends Item {
       lastModifiedAuthor: this.user.email,
     };
     await newClass.set(classInitData);
+    console.log('Domain.js createClassCopyFromReference newClass from Copy set in Database');
 
     // Скопировать данные
     const objectsSnap = await reference.collection('ObjectDocuments').get();
@@ -128,12 +135,16 @@ export class Domain extends Item {
     } else {
       targetDomainToAddNewClass = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
     }
+    let classInitDataInConfig = { ...classInitData };
+    delete classInitDataInConfig.fieldDescriptors;
+    delete classInitDataInConfig.objectDocumentDesignJson;
     if (Array.isArray(targetDomainToAddNewClass.items)) {
-      targetDomainToAddNewClass.items.push(classInitData);
+      targetDomainToAddNewClass.items.push(classInitDataInConfig);
     } else {
-      targetDomainToAddNewClass.items = [classInitData]
+      targetDomainToAddNewClass.items = [classInitDataInConfig]
     }
-    await workspaceDocRef.update({items: workspaceConfig.items});
+    await workspaceDocRef.update({ items: workspaceConfig.items });
+    console.log('Domain.js createClassCopyFromReference newClass from Copy updated in Config');
 
   }
 

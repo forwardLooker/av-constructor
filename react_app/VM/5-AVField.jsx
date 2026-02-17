@@ -233,6 +233,15 @@ class AVFieldOriginal extends AVItem {
     }
   };
   
+  _eventListenerF7RecalcStyleCustomProperties = e => {
+    if (e.key === 'F7') {
+      e.preventDefault();
+      const clientRect = this.props.fieldItem.domElement.getBoundingClientRect();
+      this.props.fieldItem.domElement.style.setProperty('--viewItem-root-left', clientRect.left + 'px');
+      this.props.fieldItem.domElement.style.setProperty('--viewItem-root-top', clientRect.top + 'px');
+    }
+  }; //потом на анмаунт сделать
+
   //render
   
   async componentDidMount() {
@@ -249,14 +258,7 @@ class AVFieldOriginal extends AVItem {
       this.props.fieldItem.domElement.style.setProperty('--viewItem-root-left', clientRect.left+'px');
       this.props.fieldItem.domElement.style.setProperty('--viewItem-root-top', clientRect.top + 'px');
       
-      window.document.addEventListener('keydown', e => {
-        if (e.key === 'F7') {
-          e.preventDefault();
-          const clientRect = this.props.fieldItem.domElement.getBoundingClientRect();
-          this.props.fieldItem.domElement.style.setProperty('--viewItem-root-left', clientRect.left + 'px');
-          this.props.fieldItem.domElement.style.setProperty('--viewItem-root-top', clientRect.top + 'px');
-        }
-      });
+      window.document.addEventListener('keydown', this._eventListenerF7RecalcStyleCustomProperties);
 
     }
     
@@ -392,6 +394,10 @@ class AVFieldOriginal extends AVItem {
       this._sliderFillSpaceWidth = sliderFreeSpaceWidth;
     }
   }
+  
+  componentWillUnmount() {
+    window.document.removeEventListener('keydown', this._eventListenerF7RecalcStyleCustomProperties);
+  }
 
   _renderDivInDivItems = (items = []) => {
     return items.map((i, idx) => {
@@ -489,7 +495,7 @@ class AVFieldOriginal extends AVItem {
             src={i.src}>{i.label}</img>
         )
       }
-      if (i.viewItemType = 'AVIcon') {
+      if (i.viewItemType === 'AVIcon') {
         return (
           <AVIcon key={idx} name={i.name} style={i.style}
             onMouseEnter={() => {
@@ -518,7 +524,16 @@ class AVFieldOriginal extends AVItem {
             }}                        
           ></AVIcon>
         )
+      };
+      
+      if (i.viewItemType === 'AVObjectDocument') {
+        return (
+          <AVObjectDocument key={idx} objectDocumentPath={i.objectDocumentPath}
+          ></AVObjectDocument>
+        )
       }
+
+      
     })
   }
 
