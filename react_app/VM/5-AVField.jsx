@@ -283,7 +283,7 @@ class AVFieldOriginal extends AVItem {
         items.forEach(i => {
           if (i.actionListeners) {
             i.actionListeners.forEach(listenerObj => {
-              this.props.$objectDocument.registerActionHandler(listenerObj, i);
+              this.props.$objectDocument.registerActionHandler(listenerObj, i, this);
             })
           }
           registerActionHandler(i.items)
@@ -408,7 +408,7 @@ class AVFieldOriginal extends AVItem {
               i.isHovered = true;
               
               if (i.onActions?.onMouseEnter) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
               }
 
               this.forceUpdate();
@@ -417,7 +417,7 @@ class AVFieldOriginal extends AVItem {
               i.isHovered = false;
               
               if (i.onActions?.onMouseLeave) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
               }
 
               this.forceUpdate();
@@ -425,7 +425,7 @@ class AVFieldOriginal extends AVItem {
             onClick={(e) => {
               console.log('AVField _renderDivInDivItems onClick item', i)
               if (i.onActions?.onClick) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
               }
             }}            
           >
@@ -440,7 +440,7 @@ class AVFieldOriginal extends AVItem {
               i.isHovered = true;
               
               if (i.onActions?.onMouseEnter) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
               }
 
               this.forceUpdate();
@@ -449,7 +449,7 @@ class AVFieldOriginal extends AVItem {
               i.isHovered = false;
               
               if (i.onActions?.onMouseLeave) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
               }
 
               this.forceUpdate();
@@ -457,7 +457,7 @@ class AVFieldOriginal extends AVItem {
             onClick={(e) => {
               console.log('AVField _renderDivInDivItems onClick item', i)
               if (i.onActions?.onClick) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
               }
             }}                        
           >
@@ -472,7 +472,7 @@ class AVFieldOriginal extends AVItem {
               i.isHovered = true;
               
               if (i.onActions?.onMouseEnter) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
               }
 
               this.forceUpdate();
@@ -481,7 +481,7 @@ class AVFieldOriginal extends AVItem {
               i.isHovered = false;
               
               if (i.onActions?.onMouseLeave) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
               }
 
               this.forceUpdate();
@@ -489,7 +489,7 @@ class AVFieldOriginal extends AVItem {
             onClick={(e) => {
               console.log('AVField _renderDivInDivItems onClick item', i)
               if (i.onActions?.onClick) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
               }
             }}                        
             src={i.src}>{i.label}</img>
@@ -502,7 +502,7 @@ class AVFieldOriginal extends AVItem {
               i.isHovered = true;
               
               if (i.onActions?.onMouseEnter) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
               }
 
               this.forceUpdate();
@@ -511,7 +511,7 @@ class AVFieldOriginal extends AVItem {
               i.isHovered = false;
               
               if (i.onActions?.onMouseLeave) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
               }
 
               this.forceUpdate();
@@ -519,7 +519,7 @@ class AVFieldOriginal extends AVItem {
             onClick={(e) => {
               console.log('AVField _renderDivInDivItems onClick item', i)
               if (i.onActions?.onClick) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, AVFieldComponent: this })
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
               }
             }}                        
           ></AVIcon>

@@ -1015,10 +1015,10 @@ export class AVObjectDocument extends AVItem {
       this.forceUpdate();
     }
     if (menuResult === 'Установить font-size') {
-      const px = await this.showDialog({text: 'Введите число px', inputLabel: 'px'});
-      if (px) {
+      const fontSize = await this.showDialog({text: 'Введите число px', inputLabel: 'px'});
+      if (fontSize) {
         if (!fieldItem.style) fieldItem.style = {};
-        fieldItem.style = {...fieldItem.style, fontSize: px+'px'};
+        fieldItem.style = {...fieldItem.style, fontSize: fontSize+'px'};
         this.forceUpdate();
       }
     }
@@ -3677,21 +3677,21 @@ export class AVObjectDocument extends AVItem {
   _forceUpdateDebounced1Sec = this.makeDebounced(() => this.forceUpdate(), 1000)
   
   // Для Филдов
-  registerActionHandler = (listenerObj, item) => {
+  registerActionHandler = (listenerObj, item, listenerAVFieldComponent) => {
     if (!this.actionHandlerList[listenerObj.actionName]) {
-      this.actionHandlerList[listenerObj.actionName] = [{ item, actionHandlerFunction: listenerObj.actionHandlerFunction }];
+      this.actionHandlerList[listenerObj.actionName] = [{ item, listenerAVFieldComponent,  actionHandlerFunction: listenerObj.actionHandlerFunction }];
     } else {
-      this.actionHandlerList[listenerObj.actionName].push({ item, actionHandlerFunction: listenerObj.actionHandlerFunction });
+      this.actionHandlerList[listenerObj.actionName].push({ item, listenerAVFieldComponent, actionHandlerFunction: listenerObj.actionHandlerFunction });
     }
   }
   
-  activateActionHandler = ({ e, actionName, AVFieldComponent }) => {
+  activateActionHandler = ({ e, actionName, sourceAVFieldComponent }) => {
     console.log('AVObjectDocument activateActionHandler actionHandlerList', this.actionHandlerList);
     if (this.actionHandlerList[actionName]) {
-      this.actionHandlerList[actionName].forEach(({ item, actionHandlerFunction }) => {
-        let f = new Function('item', '$objectDocument', 'e', actionHandlerFunction);
-        f = f.bind(AVFieldComponent);
-        f(item, this, e);
+      this.actionHandlerList[actionName].forEach(({ item, listenerAVFieldComponent, actionHandlerFunction }) => {
+        let f = new Function('item', '$objectDocument', 'e', 'sourceAVFieldComponent', actionHandlerFunction);
+        f = f.bind(listenerAVFieldComponent);
+        f(item, this, e, sourceAVFieldComponent);
 
       })
     }
