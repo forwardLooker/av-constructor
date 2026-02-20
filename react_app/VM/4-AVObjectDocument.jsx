@@ -9,6 +9,7 @@ import {AVButton} from "../V/AVButton.jsx";
 import {AVIcon} from '../V/icons/AVIcon.jsx';
 
 import { JSONTree } from 'react-json-tree';
+import { AVContextMenu } from '../V/AVContextMenu.jsx';
 
 export class AVObjectDocument extends AVItem {
   static defaultProps = {
@@ -1897,7 +1898,13 @@ export class AVObjectDocument extends AVItem {
                   newActionListenersArr = rootActionListenersArr;
                   tabItemForFieldWrapper.selectedTabLabel = tabItemForFieldWrapper.items[0].label
                   this.Host.$hostElement.forceUpdate();
-                }}>root(space div)</div>
+                }}>root(space div)<AVButton onClick={() => {
+                    this.Host.$hostElement.divInDivItemsCopy = this.deepClone(fieldItem.items);
+                  }}>Копировать структуру</AVButton>{this.Host.$hostElement.divInDivItemsCopy && (<AVButton onClick={() => {
+                    fieldItem.items = this.Host.$hostElement.divInDivItemsCopy;
+                    this.Host.$hostElement.divInDivItemsCopy = null;
+                    this.Host.$hostElement.forceUpdate();
+                  }}>Вставить копию</AVButton>)}</div>
                 <div onClick={async e => {
                   let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument)', inputLabel: 'viewItemType' });
                   if (newItemType) {
