@@ -1899,10 +1899,13 @@ export class AVObjectDocument extends AVItem {
                   tabItemForFieldWrapper.selectedTabLabel = tabItemForFieldWrapper.items[0].label
                   this.Host.$hostElement.forceUpdate();
                 }}>root(space div)<AVButton onClick={() => {
-                    this.Host.$hostElement.divInDivItemsCopy = this.deepClone(fieldItem.items);
+                    this.Host.$hostElement.divInDivItemsCopy = this.deepClone(innerStruct);
+                    this.Host.$hostElement.divInDivRootStyle = this.deepClone(rootStyleObj);
                   }}>Копировать структуру</AVButton>{this.Host.$hostElement.divInDivItemsCopy && (<AVButton onClick={() => {
-                    fieldItem.items = this.Host.$hostElement.divInDivItemsCopy;
+                    innerStruct = this.Host.$hostElement.divInDivItemsCopy;
+                    rootStyleObj = this.Host.$hostElement.divInDivRootStyle;
                     this.Host.$hostElement.divInDivItemsCopy = null;
+                    this.Host.$hostElement.divInDivRootStyle = null;
                     this.Host.$hostElement.forceUpdate();
                   }}>Вставить копию</AVButton>)}</div>
                 <div onClick={async e => {

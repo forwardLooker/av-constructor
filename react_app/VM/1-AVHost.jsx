@@ -55,7 +55,10 @@ export class AVHost extends AVItem {
     customPopupContent: null,
     _customPopupResolveFunc: null,
   }
-
+  
+  divInDivItemsCopy; //AVObjectDocument
+  divInDivRootStyle;
+  
   constructor() {
     super();
     AVItem.Host = new Host(this);
