@@ -318,6 +318,9 @@ a {
 .pad-0-8 {
   padding: 0 8px;
 }
+.pad-10 {
+  padding: 10px
+}
 .pad-15 {
   padding: 15px;
 }
@@ -511,6 +514,10 @@ a {
   right: 0;
   bottom: 0;
   left: 0;
+}
+.rb-0 {
+  right: 0;
+  bottom: 0;
 }
 .rl-0 {
   right: 0;
