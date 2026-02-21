@@ -183,6 +183,9 @@ a {
 .min-height-200px {
   min-height: 200px;
 }
+.max-height-90vh {
+  max-height: 90vh;
+}
 .width-100prc {
   width: 100%
 }

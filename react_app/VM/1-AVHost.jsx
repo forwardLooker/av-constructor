@@ -420,12 +420,13 @@ export class AVHost extends AVItem {
           )}
           {this.state.dialogItemTreeStructure && (
             <AVTree
+              className="max-height-90vh scroll-y"
               items={this.state.dialogItemTreeStructure.items}
               expandAllRowsNestedLevel={1}
               onItemSelectFunc={(item) => this.setState({dialogInputValue: item})}
             ></AVTree>
           )}
-          <div className='pos-abs rb-0 row justify-end'>
+          <div className={`${(this.state.dialogContent || this.state.dialogItemTreeStructure) ? '' : 'pos-abs rb-0' }  row justify-end`}>
             <AVButton onClick={this._dialogSubmitted}>OK</AVButton>
             <AVButton onClick={this._dialogCanceled}>Отмена</AVButton>
           </div>

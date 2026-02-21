@@ -64,7 +64,7 @@ export class AVTree extends AVElement {
       return '';
     }
     return (
-      <div className={`_av-tree-root flex-1 col bg-tree ${nestingLevel > 0 ? 'margin-left-16' : ''}`}>
+      <div className={`_av-tree-root flex-1 col bg-tree ${nestingLevel > 0 ? 'margin-left-16' : ''} ${nestingLevel === 0 && this.props.className ? this.props.className : ''}`}>
         {items.map((i, idx) => {
           if (i.userHasNotRightsOnItem) {
             return null;
