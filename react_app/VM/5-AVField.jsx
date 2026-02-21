@@ -276,7 +276,7 @@ class AVFieldOriginal extends AVItem {
     if (this.props.fieldItem.viewItemType === 'space div') {
       if (this.props.fieldItem.actionListeners) {
         this.props.fieldItem.actionListeners.forEach(listenerObj => {
-          this.props.$objectDocument.registerActionHandler(listenerObj);
+          this.props.$objectDocument.registerActionHandler(listenerObj, this.props.fieldItem, this);
         })
       }
       const registerActionHandler = (items = []) => {
@@ -379,6 +379,27 @@ class AVFieldOriginal extends AVItem {
       this.calcSliderFillSpaceWidth();
       this.forceUpdate();
     }
+    
+    // // потому что во время дизайна обновлённая структура не реагирует на Экшены
+    // if (this.props.fieldItem.viewItemType === 'space div') {
+    //   if (this.props.fieldItem.actionListeners) {
+    //     this.props.fieldItem.actionListeners.forEach(listenerObj => {
+    //       this.props.$objectDocument.registerActionHandler(listenerObj);
+    //     })
+    //   }
+    //   const registerActionHandler = (items = []) => {
+    //     items.forEach(i => {
+    //       if (i.actionListeners) {
+    //         i.actionListeners.forEach(listenerObj => {
+    //           this.props.$objectDocument.registerActionHandler(listenerObj, i, this);
+    //         })
+    //       }
+    //       registerActionHandler(i.items)
+    //     })
+    //   }
+    //   registerActionHandler(this.props.fieldItem.items)
+    // }
+
 
   }
   
@@ -552,6 +573,7 @@ class AVFieldOriginal extends AVItem {
         <div className={`_av-field-viewItem-root flex-1 ${(flexBasisNumber > 16 || !flexBasisNumber) ? 'pad-8' : ''}`}
           style={(flexBasisNumber > 16 || !flexBasisNumber) ? this.props.fieldItem.viewItemRootStyle : getStyleObj()}
           ref={this.props.refOnRootDiv}
+          {...this.props.fieldItem.attributes}
         >
           {this._renderDivInDivItems(this.props.fieldItem.items)}
           {this.props.children}

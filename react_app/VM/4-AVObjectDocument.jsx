@@ -104,11 +104,24 @@ export class AVObjectDocument extends AVItem {
       window.document.addEventListener('keydown', this._f4Listener);
 
     }
+    
+    window.document.addEventListener('click', this._outClickListener)
 
     // this.setState({
     //   _newData: this.deepClone(this.props.objectDocument.data),
     //   _newDataBeforeUpdate: this.deepClone(this.props.objectDocument.data),
     // })
+  }
+  
+  _outClickListener = e => {
+    this.actionHandlerList['Outclick']?.forEach(({ item, listenerAVFieldComponent, actionHandlerFunction }) => {
+      if (!e.target.closest('#' + item.attributes.id)) {
+        let f = new Function('item', '$objectDocument', 'e', 'sourceAVFieldComponent', actionHandlerFunction);
+        f = f.bind(listenerAVFieldComponent);
+        f(item, this, e);
+      }
+    })
+    
   }
   
   _f4Listener = e => {
@@ -1031,10 +1044,10 @@ export class AVObjectDocument extends AVItem {
       let rootStyleObj = newStyleObj;
       let rootHoverStyleObj = { ...fieldItem.viewItemRootHoverStyle };
 
-      let newOnActionsObj = { ...(fieldItem.viewItemRootOnActions || {}) };
+      let newOnActionsObj = { ...(fieldItem.onActions || {}) };
       let rootOnActionsObj = newOnActionsObj;
       
-      let newActionListenersArr = [...(fieldItem.viewItemRootActionListeners || []) ];
+      let newActionListenersArr = [...(fieldItem.actionListeners || []) ];
       let rootActionListenersArr = newActionListenersArr;
       
 
@@ -1813,6 +1826,17 @@ export class AVObjectDocument extends AVItem {
                       this.Host.$hostElement.forceUpdate();
                     }}
                   ></AVField>
+                  <AVField
+                    fieldItem={{
+                      label: 'id',
+                      dataType: 'string',
+                    }}
+                    value={itemSelected.attributes?.id}
+                    onChangeFunc={(value) => itemSelected.attributes.id = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
                 </div>
               )
             },
@@ -1877,7 +1901,7 @@ export class AVObjectDocument extends AVItem {
                 itemSelected.actionListeners = []
               }
 
-              newOnActionsObj = itemSelected === fieldItem ? rootActionListenersArr : itemSelected.actionListeners;
+              newActionListenersArr = itemSelected === fieldItem ? rootActionListenersArr : itemSelected.actionListeners;
               this.Host.$hostElement.forceUpdate();
             },
             renderCustomBody: () => {
@@ -2007,18 +2031,18 @@ export class AVObjectDocument extends AVItem {
           this.forceUpdate();
         }
         
-        if (!this.isDeepEqual(rootOnActionsObj, fieldItem.viewItemRootOnActions)) {
-          fieldItem.viewItemRootOnActions = { ...rootOnActionsObj };
+        if (!this.isDeepEqual(rootOnActionsObj, fieldItem.onActions)) {
+          fieldItem.onActions = { ...rootOnActionsObj };
           Object.keys(rootHoverStyleObj).forEach(propName => {
             if (rootOnActionsObj[propName] === 'delete' || rootOnActionsObj[propName] === '') {
-              delete fieldItem.viewItemRootOnActions[propName];
+              delete fieldItem.onActions[propName];
             }
           })
           this.forceUpdate();
         }
         
-        if (!this.isDeepEqual(rootActionListenersArr, fieldItem.viewItemRootActionListeners)) {
-          fieldItem.viewItemRootActionListeners = [...rootActionListenersArr];
+        if (!this.isDeepEqual(rootActionListenersArr, fieldItem.actionListeners)) {
+          fieldItem.actionListeners = [...rootActionListenersArr];
           this.forceUpdate();
         }
 
