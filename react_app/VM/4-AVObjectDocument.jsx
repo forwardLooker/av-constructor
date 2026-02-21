@@ -175,6 +175,8 @@ export class AVObjectDocument extends AVItem {
   
   componentWillUnmount() {
     window.document.removeEventListener('keydown', this._f4Listener);
+    window.document.removeEventListener('click', this._outClickListener)
+
   }
 
   _prepareDesignJson = () => {
