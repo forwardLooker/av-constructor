@@ -7,7 +7,8 @@ import {AVElement} from '../0-AVElement.js';
 export class AVIcon extends AVElement {
   static defaultProps = {
     name: '',
-    fillColor: null
+    fillColor: null,
+    attributes: null,
   }
 // em	Размер шрифта родительского элемента
   iconSet = {
@@ -798,7 +799,7 @@ export class AVIcon extends AVElement {
   render() {
     const SVG = this.iconSet[this.props.name]();
     return (
-      <div className={`_av-icon-root flex-shrink-0 row align-center justify-center overflow-hidden ${this.props.className}`} {...this.R.omit(['className', 'fillColor'], this.props)}>
+      <div {...this.props.attributes} className={`_av-icon-root flex-shrink-0 row align-center justify-center overflow-hidden ${this.props.className}`} {...this.R.omit(['className', 'fillColor'], this.props)}>
         {SVG}
       </div>
     )

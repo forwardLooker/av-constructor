@@ -403,7 +403,7 @@ class AVFieldOriginal extends AVItem {
     return items.map((i, idx) => {
       if (i.viewItemType === 'd') {
         return (
-          <div key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }}
+          <div key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
             onMouseEnter={(e) => {
               i.isHovered = true;
               
@@ -435,7 +435,7 @@ class AVFieldOriginal extends AVItem {
       }
       if (i.viewItemType === 'b') {
         return (
-          <button key={idx} style={i.style}
+          <button key={idx} style={i.style} {...i.attributes}
             onMouseEnter={() => {
               i.isHovered = true;
               
@@ -467,7 +467,7 @@ class AVFieldOriginal extends AVItem {
       }
       if (i.viewItemType === 'img') {
         return (
-          <img key={idx} style={i.style}
+          <img key={idx} style={i.style} {...i.attributes}
             onMouseEnter={() => {
               i.isHovered = true;
               
@@ -497,7 +497,7 @@ class AVFieldOriginal extends AVItem {
       }
       if (i.viewItemType === 'AVIcon') {
         return (
-          <AVIcon key={idx} name={i.name} style={i.style}
+          <AVIcon key={idx} name={i.name} style={i.style} attributes={i.attributes}
             onMouseEnter={() => {
               i.isHovered = true;
               

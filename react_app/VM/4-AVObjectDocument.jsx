@@ -1791,6 +1791,35 @@ export class AVObjectDocument extends AVItem {
           },
           {
             viewItemType: 'tab',
+            label: 'attributes',
+            onClickFunc: () => {
+              if (!itemSelected.attributes) {
+                itemSelected.attributes = {}
+              }
+              newStyleObj = itemSelected === fieldItem ? rootHoverStyleObj : itemSelected.hoverStyle;
+              this.Host.$hostElement.forceUpdate();
+            },
+            renderCustomBody: () => {
+              return (
+                <div>
+                  <AVField
+                    fieldItem={{
+                      label: 'title',
+                      dataType: 'string',
+                    }}
+                    value={itemSelected.attributes?.title}
+                    onChangeFunc={(value) => itemSelected.attributes.title = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+                </div>
+              )
+            },
+          },
+
+          {
+            viewItemType: 'tab',
             label: 'onActions',
             onClickFunc: () => {
               if (!itemSelected.onActions) {
