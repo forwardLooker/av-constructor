@@ -456,8 +456,8 @@ class AVFieldOriginal extends AVItem {
       }
       if (i.viewItemType === 'b') {
         return (
-          <button key={idx} style={i.style} {...i.attributes}
-            onMouseEnter={() => {
+          <button key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
+            onMouseEnter={(e) => {
               i.isHovered = true;
               
               if (i.onActions?.onMouseEnter) {
@@ -466,7 +466,7 @@ class AVFieldOriginal extends AVItem {
 
               this.forceUpdate();
             }}
-            onMouseLeave={() => {
+            onMouseLeave={(e) => {
               i.isHovered = false;
               
               if (i.onActions?.onMouseLeave) {
@@ -488,8 +488,8 @@ class AVFieldOriginal extends AVItem {
       }
       if (i.viewItemType === 'img') {
         return (
-          <img key={idx} style={i.style} {...i.attributes}
-            onMouseEnter={() => {
+          <img key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
+            onMouseEnter={(e) => {
               i.isHovered = true;
               
               if (i.onActions?.onMouseEnter) {
@@ -498,7 +498,7 @@ class AVFieldOriginal extends AVItem {
 
               this.forceUpdate();
             }}
-            onMouseLeave={() => {
+            onMouseLeave={(e) => {
               i.isHovered = false;
               
               if (i.onActions?.onMouseLeave) {
@@ -518,8 +518,8 @@ class AVFieldOriginal extends AVItem {
       }
       if (i.viewItemType === 'AVIcon') {
         return (
-          <AVIcon key={idx} name={i.name} style={i.style} attributes={i.attributes}
-            onMouseEnter={() => {
+          <AVIcon key={idx} name={i.name} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} attributes={i.attributes}
+            onMouseEnter={(e) => {
               i.isHovered = true;
               
               if (i.onActions?.onMouseEnter) {
@@ -528,7 +528,7 @@ class AVFieldOriginal extends AVItem {
 
               this.forceUpdate();
             }}
-            onMouseLeave={() => {
+            onMouseLeave={(e) => {
               i.isHovered = false;
               
               if (i.onActions?.onMouseLeave) {
@@ -571,9 +571,32 @@ class AVFieldOriginal extends AVItem {
       };
       return (
         <div className={`_av-field-viewItem-root flex-1 ${(flexBasisNumber > 16 || !flexBasisNumber) ? 'pad-8' : ''}`}
-          style={(flexBasisNumber > 16 || !flexBasisNumber) ? this.props.fieldItem.viewItemRootStyle : getStyleObj()}
+          style={(flexBasisNumber > 16 || !flexBasisNumber) ? { ...(this.props.fieldItem.viewItemRootStyle || {}), ...(this.props.fieldItem.isHovered && (this.props.fieldItem.viewItemRootHoverStyle || {})) } : getStyleObj()}
           ref={this.props.refOnRootDiv}
           {...this.props.fieldItem.attributes}
+          onMouseEnter={(e) => {
+            this.props.fieldItem.isHovered = true;
+
+            if (this.props.fieldItem.onActions?.onMouseEnter) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: this.props.fieldItem.onActions.onMouseEnter, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          }}
+          onMouseLeave={(e) => {
+            this.props.fieldItem.isHovered = false;
+
+            if (this.props.fieldItem.onActions?.onMouseLeave) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: this.props.fieldItem.onActions.onMouseLeave, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          }}
+          onClick={(e) => {
+            if (this.props.fieldItem.onActions?.onClick) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: this.props.fieldItem.onActions.onClick, sourceAVFieldComponent: this })
+            }
+          }}                        
         >
           {this._renderDivInDivItems(this.props.fieldItem.items)}
           {this.props.children}
