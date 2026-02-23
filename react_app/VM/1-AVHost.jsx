@@ -94,9 +94,27 @@ export class AVHost extends AVItem {
                 objectDocumentPath={routeObjDoc.targetObjectDocumentPath}
                 noOkCancelPanel
               ></AVObjectDocument>
-            </AVHost>)
+            </AVHost>),
+          children: [
+            {
+              path: '*', element: (
+                <AVHost appRef={this.props.appRef}>
+                  <AVObjectDocument
+                    objectDocumentPath={routeObjDoc.targetObjectDocumentPath}
+                    noOkCancelPanel
+                  ></AVObjectDocument>
+                </AVHost>
+              ),
+            }
+          ]
         })
       });
+      
+      routesConfigArr.push({
+        path: "*",
+        element: <AVHost appRef={this.props.appRef}></AVHost>,
+      });
+      
       this.props.appRef.setState({
         router: createBrowserRouter(routesConfigArr)
       }, () => {
