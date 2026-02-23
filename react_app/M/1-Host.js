@@ -113,6 +113,16 @@ export class Host extends Item {
     return this.$hostElement.props.appRef.state.router;
   }
   
+  get location() {
+    return this.$hostElement.props.appRef.state.router.state.location;
+  }
+  
+  get trailPathname() {
+    const pathArr = this.location.pathname.split('/');
+    const trailPathname = '/' + pathArr[pathArr.length - 1];
+    return trailPathname;
+  }
+  
   // dispose(...params) {
   //   this.$hostElement.props.appRef.state.router.dispose(...params);
   // }

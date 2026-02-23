@@ -218,6 +218,29 @@ class AVFieldOriginal extends AVItem {
   
   searchInClassObjectDocuments = [];
   searchInClassObjectDocumentsFiltered = [];
+
+  constructor(props) {
+    super(props);
+    
+    if (this.props.fieldItem.viewItemType === 'space div') {
+      // on constructor withoutRegistration
+      const activateConstructor = (item) => {
+        item.actionListeners?.forEach(({ actionName, actionHandlerFunction }) => {
+          if (actionName === 'constructor') {
+            let f = new Function('item', '$objectDocument', actionHandlerFunction);
+            f = f.bind(this);
+            f(item, this.props.$objectDocument);
+          }
+        })
+        item.items?.forEach(i => {
+          activateConstructor(i);
+        })
+      }
+      activateConstructor(this.props.fieldItem);
+
+    }
+
+  }
   
   _eventListenerGazSelect = e => {
     if (!e.target.closest('._av-field-root')) {
