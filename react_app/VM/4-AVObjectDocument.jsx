@@ -2354,6 +2354,64 @@ export class AVObjectDocument extends AVItem {
                 <AVField
                   style={{ width: '150px' }}
                   fieldItem={{
+                    label: 'borderTop',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.borderTop}
+                  onChangeFunc={(value) => newStyleObj.borderTop = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'borderRight',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.borderRight}
+                  onChangeFunc={(value) => newStyleObj.borderRight = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'borderLeft',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.borderLeft}
+                  onChangeFunc={(value) => newStyleObj.borderLeft = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'borderBottom',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.borderBottom}
+                  onChangeFunc={(value) => newStyleObj.borderBottom = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+              </div>
+              <div className='row'>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
                     label: 'boxShadow',
                     dataType: 'string',
                     variant: 'Gazprombank-string',
@@ -2610,6 +2668,51 @@ export class AVObjectDocument extends AVItem {
                   }}
                 ></AVField>
               </div>
+              <div className='row'>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'transition',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.transition}
+                  onChangeFunc={(value) => newStyleObj.transition = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'transform',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.transform}
+                  onChangeFunc={(value) => newStyleObj.transform = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+                <AVField
+                  style={{ width: '150px' }}
+                  fieldItem={{
+                    label: 'animation',
+                    dataType: 'string',
+                    variant: 'Gazprombank-string',
+                    size: 7,
+                  }}
+                  value={newStyleObj?.animation}
+                  onChangeFunc={(value) => newStyleObj.animation = value}
+                  onBlurFunc={e => {
+                    this.Host.$hostElement.forceUpdate();
+                  }}
+                ></AVField>
+              </div>
+
             </div>
           </div>
         ),
@@ -3085,6 +3188,65 @@ export class AVObjectDocument extends AVItem {
               <AVField
                 style={{ width: '150px' }}
                 fieldItem={{
+                  label: 'borderTop',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.borderTop}
+                onChangeFunc={(value) => newStyleObj.borderTop = value}
+                onBlurFunc={e => {
+                  this.Host.$hostElement.forceUpdate();
+                }}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'borderRight',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.borderRight}
+                onChangeFunc={(value) => newStyleObj.borderRight = value}
+                onBlurFunc={e => {
+                  this.Host.$hostElement.forceUpdate();
+                }}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'borderLeft',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.borderLeft}
+                onChangeFunc={(value) => newStyleObj.borderLeft = value}
+                onBlurFunc={e => {
+                  this.Host.$hostElement.forceUpdate();
+                }}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'borderBottom',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.borderBottom}
+                onChangeFunc={(value) => newStyleObj.borderBottom = value}
+                onBlurFunc={e => {
+                  this.Host.$hostElement.forceUpdate();
+                }}
+              ></AVField>
+            </div>
+
+            <div className='row'>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
                   label: 'boxShadow',
                   dataType: 'string',
                   variant: 'Gazprombank-string',
@@ -3290,6 +3452,51 @@ export class AVObjectDocument extends AVItem {
                 onChangeFunc={(value) => newStyleObj.opacity = value}
               ></AVField>
             </div>
+            <div className='row'>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'transition',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.transition}
+                onChangeFunc={(value) => newStyleObj.transition = value}
+                onBlurFunc={e => {
+                  this.Host.$hostElement.forceUpdate();
+                }}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'transform',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.transform}
+                onChangeFunc={(value) => newStyleObj.transform = value}
+                onBlurFunc={e => {
+                  this.Host.$hostElement.forceUpdate();
+                }}
+              ></AVField>
+              <AVField
+                style={{ width: '150px' }}
+                fieldItem={{
+                  label: 'animation',
+                  dataType: 'string',
+                  variant: 'Gazprombank-string',
+                  size: 7,
+                }}
+                value={newStyleObj?.animation}
+                onChangeFunc={(value) => newStyleObj.animation = value}
+                onBlurFunc={e => {
+                  this.Host.$hostElement.forceUpdate();
+                }}
+              ></AVField>
+            </div>
+
           </div>
         </div>
       ),
