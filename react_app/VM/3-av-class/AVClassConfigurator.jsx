@@ -107,6 +107,11 @@ export class AVClassConfigurator extends AVItem {
         }
         },
         {
+          name: 'sortInGrid', variant: 'select', valuesList: () => {
+            return ['', 'ascend', 'descend'];
+          }
+        },
+        {
           name: 'size', hideIfFunc: () => {
             if (
               this.state.selectedFieldDescriptor.variant !== 'Gazprombank-string' &&

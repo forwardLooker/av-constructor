@@ -75,11 +75,43 @@ export class AVGrid extends AVElement {
   componentDidMount() {
     this._realignGridHeaderCells();
     this._realignGridRows();
+    
+    this._sortInGrid();
+
     this.forceUpdate();
     
     // для ресайза при переключениях на весь экран
     window.document.addEventListener('keydown', this._F7EventListener);
     
+  }
+
+  _sortInGrid = () => {
+    this.state._columns.forEach(column => {
+      if (column.sortInGrid === 'ascend') {
+        let items;
+        if (column.dataType === 'number') {
+          items = this.state._items.sort((a, b) => a[column.name] - b[column.name])
+        } else if (column.dataType === 'boolean') {
+          items = this.state._items.sort((a, b) => !b[column.name] - !a[column.name])
+        } else {
+          items = sortAscend(this.state._items)
+        }
+        this.state_items = items;
+        this.state.sortingType = 'descend';
+      }
+      if (column.sortInGrid === 'descend') {
+        let items;
+        if (column.dataType === 'number') {
+          items = this.state._items.sort((a, b) => b[column.name] - a[column.name])
+        } else if (column.dataType === 'boolean') {
+          items = this.state._items.sort((a, b) => !a[column.name] - !b[column.name])
+        } else {
+          items = sortDescend(this.state._items)
+        }
+        this.state_items = items;
+        this.state.sortingType = 'ascend';
+      }
+    })
   }
   
   _F7EventListener = e => {
@@ -99,12 +131,14 @@ export class AVGrid extends AVElement {
       }, () => {
         this._realignGridHeaderCells();
         this._realignGridRows();
+        this._sortInGrid();
         this.forceUpdate();
       })
     } else {
       if (prevProps.items !== this.props.items) {
         this.setState({ _items: this.deepCloneArrayWithInnerRef(this.props.items) }, () => {
           this._realignGridRows();
+          this._sortInGrid();
           this.forceUpdate();
         })
       } else if (prevProps.columns !== this.props.columns) {
