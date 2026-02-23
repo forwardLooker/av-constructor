@@ -1911,9 +1911,9 @@ export class AVObjectDocument extends AVItem {
                 <div>
                   <AVField
                     fieldItem={{
-                      label: 'Action Listeners',
+                      label: 'Action Listeners (Встроенные: Outclick (по id), componentDidMount, constructor)',
                       dataType: 'array',
-                      labelPostion: 'top',
+                      labelPosition: 'top',
                       items: [{
                         name: 'actionName',
                         width: '400px',

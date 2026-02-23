@@ -229,7 +229,11 @@ class AVFieldOriginal extends AVItem {
           if (actionName === 'constructor') {
             let f = new Function('item', '$objectDocument', actionHandlerFunction);
             f = f.bind(this);
-            f(item, this.props.$objectDocument);
+            try {
+              f(item, this.props.$objectDocument);
+            } catch (error) {
+              console.log('AVField constructor() actionHandlerFunction', error)
+            }
           }
         })
         item.items?.forEach(i => {
@@ -320,7 +324,11 @@ class AVFieldOriginal extends AVItem {
           if (actionName === 'componentDidMount') {
             let f = new Function('item', '$objectDocument', actionHandlerFunction);
             f = f.bind(this);
-            f(item, this.props.$objectDocument);
+            try {
+              f(item, this.props.$objectDocument);
+            } catch (error) {
+              console.log('AVField componentDidMount() actionHandlerFunction', error)
+            }
           }
         })
         item.items?.forEach(i => {
