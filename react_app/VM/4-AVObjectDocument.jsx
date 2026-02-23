@@ -531,7 +531,8 @@ export class AVObjectDocument extends AVItem {
                       }
                     }}
                     onContextMenu={e => $objDoc._onTabContextMenu(e, tab, fieldItem, idx, containerElement)}
-                  ><div className={`${fieldItem.selectedTabLabel === tab.label ? 'border-bottom-2' : ''}`}>{tab.label || 'tab1'}</div></div>
+                  ><div style={fieldItem.selectedTabLabel === tab.label ? { ...fieldItem.tabHeadItemLabelStyle, ...fieldItem.selectedTabHeadItemLabelStyle, ...(this.state.tabLabelHovered === tab.label ? fieldItem.selectedTabHeadItemLabelHoveredStyle : {}) } : { ...fieldItem.tabHeadItemLabelStyle, ...(this.state.tabLabelHovered === tab.label ? fieldItem.tabHeadItemLabelHoveredStyle : {}) }}
+                    className={`${fieldItem.selectedTabLabel === tab.label ? 'border-bottom-2' : ''}`}>{tab.label || 'tab1'}</div></div>
                 ))}
               </div>
               {$objDoc.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl)) ? null : (
@@ -2061,6 +2062,12 @@ export class AVObjectDocument extends AVItem {
       let oldTabHeadItemHoveredStyleObj = fieldItem.tabHeadItemHoveredStyle;
       let oldSelectedTabHeadItemStyleObj = fieldItem.selectedTabHeadItemStyle;
       let oldSelectedTabHeadItemHoveredStyleObj = fieldItem.selectedTabHeadItemHoveredStyle;
+      //ItemLabel для полного контроля над табами
+      let oldTabHeadItemLabelStyleObj = fieldItem.tabHeadItemLabelStyle;
+      let oldTabHeadItemLabelHoveredStyleObj = fieldItem.tabHeadItemLabelHoveredStyle;
+      let oldSelectedTabHeadItemLabelStyleObj = fieldItem.selectedTabHeadItemLabelStyle;
+      let oldSelectedTabHeadItemLabelHoveredStyleObj = fieldItem.selectedTabHeadItemLabelHoveredStyle;
+
       
       let oldTabBodyContainerStyleObj = fieldItem.tabBodyContainerStyle;
 
@@ -2073,6 +2080,12 @@ export class AVObjectDocument extends AVItem {
       let tabHeadItemHoveredStyleObj = { ...oldTabHeadItemHoveredStyleObj };
       let selectedTabHeadItemStyleObj = { ...oldSelectedTabHeadItemStyleObj };
       let selectedTabHeadItemHoveredStyleObj = { ...oldSelectedTabHeadItemHoveredStyleObj };
+      //ItemLabel
+      let tabHeadItemLabelStyleObj = { ...oldTabHeadItemLabelStyleObj };
+      let tabHeadItemLabelHoveredStyleObj = { ...oldTabHeadItemLabelHoveredStyleObj };
+      let selectedTabHeadItemLabelStyleObj = { ...oldSelectedTabHeadItemLabelStyleObj };
+      let selectedTabHeadItemLabelHoveredStyleObj = { ...oldSelectedTabHeadItemLabelHoveredStyleObj };
+
 
       
       let tabBodyContainerStyleObj = { ...oldTabBodyContainerStyleObj };
@@ -2098,22 +2111,45 @@ export class AVObjectDocument extends AVItem {
                   this.Host.$hostElement.forceUpdate();
                 }}>tabHead(tabs)</div>
                 
+                <div className='pad-8'></div>
+                
                 <div className={`${newStyleObj === tabHeadItemStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
                   newStyleObj = tabHeadItemStyleObj;
                   this.Host.$hostElement.forceUpdate();
-                }}>tabHeadItem(tabs)</div>
+                }}>tabHead-Item(tabs)</div>
                 <div className={`${newStyleObj === tabHeadItemHoveredStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
                   newStyleObj = tabHeadItemHoveredStyleObj;
                   this.Host.$hostElement.forceUpdate();
-                }}>tabHeadItemHovered(tabs)</div>
+                }}>tabHead-Item-Hovered(tabs)</div>
                 <div className={`${newStyleObj === selectedTabHeadItemStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
                   newStyleObj = selectedTabHeadItemStyleObj;
                   this.Host.$hostElement.forceUpdate();
-                }}>selectedTabHeadItem(tabs)</div>
+                }}>selected-TabHead-Item(tabs)</div>
                 <div className={`${newStyleObj === selectedTabHeadItemHoveredStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
                   newStyleObj = selectedTabHeadItemHoveredStyleObj;
                   this.Host.$hostElement.forceUpdate();
-                }}>selectedTabHeadItemHovered(tabs)</div>
+                }}>selected-TabHead-Item-Hovered(tabs)</div>
+
+                <div className='pad-8'></div>
+                
+                <div className={`${newStyleObj === tabHeadItemLabelStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
+                  newStyleObj = tabHeadItemLabelStyleObj;
+                  this.Host.$hostElement.forceUpdate();
+                }}>tabHead-Item-Label(tabs)</div>
+                <div className={`${newStyleObj === tabHeadItemLabelHoveredStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
+                  newStyleObj = tabHeadItemLabelHoveredStyleObj;
+                  this.Host.$hostElement.forceUpdate();
+                }}>tabHead-Item-Label-Hovered(tabs)</div>
+                <div className={`${newStyleObj === selectedTabHeadItemLabelStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
+                  newStyleObj = selectedTabHeadItemLabelStyleObj;
+                  this.Host.$hostElement.forceUpdate();
+                }}>selected-TabHead-Item-Label(tabs)</div>
+                <div className={`${newStyleObj === selectedTabHeadItemLabelHoveredStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
+                  newStyleObj = selectedTabHeadItemLabelHoveredStyleObj;
+                  this.Host.$hostElement.forceUpdate();
+                }}>selected-TabHead-Item-Label-Hovered(tabs)</div>
+                
+                <div className='pad-8'></div>
 
                 <div className={`${newStyleObj === tabBodyContainerStyleObj ? 'font-bold' : ''} cursor-pointer`} onClick={e => {
                   newStyleObj = tabBodyContainerStyleObj;
@@ -2645,6 +2681,54 @@ export class AVObjectDocument extends AVItem {
 
           this.forceUpdate();
         }
+
+
+        if (!this.isDeepEqual(tabHeadItemLabelStyleObj, oldTabHeadItemLabelStyleObj)) {
+          fieldItem.tabHeadItemLabelStyle = { ...tabHeadItemLabelStyleObj };
+          Object.keys(tabHeadItemLabelStyleObj).forEach(propName => {
+            if (tabHeadItemLabelStyleObj[propName] === 'delete' || tabHeadItemLabelStyleObj[propName] === '') {
+              delete fieldItem.tabHeadItemLabelStyle[propName];
+            }
+          })
+
+          this.forceUpdate();
+        }
+
+        if (!this.isDeepEqual(tabHeadItemLabelHoveredStyleObj, oldTabHeadItemLabelHoveredStyleObj)) {
+          fieldItem.tabHeadItemLabelHoveredStyle = { ...tabHeadItemLabelHoveredStyleObj };
+          Object.keys(tabHeadItemLabelHoveredStyleObj).forEach(propName => {
+            if (tabHeadItemLabelHoveredStyleObj[propName] === 'delete' || tabHeadItemLabelHoveredStyleObj[propName] === '') {
+              delete fieldItem.tabHeadItemLabelHoveredStyle[propName];
+            }
+          })
+
+          this.forceUpdate();
+        }
+
+        if (!this.isDeepEqual(selectedTabHeadItemLabelStyleObj, oldSelectedTabHeadItemLabelStyleObj)) {
+          fieldItem.selectedTabHeadItemLabelStyle = { ...selectedTabHeadItemLabelStyleObj };
+          Object.keys(selectedTabHeadItemLabelStyleObj).forEach(propName => {
+            if (selectedTabHeadItemLabelStyleObj[propName] === 'delete' || selectedTabHeadItemLabelStyleObj[propName] === '') {
+              delete fieldItem.selectedTabHeadItemLabelStyle[propName];
+            }
+          })
+
+          this.forceUpdate();
+        }
+
+        if (!this.isDeepEqual(selectedTabHeadItemLabelHoveredStyleObj, oldSelectedTabHeadItemLabelHoveredStyleObj)) {
+          fieldItem.selectedTabHeadItemLabelHoveredStyle = { ...selectedTabHeadItemLabelHoveredStyleObj };
+          Object.keys(selectedTabHeadItemLabelHoveredStyleObj).forEach(propName => {
+            if (selectedTabHeadItemLabelHoveredStyleObj[propName] === 'delete' || selecselectedTabHeadItemLabelHoveredStyleObjtedTabHeadItemStyleObj[propName] === '') {
+              delete fieldItem.selectedTabHeadItemLabelHoveredStyle[propName];
+            }
+          })
+
+          this.forceUpdate();
+        }
+
+        
+        
         
         if (!this.isDeepEqual(tabBodyContainerStyleObj, oldTabBodyContainerStyleObj)) {
           fieldItem.tabBodyContainerStyle = { ...tabBodyContainerStyleObj };
