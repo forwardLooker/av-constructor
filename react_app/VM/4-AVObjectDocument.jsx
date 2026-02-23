@@ -3743,7 +3743,7 @@ export class AVObjectDocument extends AVItem {
   
   // Для Филдов
   registerActionHandler = (listenerObj, item, listenerAVFieldComponent) => {
-    const commonJustInMomentActions = ['Outclick', 'componentDidMount', 'constructor'];
+    const commonJustInMomentActions = ['componentDidMount', 'constructor'];
     if (commonJustInMomentActions.some(a => a === listenerObj.actionName)) {
       return;
     }
