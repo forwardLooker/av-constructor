@@ -116,7 +116,7 @@ export class AVObjectDocument extends AVItem {
   _outClickListener = e => {
     this.actionHandlerList['Outclick']?.forEach(({ item, listenerAVFieldComponent, actionHandlerFunction }) => {
       if (!e.target.closest('#' + item.attributes.id)) {
-        let f = new Function('item', '$objectDocument', 'e', 'sourceAVFieldComponent', actionHandlerFunction);
+        let f = new Function('item', '$objectDocument', 'e', actionHandlerFunction);
         f = f.bind(listenerAVFieldComponent);
         f(item, this, e);
       }

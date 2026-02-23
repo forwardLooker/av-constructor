@@ -289,7 +289,23 @@ class AVFieldOriginal extends AVItem {
           registerActionHandler(i.items)
         })
       }
-      registerActionHandler(this.props.fieldItem.items)
+      registerActionHandler(this.props.fieldItem.items);
+      
+      //on didMount withoutRegistration
+      const activateComponentDidMount = (item) => {
+        item.actionListeners?.forEach(({ actionName, actionHandlerFunction }) => {
+          if (actionName === 'componentDidMount') {
+            let f = new Function('item', '$objectDocument', actionHandlerFunction);
+            f = f.bind(this);
+            f(item, this.props.$objectDocument);
+          }
+        })
+        item.items?.forEach(i => {
+          activateComponentDidMount(i);
+        })
+      }
+      activateComponentDidMount(this.props.fieldItem);
+      
     }
 
     if (this.props.fieldItem.variant === 'Gazprombank-tel') {

@@ -104,6 +104,18 @@ export class Host extends Item {
   navigate(...params) {
     this.$hostElement.props.appRef.state.router.navigate(...params);
   }
+
+  subscribe(...params) {
+    this.$hostElement.props.appRef.state.router.subscribe(...params);
+  }
+  
+  get router() {
+    return this.$hostElement.props.appRef.state.router;
+  }
+  
+  // dispose(...params) {
+  //   this.$hostElement.props.appRef.state.router.dispose(...params);
+  // }
   
   async preloadObjectDocumentsByClassReference(serverRef) {
     const classItem = this.getClass(serverRef);
