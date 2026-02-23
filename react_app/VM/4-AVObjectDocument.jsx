@@ -1915,9 +1915,11 @@ export class AVObjectDocument extends AVItem {
                       dataType: 'array',
                       labelPostion: 'top',
                       items: [{
-                        name: 'actionName'
+                        name: 'actionName',
+                        width: '400px',
                       }, {
                         name: 'actionHandlerFunction',
+                        label: 'actionHandlerFunction(this, item, $objectDocument, e, sourceAVFieldComponent)',
                         dataType: 'string',
                         variant: 'textarea'
                         }]
