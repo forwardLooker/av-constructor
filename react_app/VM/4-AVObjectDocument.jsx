@@ -1041,7 +1041,7 @@ export class AVObjectDocument extends AVItem {
     }
     
     if (menuResult === 'Дизайнер div в div-е') {
-      let oldStyleObj = fieldItem.viewItemRootStyle;
+      let oldStyleObj = fieldItem.viewItemRootStyle; // У нас 2-этажный style на fieldItem, один идёт в ФилдРаппер
 
       let newStyleObj = { ...oldStyleObj };
       let rootStyleObj = newStyleObj;
@@ -1052,6 +1052,9 @@ export class AVObjectDocument extends AVItem {
       
       let newActionListenersArr = [...(fieldItem.actionListeners || []) ];
       let rootActionListenersArr = newActionListenersArr;
+
+      let newAttributes = { ...(fieldItem.attributes || {}) };
+      let rootAttributes = newAttributes;
       
 
       let innerStruct = this.deepClone(fieldItem.items) || [];
@@ -1097,6 +1100,7 @@ export class AVObjectDocument extends AVItem {
                     newStyleObj = itemSelected.style;
                     newOnActionsObj = itemSelected.onActions
                     newActionListenersArr = itemSelected.actionListeners;
+                    newAttributes = itemSelected.attributes;
                     tabItemForFieldWrapper.selectedTabLabel = tabItemForFieldWrapper.items[0].label
                     this.Host.$hostElement.forceUpdate();
                   }}>
@@ -1812,7 +1816,8 @@ export class AVObjectDocument extends AVItem {
               if (!itemSelected.attributes) {
                 itemSelected.attributes = {}
               }
-              newStyleObj = itemSelected === fieldItem ? rootHoverStyleObj : itemSelected.hoverStyle;
+
+              newAttributes = itemSelected === fieldItem ? rootAttributes : itemSelected.attributes;
               this.Host.$hostElement.forceUpdate();
             },
             renderCustomBody: () => {
@@ -1823,8 +1828,8 @@ export class AVObjectDocument extends AVItem {
                       label: 'title',
                       dataType: 'string',
                     }}
-                    value={itemSelected.attributes?.title}
-                    onChangeFunc={(value) => itemSelected.attributes.title = value}
+                    value={newAttributes?.title}
+                    onChangeFunc={(value) => newAttributes.title = value}
                     onBlurFunc={e => {
                       this.Host.$hostElement.forceUpdate();
                     }}
@@ -1834,8 +1839,8 @@ export class AVObjectDocument extends AVItem {
                       label: 'id',
                       dataType: 'string',
                     }}
-                    value={itemSelected.attributes?.id}
-                    onChangeFunc={(value) => itemSelected.attributes.id = value}
+                    value={newAttributes?.id}
+                    onChangeFunc={(value) => newAttributes.id = value}
                     onBlurFunc={e => {
                       this.Host.$hostElement.forceUpdate();
                     }}
@@ -1954,16 +1959,37 @@ export class AVObjectDocument extends AVItem {
                   newStyleObj = rootStyleObj;
                   newOnActionsObj = rootOnActionsObj;
                   newActionListenersArr = rootActionListenersArr;
+                  newAttributes = rootAttributes;
                   tabItemForFieldWrapper.selectedTabLabel = tabItemForFieldWrapper.items[0].label
                   this.Host.$hostElement.forceUpdate();
                 }}>root(space div)<AVButton onClick={() => {
                     this.Host.$hostElement.divInDivItemsCopy = this.deepClone(innerStruct);
-                    this.Host.$hostElement.divInDivRootStyle = this.deepClone(rootStyleObj);
+                    // this.Host.$hostElement.divInDivRootStyle = this.deepClone(rootStyleObj);
+                    
+                    this.Host.$hostElement.divInDivFieldItemCopy = this.deepClone(fieldItem);
+  
                   }}>Копировать структуру</AVButton>{this.Host.$hostElement.divInDivItemsCopy && (<AVButton onClick={() => {
                     innerStruct = this.Host.$hostElement.divInDivItemsCopy;
-                    rootStyleObj = this.Host.$hostElement.divInDivRootStyle;
+                    
+                    rootStyleObj = this.Host.$hostElement.divInDivFieldItemCopy.viewItemRootStyle;
+                    rootHoverStyleObj = this.Host.$hostElement.divInDivFieldItemCopy.viewItemRootHoverStyle;
+                    
+                    rootOnActionsObj = this.Host.$hostElement.divInDivFieldItemCopy.onActions;
+                    rootActionListenersArr = this.Host.$hostElement.divInDivFieldItemCopy.actionListeners;
+                    rootAttributes = this.Host.$hostElement.divInDivFieldItemCopy.attributes;    
+                    
+
+                    newStyleObj = rootStyleObj;
+                    
+                    newOnActionsObj = rootOnActionsObj;
+                    newActionListenersArr = rootActionListenersArr;
+                    newAttributes = rootAttributes;
+                    
+
+                    
                     this.Host.$hostElement.divInDivItemsCopy = null;
-                    this.Host.$hostElement.divInDivRootStyle = null;
+                    this.Host.$hostElement.divInDivFieldItemCopy = null;
+                    // this.Host.$hostElement.divInDivRootStyle = null;
                     this.Host.$hostElement.forceUpdate();
                   }}>Вставить копию</AVButton>)}</div>
                 <div onClick={async e => {
@@ -2048,6 +2074,11 @@ export class AVObjectDocument extends AVItem {
         
         if (!this.isDeepEqual(rootActionListenersArr, fieldItem.actionListeners)) {
           fieldItem.actionListeners = [...rootActionListenersArr];
+          this.forceUpdate();
+        }
+        
+        if (!this.isDeepEqual(rootAttributes, fieldItem.attributes)) {
+          fieldItem.attributes = {...rootAttributes};
           this.forceUpdate();
         }
 

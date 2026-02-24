@@ -785,7 +785,7 @@ export class AVIcon extends AVElement {
         </svg>
       </svg>
     ),
-    smartphone: () => (
+    smartphone: () => ( //gazprombank premium menu list
       <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="none">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="progressive_icon progressive_icon20">
           <path d="M8.87 15.375a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" fill="#476bf0"></path>
