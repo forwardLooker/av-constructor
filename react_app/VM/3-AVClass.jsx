@@ -17,7 +17,9 @@ export class AVClass extends AVItem {
   static defaultProps = {
     classItem: null,
     onObjectDocumentSelectedFunc: this.noop, // применяется внутри объекта в котором открывают класс для поля линк на объект
-    itemFullScreenMode: false, // знание убирает паддинги
+    itemFullScreenMode: false, // знание убирает паддинги,
+    
+    onCancelFunc: null, // В Классе поверх ОбджектДокумента
   }
   state = {
     currentViewName: '',
@@ -168,7 +170,8 @@ export class AVClass extends AVItem {
         <AVClassPanel
           classItem={this.props.classItem}
           onClassViewChangedFunc={viewName => this.setState({currentViewName: viewName})}
-          onCreateFunc={(e) => {this.setState({selectedObjectDocument: this.props.classItem.getNewObjectDocument()})}}
+          onCreateFunc={(e) => { this.setState({ selectedObjectDocument: this.props.classItem.getNewObjectDocument() }) }}
+          onCancelFunc={this.props.onCancelFunc}
         ></AVClassPanel>
         {this._renderView()}
         {this.state.isParametersPanelOpened && this._renderParametersPanel(this.state.ParametersPanelrender)}

@@ -9,6 +9,7 @@ export class AVClassPanel extends AVItem {
   static defaultProps = {
     classItem: null,
     onCreateFunc: this.noop,
+    onCancelFunc: null,
     onClassViewChangedFunc: this.noop
   }
   state = {
@@ -61,6 +62,7 @@ export class AVClassPanel extends AVItem {
     return (
       <div>
         <AVButton onClick={this.props.onCreateFunc}>Создать</AVButton>
+        {this.props.onCancelFunc && (<AVButton onClick={this.props.onCancelFunc}>Отмена</AVButton>)}
       </div>
     )
   }
