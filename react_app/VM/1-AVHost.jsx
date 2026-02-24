@@ -456,8 +456,8 @@ export class AVHost extends AVItem {
   _renderDialog2() {
     return (
       <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000000 bg-transparent-45">
-        <div className="bg-white">
-          <div>{this.state.dialogText2}</div>
+        <div style={{ minWidth: '400px', minHeight: '300px' }} className="pos-rel bg-white">
+          <div className='pad-10'>{this.state.dialogText2}</div>
           {this.state.dialogContent2 && this.state.dialogContent2()}
           {this.state.dialogInputLabel2 && (
             <div className='row'>
@@ -472,12 +472,13 @@ export class AVHost extends AVItem {
           )}
           {this.state.dialogItemTreeStructure2 && (
             <AVTree
+              className="max-height-90vh scroll-y"
               items={this.state.dialogItemTreeStructure2.items}
               expandAllRowsNestedLevel={1}
               onItemSelectFunc={(item) => this.setState({ dialogInputValue2: item })}
             ></AVTree>
           )}
-          <div className='row justify-end'>
+          <div className={`${(this.state.dialogContent2 || this.state.dialogItemTreeStructure2) ? '' : 'pos-abs rb-0'}  row justify-end`}>
             <AVButton onClick={this._dialog2Submitted}>OK</AVButton>
             <AVButton onClick={this._dialog2Canceled}>Отмена</AVButton>
           </div>
