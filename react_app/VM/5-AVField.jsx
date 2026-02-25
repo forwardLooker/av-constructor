@@ -427,25 +427,27 @@ class AVFieldOriginal extends AVItem {
       this.forceUpdate();
     }
     
-    // // потому что во время дизайна обновлённая структура не реагирует на Экшены
-    // if (this.props.fieldItem.viewItemType === 'space div') {
-    //   if (this.props.fieldItem.actionListeners) {
-    //     this.props.fieldItem.actionListeners.forEach(listenerObj => {
-    //       this.props.$objectDocument.registerActionHandler(listenerObj);
-    //     })
-    //   }
-    //   const registerActionHandler = (items = []) => {
-    //     items.forEach(i => {
-    //       if (i.actionListeners) {
-    //         i.actionListeners.forEach(listenerObj => {
-    //           this.props.$objectDocument.registerActionHandler(listenerObj, i, this);
-    //         })
-    //       }
-    //       registerActionHandler(i.items)
-    //     })
-    //   }
-    //   registerActionHandler(this.props.fieldItem.items)
-    // }
+    // потому что во время дизайна обновлённая структура не реагирует на Экшены
+    if (this.props.fieldItem.viewItemType === 'space div' && this.props.fieldItem.isHotReload) {
+      if (this.props.fieldItem.actionListeners) {
+        this.props.fieldItem.actionListeners.forEach(listenerObj => {
+          this.props.$objectDocument.registerActionHandler(listenerObj);
+        })
+      }
+      const registerActionHandler = (items = []) => {
+        items.forEach(i => {
+          if (i.actionListeners) {
+            i.actionListeners.forEach(listenerObj => {
+              this.props.$objectDocument.registerActionHandler(listenerObj, i, this);
+            })
+          }
+          registerActionHandler(i.items)
+        })
+      }
+      registerActionHandler(this.props.fieldItem.items);
+      
+      delete this.props.fieldItem.isHotReload;
+    }
 
 
   }

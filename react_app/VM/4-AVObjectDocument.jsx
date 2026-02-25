@@ -2096,6 +2096,8 @@ export class AVObjectDocument extends AVItem {
           fieldItem.attributes = {...rootAttributes};
           this.forceUpdate();
         }
+        
+        fieldItem.isHotReload = true; // will be deleted in AVField didUpdate
 
       }
     }
