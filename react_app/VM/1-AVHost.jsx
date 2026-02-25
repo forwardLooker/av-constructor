@@ -56,8 +56,10 @@ export class AVHost extends AVItem {
     _customPopupResolveFunc: null,
   }
   
-  divInDivItemsCopy; //AVObjectDocument
-  divInDivRootStyle;
+  divInDivFieldItemCopy; //AVObjectDocument
+  divInDivItemsCopy; 
+  
+  divInDivInnerItemCopy; //d
   
   constructor() {
     super();

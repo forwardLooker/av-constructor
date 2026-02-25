@@ -1081,7 +1081,7 @@ export class AVObjectDocument extends AVItem {
               <div className='row'>
                 <div className={`_viewItemType ${itemSelected === i ? 'font-bold border-bottom-2' : ''} cursor-pointer`}
                   onContextMenu={async e => {
-                    let menuResult = await this.showContextMenu(e, ['Удалить', 'Переименовать']);
+                    let menuResult = await this.showContextMenu(e, ['Удалить', 'Переименовать', 'Копировать', ...(this.Host.$hostElement.divInDivInnerItemCopy ? ['Вставить вправо', 'Вставить вниз'] : [])]);
                     if (menuResult === 'Удалить') {
                       let ok = await this.showDialog2({ text: `Точно хотите удалить ${i.viewItemType}?` });
                       if (ok) {
@@ -1094,6 +1094,20 @@ export class AVObjectDocument extends AVItem {
                         i.viewItemType = newItemType
                       }
                     }
+                    if (menuResult === 'Копировать') {
+                      this.Host.$hostElement.divInDivInnerItemCopy = this.deepClone(i);
+                    }
+                    
+                    if (menuResult === 'Вставить вправо') {
+                      arr.splice(idx+1, 0, this.Host.$hostElement.divInDivInnerItemCopy);
+                      this.Host.$hostElement.divInDivInnerItemCopy = null;
+                    }
+                    if (menuResult === 'Вставить вниз') {
+                      i.items = [this.Host.$hostElement.divInDivInnerItemCopy];
+                      this.Host.$hostElement.divInDivInnerItemCopy = null;
+                    }
+
+
                     this.Host.$hostElement.forceUpdate();
                   }}
                   onClick={e => {

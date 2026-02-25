@@ -565,7 +565,7 @@ class AVFieldOriginal extends AVItem {
       }
       if (i.viewItemType === 'AVIcon') {
         return (
-          <AVIcon key={idx} name={i.name} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} attributes={i.attributes}
+          <AVIcon key={idx} name={i.name} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
             onMouseEnter={(e) => {
               i.isHovered = true;
               
