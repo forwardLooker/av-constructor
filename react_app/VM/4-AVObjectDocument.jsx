@@ -76,7 +76,8 @@ export class AVObjectDocument extends AVItem {
   //render
   
   async componentDidMount() {
-    console.log('AVObjectDocument componentDidMount, props:', this.props);
+    console.log(`AVObjectDocument(name=${this.state._newData?.name}, id=${this.state._newData?.id}) componentDidMount, props:`, this.props);
+    console.log(`AVObjectDocument(name=${this.state._newData?.name}, id=${this.state._newData?.id}) actionHandlerList`, this.actionHandlerList);
     if (this.props.objectDocumentPath) {
       const objectDocument = this.Host.getObjectDocumentByPath(this.props.objectDocumentPath);
       let fieldDescriptors = objectDocument.Class?.metadata?.fieldDescriptors;
@@ -132,7 +133,7 @@ export class AVObjectDocument extends AVItem {
   }
 
   async componentDidUpdate(prevProps) {
-    console.log('AVObjectDocument componentDidUpdate, props:', this.props, 'prevProps:', prevProps);
+    console.log(`AVObjectDocument(name=${this.state._newData?.name}, id=${this.state._newData?.id}) componentDidUpdate, props:`, this.props, 'prevProps:', prevProps);
     if (this.props.objectDocumentPath !== prevProps.objectDocumentPath) {
       const objectDocument = this.Host.getObjectDocumentByPath(this.props.objectDocumentPath);
       let fieldDescriptors = objectDocument.Class?.metadata?.fieldDescriptors;
