@@ -112,6 +112,9 @@ export class AVClassConfigurator extends AVItem {
           }
         },
         {
+          name: 'gridColumnWidth', placeholder: 'пример 200px'
+        },
+        {
           name: 'size', hideIfFunc: () => {
             if (
               this.state.selectedFieldDescriptor.variant !== 'Gazprombank-string' &&

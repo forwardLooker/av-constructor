@@ -1938,7 +1938,7 @@ export class AVObjectDocument extends AVItem {
                       labelPosition: 'top',
                       items: [{
                         name: 'actionName',
-                        width: '400px',
+                        gridColumnWidth: '400px',
                       }, {
                         name: 'actionHandlerFunction',
                         label: 'actionHandlerFunction(this, item, $objectDocument, e, sourceAVFieldComponent)',
