@@ -732,3 +732,23 @@ a {
 .transform-y-5px {
   transform: translateY(5px);
 }
+
+@keyframes carusel-to-left {
+  from {
+    left: 0;
+  }
+
+  to {
+    left: -440px;
+  }
+}
+
+@keyframes carusel-to-right {
+  from {
+    left: -440px;
+  }
+
+  to {
+    left: 0;
+  }
+}

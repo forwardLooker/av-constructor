@@ -1663,13 +1663,13 @@ export class AVObjectDocument extends AVItem {
               <AVField
                 style={{ width: '150px' }}
                 fieldItem={{
-                  label: 'transform',
+                  label: 'overflow',
                   dataType: 'string',
                   variant: 'Gazprombank-string',
                   size: 7,
                 }}
-                value={newStyleObj?.transform}
-                onChangeFunc={(value) => newStyleObj.transform = value}
+                value={newStyleObj?.overflow}
+                onChangeFunc={(value) => newStyleObj.overflow = value}
                 onBlurFunc={e => {
                   this.Host.$hostElement.forceUpdate();
                 }}
@@ -2633,13 +2633,13 @@ export class AVObjectDocument extends AVItem {
                 <AVField
                   style={{ width: '150px' }}
                   fieldItem={{
-                    label: 'transform',
+                    label: 'overflow',
                     dataType: 'string',
                     variant: 'Gazprombank-string',
                     size: 7,
                   }}
-                  value={newStyleObj?.transform}
-                  onChangeFunc={(value) => newStyleObj.transform = value}
+                  value={newStyleObj?.overflow}
+                  onChangeFunc={(value) => newStyleObj.overflow = value}
                   onBlurFunc={e => {
                     this.Host.$hostElement.forceUpdate();
                   }}
