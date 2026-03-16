@@ -206,9 +206,9 @@ export class AVHost extends AVItem {
       <div className="_host-header row space-between pad-0-1dot5em height-10vh">
         <div className="row align-center">
           <div className="pad-0-4">
-            <AVIcon name="globe"></AVIcon>
+            {/* <AVIcon name=""></AVIcon> */}
           </div>
-          <h3 className='margin-left-8'>Хост тест</h3>
+          <h3 className='margin-left-8'>Хост</h3>
         </div>
         {this.user && (
           <div className="col align-center justify-center">
