@@ -181,6 +181,8 @@ export class AVClass extends AVItem {
               if (filteredObjectDocuments.length > 0) {
                 this.setState({ filteredObjectDocuments })
               }
+            } else {
+              this.setState({ filteredObjectDocuments: [] })
             }
           }}
         ></AVClassPanel>
