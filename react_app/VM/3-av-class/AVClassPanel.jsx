@@ -10,6 +10,7 @@ export class AVClassPanel extends AVItem {
     classItem: null,
     onCreateFunc: this.noop,
     onCancelFunc: null,
+    onSearchFunc: this.noop,
     onClassViewChangedFunc: this.noop
   }
   state = {
@@ -60,9 +61,18 @@ export class AVClassPanel extends AVItem {
 
   _renderGridButtons() {
     return (
-      <div>
+      <div className='row gap-12'>
         <AVButton onClick={this.props.onCreateFunc}>Создать</AVButton>
         {this.props.onCancelFunc && (<AVButton onClick={this.props.onCancelFunc}>Отмена</AVButton>)}
+        <AVField
+          fieldItem={{
+            datatype: 'string',
+            placeholder: 'Поиск',
+            isLabelHidden: true
+          }}
+          // value={this.state.searchStr}
+          onChangeFunc={searchStr => this.props.onSearchFunc(searchStr)}
+        ></AVField>
       </div>
     )
   }

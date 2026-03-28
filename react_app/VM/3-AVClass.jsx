@@ -25,6 +25,7 @@ export class AVClass extends AVItem {
     currentViewName: '',
     fieldDescriptors: [],
     objectDocuments: [],
+    filteredObjectDocuments: [],
     selectedObjectDocument: null,
 
     isParametersPanelOpened: false, // Пока нигде не используется
@@ -172,6 +173,16 @@ export class AVClass extends AVItem {
           onClassViewChangedFunc={viewName => this.setState({currentViewName: viewName})}
           onCreateFunc={(e) => { this.setState({ selectedObjectDocument: this.props.classItem.getNewObjectDocument() }) }}
           onCancelFunc={this.props.onCancelFunc}
+          onSearchFunc={searchStr => {
+            if (searchStr) {
+              const filteredObjectDocuments = this.state.objectDocuments.filter(objData => {
+                return objData['Название']?.includes(searchStr) || objData['Описание']?.includes(searchStr)
+              });
+              if (filteredObjectDocuments.length > 0) {
+                this.setState({ filteredObjectDocuments })
+              }
+            }
+          }}
         ></AVClassPanel>
         {this._renderView()}
         {this.state.isParametersPanelOpened && this._renderParametersPanel(this.state.ParametersPanelrender)}
@@ -202,7 +213,7 @@ export class AVClass extends AVItem {
           <div>
             <AVGrid
               ref={$grid => this.gridRef = $grid}
-              items={this.state.objectDocuments}
+              items={this.state.filteredObjectDocuments?.length > 0 ? this.state.filteredObjectDocuments : this.state.objectDocuments}
               columns={this.state.fieldDescriptors}
               onRowClickFunc={this._onGridRowClick}
               onRowContextMenuFunc={this._onGridRowContextMenu}

@@ -276,6 +276,9 @@ a {
 .gap-8-8 {
   gap: 8px 8px
 }
+.gap-12 {
+  gap: 12px;
+}
 .pos-abs {
   position: absolute;
 }
