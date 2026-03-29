@@ -1051,8 +1051,8 @@ class AVFieldOriginal extends AVItem {
         }
         const trimedValuesArr = valuesArr.map(str => str.trim());
         
-        const selectedStyle = { padding: '12px 16px', color: '#fff', fontWeight: 400, background: '#1e222e', border: 'none', borderRadius: '100px', transition: 'background .2s' };
-        const unselectedStyle = { padding: '12px 16px', color: '#1e222e', fontWeight: 400, background: '#eaecf4', border: 'none', borderRadius: '100px', transition: 'background .2s' };
+        const selectedStyle = { padding: '12px 16px', color: '#fff', fontWeight: 400, lineHeight: fieldItem.lineHeight || '20px', background: '#1e222e', border: 'none', borderRadius: '100px', transition: 'background .2s' };
+        const unselectedStyle = { padding: '12px 16px', color: '#1e222e', fontWeight: 400, lineHeight: fieldItem.lineHeight || '20px', background: '#eaecf4', border: 'none', borderRadius: '100px', transition: 'background .2s' };
         // const firstButtonStyle = trimedValuesArr[0] === value ? selectedStyle : unselectedStyle;
         // let secondButtonStyle = trimedValuesArr[1] === value ? selectedStyle : unselectedStyle;
         // secondButtonStyle = this.deepClone(secondButtonStyle); // клон чтобы к соседу не применялось

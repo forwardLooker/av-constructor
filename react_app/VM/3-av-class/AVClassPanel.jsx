@@ -61,7 +61,7 @@ export class AVClassPanel extends AVItem {
 
   _renderGridButtons() {
     return (
-      <div className='row gap-12'>
+      <div style={{flexBasis: '900px'}} className='row gap-12'>
         <AVButton onClick={this.props.onCreateFunc}>Создать</AVButton>
         {this.props.onCancelFunc && (<AVButton onClick={this.props.onCancelFunc}>Отмена</AVButton>)}
         <AVField
@@ -72,6 +72,17 @@ export class AVClassPanel extends AVItem {
           }}
           // value={this.state.searchStr}
           onChangeFunc={searchStr => this.props.onSearchFunc(searchStr)}
+        ></AVField>
+        <AVField
+          fieldItem={{
+            datatype: 'string',
+            variant: 'tags-buttons',
+            lineHeight: '10px',
+            valuesList: 'Ввод данных || Праздники || Подарки',
+            isLabelHidden: true
+          }}
+          // value={this.state.searchStr}
+          // onChangeFunc={searchStr => this.props.onSearchFunc(searchStr)}
         ></AVField>
       </div>
     )
