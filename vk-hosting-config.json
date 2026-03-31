@@ -1,0 +1,10 @@
+{
+  "static_path": "react_dist",
+  "app_id": "54509391",
+  "endpoints": {
+    "mobile": "index.html",
+    "mvk": "index.html",
+    "web": "index.html"
+  },
+  "debug": false
+}

@@ -1,7 +1,8 @@
 {
   "name": "av-constructor",
+  "homepage": ".",
   "private": true,
-  "version": "0.8.2",
+  "version": "1.0.0",
   "description": "AnVar Constructor",
   "babel": {
     "presets": [
@@ -14,7 +15,8 @@
   },
   "scripts": {
     "create-react-dist": "webpack",
-    "start-react": "webpack-dev-server --open"
+    "start-react": "webpack-dev-server --open",
+    "deploy": "vk-miniapps-deploy"
   },
   "keywords": [
     "javascript"
@@ -36,6 +38,7 @@
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "@vkontakte/vk-miniapps-deploy": "^1.0.2",
     "babel-loader": "8.0.0",
     "babel-plugin-styled-components": "^2.1.4",
     "css-loader": "^1.0.0",
