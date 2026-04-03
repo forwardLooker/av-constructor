@@ -347,7 +347,7 @@ export class AVClass extends AVItem {
     if (menuChoice === 'Удалить объект') {
       const ok = await this.showDialog({
         text: 'Удалить объект?',
-        content: (<AVGrid items={[rowItem]} columns={this.state.fieldDescriptors}></AVGrid>)
+        content: () => (<AVGrid items={[rowItem]} columns={this.state.fieldDescriptors}></AVGrid>)
       })
       if (ok) {
         const selectedObjectDocument = await this.props.classItem.getObjectDocument(rowItem.reference);
