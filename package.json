@@ -15,8 +15,7 @@
   },
   "scripts": {
     "create-react-dist": "webpack",
-    "start-react": "webpack-dev-server --open",
-    "deploy": "vk-miniapps-deploy"
+    "start-react": "webpack-dev-server --open"
   },
   "keywords": [
     "javascript"

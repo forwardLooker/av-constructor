@@ -2,7 +2,7 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './react_app/index.js',
+  entry: './react_app/index.jsx',
   output: {
     path: path.resolve(__dirname, 'react_dist'),
     filename: 'index_bundle.js'

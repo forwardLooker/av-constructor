@@ -28,7 +28,7 @@ export const App = () => {
           <Persik id="persik" />
         </View>
       </SplitCol>
-      {popout}
+      {/* {popout} */}
     </SplitLayout>
   );
 };

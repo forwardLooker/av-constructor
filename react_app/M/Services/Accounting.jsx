@@ -1,4 +1,4 @@
-import { Item } from '../0-Item'
+import { Item } from '../0-Item.js'
 import React from 'react';
 import { AVItem } from '../../VM/0-AVItem.js';
 import { AVGrid } from "../../V/AVGrid.jsx";

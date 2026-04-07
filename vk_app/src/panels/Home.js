@@ -2,13 +2,15 @@ import { Panel, PanelHeader, Header, Button, Group, Cell, Div, Avatar } from '@v
 import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
 import PropTypes from 'prop-types';
 
+// import { App } from '../../../react_app/index.jsx';
+
 export const Home = ({ id, fetchedUser }) => {
   const { photo_200, city, first_name, last_name } = { ...fetchedUser };
   const routeNavigator = useRouteNavigator();
 
   return (
     <Panel id={id}>
-      <PanelHeader>Главная</PanelHeader>
+      <PanelHeader>Главная страница</PanelHeader>
       {fetchedUser && (
         <Group header={<Header size="s">User Data Fetched with VK Bridge</Header>}>
           <Cell before={photo_200 && <Avatar src={photo_200} />} subtitle={city?.title}>
@@ -24,6 +26,11 @@ export const Home = ({ id, fetchedUser }) => {
           </Button>
         </Div>
       </Group>
+
+      {/* <Group header={<Header size="s">Constructor Example</Header>}>
+        <App></App>
+      </Group> */}
+      
     </Panel>
   );
 };

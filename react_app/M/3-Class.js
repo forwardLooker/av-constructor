@@ -5,12 +5,12 @@ import gazprombankPage1Class from '../Classes/gazprombank-page1.js';
 import gazprombankPage2Class from '../Classes/gazprombank-page2.js';
 import gazprombankPage3Class from '../Classes/gazprombank-page3.js';
 import gazprombankPage4Class from '../Classes/gazprombank-page4.js';
-import gazprombankMainPageClass from '../Classes/gazprombank-main-page.js';
+import gazprombankMainPageClass from '../Classes/gazprombank-main-page.jsx';
 
 
 import scriptsClass from '../Classes/scripts.js';
 
-import {Accounting} from './Services/Accounting.js';
+import {Accounting} from './Services/Accounting.jsx';
 
 
 export class Class extends Item {

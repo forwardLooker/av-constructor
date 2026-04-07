@@ -9,7 +9,8 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "tunnel": "vk-tunnel --http-protocol=http --host=localhost --port=5173",
-    "deploy": "vite build && vk-miniapps-deploy"
+    "deploy": "vite build && vk-miniapps-deploy",
+    "only-deploy": "vk-miniapps-deploy"
   },
   "dependencies": {
     "@vkontakte/icons": "^3.1.1",

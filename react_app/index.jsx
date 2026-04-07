@@ -19,7 +19,7 @@ import {AVHost} from './VM/1-AVHost.jsx';
 //   },
 // ]);
 
-class App extends React.PureComponent {
+export class App extends React.PureComponent {
   state = {
     router: null
   }
