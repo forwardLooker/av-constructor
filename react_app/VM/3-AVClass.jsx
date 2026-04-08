@@ -20,6 +20,8 @@ export class AVClass extends AVItem {
     itemFullScreenMode: false, // знание убирает паддинги,
     
     onCancelFunc: null, // В Классе поверх ОбджектДокумента
+    
+    onChangeFunc: this.noop,
   }
   state = {
     currentViewName: '',
@@ -184,6 +186,10 @@ export class AVClass extends AVItem {
             } else {
               this.setState({ filteredObjectDocuments: [] })
             }
+          }}
+          onTabChangeFunc={tabName => {
+            const classItemByTab = this.Host.getClassByName(tabName);
+            this.props.onChangeFunc(classItemByTab);
           }}
         ></AVClassPanel>
         {this._renderView()}

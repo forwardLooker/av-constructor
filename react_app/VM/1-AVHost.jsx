@@ -159,7 +159,7 @@ export class AVHost extends AVItem {
       // bodyElem.focus();
       
       if (window.vk_app) {
-        const vkClass = this.Host.getClassByName('Новые Идеи');
+        const vkClass = this.Host.getClassByName('Ввод данных');
         this.setState({ selectedTreeItem: vkClass });
       }
     }
@@ -231,7 +231,10 @@ export class AVHost extends AVItem {
         {!window.vk_app && this._renderLeftSidebar()}
         <div className={`_av-item-view pos-rel flex-1 col ${this.state.itemFullScreenMode ? '' : 'pad-8 border'} scroll-y`}>
           {this.state.selectedTreeItem?.itemType === 'class' ?
-            (<AVClass classItem={this.state.selectedTreeItem} itemFullScreenMode={this.state.itemFullScreenMode}></AVClass>) : ''}
+            (<AVClass classItem={this.state.selectedTreeItem}
+              itemFullScreenMode={this.state.itemFullScreenMode}
+              onChangeFunc={classItem => this.setState({ selectedTreeItem: classItem })}
+            ></AVClass>) : ''}
           {this.state.selectedTreeItem?.itemType === 'domain' ?
             (<AVDomain domainItem={this.state.selectedTreeItem} selectedConfigItem={this.state.selectedConfigItem}></AVDomain>)  : ''}
         </div>

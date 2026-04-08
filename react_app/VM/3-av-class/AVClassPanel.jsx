@@ -11,7 +11,9 @@ export class AVClassPanel extends AVItem {
     onCreateFunc: this.noop,
     onCancelFunc: null,
     onSearchFunc: this.noop,
-    onClassViewChangedFunc: this.noop
+    onClassViewChangedFunc: this.noop,
+    
+    onTabChangeFunc: this.noop,
   }
   state = {
     currentViewName: '',
@@ -75,17 +77,21 @@ export class AVClassPanel extends AVItem {
           // value={this.state.searchStr}
           onChangeFunc={searchStr => this.props.onSearchFunc(searchStr)}
         ></AVField>
-        <AVField
-          fieldItem={{
-            datatype: 'string',
-            variant: 'tags-buttons',
-            lineHeight: '10px',
-            valuesList: 'Ввод данных || Праздники || Подарки',
-            isLabelHidden: true
-          }}
+        {(window.vk_app || true) && (
+          <AVField
+            fieldItem={{
+              datatype: 'string',
+              variant: 'tags-buttons',
+              lineHeight: '10px',
+              valuesList: 'Ввод данных || Праздники || Подарки',
+              isLabelHidden: true,
+              defaultValue: 'Ввод данных',
+            }}
+            onChangeFunc={value => this.props.onTabChangeFunc(value)}
           // value={this.state.searchStr}
           // onChangeFunc={searchStr => this.props.onSearchFunc(searchStr)}
-        ></AVField>
+          ></AVField>
+        )}
       </div>
     )
   }
