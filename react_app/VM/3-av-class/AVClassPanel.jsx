@@ -42,19 +42,21 @@ export class AVClassPanel extends AVItem {
     return (
       <div className="_av-class-panel-root row pad-bottom-2 border-bottom-2">
         {this.state.currentViewName === 'Grid' ? this._renderGridButtons() : ''}
-        <div className="flex-1 row justify-end">
-          <div>
-            <AVField
-              fieldItem={{
-                variant: 'select',
-                valuesList: this.state.availableViewsList,
-                isEmptyOptionHidden: true
-              }}
-              value={this.state.currentViewName}
-              onChangeFunc={viewName => this._selectView(viewName)}
-            ></AVField>
+        {!window.vk_app && (
+          <div className="flex-1 row justify-end">
+            <div>
+              <AVField
+                fieldItem={{
+                  variant: 'select',
+                  valuesList: this.state.availableViewsList,
+                  isEmptyOptionHidden: true
+                }}
+                value={this.state.currentViewName}
+                onChangeFunc={viewName => this._selectView(viewName)}
+              ></AVField>
+            </div>
           </div>
-        </div>
+        )}
       </div>
    )
   }

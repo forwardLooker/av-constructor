@@ -3,6 +3,9 @@ import {Class} from './3-Class.js';
 import { Domain } from './2-Domain.js';
 import { ObjectDocument } from './4-ObjectDocument.js';
 
+import vkBridge from '@vkontakte/vk-bridge';
+
+
 
 export class Host extends Item {
   constructor(hostElement) {
@@ -12,9 +15,10 @@ export class Host extends Item {
     this.firebase.initializeApp(this.firebaseConfig);
     this.db = this.firebase.firestore();
     this.storageRoot = this.firebase.storage().ref();
-    this.auth = this.firebase.auth()
+    this.auth = this.firebase.auth();    
     this.auth.onAuthStateChanged((user) => {
       console.log('firebase.auth onAuthStateChanged user:', user);
+      // if (window.vk_app === true) return;
       if (user) {
         // this.user = user;
         Item.user = user;
@@ -24,6 +28,26 @@ export class Host extends Item {
       }
       this.fire('user-state-changed', user);
     });
+    
+    if (window.vk_app === true) {
+      this.auth.signInWithEmailAndPassword('arta.vision.constructor@gmail.com', 'Hunters8alL').then(() => {
+        vkBridge.send('VKWebAppInit');
+        new Promise(async (res, rej) => {
+          const vkUser = await vkBridge.send('VKWebAppGetUserInfo');
+          res(vkUser)
+        }).then(vkUser => {
+          console.log('vkBridge VKWebAppGetUserInfo vkUser:', vkUser);
+          if (vkUser) {
+            // this.user = user;
+            Item.vkUser = vkUser;
+          } else {
+            // this.user = null;
+            Item.vkUser = null;
+          }
+          // this.fire('user-state-changed', vkUser);
+        })
+      });
+    }
   }
   itemType = 'host';
   $hostElement;

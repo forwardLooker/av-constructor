@@ -27,11 +27,17 @@
     "firebase": "^9.22.1",
     "number-format.js": "^2.0.9",
     "ramda": "^0.30.1",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "react-json-tree": "^0.19.0",
-    "react-router-dom": "^6.29.0",
-    "styled-components": "^6.0.8"
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-json-tree": "^0.20.0",
+    "react-router-dom": "^6.30.3",
+    "styled-components": "^6.3.12",
+
+    "@vkontakte/icons": "^3.1.1",
+    "@vkontakte/vk-bridge": "^2.13.0",
+    "@vkontakte/vk-bridge-react": "^1.0.1",
+    "@vkontakte/vk-mini-apps-router": "^1.7.6",
+    "@vkontakte/vkui": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

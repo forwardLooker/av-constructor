@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDom from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -34,7 +35,8 @@ export class App extends React.PureComponent {
   }
 }
 
-ReactDom.render(
-  <App/>,
-  document.getElementById('app')
-)
+createRoot(document.getElementById('app')).render(<App />);
+// ReactDom.render(
+//   <App/>,
+//   document.getElementById('app')
+// )
