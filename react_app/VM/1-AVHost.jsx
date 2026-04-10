@@ -18,6 +18,7 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
+
 export class AVHost extends AVItem {
   static defaultProps = {
     appRef: null // Служит для незаметной перезагрузки Хоста со всеми роутами, полученными из специального Класса в System
@@ -233,7 +234,51 @@ export class AVHost extends AVItem {
           {this.state.selectedTreeItem?.itemType === 'class' ?
             (<AVClass classItem={this.state.selectedTreeItem}
               itemFullScreenMode={this.state.itemFullScreenMode}
-              onChangeFunc={classItem => this.setState({ selectedTreeItem: classItem })}
+              onChangeFunc={async classItem => {
+                const systemLogClass = this.Host.getClassByName('Системный log');
+                const systemLogObjDocs = await systemLogClass.getObjectDocuments();
+                if (systemLogObjDocs.some(o => o.name = 'Праздники загружены')) {
+                  this._prazdnikiLoaded = true;
+                  console.log('Праздники Лог успешно найден');
+                }
+                if (!this._prazdnikiLoaded && window.vk_app && classItem.name === 'Праздники') {
+                  this._prazdnikiLoaded = true;
+                  await this.vkBridge.send('VKWebAppGetAuthToken', {
+                    app_id: 54509391,
+                    scope: 'friends,status'
+                  })
+                    .then(async (data) => {
+                      if (data.access_token) {
+                        // Ключ доступа пользователя получен
+                        const friendsList = await this.vkBridge.send('VKWebAppCallAPIMethod', {
+                          method: 'friends.get',
+                          params: {
+                            v: '5.131',
+                            access_token: data.access_token,
+                            fields: 'bdate'
+                          }
+                        });
+                        console.log('vk friends.get', friendsList);
+                        friendsList.response.items.filter(i => !!i.bdate).map(vkFrObj => ({
+                          'Дата': vkFrObj.bdate,
+                          'Название': `День рождения: ${vkFrObj.first_name} ${vkFrObj.last_name}`,
+                          'Имя': vkFrObj.first_name,
+                          'Фамилия': vkFrObj.last_name,
+                          vkId: vkFrObj.id,
+                        })).forEach(frObj => {
+                          classItem.createObjectDocument(frObj)
+                        });
+                        const systemLogClass = this.Host.getClassByName('Системный log');
+                        systemLogClass.createObjectDocument({ name: 'Праздники загружены' });
+                      }
+                    })
+                    .catch((error) => {
+                      // Ошибка
+                      console.log(error);
+                    });
+                }
+                this.setState({ selectedTreeItem: classItem })
+              }}
             ></AVClass>) : ''}
           {this.state.selectedTreeItem?.itemType === 'domain' ?
             (<AVDomain domainItem={this.state.selectedTreeItem} selectedConfigItem={this.state.selectedConfigItem}></AVDomain>)  : ''}

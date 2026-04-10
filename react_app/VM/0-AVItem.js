@@ -1,4 +1,6 @@
-import {AVElement} from "../V/0-AVElement.js";
+import { AVElement } from "../V/0-AVElement.js";
+
+import vkBridge from '@vkontakte/vk-bridge';
 
 export class AVItem extends AVElement {
   static Host() {};
@@ -16,6 +18,8 @@ export class AVItem extends AVElement {
     }
     return this._userFromHost.value;
   }
+  
+  vkBridge = vkBridge;
   
   componentWillUnmount() {
     // super.componentWillUnmount();

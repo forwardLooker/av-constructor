@@ -14,10 +14,11 @@ import {Accounting} from './Services/Accounting.jsx';
 
 
 export class Class extends Item {
-  constructor({serverRef}) {
+  constructor({serverRef, name}) {
     super();
     this.serverRef = serverRef;
     this.id = serverRef.id;
+    this._name = name;
     this.classModuleDefinitions.forEach(clsDef => {
       clsDef.Host = this.Host;
     })
@@ -27,6 +28,10 @@ export class Class extends Item {
 
   }
   itemType = 'class';
+  _name;
+  get name() {
+    return this._name || this.metadata.name
+  }
   metadata = {};
   serverRef;
   id; // TODO может сделать getter?
@@ -150,7 +155,7 @@ export class Class extends Item {
       await this.serverRef.update({fieldDescriptors})
     }
   }
-
+  // может работать неправильно надо проверить подключив журнал учёта
   async saveMetadata({fieldDescriptors, connectedServices, viewsOptions}) {
     if (fieldDescriptors || connectedServices || viewsOptions) {
       await this.serverRef.update({fieldDescriptors, connectedServices, viewsOptions})

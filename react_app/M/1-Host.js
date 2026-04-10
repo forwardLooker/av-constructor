@@ -93,7 +93,7 @@ export class Host extends Item {
     const classData = this.findDeepObjInItemsBy({name: name}, {items: this.config});
     let classItem;
     if (classData) {
-      classItem = new Class({serverRef: classData.reference});
+      classItem = new Class({serverRef: classData.reference, name});
     }
     return classItem;
   }
