@@ -85,8 +85,8 @@ export class AVClassPanel extends AVItem {
               lineHeight: '10px',
               valuesList: 'Ввод данных || Праздники || Подарки',
               isLabelHidden: true,
-              defaultValue: 'Ввод данных',
             }}
+            value={this.props.classItem.name}
             onChangeFunc={value => this.props.onTabChangeFunc(value)}
           // value={this.state.searchStr}
           // onChangeFunc={searchStr => this.props.onSearchFunc(searchStr)}

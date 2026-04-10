@@ -74,8 +74,8 @@ export class Host extends Item {
     this.config = rootDomainsSnap.docs.map(doc => doc.data());
     return this.config;
   }
-  getClass(clsRef) {
-    const cls = new Class({serverRef: clsRef, Domain: null});
+  getClass(clsRef, name) {
+    const cls = new Class({serverRef: clsRef, Domain: null, name});
     return cls
   }
   getDomain(dmnRef, id) {

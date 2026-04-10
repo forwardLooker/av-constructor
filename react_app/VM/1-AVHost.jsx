@@ -570,7 +570,7 @@ export class AVHost extends AVItem {
   _onTreeItemSelect = async (item) => {
     // console.log('onTreeItemSelect:', e);
     if (item.itemType === 'class') {
-      this.setState({ selectedTreeItem: this.Host.getClass(item.reference), selectedConfigItem: item })
+      this.setState({ selectedTreeItem: this.Host.getClass(item.reference, item.name), selectedConfigItem: item })
     }
     if (item.itemType === 'domain') {
       this.setState({ selectedTreeItem: this.Host.getDomain(item.reference), selectedConfigItem: item })
