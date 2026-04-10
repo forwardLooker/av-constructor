@@ -10,7 +10,19 @@ module.exports = {
   module: {
     rules: [
       {test: /\.(jsx|js)$/, use: 'babel-loader'},
-      {test: /\.css$/, use: ['style-loader', 'css-loader']}
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/', // optional: puts fonts in a subfolder
+            },
+          },
+        ],
+      }
     ]
   },
   devServer: {

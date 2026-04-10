@@ -82,9 +82,44 @@
   font-style: italic
 }
 
-html * {
-  font-family: Roboto, Gazprombank Sans, "sans-serif"
+@font-face {
+  font-display: swap;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/400-regular.f3cc56e19e8c2b9706bd.woff2) format("woff2")
 }
+
+@font-face {
+  font-display: swap;
+  font-family: Roboto;
+  font-style: italic;
+  font-weight: 400;
+  src: url(/fonts/400-regular-italic.a65a93b3be1e896ad8a7.woff2) format("woff2")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  src: url(/fonts/500-medium.d450a4debc4880ebbb87.woff2) format("woff2")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 700;
+  src: url(/fonts/700-bold.fe848f0b984ed7d46b52.woff2) format("woff2")
+}
+
+html * {
+  font-family: Roboto
+}
+/* html * {
+  font-family: Roboto, Gazprombank Sans, "sans-serif"
+} */
 
 :root {
   --Typeface-Font-Family: "Gazprombank-Sans", "sans-serif";

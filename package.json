@@ -23,6 +23,11 @@
   "author": "Anvar Khakimov",
   "license": "Private",
   "dependencies": {
+    "@vkontakte/icons": "^3.1.1",
+    "@vkontakte/vk-bridge": "^2.13.0",
+    "@vkontakte/vk-bridge-react": "^1.0.1",
+    "@vkontakte/vk-mini-apps-router": "^1.7.6",
+    "@vkontakte/vkui": "^7.0.0",
     "email-validator": "^2.0.4",
     "firebase": "^9.22.1",
     "number-format.js": "^2.0.9",
@@ -31,13 +36,7 @@
     "react-dom": "^19.2.4",
     "react-json-tree": "^0.20.0",
     "react-router-dom": "^6.30.3",
-    "styled-components": "^6.3.12",
-
-    "@vkontakte/icons": "^3.1.1",
-    "@vkontakte/vk-bridge": "^2.13.0",
-    "@vkontakte/vk-bridge-react": "^1.0.1",
-    "@vkontakte/vk-mini-apps-router": "^1.7.6",
-    "@vkontakte/vkui": "^7.0.0"
+    "styled-components": "^6.3.12"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -47,6 +46,7 @@
     "babel-loader": "8.0.0",
     "babel-plugin-styled-components": "^2.1.4",
     "css-loader": "^1.0.0",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^0.23.0",
     "webpack": "^4.17.1",
