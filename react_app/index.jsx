@@ -8,8 +8,6 @@ import {
 import './index.css';
 import { AVHost } from './VM/1-AVHost.jsx';
 
-import '@vkontakte/vkui/dist/vkui.css';
-
 
 // const router = createBrowserRouter([
 //   {

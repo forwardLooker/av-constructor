@@ -18,7 +18,7 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'fonts/', // optional: puts fonts in a subfolder
+              outputPath: 'fonts', // optional: puts fonts in a subfolder
             },
           },
         ],
