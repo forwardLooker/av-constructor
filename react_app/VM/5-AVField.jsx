@@ -11,6 +11,8 @@ import { AVObjectDocument } from './4-AVObjectDocument.jsx';
 
 import formatNumber from 'number-format.js';
 
+import { DateInput as VKDateInput, Input as VKInput, ChipsInput as VKChipsInput } from '@vkontakte/vkui';
+
 const validator = require('email-validator');
 
 const AVField = React.forwardRef((props, ref) => (
@@ -1013,6 +1015,53 @@ class AVFieldOriginal extends AVItem {
           ></AVFieldOriginal.styles.textarea>
         );
       }
+      if (fieldItem.variant === 'vk-input') {
+        inputElement = (
+          <VKInput
+            className="flex-1"
+            autoComplete="off"
+            placeholder={fieldItem.placeholder}
+            value={(value === null || value === undefined) ? '' : value}
+            disabled={readOnly}
+            onChange={onChangeFunc}
+            onBlur={this.props.onBlurFunc}
+          ></VKInput>
+        );
+      }
+      
+      if (fieldItem.variant === 'vk-date-input') {
+        inputElement = (
+          <VKDateInput
+            className="flex-1"
+            autoComplete="off"
+            placeholder={fieldItem.placeholder}
+            value={(value === null || value === undefined) ? '' : typeof value === 'string' ? new Date(value) : value}
+            disabled={readOnly}
+            onChange={date => {
+              this.setState({ _value: date })
+              this.props.onChangeFunc(date.toString())
+            }}
+            onBlur={this.props.onBlurFunc}
+          ></VKDateInput>
+        );
+      }
+      
+      if (fieldItem.variant === 'vk-chips-input') {
+        inputElement = (
+          <VKChipsInput
+            className="flex-1"
+            autoComplete="off"
+            placeholder={fieldItem.placeholder}
+            value={(value === null || value === undefined) ? '' : value}
+            disabled={readOnly}
+            onChange={onChangeFunc}
+            onBlur={this.props.onBlurFunc}
+            addOnBlur={true}
+          ></VKChipsInput>
+        );
+      }
+
+
       if (fieldItem.variant === 'select' && fieldItem.valuesList) {
         let valuesArr
         if (Array.isArray(fieldItem.valuesList)) {
@@ -2223,8 +2272,8 @@ class AVFieldOriginal extends AVItem {
         value[option.name] = eOrValue;
       }
     } else {
-      value = eOrValue.target.value;
-      if (eOrValue.target.type === 'checkbox') {
+      value = eOrValue?.target?.value || eOrValue;
+      if (eOrValue?.target?.type === 'checkbox') {
         value = eOrValue.target.checked;
       }
     }

@@ -83,7 +83,7 @@ export class AVClassPanel extends AVItem {
               datatype: 'string',
               variant: 'tags-buttons',
               lineHeight: '10px',
-              valuesList: 'Ввод данных || Праздники || Подарки',
+              valuesList: 'Подготовка || Праздники || Подарки',
               isLabelHidden: true,
             }}
             value={this.props.classItem.name}

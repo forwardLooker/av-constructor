@@ -58,6 +58,9 @@ export class AVClassConfigurator extends AVItem {
           }
           if (this.state.selectedFieldDescriptor.dataType === 'string') {
             return ['textarea',
+              'vk-input',
+              'vk-date-input',
+              'vk-chips-input',
               'select',
               'tags-buttons',
               'radio-buttons',
