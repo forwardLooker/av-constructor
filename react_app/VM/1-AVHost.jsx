@@ -355,6 +355,19 @@ export class AVHost extends AVItem {
             className="border pad-4"
             draggable="true"
             onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+              e,
+              {
+                designDragElement: { viewItemType: 'vk-button', label: 'vk-button' },
+                designDragElementOrigin: 'instrument panel'
+              }
+            )}
+          >
+            vk-button
+          </div>
+          <div
+            className="border pad-4"
+            draggable="true"
+            onDragStart={(e) => this.state.$designObjectDocument.dragstart(
                 e,
                 {
                   designDragElement: {

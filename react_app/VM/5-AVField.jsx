@@ -11,7 +11,15 @@ import { AVObjectDocument } from './4-AVObjectDocument.jsx';
 
 import formatNumber from 'number-format.js';
 
-import { DateInput as VKDateInput, DateRangeInput as VKDateRangeInput, Input as VKInput, ChipsInput as VKChipsInput } from '@vkontakte/vkui';
+import {
+  DateInput as VKDateInput,
+  DateRangeInput as VKDateRangeInput,
+  Input as VKInput,
+  ChipsInput as VKChipsInput,
+  Select as VKSelect,
+  Checkbox as VKCheckbox,
+  Button as VKButton
+} from '@vkontakte/vkui';
 
 const validator = require('email-validator');
 
@@ -709,6 +717,34 @@ class AVFieldOriginal extends AVItem {
         </div>
       )
     }
+    if (this.props.fieldItem.viewItemType === 'vk-button') {
+      return (
+        <div className={`_av-field-viewItem-root flex-1 col justify-center align-baseline ${this.props.fieldItem.withoutPaddingAndMargin ? '' : 'pad-8-0'}`}
+          style={this.props.style}
+          ref={this.props.refOnRootDiv}
+        >
+          <VKButton
+            style={this.props.fieldItem.buttonStyle}
+            onClick={(e) => {
+              if (this.props.$objectDocument) {
+                const classInstance = this.props.$objectDocument.state._objectDocument.Class;
+                const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+                if (moduleDefinition) {
+                  const methodOnButton = moduleDefinition.methods[this.props.fieldItem.label];
+                  if (methodOnButton) {
+                    methodOnButton({ $objectDocument: this.props.$objectDocument, e })
+                  }
+                }
+
+                this.props.onButtonClickFunc({ label: this.props.fieldItem.label, e });
+              }
+            }}
+          >{(this.props.fieldItem.iconName && (<AVIcon name={this.props.fieldItem.iconName}></AVIcon>)) || this.props.fieldItem.label || 'button'}</VKButton>
+          {this.props.children}
+        </div>
+      )
+    }
+
     if (this.props.fieldItem.viewItemType === 'icon') {
       return (
         <div className='_av-field-viewItem-root flex-1 row'
@@ -1026,6 +1062,24 @@ class AVFieldOriginal extends AVItem {
             onChange={onChangeFunc}
             onBlur={this.props.onBlurFunc}
           ></VKInput>
+        );
+      } 
+      
+      if (fieldItem.variant === 'vk-select') {
+        inputElement = (
+          <VKSelect
+            className="flex-1"
+            autoComplete="off"
+            placeholder={fieldItem.placeholder}
+            value={(value === null || value === undefined) ? '' : value}
+            options={fieldItem.valuesList?.split('||').map(str => str.trim()).map(str => ({ value: str, label: str }))}
+            disabled={readOnly}
+            onChange={(_, value) => {
+              this.setState({ _value: value })
+              this.props.onChangeFunc(value)
+            }}
+            onBlur={this.props.onBlurFunc}
+          ></VKSelect>
         );
       }
       
@@ -2094,6 +2148,20 @@ class AVFieldOriginal extends AVItem {
           })}
         ></AVFieldOriginal.styles.input>
       )
+      if (fieldItem.variant === 'vk-checkbox') {
+        inputElement = (
+          <VKCheckbox
+            checked={value === null ? false : value}
+            disabled={readOnly}
+            onChange={onChangeFunc}
+            onFocus={() => this.setState({
+              isInvalidState: false,
+              isInvalidMessageRendered: false,
+              isRequiredMessageRendered: false,
+            })}
+          ></VKCheckbox>
+        )
+      }
       if (fieldItem.variant === 'Gazprombank-checkbox') {
         inputElement = (
           <AVFieldOriginal.styles.gazprombankCheckbox

@@ -59,6 +59,7 @@ export class AVClassConfigurator extends AVItem {
           if (this.state.selectedFieldDescriptor.dataType === 'string') {
             return ['textarea',
               'vk-input',
+              'vk-select',
               'vk-date-input',
               'vk-date-range-input',
               'vk-chips-input',
@@ -81,7 +82,7 @@ export class AVClassConfigurator extends AVItem {
             return ['input+range'];
           }
           if (this.state.selectedFieldDescriptor.dataType === 'boolean') {
-            return ['Gazprombank-checkbox', 'Gazprombank-checkbox-switch'];
+            return ['vk-checkbox', 'Gazprombank-checkbox', 'Gazprombank-checkbox-switch'];
           }
           return [];
         }},
@@ -94,6 +95,7 @@ export class AVClassConfigurator extends AVItem {
         {name: 'valuesList', hideIfFunc: () => {
           if (
             this.state.selectedFieldDescriptor.variant !== 'select'
+            && this.state.selectedFieldDescriptor.variant !== 'vk-select'
             && this.state.selectedFieldDescriptor.variant !== 'tags-buttons'
             && this.state.selectedFieldDescriptor.variant !== 'radio-buttons'
             && this.state.selectedFieldDescriptor.variant !== 'Gazprombank-string-select'
