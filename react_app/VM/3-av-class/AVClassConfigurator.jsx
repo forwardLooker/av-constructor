@@ -60,6 +60,7 @@ export class AVClassConfigurator extends AVItem {
             return ['textarea',
               'vk-input',
               'vk-date-input',
+              'vk-date-range-input',
               'vk-chips-input',
               'select',
               'tags-buttons',

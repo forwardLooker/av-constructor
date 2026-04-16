@@ -11,7 +11,7 @@ import { AVObjectDocument } from './4-AVObjectDocument.jsx';
 
 import formatNumber from 'number-format.js';
 
-import { DateInput as VKDateInput, Input as VKInput, ChipsInput as VKChipsInput } from '@vkontakte/vkui';
+import { DateInput as VKDateInput, DateRangeInput as VKDateRangeInput, Input as VKInput, ChipsInput as VKChipsInput } from '@vkontakte/vkui';
 
 const validator = require('email-validator');
 
@@ -1043,6 +1043,24 @@ class AVFieldOriginal extends AVItem {
             }}
             onBlur={this.props.onBlurFunc}
           ></VKDateInput>
+        );
+      }
+      
+      if (fieldItem.variant === 'vk-date-range-input') {
+        inputElement = (
+          <VKDateRangeInput
+            className="flex-1"
+            autoComplete="off"
+            placeholder={fieldItem.placeholder}
+            value={(value === null || value === undefined) ? undefined : (typeof value[0] === 'string' || typeof value[1] === 'string' ) ? value.map(ds => ds ? new Date(ds) : null) : value }
+            disabled={readOnly}
+            onChange={dateRange => {
+              console.log('VKDateRangeInput value', dateRange);
+              this.setState({ _value: dateRange })
+              this.props.onChangeFunc(dateRange.map(d => d?.toString() || null))
+            }}
+            onBlur={this.props.onBlurFunc}
+          ></VKDateRangeInput>
         );
       }
       
