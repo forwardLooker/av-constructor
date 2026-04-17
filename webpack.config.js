@@ -15,14 +15,26 @@ module.exports = {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
         use: [
           {
-            loader: 'file-loader',
+            loader: 'url-loader',
             options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts', // optional: puts fonts in a subfolder
+              limit: 8192, // Inline fonts smaller than 8kb
+              name: 'assets/fonts/[name].[hash:8].[ext]' // Fallback path
             },
           },
         ],
-      }
+      },
+      // {
+      //   test: /\.(woff|woff2|eot|ttf|otf)$/i,
+      //   use: [
+      //     {
+      //       loader: 'file-loader',
+      //       options: {
+      //         name: '[name].[ext]',
+      //         outputPath: 'fonts', // optional: puts fonts in a subfolder
+      //       },
+      //     },
+      //   ],
+      // }
     ]
   },
   devServer: {
