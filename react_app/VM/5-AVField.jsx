@@ -18,8 +18,14 @@ import {
   ChipsInput as VKChipsInput,
   Select as VKSelect,
   Checkbox as VKCheckbox,
-  Button as VKButton
+  Button as VKButton,
+  ToolButton as VKToolButton,
+  CellButton as VKCellButton,
+  IconButton as VKIconButton,
+  SubnavigationButton as VKSubnavigationButton,
 } from '@vkontakte/vkui';
+
+import { Icon20Add, Icon24Add, Icon16Delete } from '@vkontakte/icons';
 
 const validator = require('email-validator');
 
@@ -740,6 +746,126 @@ class AVFieldOriginal extends AVItem {
               }
             }}
           >{(this.props.fieldItem.iconName && (<AVIcon name={this.props.fieldItem.iconName}></AVIcon>)) || this.props.fieldItem.label || 'button'}</VKButton>
+          {this.props.children}
+        </div>
+      )
+    }
+    
+    if (this.props.fieldItem.viewItemType === 'vk-tool-button') {
+      return (
+        <div className={`_av-field-viewItem-root flex-1 col justify-center align-baseline ${this.props.fieldItem.withoutPaddingAndMargin ? '' : 'pad-8-0'}`}
+          style={this.props.style}
+          ref={this.props.refOnRootDiv}
+        >
+          <VKToolButton
+            IconCompact={Icon20Add}
+            IconRegular={Icon24Add}
+            direction='column'
+            style={this.props.fieldItem.buttonStyle}
+            onClick={(e) => {
+              if (this.props.$objectDocument) {
+                const classInstance = this.props.$objectDocument.state._objectDocument.Class;
+                const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+                if (moduleDefinition) {
+                  const methodOnButton = moduleDefinition.methods[this.props.fieldItem.label];
+                  if (methodOnButton) {
+                    methodOnButton({ $objectDocument: this.props.$objectDocument, e })
+                  }
+                }
+
+                this.props.onButtonClickFunc({ label: this.props.fieldItem.label, e });
+              }
+            }}
+          >{(this.props.fieldItem.iconName && (<AVIcon name={this.props.fieldItem.iconName}></AVIcon>)) || this.props.fieldItem.label || 'button'}
+          </VKToolButton>
+          {this.props.children}
+        </div>
+      )
+    }
+    
+    if (this.props.fieldItem.viewItemType === 'vk-cell-button') {
+      return (
+        <div className={`_av-field-viewItem-root flex-1 col justify-center align-baseline ${this.props.fieldItem.withoutPaddingAndMargin ? '' : 'pad-8-0'}`}
+          style={this.props.style}
+          ref={this.props.refOnRootDiv}
+        >
+          <VKCellButton
+            style={this.props.fieldItem.buttonStyle}
+            onClick={(e) => {
+              if (this.props.$objectDocument) {
+                const classInstance = this.props.$objectDocument.state._objectDocument.Class;
+                const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+                if (moduleDefinition) {
+                  const methodOnButton = moduleDefinition.methods[this.props.fieldItem.label];
+                  if (methodOnButton) {
+                    methodOnButton({ $objectDocument: this.props.$objectDocument, e })
+                  }
+                }
+
+                this.props.onButtonClickFunc({ label: this.props.fieldItem.label, e });
+              }
+            }}
+          >{(this.props.fieldItem.iconName && (<AVIcon name={this.props.fieldItem.iconName}></AVIcon>)) || this.props.fieldItem.label || 'button'}
+          </VKCellButton>
+          {this.props.children}
+        </div>
+      )
+    }
+    
+    if (this.props.fieldItem.viewItemType === 'vk-icon-button') {
+      return (
+        <div className={`_av-field-viewItem-root flex-1 col justify-center align-baseline ${this.props.fieldItem.withoutPaddingAndMargin ? '' : 'pad-8-0'}`}
+          style={this.props.style}
+          ref={this.props.refOnRootDiv}
+        >
+          <VKIconButton
+            style={this.props.fieldItem.buttonStyle}
+            onClick={(e) => {
+              if (this.props.$objectDocument) {
+                const classInstance = this.props.$objectDocument.state._objectDocument.Class;
+                const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+                if (moduleDefinition) {
+                  const methodOnButton = moduleDefinition.methods[this.props.fieldItem.label];
+                  if (methodOnButton) {
+                    methodOnButton({ $objectDocument: this.props.$objectDocument, e })
+                  }
+                }
+
+                this.props.onButtonClickFunc({ label: this.props.fieldItem.label, e });
+              }
+            }}
+          >{(this.props.fieldItem.iconName && (<AVIcon name={this.props.fieldItem.iconName}></AVIcon>)) || this.props.fieldItem.label || 'button'}
+            <Icon16Delete />
+          </VKIconButton>
+          {this.props.children}
+        </div>
+      )
+    }
+    
+    if (this.props.fieldItem.viewItemType === 'vk-subnavigation-button') {
+      return (
+        <div className={`_av-field-viewItem-root flex-1 col justify-center align-baseline ${this.props.fieldItem.withoutPaddingAndMargin ? '' : 'pad-8-0'}`}
+          style={this.props.style}
+          ref={this.props.refOnRootDiv}
+        >
+          <VKSubnavigationButton
+            style={this.props.fieldItem.buttonStyle}
+            onClick={(e) => {
+              if (this.props.$objectDocument) {
+                const classInstance = this.props.$objectDocument.state._objectDocument.Class;
+                const moduleDefinition = classInstance.classModuleDefinitions.find(m => m.id === classInstance.id);
+                if (moduleDefinition) {
+                  const methodOnButton = moduleDefinition.methods[this.props.fieldItem.label];
+                  if (methodOnButton) {
+                    methodOnButton({ $objectDocument: this.props.$objectDocument, e })
+                  }
+                }
+
+                this.props.onButtonClickFunc({ label: this.props.fieldItem.label, e });
+              }
+            }}
+          >{(this.props.fieldItem.iconName && (<AVIcon name={this.props.fieldItem.iconName}></AVIcon>)) || this.props.fieldItem.label || 'button'}
+          </VKSubnavigationButton>
           {this.props.children}
         </div>
       )

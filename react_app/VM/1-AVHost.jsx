@@ -368,6 +368,61 @@ export class AVHost extends AVItem {
             className="border pad-4"
             draggable="true"
             onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+              e,
+              {
+                designDragElement: { viewItemType: 'vk-tool-button', label: 'vk-tool-button' },
+                designDragElementOrigin: 'instrument panel'
+              }
+            )}
+          >
+            vk-tool-button
+          </div>
+          <div
+            className="border pad-4"
+            draggable="true"
+            onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+              e,
+              {
+                designDragElement: { viewItemType: 'vk-cell-button', label: 'vk-cell-button' },
+                designDragElementOrigin: 'instrument panel'
+              }
+            )}
+          >
+            vk-cell-button
+          </div>
+          <div
+            className="border pad-4"
+            draggable="true"
+            onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+              e,
+              {
+                designDragElement: { viewItemType: 'vk-icon-button', label: 'vk-icon-button' },
+                designDragElementOrigin: 'instrument panel'
+              }
+            )}
+          >
+            vk-icon-button
+          </div>
+        
+          <div
+            className="border pad-4"
+            draggable="true"
+            onDragStart={(e) => this.state.$designObjectDocument.dragstart(
+              e,
+              {
+                designDragElement: { viewItemType: 'vk-subnavigation-button', label: 'vk-subnavigation-button' },
+                designDragElementOrigin: 'instrument panel'
+              }
+            )}
+          >
+            vk-subnavigation-button
+          </div>
+
+
+          <div
+            className="border pad-4"
+            draggable="true"
+            onDragStart={(e) => this.state.$designObjectDocument.dragstart(
                 e,
                 {
                   designDragElement: {
