@@ -15,6 +15,7 @@ import {
   DateInput as VKDateInput,
   DateRangeInput as VKDateRangeInput,
   Input as VKInput,
+  Textarea as VKTextarea,
   ChipsInput as VKChipsInput,
   Select as VKSelect,
   Checkbox as VKCheckbox,
@@ -1189,7 +1190,22 @@ class AVFieldOriginal extends AVItem {
             onBlur={this.props.onBlurFunc}
           ></VKInput>
         );
+      }
+
+      if (fieldItem.variant === 'vk-textarea') {
+        inputElement = (
+          <VKTextarea
+            className="flex-1"
+            autoComplete="off"
+            placeholder={fieldItem.placeholder}
+            value={(value === null || value === undefined) ? '' : value}
+            disabled={readOnly}
+            onChange={onChangeFunc}
+            onBlur={this.props.onBlurFunc}
+          ></VKTextarea>
+        );
       } 
+      
       
       if (fieldItem.variant === 'vk-select') {
         inputElement = (

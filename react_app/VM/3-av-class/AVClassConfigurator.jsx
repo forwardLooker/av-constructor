@@ -59,6 +59,7 @@ export class AVClassConfigurator extends AVItem {
           if (this.state.selectedFieldDescriptor.dataType === 'string') {
             return ['textarea',
               'vk-input',
+              'vk-textarea',
               'vk-select',
               'vk-date-input',
               'vk-date-range-input',
@@ -105,6 +106,7 @@ export class AVClassConfigurator extends AVItem {
           return false
         }},
         { name: 'defaultValue' },
+        { name: 'placeholder' },
         {name: 'infoMessage', hideIfFunc: () => {
           // if (this.state.selectedFieldDescriptor.dataType !== 'string') {
           //   return true
