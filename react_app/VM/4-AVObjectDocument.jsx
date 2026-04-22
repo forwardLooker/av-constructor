@@ -510,7 +510,7 @@ export class AVObjectDocument extends AVItem {
           >
             <div className='_av-field-viewItem-root flex-1 pad-8' style={fieldItem.viewItemRootStyle}>
               <div className='_tab-head row' style={fieldItem.tabHeadStyle}>
-                {fieldItem.items.map(tab => (
+                {fieldItem.items.map(tab => tab && (
                   <div
                     className={['_tab-head-item', 'pad-4-8',
                       (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'border-2' : 'border',
@@ -537,9 +537,9 @@ export class AVObjectDocument extends AVItem {
                     className={`${fieldItem.selectedTabLabel === tab.label ? 'border-bottom-2' : ''}`}>{tab.label || 'tab1'}</div></div>
                 ))}
               </div>
-              {$objDoc.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab.label) && tab.redirectToUrl)) ? null : (
+              {$objDoc.notEmpty(fieldItem.items.filter(tab => (fieldItem.selectedTabLabel === tab?.label) && tab?.redirectToUrl)) ? null : (
                 <div className='_tabs-body-container pad-8 border' style={fieldItem.tabBodyContainerStyle}>
-                  {fieldItem.items.map(tab => (
+                  {fieldItem.items.map(tab => tab && (
                     <div className="_tab-body" key={tab.label} hidden={fieldItem.selectedTabLabel !== tab.label}>
                       {tab.renderCustomBody ? tab.renderCustomBody() : $objDoc._renderVerticalLayout(tab.items[0])}
                     </div>
@@ -1797,43 +1797,19 @@ export class AVObjectDocument extends AVItem {
       }
       
       const FieldWrapper = this.FieldWrapper;
-      let tabItemForFieldWrapper = {
-        viewItemType: 'tabs',
-        items: [
-          {
+      getTabItemForFieldWrapper.bind(this);
+      let tabItemForFieldWrapper;
+      function getTabItemForFieldWrapper() {
+        let propsTab;
+        if (itemSelected !== fieldItem) {
+          propsTab = {
             viewItemType: 'tab',
-            label: 'content+css',
+            label: 'props',
             onClickFunc: () => {
-              newStyleObj = itemSelected === fieldItem ? rootStyleObj : itemSelected.style;
-              this.Host.$hostElement.forceUpdate();
-            },
-            renderCustomBody: () => {
-              return _renderContentPlusCSS()
-            },
-          },
-          {
-            viewItemType: 'tab',
-            label: 'css(:hover)',
-            onClickFunc: () => {
-              if (!itemSelected.hoverStyle) {
-                itemSelected.hoverStyle = {}
-              }
-              newStyleObj = itemSelected === fieldItem ? rootHoverStyleObj : itemSelected.hoverStyle;
-              this.Host.$hostElement.forceUpdate();
-            },
-            renderCustomBody: () => {
-              return _renderContentPlusCSS({ withoutContent: true })
-            },
-          },
-          {
-            viewItemType: 'tab',
-            label: 'attributes',
-            onClickFunc: () => {
-              if (!itemSelected.attributes) {
-                itemSelected.attributes = {}
+              if (!itemSelected.props) {
+                itemSelected.props = []
               }
 
-              newAttributes = itemSelected === fieldItem ? rootAttributes : itemSelected.attributes;
               this.Host.$hostElement.forceUpdate();
             },
             renderCustomBody: () => {
@@ -1841,124 +1817,198 @@ export class AVObjectDocument extends AVItem {
                 <div>
                   <AVField
                     fieldItem={{
-                      label: 'title',
-                      dataType: 'string',
-                    }}
-                    value={newAttributes?.title}
-                    onChangeFunc={(value) => newAttributes.title = value}
-                    onBlurFunc={e => {
-                      this.Host.$hostElement.forceUpdate();
-                    }}
-                  ></AVField>
-                  <AVField
-                    fieldItem={{
-                      label: 'id',
-                      dataType: 'string',
-                    }}
-                    value={newAttributes?.id}
-                    onChangeFunc={(value) => newAttributes.id = value}
-                    onBlurFunc={e => {
-                      this.Host.$hostElement.forceUpdate();
-                    }}
-                  ></AVField>
-                </div>
-              )
-            },
-          },
-
-          {
-            viewItemType: 'tab',
-            label: 'onActions',
-            onClickFunc: () => {
-              if (!itemSelected.onActions) {
-                itemSelected.onActions = {}
-              }
-
-              newOnActionsObj = itemSelected === fieldItem ? rootOnActionsObj : itemSelected.onActions;
-              this.Host.$hostElement.forceUpdate();
-            },
-            renderCustomBody: () => {
-              return (
-                <div>
-                  <AVField
-                    fieldItem={{
-                      label: 'onClick',
-                      dataType: 'string',
-                    }}
-                    value={newOnActionsObj?.onClick}
-                    onChangeFunc={(value) => newOnActionsObj.onClick = value}
-                    onBlurFunc={e => {
-                      this.Host.$hostElement.forceUpdate();
-                    }}
-                  ></AVField>
-                  <AVField
-                    fieldItem={{
-                      label: 'onMouseEnter',
-                      dataType: 'string',
-                    }}
-                    value={newOnActionsObj?.onMouseEnter}
-                    onChangeFunc={(value) => newOnActionsObj.onMouseEnter = value}
-                    onBlurFunc={e => {
-                      this.Host.$hostElement.forceUpdate();
-                    }}
-                  ></AVField>
-                  <AVField
-                    fieldItem={{
-                      label: 'onMouseLeave',
-                      dataType: 'string',
-                    }}
-                    value={newOnActionsObj?.onMouseLeave}
-                    onChangeFunc={(value) => newOnActionsObj.onMouseLeave = value}
-                    onBlurFunc={e => {
-                      this.Host.$hostElement.forceUpdate();
-                    }}
-                  ></AVField>
-                </div>
-              )
-            },
-          },
-          {
-            viewItemType: 'tab',
-            label: 'Action Listeners',
-            onClickFunc: () => {
-              if (!itemSelected.actionListeners) {
-                itemSelected.actionListeners = []
-              }
-
-              newActionListenersArr = itemSelected === fieldItem ? rootActionListenersArr : itemSelected.actionListeners;
-              this.Host.$hostElement.forceUpdate();
-            },
-            renderCustomBody: () => {
-              return (
-                <div>
-                  <AVField
-                    fieldItem={{
-                      label: 'Action Listeners (Встроенные: Outclick (по id), componentDidMount, constructor)',
+                      label: 'props',
                       dataType: 'array',
                       labelPosition: 'top',
                       items: [{
-                        name: 'actionName',
+                        name: 'propName',
                         gridColumnWidth: '400px',
                       }, {
-                        name: 'actionHandlerFunction',
-                        label: 'actionHandlerFunction(this, item, $objectDocument, e, sourceAVFieldComponent)',
+                        name: 'propValue',
+                        label: 'propValue',
                         dataType: 'string',
-                        variant: 'textarea'
-                        }]
+                        // variant: 'textarea'
+                      }]
                     }}
-                    value={newActionListenersArr}
-                    onChangeFunc={(value) => newActionListenersArr = value}
-                    onBlurFunc={e => {
-                      this.Host.$hostElement.forceUpdate();
-                    }}
+                    value={itemSelected?.props}
+                    onChangeFunc={(value) => itemSelected.props = value}
                   ></AVField>
                 </div>
               )
             },
-          },
-        ]
-      } 
+          };
+        }
+        let tabsObj = {
+          selectedTabLabel: 'content+css',
+          viewItemType: 'tabs',
+          items: [
+            {
+              viewItemType: 'tab',
+              label: 'content+css',
+              onClickFunc: () => {
+                newStyleObj = itemSelected === fieldItem ? rootStyleObj : itemSelected.style;
+                this.Host.$hostElement.forceUpdate();
+              },
+              renderCustomBody: () => {
+                return _renderContentPlusCSS()
+              },
+            },
+            {
+              viewItemType: 'tab',
+              label: 'css(:hover)',
+              onClickFunc: () => {
+                if (!itemSelected.hoverStyle) {
+                  itemSelected.hoverStyle = {}
+                }
+                newStyleObj = itemSelected === fieldItem ? rootHoverStyleObj : itemSelected.hoverStyle;
+                this.Host.$hostElement.forceUpdate();
+              },
+              renderCustomBody: () => {
+                return _renderContentPlusCSS({ withoutContent: true })
+              },
+            },
+            {
+              viewItemType: 'tab',
+              label: 'attributes',
+              onClickFunc: () => {
+                if (!itemSelected.attributes) {
+                  itemSelected.attributes = {}
+                }
 
+                newAttributes = itemSelected === fieldItem ? rootAttributes : itemSelected.attributes;
+                this.Host.$hostElement.forceUpdate();
+              },
+              renderCustomBody: () => {
+                return (
+                  <div>
+                    <AVField
+                      fieldItem={{
+                        label: 'title',
+                        dataType: 'string',
+                      }}
+                      value={newAttributes?.title}
+                      onChangeFunc={(value) => newAttributes.title = value}
+                      onBlurFunc={e => {
+                        this.Host.$hostElement.forceUpdate();
+                      }}
+                    ></AVField>
+                    <AVField
+                      fieldItem={{
+                        label: 'id',
+                        dataType: 'string',
+                      }}
+                      value={newAttributes?.id}
+                      onChangeFunc={(value) => newAttributes.id = value}
+                      onBlurFunc={e => {
+                        this.Host.$hostElement.forceUpdate();
+                      }}
+                    ></AVField>
+                  </div>
+                )
+              },
+            },
+            {
+              viewItemType: 'tab',
+              label: 'onActions',
+              onClickFunc: () => {
+                if (!itemSelected.onActions) {
+                  itemSelected.onActions = {}
+                }
+
+                newOnActionsObj = itemSelected === fieldItem ? rootOnActionsObj : itemSelected.onActions;
+                this.Host.$hostElement.forceUpdate();
+              },
+              renderCustomBody: () => {
+                return (
+                  <div>
+                    <AVField
+                      fieldItem={{
+                        label: 'onClick',
+                        dataType: 'string',
+                      }}
+                      value={newOnActionsObj?.onClick}
+                      onChangeFunc={(value) => newOnActionsObj.onClick = value}
+                      onBlurFunc={e => {
+                        this.Host.$hostElement.forceUpdate();
+                      }}
+                    ></AVField>
+                    <AVField
+                      fieldItem={{
+                        label: 'onMouseEnter',
+                        dataType: 'string',
+                      }}
+                      value={newOnActionsObj?.onMouseEnter}
+                      onChangeFunc={(value) => newOnActionsObj.onMouseEnter = value}
+                      onBlurFunc={e => {
+                        this.Host.$hostElement.forceUpdate();
+                      }}
+                    ></AVField>
+                    <AVField
+                      fieldItem={{
+                        label: 'onMouseLeave',
+                        dataType: 'string',
+                      }}
+                      value={newOnActionsObj?.onMouseLeave}
+                      onChangeFunc={(value) => newOnActionsObj.onMouseLeave = value}
+                      onBlurFunc={e => {
+                        this.Host.$hostElement.forceUpdate();
+                      }}
+                    ></AVField>
+                  </div>
+                )
+              },
+            },
+            {
+              viewItemType: 'tab',
+              label: 'Action Listeners',
+              onClickFunc: () => {
+                if (!itemSelected.actionListeners) {
+                  itemSelected.actionListeners = []
+                }
+
+                newActionListenersArr = itemSelected === fieldItem ? rootActionListenersArr : itemSelected.actionListeners;
+                this.Host.$hostElement.forceUpdate();
+              },
+              renderCustomBody: () => {
+                return (
+                  <div>
+                    <AVField
+                      fieldItem={{
+                        label: 'Action Listeners (Встроенные: Outclick (по id), componentDidMount, constructor)',
+                        dataType: 'array',
+                        labelPosition: 'top',
+                        items: [{
+                          name: 'actionName',
+                          gridColumnWidth: '400px',
+                        }, {
+                          name: 'actionHandlerFunction',
+                          label: 'actionHandlerFunction(this, item, $objectDocument, e, sourceAVFieldComponent)',
+                          dataType: 'string',
+                          variant: 'textarea'
+                        }]
+                      }}
+                      value={newActionListenersArr}
+                      onChangeFunc={(value) => newActionListenersArr = value}
+                      onBlurFunc={e => {
+                        this.Host.$hostElement.forceUpdate();
+                      }}
+                    ></AVField>
+                  </div>
+                )
+              },
+            },
+          ]
+        };
+        
+        if (propsTab) {
+          tabsObj.items.splice(3, 0, propsTab);
+        }
+        return tabsObj;
+      };
+      
+      tabItemForFieldWrapper = getTabItemForFieldWrapper();
+
+      
       const ok = await this.showDialog({
         content: () => (
           <div className='scroll-y' style={{ width: '100vw', height: '90vh' }}>
@@ -2033,7 +2083,10 @@ export class AVObjectDocument extends AVItem {
             <div style={{ height: '16px' }}></div>
             <FieldWrapper
               $objDoc={this}
-              fieldItem={tabItemForFieldWrapper}
+              fieldItem={(() => {
+                tabItemForFieldWrapper = getTabItemForFieldWrapper();
+                return tabItemForFieldWrapper;
+              })()}
             ></FieldWrapper>
             
           </div>

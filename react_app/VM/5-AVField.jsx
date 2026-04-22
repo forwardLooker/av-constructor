@@ -494,7 +494,10 @@ class AVFieldOriginal extends AVItem {
       if (vkuiComponentClass) {
         return React.createElement(vkuiComponentClass, {
           key: idx,
-          activePanel: i.viewItemType === 'View' && 'basic-case',
+          ...(i.props && this.R.pipe(
+            this.R.map(this.R.props(['propName', 'propValue'])),
+            this.R.fromPairs
+          )(i.props)),
           style: { ...i.style, ...(i.isHovered && i.hoverStyle) },
           ...i.attributes,
            onMouseEnter:(e) => {
