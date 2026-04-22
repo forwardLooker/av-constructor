@@ -26,6 +26,8 @@ import {
   SubnavigationButton as VKSubnavigationButton,
 } from '@vkontakte/vkui';
 
+import * as vkui from '@vkontakte/vkui';
+
 import { Icon20Add, Icon24Add, Icon16Delete } from '@vkontakte/icons';
 
 const validator = require('email-validator');
@@ -488,6 +490,41 @@ class AVFieldOriginal extends AVItem {
 
   _renderDivInDivItems = (items = []) => {
     return items.map((i, idx) => {
+      let vkuiComponentClass = vkui[i.viewItemType];
+      if (vkuiComponentClass) {
+        return React.createElement(vkuiComponentClass, {
+          key: idx,
+          activePanel: i.viewItemType === 'View' && 'basic-case',
+          style: { ...i.style, ...(i.isHovered && i.hoverStyle) },
+          ...i.attributes,
+           onMouseEnter:(e) => {
+              i.isHovered = true;
+              
+              if (i.onActions?.onMouseEnter) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
+              }
+
+              this.forceUpdate();
+            },
+            onMouseLeave:(e) => {
+              i.isHovered = false;
+              
+              if (i.onActions?.onMouseLeave) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
+              }
+
+              this.forceUpdate();
+            },
+            onClick:(e) => {
+              console.log('AVField _renderDivInDivItems onClick item', i)
+              if (i.onActions?.onClick) {
+                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
+              }
+            }            
+
+        }, i.label, ...this._renderDivInDivItems(i.items))
+      }
+      
       if (i.viewItemType === 'd') {
         return (
           <div key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
