@@ -884,6 +884,7 @@ export class AVObjectDocument extends AVItem {
 
   _onDesignFieldContextMenu = async (e, fieldItem, idx, containerElement) => {
     e.preventDefault();
+    e.stopPropagation();
     let menu = [
       `Установить font-size`,
       'Установить style',
@@ -1797,9 +1798,9 @@ export class AVObjectDocument extends AVItem {
       }
       
       const FieldWrapper = this.FieldWrapper;
-      getTabItemForFieldWrapper.bind(this);
+      
       let tabItemForFieldWrapper;
-      function getTabItemForFieldWrapper() {
+      let getTabItemForFieldWrapper = function() {
         let propsTab;
         if (itemSelected !== fieldItem) {
           propsTab = {
@@ -1839,7 +1840,7 @@ export class AVObjectDocument extends AVItem {
           };
         }
         let tabsObj = {
-          selectedTabLabel: 'content+css',
+          selectedTabLabel: tabItemForFieldWrapper?.selectedTabLabel || 'content+css',
           viewItemType: 'tabs',
           items: [
             {
@@ -2005,6 +2006,8 @@ export class AVObjectDocument extends AVItem {
         }
         return tabsObj;
       };
+      
+      getTabItemForFieldWrapper = getTabItemForFieldWrapper.bind(this);
       
       tabItemForFieldWrapper = getTabItemForFieldWrapper();
 

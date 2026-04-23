@@ -2540,7 +2540,7 @@ class AVFieldOriginal extends AVItem {
         value[option.name] = eOrValue;
       }
     } else {
-      value = eOrValue?.target?.value || eOrValue;
+      value = eOrValue?.target?.value || (eOrValue?.target?.value === '' ? '' : eOrValue);
       if (eOrValue?.target?.type === 'checkbox') {
         value = eOrValue.target.checked;
       }
