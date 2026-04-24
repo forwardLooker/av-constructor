@@ -260,11 +260,32 @@ export class AVHost extends AVItem {
                         });
                         console.log('vk friends.get', friendsList);
                         friendsList.response.items.filter(i => !!i.bdate).map(vkFrObj => ({
-                          'bdate': vkFrObj.bdate,
+                          bdate: vkFrObj.bdate,
+                          can_post: vkFrObj.can_post,
+                          can_see_all_posts: vkFrObj.can_see_all_posts,
+                          can_write_private_message: vkFrObj.can_write_private_message,
+                          city: vkFrObj.city,
+                          contacts: vkFrObj.contacts,
+                          country: vkFrObj.country,
+                          domain: vkFrObj.domain,
+                          education: vkFrObj.education,
+                          has_mobile: vkFrObj.has_mobile,
+                          timezone: vkFrObj.timezone,
+                          last_seen: vkFrObj.last_seen,
+                          nickname: vkFrObj.nickname,
+                          online: vkFrObj.online,
+                          photo_100: vkFrObj.photo_100,
+                          photo_200_orig: vkFrObj.photo_200_orig,
+                          photo_50: vkFrObj.photo_50,
+                          photo_id: vkFrObj.photo_id,
+                          relation: vkFrObj.relation,
+                          sex: vkFrObj.sex,
+                          status: vkFrObj.status,
+                          universities: vkFrObj.universities,
+                          
                           'Название': `День рождения: ${vkFrObj.first_name} ${vkFrObj.last_name}`,
-                          'first_name': vkFrObj.first_name,
-                          'last_name': vkFrObj.last_name,
-                          'photo_200_orig': vkFrObj.photo_200_orig,
+                          first_name: vkFrObj.first_name,
+                          last_name: vkFrObj.last_name,
                           vkId: vkFrObj.id,
                         })).forEach(frObj => {
                           classItem.createObjectDocument(frObj)
