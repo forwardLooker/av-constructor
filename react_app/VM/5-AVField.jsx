@@ -511,6 +511,13 @@ class AVFieldOriginal extends AVItem {
   }
   
   _renderOneDivInDivItem = (i, idx, objDoc) => {
+    if (i.viewItemType === 'vertical-layout') {
+      if (!i.items || i.items?.length === 0) {
+        i.items =[{viewItemType: 'space div'}]
+      }
+      return this.props.$objectDocument._renderVerticalLayout(i);
+    }
+    
     let vkuiComponentClass = vkui[i.viewItemType];
     if (vkuiComponentClass) {
       let propsObj = (i.props && this.R.pipe(

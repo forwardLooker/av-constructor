@@ -3935,10 +3935,10 @@ export class AVObjectDocument extends AVItem {
   }
   
   _removeDragBorderFromDomELement = (domELement) => {
-    domELement.classList.remove('border-top-4');
-    domELement.classList.remove('border-bottom-4');
-    domELement.classList.remove('border-left-4');
-    domELement.classList.remove('border-right-4');
+    domELement?.classList.remove('border-top-4');
+    domELement?.classList.remove('border-bottom-4');
+    domELement?.classList.remove('border-left-4');
+    domELement?.classList.remove('border-right-4');
   }
 
   _dragleave = (e, dropFieldItem, dropElementIndex, dropContainer) => {
@@ -4091,9 +4091,9 @@ export class AVObjectDocument extends AVItem {
         }
       }
       this.state.designDragContainer.items.splice(cutIndex, 1);
-      if (this.state.designDragContainer.items.length === 1 && this.state.designDragContainer.container) { // Если в Хрз или Врт остался 1 то вытащить филд на 1 этаж выше
-        const replaceIdx = this.state.designDragContainer.container.findIndex(item => item === this.state.designDragContainer);
-        this.state.designDragContainer.container.splice(replaceIdx, 1, this.state.designDragContainer.items[0]);
+      if (this.state.designDragContainer.items.length === 1 && this.state.designDragContainer.container && (this.state.designDragContainer.container.viewItemType === 'vertical-layout' || this.state.designDragContainer.container.viewItemType === 'horizontal-layout')) { // Если в Хрз или Врт остался 1 то вытащить филд на 1 этаж выше
+        const replaceIdx = this.state.designDragContainer.container.items.findIndex(item => item === this.state.designDragContainer);
+        this.state.designDragContainer.container.items.splice(replaceIdx, 1, this.state.designDragContainer.items[0]);
       }
       this._removeEmptyContainers(this.state.designDragContainer);
     }
