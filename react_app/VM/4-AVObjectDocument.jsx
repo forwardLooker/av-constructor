@@ -955,14 +955,14 @@ export class AVObjectDocument extends AVItem {
       menu = ['Изменить label', ...menu];
       menuResult = await this.showContextMenu(e, menu);
       if (menuResult === 'Изменить label') {
-        const newLabel = await this.showDialog({ text: 'Введите новый label', inputLabel: 'label', dialogInputValue: fieldItem.label });
+        const newLabel = await this.showDialog({ text: 'Введите новый label', inputLabel: 'label', inputValue: fieldItem.label });
         if (newLabel) {
           fieldItem.label = newLabel;
           this.forceUpdate();
         }
       }
       if (menuResult === 'Установить iconName вместо label') {
-        const iconName = await this.showDialog({ text: 'Введите новый iconName', inputLabel: 'iconName', dialogInputValue: fieldItem.iconName });
+        const iconName = await this.showDialog({ text: 'Введите новый iconName', inputLabel: 'iconName', inputValue: fieldItem.iconName });
         if (iconName) {
           fieldItem.iconName = iconName;
           this.forceUpdate();
@@ -976,7 +976,8 @@ export class AVObjectDocument extends AVItem {
             <br></br>,
             `Текущий justifyMode: ${fieldItem.justifyMode}`
           ],
-          inputLabel: 'justifyMode'
+          inputLabel: 'justifyMode',
+          inputValue: fieldItem.justifyMode || ''
         });
         if (justifyMode) {
           fieldItem.justifyMode = justifyMode;
@@ -1006,7 +1007,7 @@ export class AVObjectDocument extends AVItem {
       this.forceUpdate()
     }
     if (menuResult === 'Задать url фоновой картинки') {
-      const imgSrc = await this.showDialog({ text: 'Введите url картинки', inputLabel: 'src' });
+      const imgSrc = await this.showDialog({ text: 'Введите url картинки', inputLabel: 'src', inputValue: fieldItem.imgSrc });
       if (imgSrc) {
         fieldItem.imgSrc = imgSrc;
         this.forceUpdate();
@@ -1100,7 +1101,7 @@ export class AVObjectDocument extends AVItem {
                       }
                     }
                     if (menuResult === 'Переименовать') {
-                      let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument)', inputLabel: 'viewItemType', inputValue: i.viewItemType });
+                      let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType', inputValue: i.viewItemType });
                       if (newItemType) {
                         i.viewItemType = newItemType
                       }
@@ -1130,10 +1131,10 @@ export class AVObjectDocument extends AVItem {
                     tabItemForFieldWrapper.selectedTabLabel = tabItemForFieldWrapper.items[0].label
                     this.Host.$hostElement.forceUpdate();
                   }}>
-                  {i.asPropRender?.isAsPropRenderMode ? i.asPropRender?.propName + '=': ''}{'<' + i.viewItemType + '>'}
+                  {i.asPropRender?.isAsPropRenderMode ? i.asPropRender?.propName + '=': ''}{'<' + (i.viewItemType || 'field') + '>'}
                 </div>
                 <div className='_toRight+ cursor-default' onClick={async e => {
-                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument)', inputLabel: 'viewItemType' });
+                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType' });
                   if (newItemType) {
                     arr.splice(idx + 1, 0, { viewItemType: newItemType, style: {}, onActions: {}, actionListeners: [] });
                     this.Host.$hostElement.forceUpdate();
@@ -1141,7 +1142,7 @@ export class AVObjectDocument extends AVItem {
                 }}>+</div>
               </div>
               <div className='_toDown+ cursor-default' onClick={async e => {
-                let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument)', inputLabel: 'viewItemType' });
+                let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType' });
                 if (newItemType) {
                   i.items = [{ viewItemType: newItemType, style: {}, items: i.items || [], onActions: {}, actionListeners: [] }];
                   this.Host.$hostElement.forceUpdate();
@@ -3179,7 +3180,7 @@ export class AVObjectDocument extends AVItem {
           `Текущий presentationGroup: ${fieldItem.presentationGroup}`
         ],
         inputLabel: 'presentationGroup',
-        dialogInputValue: fieldItem.presentationGroup
+        inputValue: fieldItem.presentationGroup
       });
       if (typeof presentationGroup === 'string') {
         fieldItem.presentationGroup = presentationGroup;
@@ -3201,7 +3202,7 @@ export class AVObjectDocument extends AVItem {
           `Текущий presentationGroup: ${containerItem.presentationGroup}`
         ],
         inputLabel: 'presentationGroup',
-        dialogInputValue: containerItem.presentationGroup
+        inputValue: containerItem.presentationGroup
       });
       if (typeof presentationGroup === 'string') {
         containerItem.presentationGroup = presentationGroup;
@@ -3223,7 +3224,7 @@ export class AVObjectDocument extends AVItem {
           `Текущий presentationGroup: ${containerItem.presentationGroup}`
         ],
         inputLabel: 'presentationGroup',
-        dialogInputValue: containerItem.presentationGroup
+        inputValue: containerItem.presentationGroup
       });
       if (typeof presentationGroup === 'string') {
         containerItem.presentationGroup = presentationGroup;
@@ -3769,7 +3770,7 @@ export class AVObjectDocument extends AVItem {
       }
     }
     if (menuResult === 'Изменить label вкладки') {
-      const newTabLabel = await this.showDialog({text: 'Введите label вкладки', inputLabel: 'label'});
+      const newTabLabel = await this.showDialog({text: 'Введите label вкладки', inputLabel: 'label', inputValue: tab.label});
       if (newTabLabel) {
         if (tab.label === tabsFieldItem.selectedTabLabel) {
           tabsFieldItem.selectedTabLabel = newTabLabel;
@@ -3812,7 +3813,7 @@ export class AVObjectDocument extends AVItem {
       this.forceUpdate();
     }
     if (menuResult === 'Сделать ссылкой') {
-      const newUrl = await this.showDialog({text: 'Введите url ссылки', inputLabel: 'url'});
+      const newUrl = await this.showDialog({ text: 'Введите url ссылки', inputLabel: 'url', inputValue: tab.redirectToUrl });
       if (newUrl) {
         tab.redirectToUrl = newUrl
         this.forceUpdate();

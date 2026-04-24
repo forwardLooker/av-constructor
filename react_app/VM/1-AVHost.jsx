@@ -716,7 +716,7 @@ export class AVHost extends AVItem {
         }
       }
       if (menuChoice === 'Переименовать домен') {
-        const newDomainName = await this.showDialog({ text: 'Введите новое название домена', inputLabel: 'name', dialogInputValue: item.name });
+        const newDomainName = await this.showDialog({ text: 'Введите новое название домена', inputLabel: 'name', inputValue: item.name });
         if (newDomainName) {
           const domain = this.Host.getDomain(item.reference);
           await domain.renameDomain(newDomainName);
@@ -771,7 +771,7 @@ export class AVHost extends AVItem {
         'Удалить класс'
       ]);
       if (menuChoice === 'Переименовать класс') {
-        const newClassName = await this.showDialog({ text: 'Введите новое название класса', inputLabel: 'name', dialogInputValue: item.name});
+        const newClassName = await this.showDialog({ text: 'Введите новое название класса', inputLabel: 'name', inputValue: item.name});
         if (newClassName) {
           const classItem = this.Host.getClass(item.reference);
           await classItem.renameClass(newClassName);
@@ -827,7 +827,7 @@ export class AVHost extends AVItem {
         'Переместить в дереве вниз',
       ]);
       if (menuChoice === 'Переименовать папку') {
-        const newFolderName = await this.showDialog({ text: 'Введите новое название папки', inputLabel: 'name', dialogInputValue: item.name });
+        const newFolderName = await this.showDialog({ text: 'Введите новое название папки', inputLabel: 'name', inputValue: item.name });
         if (newFolderName) {
           const domain = this.Host.getDomain(null, item.domainId); //TODO у айтема папки должен быть референс на домен, а не только id
           await domain.renameFolderInConfig(item.name, newFolderName);
@@ -873,13 +873,13 @@ export class AVHost extends AVItem {
     })
   }
 
-  async showDialog({ text, inputLabel, itemTreeStructure, content, dialogInputValue }) {
+  async showDialog({ text, inputLabel, itemTreeStructure, content, inputValue }) {
     return new Promise((resolve, reject) => {
       this.setState({
         isDialogOpened: true,
         dialogText: text,
         dialogInputLabel: inputLabel,
-        dialogInputValue,
+        dialogInputValue: inputValue,
         dialogContent: content,
         _dialogResolveFunc: resolve,
 
@@ -888,13 +888,13 @@ export class AVHost extends AVItem {
     })
   }
 
-  async showDialog2({ text, inputLabel, itemTreeStructure, content, dialogInputValue }) {
+  async showDialog2({ text, inputLabel, itemTreeStructure, content, inputValue }) {
     return new Promise((resolve, reject) => {
       this.setState({
         isDialogOpened2: true,
         dialogText2: text,
         dialogInputLabel2: inputLabel,
-        dialogInputValue2: dialogInputValue,
+        dialogInputValue2: inputValue,
         dialogContent2: content,
         _dialogResolveFunc2: resolve,
 

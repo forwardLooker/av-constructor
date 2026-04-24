@@ -399,7 +399,7 @@ export class AVClassConfigurator extends AVItem {
       }
     }
     if (menuChoice === 'Переименовать') {
-      const fieldName = await this.showDialog({ text: 'Введите название поля', inputLabel: 'name', dialogInputValue: item.name});
+      const fieldName = await this.showDialog({ text: 'Введите название поля', inputLabel: 'name', inputValue: item.name});
       if (fieldName) {
         item.name = fieldName;
         this.setState(
