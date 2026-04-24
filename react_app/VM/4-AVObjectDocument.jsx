@@ -1121,7 +1121,7 @@ export class AVObjectDocument extends AVItem {
                     tabItemForFieldWrapper.selectedTabLabel = tabItemForFieldWrapper.items[0].label
                     this.Host.$hostElement.forceUpdate();
                   }}>
-                  {'<' + i.viewItemType + '>'}
+                  {i.asPropRender?.isAsPropRenderMode ? i.asPropRender?.propName + '=': ''}{'<' + i.viewItemType + '>'}
                 </div>
                 <div className='_toRight+ cursor-default' onClick={async e => {
                   let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument)', inputLabel: 'viewItemType' });
@@ -1803,6 +1803,7 @@ export class AVObjectDocument extends AVItem {
       let getTabItemForFieldWrapper = function() {
         let propsTab;
         let mapTab;
+        let asPropRenderTab;
         if (itemSelected !== fieldItem) {
           propsTab = {
             viewItemType: 'tab',
@@ -1898,6 +1899,46 @@ export class AVObjectDocument extends AVItem {
                 </div>
               )
             },
+          }
+          asPropRenderTab = {
+            viewItemType: 'tab',
+            label: 'asPropRender',
+            onClickFunc: () => {
+              if (!itemSelected.asPropRender) {
+                itemSelected.asPropRender = {}
+              }
+
+              this.Host.$hostElement.forceUpdate();
+            },
+            renderCustomBody: () => {
+              return (
+                <div>
+                  <AVField
+                    fieldItem={{
+                      label: 'isAsPropRenderMode',
+                      dataType: 'boolean',
+                    }}
+                    value={itemSelected.asPropRender?.isAsPropRenderMode}
+                    onChangeFunc={(value) => itemSelected.asPropRender.isAsPropRenderMode = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+                  <AVField
+                    fieldItem={{
+                      label: 'propName',
+                      dataType: 'string',
+                    }}
+                    value={itemSelected.asPropRender?.propName}
+                    onChangeFunc={(value) => itemSelected.asPropRender.propName = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+                </div>
+              )
+            },
+
           }
         }
         let tabsObj = {
@@ -2067,6 +2108,9 @@ export class AVObjectDocument extends AVItem {
         }
         if (mapTab) {
           tabsObj.items.splice(6, 0, mapTab);
+        }
+        if (asPropRenderTab) {
+          tabsObj.items.splice(7, 0, asPropRenderTab);
         }
         return tabsObj;
       };

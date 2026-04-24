@@ -536,6 +536,15 @@ class AVFieldOriginal extends AVItem {
           }
         })
       }
+      // Добавление пропсов как рендер-элементов asPropsRender
+      i.items?.forEach(innerItem => {
+        if (innerItem.asPropRender?.isAsPropRenderMode && innerItem.asPropRender?.propName) {
+          if (!propsObj) {
+            propsObj = {};
+            propsObj[innerItem.asPropRender.propName] = this._renderOneDivInDivItem(innerItem, 0, objDoc);
+          }
+        }
+      })
       return React.createElement(vkuiComponentClass, {
         key: idx,
         ...propsObj,
@@ -705,6 +714,9 @@ class AVFieldOriginal extends AVItem {
 
   _renderDivInDivItems = (items = [], objDocFromMap) => {
     return items.map((i, idx) => {
+      if (i.asPropRender?.isAsPropRenderMode) {
+        return null;
+      }
       if (!i.map?.isMapMode) {
         return this._renderOneDivInDivItem(i, idx, objDocFromMap);
       } else {
