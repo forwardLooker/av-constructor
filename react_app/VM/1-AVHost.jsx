@@ -160,7 +160,7 @@ export class AVHost extends AVItem {
       // bodyElem.focus();
       
       if (window.vk_app) {
-        const vkClass = this.Host.getClassByName('Ввод данных');
+        const vkClass = this.Host.getClassByName('Подготовка');
         this.setState({ selectedTreeItem: vkClass });
       }
     }
@@ -260,10 +260,11 @@ export class AVHost extends AVItem {
                         });
                         console.log('vk friends.get', friendsList);
                         friendsList.response.items.filter(i => !!i.bdate).map(vkFrObj => ({
-                          'Дата': vkFrObj.bdate,
+                          'bdate': vkFrObj.bdate,
                           'Название': `День рождения: ${vkFrObj.first_name} ${vkFrObj.last_name}`,
-                          'Имя': vkFrObj.first_name,
-                          'Фамилия': vkFrObj.last_name,
+                          'first_name': vkFrObj.first_name,
+                          'last_name': vkFrObj.last_name,
+                          'photo_200_orig': vkFrObj.photo_200_orig,
                           vkId: vkFrObj.id,
                         })).forEach(frObj => {
                           classItem.createObjectDocument(frObj)
