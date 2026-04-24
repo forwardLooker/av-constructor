@@ -541,8 +541,8 @@ class AVFieldOriginal extends AVItem {
         if (innerItem.asPropRender?.isAsPropRenderMode && innerItem.asPropRender?.propName) {
           if (!propsObj) {
             propsObj = {};
-            propsObj[innerItem.asPropRender.propName] = this._renderOneDivInDivItem(innerItem, 0, objDoc);
           }
+          propsObj[innerItem.asPropRender.propName] = this._renderOneDivInDivItem(innerItem, 0, objDoc);
         }
       })
       return React.createElement(vkuiComponentClass, {
