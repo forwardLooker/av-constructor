@@ -522,6 +522,12 @@ class AVFieldOriginal extends AVItem {
           const pObj = i.props.find(p => {
             return key === p.propName
           });
+          if (pObj.type === 'number') {
+            propsObj[key] = Number(propsObj[key])
+          }
+          if (pObj.type === 'boolean') {
+            propsObj[key] = propsObj[key] === 'false' ? false : Boolean(propsObj[key])
+          }
           if (pObj.type === 'objDocFromClassByFunction') {
             const lamdaText = propsObj[key];
             const lamdaFunc = new Function('objDoc', lamdaText);
@@ -560,7 +566,7 @@ class AVFieldOriginal extends AVItem {
           }
         }
 
-      }, i.label, ...this._renderDivInDivItems(i.items))
+      }, i.label, ...this._renderDivInDivItems(i.items, objDoc))
     }
 
     if (i.viewItemType === 'd') {
@@ -591,7 +597,7 @@ class AVFieldOriginal extends AVItem {
             }
           }}
         >
-          {i.label}{this._renderDivInDivItems(i.items)}
+          {i.label}{this._renderDivInDivItems(i.items, objDoc)}
         </div>
       )
     }
@@ -623,7 +629,7 @@ class AVFieldOriginal extends AVItem {
             }
           }}
         >
-          {i.label}{this._renderDivInDivItems(i.items)}
+          {i.label}{this._renderDivInDivItems(i.items, objDoc)}
         </button>
       )
     }
@@ -697,10 +703,10 @@ class AVFieldOriginal extends AVItem {
 
   }
 
-  _renderDivInDivItems = (items = []) => {
+  _renderDivInDivItems = (items = [], objDocFromMap) => {
     return items.map((i, idx) => {
       if (!i.map?.isMapMode) {
-        return this._renderOneDivInDivItem(i, idx);
+        return this._renderOneDivInDivItem(i, idx, objDocFromMap);
       } else {
         const arrayFromSource = this.state.sourceClassObjectDocuments[i.map?.sourceClassName];
         return arrayFromSource?.map((objDoc, oIdx) => {
