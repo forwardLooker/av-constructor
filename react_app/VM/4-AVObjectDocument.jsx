@@ -1802,6 +1802,7 @@ export class AVObjectDocument extends AVItem {
       let tabItemForFieldWrapper;
       let getTabItemForFieldWrapper = function() {
         let propsTab;
+        let mapTab;
         if (itemSelected !== fieldItem) {
           propsTab = {
             viewItemType: 'tab',
@@ -1824,11 +1825,20 @@ export class AVObjectDocument extends AVItem {
                       items: [{
                         name: 'propName',
                         gridColumnWidth: '400px',
-                      }, {
+                      },
+                      {
                         name: 'propValue',
                         label: 'propValue',
                         dataType: 'string',
                         // variant: 'textarea'
+                      },
+                      {
+                        name: 'type',
+                        label: 'type',
+                        dataType: 'string',
+                        variant: 'select',
+                        valuesList: ['string', 'boolean', 'objDocFromClassByFunction'],
+                        gridColumnWidth: '200px',
                       }]
                     }}
                     value={itemSelected?.props}
@@ -1838,6 +1848,57 @@ export class AVObjectDocument extends AVItem {
               )
             },
           };
+          mapTab = {
+            viewItemType: 'tab',
+            label: 'map',
+            onClickFunc: () => {
+              if (!itemSelected.map) {
+                itemSelected.map = {}
+              }
+
+              this.Host.$hostElement.forceUpdate();
+            },
+            renderCustomBody: () => {
+              return (
+                <div>
+                  <AVField
+                    fieldItem={{
+                      label: 'isMapMode',
+                      dataType: 'boolean',
+                    }}
+                    value={itemSelected.map?.isMapMode}
+                    onChangeFunc={(value) => itemSelected.map.isMapMode = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+                  <AVField
+                    fieldItem={{
+                      label: 'sourceClassName',
+                      dataType: 'string',
+                    }}
+                    value={itemSelected.map?.sourceClassName}
+                    onChangeFunc={(value) => itemSelected.map.sourceClassName = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+
+                  {/* <AVField
+                    fieldItem={{
+                      label: 'sourceClassPath',
+                      dataType: 'string',
+                    }}
+                    value={itemSelected.map?.sourceClassPath}
+                    onChangeFunc={(value) => itemSelected.map.sourceClassPath = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField> */}
+                </div>
+              )
+            },
+          }
         }
         let tabsObj = {
           selectedTabLabel: tabItemForFieldWrapper?.selectedTabLabel || 'content+css',
@@ -2003,6 +2064,9 @@ export class AVObjectDocument extends AVItem {
         
         if (propsTab) {
           tabsObj.items.splice(3, 0, propsTab);
+        }
+        if (mapTab) {
+          tabsObj.items.splice(6, 0, mapTab);
         }
         return tabsObj;
       };

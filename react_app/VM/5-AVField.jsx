@@ -221,6 +221,8 @@ class AVFieldOriginal extends AVItem {
     
     isInvalidMessageRendered: false,
     invalidMessage: '',
+    
+    sourceClassObjectDocuments: {}, // for linking Class data in designer
   }
   
   _computedValueNotified;
@@ -356,6 +358,26 @@ class AVFieldOriginal extends AVItem {
       }
       activateComponentDidMount(this.props.fieldItem);
       
+      // load sourceClassObjectDocuments
+      const loadObjectDocumentsForMapping = async (items = []) => {
+        items.forEach(async i => {
+          if (i.map?.isMapMode && i.map?.sourceClassName) {
+            const classItem = this.Host.getClassByName(i.map.sourceClassName);
+            const objDocsArr = await classItem.getObjectDocuments();
+            this.state.sourceClassObjectDocuments[i.map.sourceClassName] = objDocsArr;
+          }
+          loadObjectDocumentsForMapping(i.items)
+
+          // if (i.map?.isMapMode && i.map?.sourceClassPath) {
+          //   const classItem = this.Host.getClassByPath(i.map.sourceClassPath);
+          //   const objDocsArr = await classItem.getObjectDocuments();
+          //   this.state.sourceClassObjectDocuments[i.map.sourceClassPath] = objDocsArr;
+          // }
+          // loadObjectDocumentsForMapping(i.items)
+        })
+      }
+      await loadObjectDocumentsForMapping(this.props.fieldItem.items);
+      this.forceUpdate();
     }
 
     if (this.props.fieldItem.variant === 'Gazprombank-tel') {
@@ -487,179 +509,204 @@ class AVFieldOriginal extends AVItem {
   componentWillUnmount() {
     window.document.removeEventListener('keydown', this._eventListenerF7RecalcStyleCustomProperties);
   }
+  
+  _renderOneDivInDivItem = (i, idx, objDoc) => {
+    let vkuiComponentClass = vkui[i.viewItemType];
+    if (vkuiComponentClass) {
+      let propsObj = (i.props && this.R.pipe(
+        this.R.map(this.R.props(['propName', 'propValue'])),
+        this.R.fromPairs
+      )(i.props));
+      if (propsObj) {
+        Object.keys(propsObj).forEach(key => {
+          const pObj = i.props.find(p => {
+            return key === p.propName
+          });
+          if (pObj.type === 'objDocFromClassByFunction') {
+            const lamdaText = propsObj[key];
+            const lamdaFunc = new Function('objDoc', lamdaText);
+            const computedValue = lamdaFunc(objDoc);
+            propsObj[key] = computedValue;
+          }
+        })
+      }
+      return React.createElement(vkuiComponentClass, {
+        key: idx,
+        ...propsObj,
+        style: { ...i.style, ...(i.isHovered && i.hoverStyle) },
+        ...i.attributes,
+        onMouseEnter: (e) => {
+          i.isHovered = true;
+
+          if (i.onActions?.onMouseEnter) {
+            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
+          }
+
+          this.forceUpdate();
+        },
+        onMouseLeave: (e) => {
+          i.isHovered = false;
+
+          if (i.onActions?.onMouseLeave) {
+            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
+          }
+
+          this.forceUpdate();
+        },
+        onClick: (e) => {
+          console.log('AVField _renderDivInDivItems onClick item', i)
+          if (i.onActions?.onClick) {
+            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
+          }
+        }
+
+      }, i.label, ...this._renderDivInDivItems(i.items))
+    }
+
+    if (i.viewItemType === 'd') {
+      return (
+        <div key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
+          onMouseEnter={(e) => {
+            i.isHovered = true;
+
+            if (i.onActions?.onMouseEnter) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          }}
+          onMouseLeave={(e) => {
+            i.isHovered = false;
+
+            if (i.onActions?.onMouseLeave) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          }}
+          onClick={(e) => {
+            console.log('AVField _renderDivInDivItems onClick item', i)
+            if (i.onActions?.onClick) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
+            }
+          }}
+        >
+          {i.label}{this._renderDivInDivItems(i.items)}
+        </div>
+      )
+    }
+    if (i.viewItemType === 'b') {
+      return (
+        <button key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
+          onMouseEnter={(e) => {
+            i.isHovered = true;
+
+            if (i.onActions?.onMouseEnter) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          }}
+          onMouseLeave={(e) => {
+            i.isHovered = false;
+
+            if (i.onActions?.onMouseLeave) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          }}
+          onClick={(e) => {
+            console.log('AVField _renderDivInDivItems onClick item', i)
+            if (i.onActions?.onClick) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
+            }
+          }}
+        >
+          {i.label}{this._renderDivInDivItems(i.items)}
+        </button>
+      )
+    }
+    if (i.viewItemType === 'img') {
+      return (
+        <img key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
+          onMouseEnter={(e) => {
+            i.isHovered = true;
+
+            if (i.onActions?.onMouseEnter) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          }}
+          onMouseLeave={(e) => {
+            i.isHovered = false;
+
+            if (i.onActions?.onMouseLeave) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          }}
+          onClick={(e) => {
+            console.log('AVField _renderDivInDivItems onClick item', i)
+            if (i.onActions?.onClick) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
+            }
+          }}
+          src={i.src}>{i.label}</img>
+      )
+    }
+    if (i.viewItemType === 'AVIcon') {
+      return (
+        <AVIcon key={idx} name={i.name} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
+          onMouseEnter={(e) => {
+            i.isHovered = true;
+
+            if (i.onActions?.onMouseEnter) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          }}
+          onMouseLeave={(e) => {
+            i.isHovered = false;
+
+            if (i.onActions?.onMouseLeave) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          }}
+          onClick={(e) => {
+            console.log('AVField _renderDivInDivItems onClick item', i)
+            if (i.onActions?.onClick) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
+            }
+          }}
+        ></AVIcon>
+      )
+    };
+
+    if (i.viewItemType === 'AVObjectDocument') {
+      return (
+        <AVObjectDocument key={idx} objectDocumentPath={i.objectDocumentPath}
+        ></AVObjectDocument>
+      )
+    }
+
+  }
 
   _renderDivInDivItems = (items = []) => {
     return items.map((i, idx) => {
-      let vkuiComponentClass = vkui[i.viewItemType];
-      if (vkuiComponentClass) {
-        return React.createElement(vkuiComponentClass, {
-          key: idx,
-          ...(i.props && this.R.pipe(
-            this.R.map(this.R.props(['propName', 'propValue'])),
-            this.R.fromPairs
-          )(i.props)),
-          style: { ...i.style, ...(i.isHovered && i.hoverStyle) },
-          ...i.attributes,
-           onMouseEnter:(e) => {
-              i.isHovered = true;
-              
-              if (i.onActions?.onMouseEnter) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
-              }
-
-              this.forceUpdate();
-            },
-            onMouseLeave:(e) => {
-              i.isHovered = false;
-              
-              if (i.onActions?.onMouseLeave) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
-              }
-
-              this.forceUpdate();
-            },
-            onClick:(e) => {
-              console.log('AVField _renderDivInDivItems onClick item', i)
-              if (i.onActions?.onClick) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
-              }
-            }            
-
-        }, i.label, ...this._renderDivInDivItems(i.items))
+      if (!i.map?.isMapMode) {
+        return this._renderOneDivInDivItem(i, idx);
+      } else {
+        const arrayFromSource = this.state.sourceClassObjectDocuments[i.map?.sourceClassName];
+        return arrayFromSource?.map((objDoc, oIdx) => {
+          return this._renderOneDivInDivItem(i, idx+oIdx, objDoc);
+        })
       }
-      
-      if (i.viewItemType === 'd') {
-        return (
-          <div key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
-            onMouseEnter={(e) => {
-              i.isHovered = true;
-              
-              if (i.onActions?.onMouseEnter) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
-              }
-
-              this.forceUpdate();
-            }}
-            onMouseLeave={(e) => {
-              i.isHovered = false;
-              
-              if (i.onActions?.onMouseLeave) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
-              }
-
-              this.forceUpdate();
-            }}
-            onClick={(e) => {
-              console.log('AVField _renderDivInDivItems onClick item', i)
-              if (i.onActions?.onClick) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
-              }
-            }}            
-          >
-            {i.label}{this._renderDivInDivItems(i.items)}
-          </div>
-        )
-      }
-      if (i.viewItemType === 'b') {
-        return (
-          <button key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
-            onMouseEnter={(e) => {
-              i.isHovered = true;
-              
-              if (i.onActions?.onMouseEnter) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
-              }
-
-              this.forceUpdate();
-            }}
-            onMouseLeave={(e) => {
-              i.isHovered = false;
-              
-              if (i.onActions?.onMouseLeave) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
-              }
-
-              this.forceUpdate();
-            }}
-            onClick={(e) => {
-              console.log('AVField _renderDivInDivItems onClick item', i)
-              if (i.onActions?.onClick) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
-              }
-            }}                        
-          >
-            {i.label}{this._renderDivInDivItems(i.items)}
-          </button>
-        )  
-      }
-      if (i.viewItemType === 'img') {
-        return (
-          <img key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
-            onMouseEnter={(e) => {
-              i.isHovered = true;
-              
-              if (i.onActions?.onMouseEnter) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
-              }
-
-              this.forceUpdate();
-            }}
-            onMouseLeave={(e) => {
-              i.isHovered = false;
-              
-              if (i.onActions?.onMouseLeave) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
-              }
-
-              this.forceUpdate();
-            }}
-            onClick={(e) => {
-              console.log('AVField _renderDivInDivItems onClick item', i)
-              if (i.onActions?.onClick) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
-              }
-            }}                        
-            src={i.src}>{i.label}</img>
-        )
-      }
-      if (i.viewItemType === 'AVIcon') {
-        return (
-          <AVIcon key={idx} name={i.name} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
-            onMouseEnter={(e) => {
-              i.isHovered = true;
-              
-              if (i.onActions?.onMouseEnter) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
-              }
-
-              this.forceUpdate();
-            }}
-            onMouseLeave={(e) => {
-              i.isHovered = false;
-              
-              if (i.onActions?.onMouseLeave) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
-              }
-
-              this.forceUpdate();
-            }}
-            onClick={(e) => {
-              console.log('AVField _renderDivInDivItems onClick item', i)
-              if (i.onActions?.onClick) {
-                this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
-              }
-            }}                        
-          ></AVIcon>
-        )
-      };
-      
-      if (i.viewItemType === 'AVObjectDocument') {
-        return (
-          <AVObjectDocument key={idx} objectDocumentPath={i.objectDocumentPath}
-          ></AVObjectDocument>
-        )
-      }
-
       
     })
   }
