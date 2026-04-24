@@ -61,6 +61,8 @@ export class AVObjectDocument extends AVItem {
     isRightPanelOpened: false,
     
     customDivContent: null,
+    
+    hiddenDesignFieldOverlayItems: [],
   }
   
   $rootDivDomElement;
@@ -592,7 +594,7 @@ export class AVObjectDocument extends AVItem {
             onButtonClickFunc={$objDoc.props.onButtonClickFunc}
             onLabelClickFunc={$objDoc.props.onLabelClickFunc}
           >
-            {designMode && ($objDoc._renderDesignFieldOverlay(fieldItem, idx, containerElement, this))}
+            {designMode && (!$objDoc.state.hiddenDesignFieldOverlayItems.some(hdn => hdn === fieldItem) && $objDoc._renderDesignFieldOverlay(fieldItem, idx, containerElement, this))}
           </AVField>
         </div>
       )
@@ -942,6 +944,8 @@ export class AVObjectDocument extends AVItem {
     if (fieldItem.fullOverlayMode) {
       menu.push('Установить style для tabs структуры')
       menu.push('Убрать экранирование');
+    } else {
+      menu.push('Убрать экранирование');
     }
 
     
@@ -1031,8 +1035,13 @@ export class AVObjectDocument extends AVItem {
       }
     }
     if (menuResult === 'Убрать экранирование') {
-      delete fieldItem.fullOverlayMode;
-      this.forceUpdate();
+      if (fieldItem.fullOverlayMode) {
+        delete fieldItem.fullOverlayMode;
+        this.forceUpdate();
+      } else {
+        this.state.hiddenDesignFieldOverlayItems.push(fieldItem);
+        this.forceUpdate();
+      }
     }
     if (menuResult === 'Установить font-size') {
       const fontSize = await this.showDialog({text: 'Введите число px', inputLabel: 'px'});
@@ -4130,6 +4139,7 @@ export class AVObjectDocument extends AVItem {
       state => ({designMode: !state.designMode}),
       async () => {
         if (this.state.designMode === false) {
+          this.state.hiddenDesignFieldOverlayItems = [];
           const saveDesignFlag = await this.showDialog({text: 'Сохранить дизайн?'});
           if (saveDesignFlag) {
             return this.saveDesign();
