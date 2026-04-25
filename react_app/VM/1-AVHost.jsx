@@ -160,8 +160,8 @@ export class AVHost extends AVItem {
       // bodyElem.focus();
       
       if (window.vk_app) {
-        const vkClass = this.Host.getClassByName('Подготовка');
-        this.setState({ selectedTreeItem: vkClass });
+        const vkClass = this.Host.getClassByName('vk main');
+        this.setState({ selectedTreeItem: vkClass, itemFullScreenMode: true });
       }
     }
   }
@@ -229,7 +229,7 @@ export class AVHost extends AVItem {
   _renderMain() {
     return (
       <div className="flex-1 row">
-        {!window.vk_app && this._renderLeftSidebar()}
+        {this._renderLeftSidebar()}
         <div className={`_av-item-view pos-rel flex-1 col ${this.state.itemFullScreenMode ? '' : 'pad-8 border'} scroll-y`}>
           {this.state.selectedTreeItem?.itemType === 'class' ?
             (<AVClass classItem={this.state.selectedTreeItem}

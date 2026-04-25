@@ -48,6 +48,7 @@ export class Class extends Item {
   classServiceDefinitions = [Accounting];
   async getObjectDocuments() {
     if (this.serverRef) {
+      console.log('Class.getObjectDocuments()');
       const objectsSnap = await this.serverRef.collection('ObjectDocuments').get();
       return objectsSnap.docs.map(doc => {
         return doc.data();
@@ -56,6 +57,7 @@ export class Class extends Item {
   }
 
   async getFieldDescriptors() {
+    console.log('Class.getFieldDescriptors()');
     const doc = await this.serverRef.get();
     this.metadata = doc.data();
     return this.metadata.fieldDescriptors || [];
@@ -109,6 +111,7 @@ export class Class extends Item {
   }
   
   async getObjectDocument(objectServerRef) {
+    console.log('Class.getObjectDocument(objectServerRef), objectServerRef:', objectServerRef);
     const obj = new ObjectDocument();
     obj.serverRef = objectServerRef;
     obj.Class = this;
@@ -126,7 +129,7 @@ export class Class extends Item {
   }
 
   async createObjectDocument(objDocData) { // для создания не с вьюхи Грида, а программно с других сервисов
-    console.log('createObjectDocument objDocData:', objDocData);
+    console.log('Class.createObjectDocument(objDocData), objDocData:', objDocData);
     const obj = new ObjectDocument();
     obj.notExistOnServer = true;
     obj.Class = this;
@@ -151,18 +154,21 @@ export class Class extends Item {
   }
 
   async saveFieldDescriptors(fieldDescriptors) {
+    console.log('Class.saveFieldDescriptors(fieldDescriptors), fieldDescriptors:', fieldDescriptors);
     if (fieldDescriptors) {
       await this.serverRef.update({fieldDescriptors})
     }
   }
   // может работать неправильно надо проверить подключив журнал учёта
-  async saveMetadata({fieldDescriptors, connectedServices, viewsOptions}) {
+  async saveMetadata({ fieldDescriptors, connectedServices, viewsOptions }) {
+    console.log('Class.saveMetadata({ fieldDescriptors, connectedServices, viewsOptions }), param:', { fieldDescriptors, connectedServices, viewsOptions });
     if (fieldDescriptors || connectedServices || viewsOptions) {
       await this.serverRef.update({fieldDescriptors, connectedServices, viewsOptions})
     }
   }
 
   async renameClass(newClassName) {
+    console.log('Class.renameClass(newClassName), newClassName:', newClassName);
     await this.serverRef.update({name: newClassName});
     // update config
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
@@ -174,6 +180,7 @@ export class Class extends Item {
   }
 
   async deleteClass() {
+    console.log('Class.deleteClass()');
     await this.serverRef.delete();
     // update config
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
@@ -186,6 +193,7 @@ export class Class extends Item {
   }
 
   async moveClassInFolderInConfig(folderName) {
+    console.log('Class.moveClassInFolderInConfig(folderName), folderName:', folderName);
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
     const workspaceDoc = await workspaceDocRef.get();
     const workspaceConfig = workspaceDoc.data();
@@ -224,6 +232,7 @@ export class Class extends Item {
   }
 
   async moveClassUpInConfig() {
+    console.log('Class.moveClassInFolderInConfig()');
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
     const workspaceDoc = await workspaceDocRef.get();
     const workspaceConfig = workspaceDoc.data();
@@ -240,6 +249,7 @@ export class Class extends Item {
   }
 
   async moveClassDownInConfig() {
+    console.log('Class.moveClassDownInConfig()');
     const workspaceDocRef = this.Host.db.collection('Domains').doc('workspace');
     const workspaceDoc = await workspaceDocRef.get();
     const workspaceConfig = workspaceDoc.data();

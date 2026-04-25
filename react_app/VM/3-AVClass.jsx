@@ -46,7 +46,15 @@ export class AVClass extends AVItem {
     console.log('AVClass componentDidMount, props:', this.props);
     if (this.props.classItem) {
       await this._loadGridData();
-      this.setState({ currentViewName: this.props.classItem.defaultViewName })
+      this.setState({ currentViewName: this.props.classItem.defaultViewName }, () => {
+        
+        
+        if (this.props.classItem.name === 'vk main' && window.vk_app) {
+          this._onGridRowClick(this.state.objectDocuments[0]);
+        }
+
+      });
+      
     }
 
   }

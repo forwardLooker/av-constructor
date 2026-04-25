@@ -4139,6 +4139,7 @@ export class AVObjectDocument extends AVItem {
     this.setState(
       state => ({designMode: !state.designMode}),
       async () => {
+        console.log('designMode switched, state.designMode=', this.state.designMode);
         if (this.state.designMode === false) {
           this.state.hiddenDesignFieldOverlayItems = [];
           const saveDesignFlag = await this.showDialog({text: 'Сохранить дизайн?'});

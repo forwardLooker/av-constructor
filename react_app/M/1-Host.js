@@ -17,7 +17,7 @@ export class Host extends Item {
     this.storageRoot = this.firebase.storage().ref();
     this.auth = this.firebase.auth();    
     this.auth.onAuthStateChanged((user) => {
-      console.log('firebase.auth onAuthStateChanged user:', user);
+      console.log('Host firebase.auth onAuthStateChanged user:', user);
       // if (window.vk_app === true) return;
       if (user) {
         // this.user = user;
@@ -32,6 +32,7 @@ export class Host extends Item {
     if (window.vk_app === true) {
       this.auth.signInWithEmailAndPassword('arta.vision.constructor@gmail.com', 'Hunters8alL').then(() => {
         vkBridge.send('VKWebAppInit');
+        console.log('vkBridge VKWebAppInit');
         new Promise(async (res, rej) => {
           const vkUser = await vkBridge.send('VKWebAppGetUserInfo');
           res(vkUser)
@@ -70,6 +71,7 @@ export class Host extends Item {
   config;
   preloadedObjectDocuments = [];
   async getConfig() {
+    console.log('Host.getConfig()');
     const rootDomainsSnap = await this.db.collection('Domains').get();
     this.config = rootDomainsSnap.docs.map(doc => doc.data());
     return this.config;
@@ -110,7 +112,7 @@ export class Host extends Item {
   getObjectDocumentByPath(path) {
     const preloadedObjDoc = this.preloadedObjectDocuments.find(o => o.path === path);
     if (preloadedObjDoc) {
-      console.log('getObjectDocumentByPath, found preloadedObjDoc:', preloadedObjDoc);
+      console.log('Host.getObjectDocumentByPath(path), found preloadedObjDoc:', preloadedObjDoc);
       return preloadedObjDoc;
     }
     const objRef = this.db.doc(path);
@@ -126,10 +128,12 @@ export class Host extends Item {
   }
   
   navigate(...params) {
+    console.log('Host.navigate(...params), params:', params);
     this.$hostElement.props.appRef.state.router.navigate(...params);
   }
 
   subscribe(...params) {
+    console.log('Host.subscribe(...params), params:', params);
     this.$hostElement.props.appRef.state.router.subscribe(...params);
   }
   
@@ -159,7 +163,7 @@ export class Host extends Item {
       return new ObjectDocument({ serverRef: o.reference, path: o.path, data: o, preloaded: true, Class: classItem })
     });
     this.preloadedObjectDocuments = [...this.preloadedObjectDocuments, ...objDocsItems];
-    console.log('preloadObjectDocumentsByClassReference finished, preloadedObjectDocuments:', this.preloadedObjectDocuments);
+    console.log('finished async preloadObjectDocumentsByClassReference(serverRef), preloadedObjectDocuments:', this.preloadedObjectDocuments);
   }
 
 };

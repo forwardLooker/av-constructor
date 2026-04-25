@@ -23,6 +23,7 @@ export class ObjectDocument extends Item {
   data = {};
   notExistOnServer;
   async getData() {
+    console.log('ObjectDocument.getData()');
     const doc = await this.serverRef.get();
     this.data = doc.data();
   }
@@ -30,7 +31,7 @@ export class ObjectDocument extends Item {
     return this.Class.objectDocumentDesignJson;
   }
   async saveData(data) {
-    console.log('saveData objDocData:', data);
+    console.log('ObjectDocument.saveData(data), data:', data);
     if (this.notExistOnServer) {
       this.serverRef = this.Class.serverRef.collection('ObjectDocuments').doc();
       await this.serverRef.set({
@@ -53,10 +54,12 @@ export class ObjectDocument extends Item {
     }
   }
   async saveDesignJson(designJson) {
+    console.log('ObjectDocument.saveDesignJson(designJson), designJson:', designJson);
     await this.Class.saveObjectDocumentDesignJson(designJson);
   }
 
   async deleteObjectDocument() {
+    console.log('ObjectDocument.deleteObjectDocument()');
     await this.serverRef.delete();
   }
 };
