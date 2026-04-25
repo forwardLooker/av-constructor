@@ -554,9 +554,9 @@ class AVFieldOriginal extends AVItem {
       })
       return React.createElement(vkuiComponentClass, {
         key: idx,
+        ...this.R.reject(this.R.isEmpty, (i.attributes || {})),
         ...propsObj,
         style: { ...i.style, ...(i.isHovered && i.hoverStyle) },
-        ...i.attributes,
         onMouseEnter: (e) => {
           i.isHovered = true;
 
