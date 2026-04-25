@@ -1087,7 +1087,7 @@ export class AVObjectDocument extends AVItem {
       
       let _renderDivInItem = (i, idx, arr) => {
         return (
-          <div key={i.viewItemType + idx} className='col border'>
+          <div key={(i.viewItemType || 0) + idx} className='col border'>
 
             <div className='d+ col'>
               <div className='row'>
@@ -1107,7 +1107,11 @@ export class AVObjectDocument extends AVItem {
                       }
                     }
                     if (menuResult === 'Копировать') {
+                      this._removeContainerReference(i);
+                      this._removeDomElementReference(i);
+                      this._removeVirtualDomElementReference(i);
                       this.Host.$hostElement.divInDivInnerItemCopy = this.deepClone(i);
+                      this._addContainerReference(i);
                     }
                     
                     if (menuResult === 'Вставить вправо') {
@@ -1115,7 +1119,11 @@ export class AVObjectDocument extends AVItem {
                       this.Host.$hostElement.divInDivInnerItemCopy = null;
                     }
                     if (menuResult === 'Вставить вниз') {
-                      i.items = [this.Host.$hostElement.divInDivInnerItemCopy];
+                      if (i.items?.length > 0) {
+                        i.items = [this.Host.$hostElement.divInDivInnerItemCopy, ...i.items];
+                      } else {
+                        i.items = [this.Host.$hostElement.divInDivInnerItemCopy];
+                      }
                       this.Host.$hostElement.divInDivInnerItemCopy = null;
                     }
 
@@ -2180,7 +2188,7 @@ export class AVObjectDocument extends AVItem {
                     this.Host.$hostElement.forceUpdate();
                   }}>Вставить копию</AVButton>)}</div>
                 <div onClick={async e => {
-                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument)', inputLabel: 'viewItemType' });
+                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType' });
                   if (newItemType) {
                     if (innerStruct.length === 0) {
                       innerStruct = [{ viewItemType: newItemType, style: {}, onActions: {}, actionListeners: [] }]
@@ -4211,6 +4219,7 @@ export class AVObjectDocument extends AVItem {
     })
   }
   _removeContainerReference = (layoutElement) => {
+    if (layoutElement.container) { delete layoutElement.container; }
     if (!layoutElement.items) return;
     layoutElement.items.forEach(i => {
       if (i.viewItemType === 'horizontal-layout' || i.viewItemType === 'vertical-layout') {
