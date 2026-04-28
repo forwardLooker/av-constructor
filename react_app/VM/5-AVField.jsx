@@ -30,6 +30,8 @@ import * as vkui from '@vkontakte/vkui';
 
 import { Icon20Add, Icon24Add, Icon16Delete } from '@vkontakte/icons';
 
+import * as vkicons from '@vkontakte/icons';
+
 const validator = require('email-validator');
 
 const AVField = React.forwardRef((props, ref) => (
@@ -517,8 +519,8 @@ class AVFieldOriginal extends AVItem {
       }
       return this.props.$objectDocument._renderVerticalLayout(i);
     }
-    
-    let vkuiComponentClass = vkui[i.viewItemType];
+        
+    let vkuiComponentClass = vkui[i.viewItemType] || vkicons[i.viewItemType];
     if (vkuiComponentClass) {
       let propsObj = (i.props && this.R.pipe(
         this.R.map(this.R.props(['propName', 'propValue'])),
