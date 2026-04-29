@@ -1448,6 +1448,51 @@ class AVFieldOriginal extends AVItem {
           </AVFieldOriginal.styles.select>
         )
       }
+      if (fieldItem.variant === 'vk-segmented-control') {
+        inputElement = (
+          <vkui.SegmentedControl
+            className="flex-1"
+            autoComplete="off"
+            size={fieldItem.size || 'm'}
+            placeholder={fieldItem.placeholder}
+            value={(value === null || value === undefined) ? '' : value}
+            options={fieldItem.valuesList?.split('||').map(str => str.trim()).map(str => ({ value: str, label: str }))}
+            disabled={readOnly}
+            onChange={(_, value) => {
+              this.setState({ _value: value })
+              this.props.onChangeFunc(value)
+            }}
+            onBlur={this.props.onBlurFunc}
+          ></vkui.SegmentedControl>
+        );
+        if (fieldItem.isLabelVkFormItem) {
+          inputElement = (
+            <vkui.FormItem
+              className='flex-1'
+              htmlFor={fieldItem.label}
+              top={fieldItem.label}
+              required={fieldItem.required}
+            >
+              <vkui.SegmentedControl
+                id={fieldItem.label}
+                name={fieldItem.label}
+                size={fieldItem.size || 'm'}
+                placeholder={fieldItem.placeholder}
+                value={(value === null || value === undefined) ? '' : value}
+                options={fieldItem.valuesList?.split('||').map(str => str.trim()).map(str => ({ value: str, label: str }))}
+                disabled={readOnly}
+                onChange={(value) => {
+                  this.setState({ _value: value })
+                  this.props.onChangeFunc(value)
+                }}
+                onBlur={this.props.onBlurFunc}
+                required={fieldItem.required}
+              ></vkui.SegmentedControl>
+            </vkui.FormItem>
+          );
+        }
+
+      }
       if (fieldItem.variant === 'tags-buttons' && fieldItem.valuesList) {
         let valuesArr
         if (Array.isArray(fieldItem.valuesList)) {

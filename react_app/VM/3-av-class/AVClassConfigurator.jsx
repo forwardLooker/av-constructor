@@ -62,6 +62,7 @@ export class AVClassConfigurator extends AVItem {
               'vk-input',
               'vk-textarea',
               'vk-select',
+              'vk-segmented-control',
               'vk-date-input',
               'vk-date-range-input',
               'select',
@@ -97,6 +98,7 @@ export class AVClassConfigurator extends AVItem {
           if (
             this.state.selectedFieldDescriptor.variant !== 'select'
             && this.state.selectedFieldDescriptor.variant !== 'vk-select'
+            && this.state.selectedFieldDescriptor.variant !== 'vk-segmented-control'
             && this.state.selectedFieldDescriptor.variant !== 'tags-buttons'
             && this.state.selectedFieldDescriptor.variant !== 'radio-buttons'
             && this.state.selectedFieldDescriptor.variant !== 'Gazprombank-string-select'
