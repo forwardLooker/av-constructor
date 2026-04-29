@@ -38,7 +38,8 @@ export class AVClassConfigurator extends AVItem {
       items: [
         { name: 'labelPartWhichHaveLinkUrl' },
         { name: 'linkUrlForLabelPart' },
-        { name: 'isLabelHidden', dataType: 'boolean'},
+        { name: 'isLabelHidden', dataType: 'boolean' },
+        { name: 'isLabelVkFormItem', dataType: 'boolean' },
       ]
     },
     {name: 'dataType',
@@ -63,7 +64,6 @@ export class AVClassConfigurator extends AVItem {
               'vk-select',
               'vk-date-input',
               'vk-date-range-input',
-              'vk-chips-input',
               'select',
               'tags-buttons',
               'radio-buttons',

@@ -16,7 +16,6 @@ import {
   DateRangeInput as VKDateRangeInput,
   Input as VKInput,
   Textarea as VKTextarea,
-  ChipsInput as VKChipsInput,
   Select as VKSelect,
   Checkbox as VKCheckbox,
   Button as VKButton,
@@ -1304,6 +1303,28 @@ class AVFieldOriginal extends AVItem {
             onBlur={this.props.onBlurFunc}
           ></VKInput>
         );
+        
+        if (fieldItem.isLabelVkFormItem) {
+          inputElement = (
+            <vkui.FormItem
+              className='flex-1'
+              htmlFor={fieldItem.label}
+              top={fieldItem.label}
+              required={fieldItem.required}
+            >
+              <vkui.Input
+                id={fieldItem.label}
+                name={fieldItem.label}
+                placeholder={fieldItem.placeholder}
+                value={(value === null || value === undefined) ? '' : value}
+                disabled={readOnly}
+                onChange={onChangeFunc}
+                onBlur={this.props.onBlurFunc}
+                required={fieldItem.required}
+              ></vkui.Input>
+            </vkui.FormItem>
+          );
+        }
       }
 
       if (fieldItem.variant === 'vk-textarea') {
@@ -1337,6 +1358,32 @@ class AVFieldOriginal extends AVItem {
             onBlur={this.props.onBlurFunc}
           ></VKSelect>
         );
+        if (fieldItem.isLabelVkFormItem) {
+          inputElement = (
+            <vkui.FormItem
+              className='flex-1'
+              htmlFor={fieldItem.label}
+              top={fieldItem.label}
+              required={fieldItem.required}
+            >
+              <vkui.Select
+                id={fieldItem.label}
+                name={fieldItem.label}
+                placeholder={fieldItem.placeholder}
+                value={(value === null || value === undefined) ? '' : value}
+                options={fieldItem.valuesList?.split('||').map(str => str.trim()).map(str => ({ value: str, label: str }))}
+                disabled={readOnly}
+                onChange={(_, value) => {
+                  this.setState({ _value: value })
+                  this.props.onChangeFunc(value)
+                }}
+                onBlur={this.props.onBlurFunc}
+                required={fieldItem.required}
+              ></vkui.Select>
+            </vkui.FormItem>
+          );
+        }
+
       }
       
       if (fieldItem.variant === 'vk-date-input') {
@@ -1373,22 +1420,6 @@ class AVFieldOriginal extends AVItem {
           ></VKDateRangeInput>
         );
       }
-      
-      if (fieldItem.variant === 'vk-chips-input') {
-        inputElement = (
-          <VKChipsInput
-            className="flex-1"
-            autoComplete="off"
-            placeholder={fieldItem.placeholder}
-            value={(value === null || value === undefined) ? '' : value}
-            disabled={readOnly}
-            onChange={onChangeFunc}
-            onBlur={this.props.onBlurFunc}
-            addOnBlur={true}
-          ></VKChipsInput>
-        );
-      }
-
 
       if (fieldItem.variant === 'select' && fieldItem.valuesList) {
         let valuesArr
@@ -2651,6 +2682,9 @@ class AVFieldOriginal extends AVItem {
   
   _calcIsLabelHidden = () => {
     if (this.props.fieldItem.variant && this.props.fieldItem.variant.includes('Gazprombank')) {
+      return true
+    }
+    if (this.props.fieldItem.isLabelVkFormItem) {
       return true
     }
     return (this.props.isLabelHidden || this.props.fieldItem.isLabelHidden)
