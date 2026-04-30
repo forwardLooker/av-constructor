@@ -45,18 +45,21 @@ export class AVClass extends AVItem {
   async componentDidMount() {
     console.log('AVClass componentDidMount, props:', this.props);
     if (this.props.classItem) {
+      if (this.props.classItem.name === 'vk main' && window.vk_app) {
+        this.setState({
+          currentViewName: this.props.classItem.defaultViewName,
+          fieldDescriptors: this.props.classItem.metadata.fieldDescriptors,
+          objectDocuments: this.props.classItem.data,
+          selectedObjectDocument: this.props.classItem.getObjectDocumentByData(this.props.classItem.data[0])
+        });
+        return;
+      }
+
       await this._loadGridData();
       this.setState({ currentViewName: this.props.classItem.defaultViewName }, () => {
-        
-        
-        if (this.props.classItem.name === 'vk main' && window.vk_app) {
-          this._onGridRowClick(this.state.objectDocuments[0]);
-        }
-
+        // было для vk
       });
-      
     }
-
   }
 
   async componentDidUpdate(prevProps) {
@@ -225,7 +228,7 @@ export class AVClass extends AVItem {
   _renderGrid() {
     return (
       <div className="margin-top-8">
-        {!this.state.selectedObjectDocument && (
+        {!this.state.selectedObjectDocument && (this.state.fieldDescriptors.length > 0) && (
           <div>
             <AVGrid
               ref={$grid => this.gridRef = $grid}

@@ -71,7 +71,7 @@ export class AVHost extends AVItem {
   
   async componentDidMount() {
     console.log('AVHost componentDidMount, props:', this.props);
-    if (!this.props.appRef.state.router) {
+    if (!this.props.appRef.state.router && !window.vk_app) {
       const config = await this.Host.getConfig(); // Чтобы получить роуты требуется на Хосте сначала Конфиг
       console.log('without router config loaded, config:', config);
       const classItemRoutes = this.Host.getClassByName('Роуты');
@@ -124,7 +124,18 @@ export class AVHost extends AVItem {
         console.log('router set on App Component, router:', this.props.appRef.state.router);
       })
     } else {
-      const config = await this.Host.getConfig();
+      let config;
+      if (window.vk_app) {
+        const vkClass = this.Host.getClassByPath('Domains/workspace/Domains/T4mhHKJGircmevLZbBHm/Classes/z3A9B1SghE3xHKzStVth');
+        const [c] = await Promise.all([this.Host.getConfig.bind(this.Host)(), vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
+        this.setState({ selectedTreeItem: vkClass, itemFullScreenMode: true });
+        config = c;
+      }
+      
+      if (!config) {
+        config = await this.Host.getConfig();
+      }
+      
       if (this.user && (this.user.email !== 'arta.vision.constructor@gmail.com')) { //admin
         const usersClass = this.Host.getClassByName('Пользователи');
         const usersArr = await usersClass.getObjectDocuments();
@@ -159,10 +170,10 @@ export class AVHost extends AVItem {
       });
       // bodyElem.focus();
       
-      if (window.vk_app) {
-        const vkClass = this.Host.getClassByName('vk main');
-        this.setState({ selectedTreeItem: vkClass, itemFullScreenMode: true });
-      }
+      // if (window.vk_app) {
+      //   const vkClass = this.Host.getClassByName('vk main');
+      //   this.setState({ selectedTreeItem: vkClass, itemFullScreenMode: true });
+      // }
     }
   }
   
@@ -178,7 +189,7 @@ export class AVHost extends AVItem {
   }
 
   render() {
-    if (!this.props.appRef.state.router) {
+    if (!this.props.appRef.state.router && !window.vk_app) {
       return null
     }
     return (

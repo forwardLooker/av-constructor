@@ -33,6 +33,7 @@ export class Class extends Item {
     return this._name || this.metadata.name
   }
   metadata = {};
+  data = [];
   serverRef;
   id; // TODO может сделать getter?
   Domain;
@@ -50,9 +51,11 @@ export class Class extends Item {
     if (this.serverRef) {
       console.log('Class.getObjectDocuments()');
       const objectsSnap = await this.serverRef.collection('ObjectDocuments').get();
-      return objectsSnap.docs.map(doc => {
+      const objectsData = objectsSnap.docs.map(doc => {
         return doc.data();
-      })
+      });
+      this.data = objectsData;
+      return objectsData;
     }
   }
 
@@ -119,6 +122,17 @@ export class Class extends Item {
     await obj.getData();
     return obj;
   }
+  
+  getObjectDocumentByData(data) {
+    console.log('Class.getObjectDocumentByData(data), data:', data);
+    const obj = new ObjectDocument();
+    obj.serverRef = data.reference;
+    obj.Class = this;
+    obj.Domain = this.Domain;
+    obj.data = data;
+    return obj;
+  }
+
 
   getNewObjectDocument() {
     const obj = new ObjectDocument();
