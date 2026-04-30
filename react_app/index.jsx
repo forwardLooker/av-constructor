@@ -7,41 +7,15 @@ import {
 } from "react-router-dom";
 import './index.css';
 import { AVHost } from './VM/1-AVHost.jsx';
-import {Host} from './M/1-Host.js';
+import { Host } from './M/1-Host.js';
+
+import vkBridge from '@vkontakte/vk-bridge';
 
 import '@vkontakte/vkui/dist/vkui.css';
-
-
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <AVHost></AVHost>,
-//   },
-//   {
-//     path: "route1",
-//     element: <div>Hello world!</div>,
-//   },
-// ]);
 
 let config;
 let hostItem;
 let vkClass;
-const vkStart = async () => {
-  hostItem = new Host();
-  vkClass = hostItem.getClassByPath('Domains/workspace/Domains/T4mhHKJGircmevLZbBHm/Classes/z3A9B1SghE3xHKzStVth');
-  const [c] = await Promise.all([hostItem.getConfig.bind(hostItem)(), vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
-  config = c;
-  
-  createRoot(document.getElementById('app')).render(<App />);
-}
-
-if (window.vk_app) {
-  vkStart()
-} else {
-  createRoot(document.getElementById('app')).render(<App />);
-}
-
-
 
 export class App extends React.PureComponent {
   state = {
@@ -57,6 +31,24 @@ export class App extends React.PureComponent {
     }
   }
 }
+
+const vkStart = async () => {
+  hostItem = new Host();
+  vkClass = hostItem.getClassByPath('Domains/workspace/Domains/T4mhHKJGircmevLZbBHm/Classes/z3A9B1SghE3xHKzStVth');
+  const [c] = await Promise.all([hostItem.getConfig.bind(hostItem)(), vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
+  config = c;
+  
+  createRoot(document.getElementById('app')).render(<App />);
+}
+
+if (window.vk_app) {
+  vkBridge.send('VKWebAppInit');
+  console.log('vkBridge VKWebAppInit');
+  vkStart()
+} else {
+  createRoot(document.getElementById('app')).render(<App />);
+}
+
 
 // createRoot(document.getElementById('app')).render(<App />);
 // ReactDom.render(

@@ -202,7 +202,7 @@ export class AVHost extends AVItem {
         {!this.props.children && this._renderHeader()}
         {!this.props.children && (
           <div className={`flex-1 row ${this.state.itemFullScreenMode ? '' : 'border'}`}>
-            {this.user ? this._renderMain() : <AVAuth onAuthMadeFunc={async (userObj) => {
+            {(this.user || window.vk_app) ? this._renderMain() : <AVAuth onAuthMadeFunc={async (userObj) => {
               const config = await this.Host.getConfig();
               if (this.user.email !== 'arta.vision.constructor@gmail.com') { //admin
                 this.checkForRightsOnItems(config, userObj);

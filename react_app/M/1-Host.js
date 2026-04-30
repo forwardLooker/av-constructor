@@ -31,8 +31,8 @@ export class Host extends Item {
     
     if (window.vk_app === true) {
       this.auth.signInWithEmailAndPassword('arta.vision.constructor@gmail.com', 'Hunters8alL').then(() => {
-        vkBridge.send('VKWebAppInit');
-        console.log('vkBridge VKWebAppInit');
+        // vkBridge.send('VKWebAppInit');
+        // console.log('vkBridge VKWebAppInit');
         new Promise(async (res, rej) => {
           const vkUser = await vkBridge.send('VKWebAppGetUserInfo');
           res(vkUser)
