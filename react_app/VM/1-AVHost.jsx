@@ -25,9 +25,9 @@ export class AVHost extends AVItem {
   }
 
   state = {
-    config: [], // то что отображается в дереве
+    config: this.props.config || [], // то что отображается в дереве
     fullOriginalConfig: [],
-    selectedTreeItem: null,
+    selectedTreeItem: this.props.vkClass || null,
     selectedConfigItem: null,
 
     isDialogOpened: false,
@@ -50,7 +50,7 @@ export class AVHost extends AVItem {
     designMode: false,
     $designObjectDocument: null,
     
-    itemFullScreenMode: false,
+    itemFullScreenMode: this.props.itemFullScreenMode || false,
     
     isCustomPopupOpened: false,
     customPopupContent: null,
@@ -62,9 +62,14 @@ export class AVHost extends AVItem {
   
   divInDivInnerItemCopy; //d
   
-  constructor() {
-    super();
-    AVItem.Host = new Host(this);
+  constructor(props) {
+    super(props);
+    if (window.vk_app) {
+      this.props.hostItem.$hostElement = this;
+      AVItem.Host = this.props.hostItem;
+    } else {
+      AVItem.Host = new Host(this);
+    }
   }
   
   //render
@@ -124,13 +129,13 @@ export class AVHost extends AVItem {
         console.log('router set on App Component, router:', this.props.appRef.state.router);
       })
     } else {
-      let config;
-      if (window.vk_app) {
-        const vkClass = this.Host.getClassByPath('Domains/workspace/Domains/T4mhHKJGircmevLZbBHm/Classes/z3A9B1SghE3xHKzStVth');
-        const [c] = await Promise.all([this.Host.getConfig.bind(this.Host)(), vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
-        this.setState({ selectedTreeItem: vkClass, itemFullScreenMode: true });
-        config = c;
-      }
+      let config = this.props.config;
+      // if (window.vk_app) {
+      //   const vkClass = this.Host.getClassByPath('Domains/workspace/Domains/T4mhHKJGircmevLZbBHm/Classes/z3A9B1SghE3xHKzStVth');
+      //   const [c] = await Promise.all([this.Host.getConfig.bind(this.Host)(), vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
+      //   this.setState({ selectedTreeItem: vkClass, itemFullScreenMode: true });
+      //   config = c;
+      // }
       
       if (!config) {
         config = await this.Host.getConfig();

@@ -24,11 +24,11 @@ export class AVClass extends AVItem {
     onChangeFunc: this.noop,
   }
   state = {
-    currentViewName: '',
-    fieldDescriptors: [],
-    objectDocuments: [],
+    currentViewName: this.props.classItem?.defaultViewName || '',
+    fieldDescriptors: this.props.classItem?.metadata?.fieldDescriptors || [],
+    objectDocuments: this.props.classItem?.data || [],
     filteredObjectDocuments: [],
-    selectedObjectDocument: null,
+    selectedObjectDocument: (window.vk_app && this.props.classItem?.getObjectDocumentByData(this.props.classItem.data[0])) ||  null,
 
     isParametersPanelOpened: false, // Пока нигде не используется
     ParametersPanelrender: this.noop,
@@ -46,12 +46,12 @@ export class AVClass extends AVItem {
     console.log('AVClass componentDidMount, props:', this.props);
     if (this.props.classItem) {
       if (this.props.classItem.name === 'vk main' && window.vk_app) {
-        this.setState({
-          currentViewName: this.props.classItem.defaultViewName,
-          fieldDescriptors: this.props.classItem.metadata.fieldDescriptors,
-          objectDocuments: this.props.classItem.data,
-          selectedObjectDocument: this.props.classItem.getObjectDocumentByData(this.props.classItem.data[0])
-        });
+        // this.setState({
+        //   currentViewName: this.props.classItem.defaultViewName,
+        //   fieldDescriptors: this.props.classItem.metadata.fieldDescriptors,
+        //   objectDocuments: this.props.classItem.data,
+        //   selectedObjectDocument: this.props.classItem.getObjectDocumentByData(this.props.classItem.data[0])
+        // });
         return;
       }
 
