@@ -1,6 +1,8 @@
 import React from 'react';
 
-import {AVItem} from './0-AVItem.js';
+import { AVItem } from './0-AVItem.js';
+import { AVClass } from './3-AVClass.jsx';
+
 
 import {AVLabel} from "../V/AVLabel.jsx";
 import {AVButton} from "../V/AVButton.jsx";
@@ -520,30 +522,31 @@ class AVFieldOriginal extends AVItem {
     }
         
     let vkuiComponentClass = vkui[i.viewItemType] || vkicons[i.viewItemType];
+    let propsObj = (i.props && this.R.pipe(
+      this.R.map(this.R.props(['propName', 'propValue'])),
+      this.R.fromPairs
+    )(i.props));
+    if (propsObj) {
+      Object.keys(propsObj).forEach(key => {
+        const pObj = i.props.find(p => {
+          return key === p.propName
+        });
+        if (pObj.type === 'number') {
+          propsObj[key] = Number(propsObj[key])
+        }
+        if (pObj.type === 'boolean') {
+          propsObj[key] = propsObj[key] === 'false' ? false : Boolean(propsObj[key])
+        }
+        if (pObj.type === 'objDocFromClassByFunction') {
+          const lamdaText = propsObj[key];
+          const lamdaFunc = new Function('objDoc', lamdaText);
+          const computedValue = lamdaFunc(objDoc);
+          propsObj[key] = computedValue;
+        }
+      })
+    }
+
     if (vkuiComponentClass) {
-      let propsObj = (i.props && this.R.pipe(
-        this.R.map(this.R.props(['propName', 'propValue'])),
-        this.R.fromPairs
-      )(i.props));
-      if (propsObj) {
-        Object.keys(propsObj).forEach(key => {
-          const pObj = i.props.find(p => {
-            return key === p.propName
-          });
-          if (pObj.type === 'number') {
-            propsObj[key] = Number(propsObj[key])
-          }
-          if (pObj.type === 'boolean') {
-            propsObj[key] = propsObj[key] === 'false' ? false : Boolean(propsObj[key])
-          }
-          if (pObj.type === 'objDocFromClassByFunction') {
-            const lamdaText = propsObj[key];
-            const lamdaFunc = new Function('objDoc', lamdaText);
-            const computedValue = lamdaFunc(objDoc);
-            propsObj[key] = computedValue;
-          }
-        })
-      }
       // Добавление пропсов как рендер-элементов asPropsRender
       i.items?.forEach(innerItem => {
         if (innerItem.asPropRender?.isAsPropRenderMode && innerItem.asPropRender?.propName) {
@@ -715,6 +718,13 @@ class AVFieldOriginal extends AVItem {
       return (
         <AVObjectDocument key={idx} objectDocumentPath={i.objectDocumentPath}
         ></AVObjectDocument>
+      )
+    }
+    
+    if (i.viewItemType === 'AVClass') {
+      return (
+        <AVClass key={idx} {...propsObj}
+        ></AVClass>
       )
     }
 

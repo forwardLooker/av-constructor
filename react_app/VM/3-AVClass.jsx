@@ -36,6 +36,8 @@ export class AVClass extends AVItem {
     linearChartDate: null, // для вьюхи Charts
     linearChartAmount: null,
     isLinearChartVisible: false,
+    
+    classItem: null,
   }
   
   gridRef;
@@ -44,6 +46,15 @@ export class AVClass extends AVItem {
   
   async componentDidMount() {
     console.log('AVClass componentDidMount, props:', this.props);
+    if (this.props.byClassName) {
+      const classItem = this.Host.getClassByName(this.props.byClassName);
+      this.state.classItem = classItem;
+      await this._loadGridData();
+      this.setState({ currentViewName: classItem.defaultViewName }, () => {
+        // было для vk
+      });
+
+    }
     if (this.props.classItem) {
       if (this.props.classItem.name === 'vk main' && window.vk_app) {
         // this.setState({
@@ -182,9 +193,9 @@ export class AVClass extends AVItem {
     return (
       <div className="_av-class-root pos-rel flex-1 col">
         <AVClassPanel
-          classItem={this.props.classItem}
+          classItem={this.props.classItem || this.state.classItem}
           onClassViewChangedFunc={viewName => this.setState({currentViewName: viewName})}
-          onCreateFunc={(e) => { this.setState({ selectedObjectDocument: this.props.classItem.getNewObjectDocument() }) }}
+          onCreateFunc={(e) => { const classItem = this.props.classItem || this.state.classItem; this.setState({ selectedObjectDocument: classItem.getNewObjectDocument() }) }}
           onCancelFunc={this.props.onCancelFunc}
           onSearchFunc={searchStr => {
             if (searchStr) {
@@ -222,7 +233,7 @@ export class AVClass extends AVItem {
     if (this.state.currentViewName === 'Charts') {
       return this._renderCharts()
     }
-    return this.props.classItem.getViewComponentByName(this.state.currentViewName, this);
+    return this.props.classItem?.getViewComponentByName(this.state.currentViewName, this);
   }
 
   _renderGrid() {
@@ -348,8 +359,9 @@ export class AVClass extends AVItem {
   }
 
   _loadGridData = async () => {
-    const fieldDescriptors = await this.props.classItem.getFieldDescriptors();
-    const objectDocuments = await this.props.classItem.getObjectDocuments();
+    const classItem = this.state.classItem || this.props.classItem;
+    const fieldDescriptors = await classItem.getFieldDescriptors();
+    const objectDocuments = await classItem.getObjectDocuments();
     this.setState({fieldDescriptors, objectDocuments});
   }
 
