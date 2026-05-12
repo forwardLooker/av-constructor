@@ -366,7 +366,8 @@ export class AVClass extends AVItem {
   }
 
   _onGridRowClick = async (rowItem) => {
-    const selectedObjectDocument = await this.props.classItem.getObjectDocument(rowItem.reference);
+    const classItem = this.state.classItem || this.props.classItem;
+    const selectedObjectDocument = await classItem.getObjectDocument(rowItem.reference);
     this.setState({selectedObjectDocument});
     this.props.onObjectDocumentSelectedFunc(selectedObjectDocument);
   }
