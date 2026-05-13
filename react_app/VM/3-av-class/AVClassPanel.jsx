@@ -77,7 +77,7 @@ export class AVClassPanel extends AVItem {
           // value={this.state.searchStr}
           onChangeFunc={searchStr => this.props.onSearchFunc(searchStr)}
         ></AVField>
-        {(window.vk_app || true) && (
+        {/* {(window.vk_app || true) && (
           <AVField
             fieldItem={{
               datatype: 'string',
@@ -91,7 +91,7 @@ export class AVClassPanel extends AVItem {
           // value={this.state.searchStr}
           // onChangeFunc={searchStr => this.props.onSearchFunc(searchStr)}
           ></AVField>
-        )}
+        )} */}
       </div>
     )
   }

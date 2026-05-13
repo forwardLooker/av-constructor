@@ -22,6 +22,8 @@ export class AVClass extends AVItem {
     onCancelFunc: null, // В Классе поверх ОбджектДокумента
     
     onChangeFunc: this.noop,
+    
+    byClassName: '',
   }
   state = {
     currentViewName: this.props.classItem?.defaultViewName || '',
