@@ -4282,7 +4282,7 @@ export class AVObjectDocument extends AVItem {
   }
   
   activateActionHandler = ({ e, actionName, sourceAVFieldComponent }) => {
-    console.log('AVObjectDocument activateActionHandler actionHandlerList', this.actionHandlerList);
+    console.log(`AVObjectDocument.activateActionHandler() ${actionName} this.actionHandlerList:`, this.actionHandlerList);
     if (this.actionHandlerList[actionName]) {
       this.actionHandlerList[actionName].forEach(({ item, listenerAVFieldComponent, actionHandlerFunction }) => {
         let f = new Function('item', '$objectDocument', 'e', 'sourceAVFieldComponent', actionHandlerFunction);
