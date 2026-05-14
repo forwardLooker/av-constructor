@@ -14,7 +14,7 @@ import vkBridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
 
 let config;
-let hostItem;
+let host;
 let vkClass;
 
 export class App extends React.PureComponent {
@@ -23,7 +23,7 @@ export class App extends React.PureComponent {
   }
   render() {
     if (!this.state.router) {
-      return (<AVHost appRef={this} hostItem={hostItem} vkClass={vkClass} config={config} itemFullScreenMode={window.vk_app ? true : false}></AVHost>)
+      return (<AVHost appRef={this} hostItem={host} vkClass={vkClass} config={config} itemFullScreenMode={window.vk_app ? true : false}></AVHost>)
     } else {
       return (
         <RouterProvider router={this.state.router} />
@@ -32,10 +32,10 @@ export class App extends React.PureComponent {
   }
 }
 
-const vkStart = async () => {
-  hostItem = new Host();
-  vkClass = hostItem.getClassByPath('Domains/workspace/Domains/T4mhHKJGircmevLZbBHm/Classes/z3A9B1SghE3xHKzStVth');
-  const [c] = await Promise.all([hostItem.getConfig.bind(hostItem)(), vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
+async function vkStart () {
+  host = new Host();
+  vkClass = host.getClassByPath('Domains/workspace/Domains/T4mhHKJGircmevLZbBHm/Classes/z3A9B1SghE3xHKzStVth');
+  const [c] = await Promise.all([host.getConfig.bind(host)(), vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
   config = c;
   
   createRoot(document.getElementById('app')).render(<App />);
