@@ -82,7 +82,7 @@ export class Domain extends Item {
       targetDomainToAddNewClass = this.findDeepObjInItemsBy({id: this.id}, {items: workspaceConfig.items});
     }
     let classInitDataInConfig = { ...classInitData };
-    delete classInitDataInConfig.fieldDescriptors;
+    // delete classInitDataInConfig.fieldDescriptors;
     delete classInitDataInConfig.objectDocumentDesignJson;
     if (Array.isArray(targetDomainToAddNewClass.items)) {
       targetDomainToAddNewClass.items.push(classInitDataInConfig);
@@ -91,7 +91,7 @@ export class Domain extends Item {
     }
     console.log('targetDomainToAddNewClass', targetDomainToAddNewClass);
     await workspaceDocRef.update({ items: workspaceConfig.items });
-    console.log('Domain.js createClassCopyFromReference newClass from Copy updated in Config');
+    console.log('Domain.createClassCopyFromReference() finished, newClass from Copy updated in Config');
 
   }
 

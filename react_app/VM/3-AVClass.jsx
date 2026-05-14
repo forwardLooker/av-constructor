@@ -78,7 +78,7 @@ export class AVClass extends AVItem {
   async componentDidUpdate(prevProps) {
     if (this.props.classItem !== prevProps.classItem) {
       await this._loadGridData();
-      this.setState({ currentViewName: this.props.classItem.defaultViewName })
+      this.setState({ currentViewName: this.props.classItem.defaultViewName, filteredObjectDocuments: [] })
     }
     
     if (!this.state.selectedObjectDocument && this.gridRef) {
