@@ -392,7 +392,8 @@ export class AVClass extends AVItem {
   }
 
   _onObjectSaved = async () => {
-    const objectDocuments = await this.props.classItem.getObjectDocuments();
+    const classItem = this.state.classItem || this.props.classItem;
+    const objectDocuments = await classItem.getObjectDocuments();
     this.setState({objectDocuments});
   }
 
