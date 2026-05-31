@@ -34,7 +34,8 @@ export class App extends React.PureComponent {
 
 async function vkStart () {
   host = new Host();
-  vkClass = host.getClassByPath('Domains/workspace/Domains/fKEKGydMtMgcGv5Iwn4s/Classes/4qEmXDmHobTXfNnziIbE');
+  vkClass = host.getClassByPath('Domains/workspace/Domains/T4mhHKJGircmevLZbBHm/Classes/z3A9B1SghE3xHKzStVth');
+  // vkClass = host.getClassByPath('Domains/workspace/Domains/fKEKGydMtMgcGv5Iwn4s/Classes/4qEmXDmHobTXfNnziIbE');
   const [c] = await Promise.all([host.getConfig.bind(host)(), vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
   config = c;
   
