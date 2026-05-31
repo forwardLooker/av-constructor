@@ -1088,75 +1088,93 @@ export class AVObjectDocument extends AVItem {
       let _renderDivInItem = (i, idx, arr) => {
         return (
           <div key={(i.viewItemType || 0) + idx} className='col border'>
-
-            <div className='d+ col'>
-              <div className='row'>
-                <div className={`_viewItemType ${itemSelected === i ? 'font-bold border-bottom-2' : ''} cursor-pointer`}
-                  onContextMenu={async e => {
-                    let menuResult = await this.showContextMenu(e, ['Удалить', 'Переименовать', 'Копировать', ...(this.Host.$hostElement.divInDivInnerItemCopy ? ['Вставить вправо', 'Вставить вниз'] : [])]);
-                    if (menuResult === 'Удалить') {
-                      let ok = await this.showDialog2({ text: `Точно хотите удалить ${i.viewItemType}?` });
-                      if (ok) {
-                        arr.splice(idx, 1);
-                      }
-                    }
-                    if (menuResult === 'Переименовать') {
-                      let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType', inputValue: i.viewItemType });
-                      if (newItemType) {
-                        i.viewItemType = newItemType
-                      }
-                    }
-                    if (menuResult === 'Копировать') {
-                      this._removeContainerReference(i);
-                      this._removeDomElementReference(i);
-                      this._removeVirtualDomElementReference(i);
-                      this.Host.$hostElement.divInDivInnerItemCopy = this.deepClone(i);
-                      this._addContainerReference(i);
-                    }
-                    
-                    if (menuResult === 'Вставить вправо') {
-                      arr.splice(idx+1, 0, this.Host.$hostElement.divInDivInnerItemCopy);
-                      this.Host.$hostElement.divInDivInnerItemCopy = null;
-                    }
-                    if (menuResult === 'Вставить вниз') {
-                      if (i.items?.length > 0) {
-                        i.items = [this.Host.$hostElement.divInDivInnerItemCopy, ...i.items];
-                      } else {
-                        i.items = [this.Host.$hostElement.divInDivInnerItemCopy];
-                      }
-                      this.Host.$hostElement.divInDivInnerItemCopy = null;
-                    }
-
-
-                    this.Host.$hostElement.forceUpdate();
-                  }}
-                  onClick={e => {
-                    itemSelected = i;
-                    newStyleObj = itemSelected.style;
-                    newOnActionsObj = itemSelected.onActions
-                    newActionListenersArr = itemSelected.actionListeners;
-                    newAttributes = itemSelected.attributes;
-                    tabItemForFieldWrapper.selectedTabLabel = tabItemForFieldWrapper.items[0].label
-                    this.Host.$hostElement.forceUpdate();
-                  }}>
-                  {i.asPropRender?.isAsPropRenderMode ? i.asPropRender?.propName + '=': ''}{'<' + (i.viewItemType || 'field') + '>'}
-                </div>
-                <div className='_toRight+ cursor-default' onClick={async e => {
+            <div className='d+ row'>
+              <div className='d+ col'>
+                <div className='_toUp+ text-center cursor-default' onClick={async e => {
                   let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType' });
                   if (newItemType) {
-                    arr.splice(idx + 1, 0, { viewItemType: newItemType, style: {}, onActions: {}, actionListeners: [] });
+                    const idxToReplace = arr.findIndex(item => item === i);
+                    arr.splice(idxToReplace, 1, { viewItemType: newItemType, style: {}, items: [i], onActions: {}, actionListeners: [] })
+                    this.Host.$hostElement.forceUpdate();
+                  }
+                }}>+</div>
+                <div className='row'>
+                  <div className='_toLeft+ cursor-default' onClick={async e => {
+                    let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType' });
+                    if (newItemType) {
+                      arr.splice(idx, 0, { viewItemType: newItemType, style: {}, onActions: {}, actionListeners: [] });
+                      this.Host.$hostElement.forceUpdate();
+                    }
+                  }}>+</div>
+                  <div className={`_viewItemType ${itemSelected === i ? 'font-bold border-bottom-2' : ''} cursor-pointer`}
+                    onContextMenu={async e => {
+                      let menuResult = await this.showContextMenu(e, ['Удалить', 'Переименовать', 'Копировать', ...(this.Host.$hostElement.divInDivInnerItemCopy ? ['Вставить вправо', 'Вставить вниз'] : [])]);
+                      if (menuResult === 'Удалить') {
+                        let ok = await this.showDialog2({ text: `Точно хотите удалить ${i.viewItemType}?` });
+                        if (ok) {
+                          arr.splice(idx, 1);
+                        }
+                      }
+                      if (menuResult === 'Переименовать') {
+                        let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType', inputValue: i.viewItemType });
+                        if (newItemType) {
+                          i.viewItemType = newItemType
+                        }
+                      }
+                      if (menuResult === 'Копировать') {
+                        this._removeContainerReference(i);
+                        this._removeDomElementReference(i);
+                        this._removeVirtualDomElementReference(i);
+                        this.Host.$hostElement.divInDivInnerItemCopy = this.deepClone(i);
+                        this._addContainerReference(i);
+                      }
+
+                      if (menuResult === 'Вставить вправо') {
+                        arr.splice(idx + 1, 0, this.Host.$hostElement.divInDivInnerItemCopy);
+                        this.Host.$hostElement.divInDivInnerItemCopy = null;
+                      }
+                      if (menuResult === 'Вставить вниз') {
+                        if (i.items?.length > 0) {
+                          i.items = [this.Host.$hostElement.divInDivInnerItemCopy, ...i.items];
+                        } else {
+                          i.items = [this.Host.$hostElement.divInDivInnerItemCopy];
+                        }
+                        this.Host.$hostElement.divInDivInnerItemCopy = null;
+                      }
+
+
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                    onClick={e => {
+                      itemSelected = i;
+                      newStyleObj = itemSelected.style;
+                      newOnActionsObj = itemSelected.onActions
+                      newActionListenersArr = itemSelected.actionListeners;
+                      newAttributes = itemSelected.attributes;
+                      tabItemForFieldWrapper.selectedTabLabel = tabItemForFieldWrapper.items[0].label
+                      this.Host.$hostElement.forceUpdate();
+                    }}>
+                    {i.asPropRender?.isAsPropRenderMode ? i.asPropRender?.propName + '=' : ''}{'<' + (i.viewItemType || 'field') + '>'}
+                  </div>
+                  <div className='_toRight+ cursor-default' onClick={async e => {
+                    let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType' });
+                    if (newItemType) {
+                      arr.splice(idx + 1, 0, { viewItemType: newItemType, style: {}, onActions: {}, actionListeners: [] });
+                      this.Host.$hostElement.forceUpdate();
+                    }
+                  }}>+</div>
+                </div>
+                <div className='_toDown+ text-center cursor-default' onClick={async e => {
+                  let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType' });
+                  if (newItemType) {
+                    i.items = [{ viewItemType: newItemType, style: {}, items: i.items || [], onActions: {}, actionListeners: [] }];
                     this.Host.$hostElement.forceUpdate();
                   }
                 }}>+</div>
               </div>
-              <div className='_toDown+ cursor-default' onClick={async e => {
-                let newItemType = await this.showDialog2({ text: 'Введите viewItemType(d, b, img, AVIcon, AVObjectDocument, vertical-layout, vkui_v7(*))', inputLabel: 'viewItemType' });
-                if (newItemType) {
-                  i.items = [{ viewItemType: newItemType, style: {}, items: i.items || [], onActions: {}, actionListeners: [] }];
-                  this.Host.$hostElement.forceUpdate();
-                }
-              }}>+</div>
+              <div className='flex-1'></div>
             </div>
+            
             {i.items && i.items.length > 0 && (
               <div className='row'>
                 {i.items.map((i2, idx2, arr2) => {
