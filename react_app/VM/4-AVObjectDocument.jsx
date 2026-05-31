@@ -2161,7 +2161,7 @@ export class AVObjectDocument extends AVItem {
       
       const ok = await this.showDialog({
         content: () => (
-          <div className='scroll-y' style={{ width: '100vw', height: '90vh' }}>
+          <div className='_dialog-content-divInDiv scroll-y' style={{ width: '90vw', height: '90vh' }}>
             <div className='margin-left-16'>
               {[<br></br>,
                 `Дизайнер div в div-е. Текущий ${itemSelected === fieldItem ? 'root(space div)' : ((itemSelected.label && (itemSelected.viewItemType + '(' + itemSelected.label + ')')) || (itemSelected.viewItemType + '(' + itemSelected.items?.map(o => o.viewItemType).toString() + ')'))} style: ${JSON.stringify(newStyleObj)}`,
