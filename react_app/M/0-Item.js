@@ -4,6 +4,10 @@ export class Item {
   get user() {
     return Item.user;
   }
+  get vkUser() {
+    return Item.vkUser;
+  }
+
   get Host() {
     return Item.Host // сеттится в конструкторе Хоста
   }; 

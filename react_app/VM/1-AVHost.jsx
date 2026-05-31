@@ -21,7 +21,13 @@ import {
 
 export class AVHost extends AVItem {
   static defaultProps = {
-    appRef: null // Служит для незаметной перезагрузки Хоста со всеми роутами, полученными из специального Класса в System
+    appRef: null, // Служит для незаметной перезагрузки Хоста со всеми роутами, полученными из специального Класса в System
+    
+    hostItem: null, // Начиная отсюда всё для инит ВК
+    vkClass: null,
+    config: null,
+    itemFullScreenMode: false
+    
   }
 
   state = {
