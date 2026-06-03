@@ -342,7 +342,7 @@ class AVFieldOriginal extends AVItem {
       }
       registerActionHandler(this.props.fieldItem.items);
       
-      //on didMount withoutRegistration
+      //on componentDidMount withoutRegistration
       const activateComponentDidMount = (item) => {
         item.actionListeners?.forEach(({ actionName, actionHandlerFunction }) => {
           if (actionName === 'componentDidMount') {
@@ -366,7 +366,11 @@ class AVFieldOriginal extends AVItem {
         items.forEach(async i => {
           if (i.map?.isMapMode && i.map?.sourceClassName) {
             const classItem = this.Host.getClassByName(i.map.sourceClassName);
-            const objDocsArr = await classItem.getObjectDocuments();
+            let objDocsArr = await classItem.getObjectDocuments();
+            if (i.map.transformationFunction) {
+              const transformation = new Function('objDocArr', i.map.transformationFunction);
+              objDocsArr = transformation(objDocsArr);
+            }
             this.state.sourceClassObjectDocuments[i.map.sourceClassName] = objDocsArr;
           }
           loadObjectDocumentsForMapping(i.items)

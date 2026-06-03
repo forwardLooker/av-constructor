@@ -1923,6 +1923,19 @@ export class AVObjectDocument extends AVItem {
                       this.Host.$hostElement.forceUpdate();
                     }}
                   ></AVField>
+                  <AVField
+                    fieldItem={{
+                      label: 'transformationFunction(return objDocArr)',
+                      dataType: 'string',
+                      variant: 'textarea'
+                    }}
+                    value={itemSelected.map?.transformationFunction}
+                    onChangeFunc={(value) => itemSelected.map.transformationFunction = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+
 
                   {/* <AVField
                     fieldItem={{
