@@ -365,13 +365,15 @@ class AVFieldOriginal extends AVItem {
       const loadObjectDocumentsForMapping = async (items = []) => {
         items.forEach(async i => {
           if (i.map?.isMapMode && i.map?.sourceClassName) {
-            const classItem = this.Host.getClassByName(i.map.sourceClassName);
-            let objDocsArr = await classItem.getObjectDocuments();
-            if (i.map.transformationFunction) {
-              const transformation = new Function('objDocArr', i.map.transformationFunction);
-              objDocsArr = transformation(objDocsArr);
-            }
-            this.state.sourceClassObjectDocuments[i.map.sourceClassName] = objDocsArr;
+            if (!this.state.sourceClassObjectDocuments[`${i.map.sourceClassName} - ${i.map.transformationFunction}`]) {
+              const classItem = this.Host.getClassByName(i.map.sourceClassName);
+              let objDocArr = await classItem.getObjectDocuments();
+              if (i.map.transformationFunction) {
+                const transformation = new Function('objDocArr', i.map.transformationFunction);
+                objDocArr = transformation(objDocArr);
+              }
+              this.state.sourceClassObjectDocuments[`${i.map.sourceClassName} - ${i.map.transformationFunction}`] = objDocArr;
+            } 
           }
           loadObjectDocumentsForMapping(i.items)
 
@@ -563,7 +565,7 @@ class AVFieldOriginal extends AVItem {
       return React.createElement(vkuiComponentClass, {
         key: idx,
         ...this.R.reject(this.R.isEmpty, (i.attributes || {})),
-        ...propsObj,
+        ...this.R.omit(['childrenFromProp'], propsObj),
         style: { ...i.style, ...(i.isHovered && i.hoverStyle) },
         onMouseEnter: (e) => {
           i.isHovered = true;
@@ -590,7 +592,7 @@ class AVFieldOriginal extends AVItem {
           }
         }
 
-      }, i.label, ...this._renderDivInDivItems(i.items, objDoc))
+      }, i.label, propsObj && propsObj['childrenFromProp'],...this._renderDivInDivItems(i.items, objDoc))
     }
 
     if (i.viewItemType === 'd') {
@@ -621,7 +623,7 @@ class AVFieldOriginal extends AVItem {
             }
           }}
         >
-          {i.label}{this._renderDivInDivItems(i.items, objDoc)}
+          {i.label}{propsObj && propsObj['childrenFromProp']}{this._renderDivInDivItems(i.items, objDoc)}
         </div>
       )
     }
@@ -653,7 +655,7 @@ class AVFieldOriginal extends AVItem {
             }
           }}
         >
-          {i.label}{this._renderDivInDivItems(i.items, objDoc)}
+          {i.label}{propsObj && propsObj['childrenFromProp']}{this._renderDivInDivItems(i.items, objDoc)}
         </button>
       )
     }
@@ -742,7 +744,7 @@ class AVFieldOriginal extends AVItem {
       if (!i.map?.isMapMode) {
         return this._renderOneDivInDivItem(i, idx, objDocFromMap);
       } else {
-        const arrayFromSource = this.state.sourceClassObjectDocuments[i.map?.sourceClassName];
+        const arrayFromSource = this.state.sourceClassObjectDocuments[`${i.map?.sourceClassName} - ${i.map?.transformationFunction}`];
         return arrayFromSource?.map((objDoc, oIdx) => {
           return this._renderOneDivInDivItem(i, idx+oIdx, objDoc);
         })
