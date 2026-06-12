@@ -562,6 +562,41 @@ class AVFieldOriginal extends AVItem {
           propsObj[innerItem.asPropRender.propName] = this._renderOneDivInDivItem(innerItem, 0, objDoc);
         }
       })
+      // 
+      if (i.viewItemType === 'Input' || i.viewItemType === 'Search') {
+        return React.createElement(vkuiComponentClass, {
+          key: idx,
+          ...this.R.reject(this.R.isEmpty, (i.attributes || {})),
+          ...this.R.omit(['childrenFromProp'], propsObj),
+          style: { ...i.style, ...(i.isHovered && i.hoverStyle) },
+          onMouseEnter: (e) => {
+            i.isHovered = true;
+
+            if (i.onActions?.onMouseEnter) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          },
+          onMouseLeave: (e) => {
+            i.isHovered = false;
+
+            if (i.onActions?.onMouseLeave) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
+            }
+
+            this.forceUpdate();
+          },
+          onClick: (e) => {
+            console.log('AVField _renderDivInDivItems onClick item', i)
+            if (i.onActions?.onClick) {
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
+            }
+          }
+
+        })
+
+      }
       return React.createElement(vkuiComponentClass, {
         key: idx,
         ...this.R.reject(this.R.isEmpty, (i.attributes || {})),
