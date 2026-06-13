@@ -543,6 +543,12 @@ class AVFieldOriginal extends AVItem {
         if (pObj.type === 'boolean') {
           propsObj[key] = propsObj[key] === 'false' ? false : Boolean(propsObj[key])
         }
+        if (pObj.type === 'dispatch') {
+          const actionName = propsObj[key];
+          propsObj[key] = (...args) => {
+            this.props.$objectDocument.activateActionHandler({ e: args, actionName, sourceAVFieldComponent: this })
+          }
+        }
         if (pObj.type === 'objDocFromClassByFunction') {
           const lamdaText = propsObj[key];
           const lamdaFunc = new Function('objDoc', lamdaText);

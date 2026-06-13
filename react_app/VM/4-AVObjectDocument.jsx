@@ -1864,7 +1864,7 @@ export class AVObjectDocument extends AVItem {
                       labelPosition: 'top',
                       items: [{
                         name: 'propName',
-                        gridColumnWidth: '400px',
+                        gridColumnWidth: '200px',
                       },
                       {
                         name: 'propValue',
@@ -1877,7 +1877,7 @@ export class AVObjectDocument extends AVItem {
                         label: 'type',
                         dataType: 'string',
                         variant: 'select',
-                        valuesList: ['string', 'number', 'boolean', 'objDocFromClassByFunction'],
+                        valuesList: ['string', 'number', 'boolean', 'dispatch', 'objDocFromClassByFunction'],
                         gridColumnWidth: '200px',
                       }]
                     }}
@@ -2137,7 +2137,7 @@ export class AVObjectDocument extends AVItem {
                           gridColumnWidth: '400px',
                         }, {
                           name: 'actionHandlerFunction',
-                          label: 'actionHandlerFunction(this, item, $objectDocument, e, sourceAVFieldComponent)',
+                          label: 'actionHandlerFunction(this, item, $objectDocument, e||e[], sourceAVFieldComponent)',
                           dataType: 'string',
                           variant: 'textarea'
                         }]
