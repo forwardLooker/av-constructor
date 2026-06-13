@@ -2137,7 +2137,7 @@ export class AVObjectDocument extends AVItem {
                           gridColumnWidth: '400px',
                         }, {
                           name: 'actionHandlerFunction',
-                          label: 'actionHandlerFunction(this, item, $objectDocument, e||e[], sourceAVFieldComponent)',
+                          label: 'actionHandlerFunction(this, item, $objectDocument, e||e[], sourceAVFieldComponent, sourceObjDoc)',
                           dataType: 'string',
                           variant: 'textarea'
                         }]
@@ -4315,13 +4315,13 @@ export class AVObjectDocument extends AVItem {
     }
   }
   
-  activateActionHandler = ({ e, actionName, sourceAVFieldComponent }) => {
+  activateActionHandler = ({ e, actionName, sourceAVFieldComponent, sourceObjDoc }) => {
     console.log(`AVObjectDocument.activateActionHandler() ${actionName} this.actionHandlerList:`, this.actionHandlerList);
     if (this.actionHandlerList[actionName]) {
       this.actionHandlerList[actionName].forEach(({ item, listenerAVFieldComponent, actionHandlerFunction }) => {
-        let f = new Function('item', '$objectDocument', 'e', 'sourceAVFieldComponent', actionHandlerFunction);
+        let f = new Function('item', '$objectDocument', 'e', 'sourceAVFieldComponent', 'sourceObjDoc', actionHandlerFunction);
         f = f.bind(listenerAVFieldComponent);
-        f(item, this, e, sourceAVFieldComponent);
+        f(item, this, e, sourceAVFieldComponent, sourceObjDoc);
 
       })
     }

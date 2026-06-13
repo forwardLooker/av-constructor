@@ -594,7 +594,6 @@ class AVFieldOriginal extends AVItem {
             this.forceUpdate();
           },
           onClick: (e) => {
-            console.log('AVField _renderDivInDivItems onClick item', i)
             if (i.onActions?.onClick) {
               this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
             }
@@ -627,9 +626,8 @@ class AVFieldOriginal extends AVItem {
           this.forceUpdate();
         },
         onClick: (e) => {
-          console.log('AVField _renderDivInDivItems onClick item', i)
           if (i.onActions?.onClick) {
-            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
+            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this, sourceObjDoc: objDoc })
           }
         }
 
