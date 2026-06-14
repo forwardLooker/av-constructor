@@ -546,7 +546,7 @@ class AVFieldOriginal extends AVItem {
         if (pObj.type === 'dispatch') {
           const actionName = propsObj[key];
           propsObj[key] = (...args) => {
-            this.props.$objectDocument.activateActionHandler({ e: args, actionName, sourceAVFieldComponent: this })
+            this.props.$objectDocument.activateActionHandler({ e: args, actionName, sourceAVFieldComponent: this, sourceObjDoc: objDoc })
           }
         }
         if (pObj.type === 'objDocFromClassByFunction') {
