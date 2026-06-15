@@ -2596,7 +2596,7 @@ class AVFieldOriginal extends AVItem {
             <AVButton
                 onClick={() => {
                   gridItems.push({});
-                  this.setState({_value: [...gridItems]}, () => {
+                  this.setState({_value: gridItems}, () => {
                     this.props.onChangeFunc(this.state._value);
                   })
                 }}
