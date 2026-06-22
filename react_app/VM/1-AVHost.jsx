@@ -169,6 +169,33 @@ export class AVHost extends AVItem {
           })
         })
       }
+      
+      // Код напоминаний загрузка времени строка 19:00
+      if (true) {
+        const date = new Date();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        
+        const timerStr = '13:23';
+        const timerHours = timerStr.split(':')[0];
+        const timerMinutes = timerStr.split(':')[1];
+        
+        const diffHours = timerHours - hours;
+        const diffMinutes = timerMinutes - minutes;
+        if (diffHours > 0 || (diffHours === 0 && diffMinutes > 0)) {
+          const diffHoursInMs = diffHours * 60 * 60 * 1000;
+          const diffMinutesInMs = diffMinutes * 60 * 1000;
+          let distanceInMs;
+          if (diffMinutes > 0) {
+            distanceInMs = diffHoursInMs + diffMinutesInMs;
+          } else {
+            distanceInMs = diffHoursInMs - diffMinutesInMs;
+          }
+          setTimeout(() => {
+            this.showDialog({ text: 'Напоминание по таймеру' });
+          }, distanceInMs)
+        }
+      }
 
       // const bodyElem = window.document.getElementsByTagName('body');
       // console.log('bodyElem', bodyElem);
