@@ -171,30 +171,35 @@ export class AVHost extends AVItem {
       }
       
       // Код напоминаний загрузка времени строка 19:00
-      if (true) {
-        const date = new Date();
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        
-        const timerStr = '13:23';
-        const timerHours = timerStr.split(':')[0];
-        const timerMinutes = timerStr.split(':')[1];
-        
-        const diffHours = timerHours - hours;
-        const diffMinutes = timerMinutes - minutes;
-        if (diffHours > 0 || (diffHours === 0 && diffMinutes > 0)) {
-          const diffHoursInMs = diffHours * 60 * 60 * 1000;
-          const diffMinutesInMs = diffMinutes * 60 * 1000;
-          let distanceInMs;
-          if (diffMinutes > 0) {
-            distanceInMs = diffHoursInMs + diffMinutesInMs;
-          } else {
-            distanceInMs = diffHoursInMs - diffMinutesInMs;
+      const reqClass = this.Host.getClassByName('Требования');
+      const reqObjDocs = await reqClass.getObjectDocuments();
+      const reqObjDocsWithReminder = reqObjDocs.filter(obj => obj['Напоминание']);
+      if (reqObjDocsWithReminder.length > 0) {
+        reqObjDocsWithReminder.forEach(remObj => {
+          const date = new Date();
+          const hours = date.getHours();
+          const minutes = date.getMinutes();
+
+          const timerStr = remObj['Напоминание'];
+          const timerHours = timerStr.split(':')[0];
+          const timerMinutes = timerStr.split(':')[1];
+
+          const diffHours = timerHours - hours;
+          const diffMinutes = timerMinutes - minutes;
+          if (diffHours > 0 || (diffHours === 0 && diffMinutes > 0)) {
+            const diffHoursInMs = diffHours * 60 * 60 * 1000;
+            const diffMinutesInMs = diffMinutes * 60 * 1000;
+            let distanceInMs;
+            if (diffMinutes > 0) {
+              distanceInMs = diffHoursInMs + diffMinutesInMs;
+            } else {
+              distanceInMs = diffHoursInMs - diffMinutesInMs;
+            }
+            setTimeout(() => {
+              this.showDialog({ text: remObj['Название'] });
+            }, distanceInMs)
           }
-          setTimeout(() => {
-            this.showDialog({ text: 'Напоминание по таймеру' });
-          }, distanceInMs)
-        }
+        })
       }
 
       // const bodyElem = window.document.getElementsByTagName('body');
@@ -616,7 +621,7 @@ export class AVHost extends AVItem {
   _renderDialog() {
     return (
       <div className="pos-fixed trbl-0 row justify-center align-center z-index-100000 bg-transparent-45">
-        <div style={{ minWidth: '400px', minHeight: '300px' }} className="pos-rel bg-white">
+        <div style={{ minWidth: '400px', minHeight: '300px' }} className="pos-rel bg-white border-radius-12px">
           <div className='pad-10'>{this.state.dialogText}</div>
           {this.state.dialogContent && this.state.dialogContent()}
           {this.state.dialogInputLabel && (
@@ -650,7 +655,7 @@ export class AVHost extends AVItem {
   _renderDialog2() {
     return (
       <div className="pos-fixed trbl-0 row justify-center align-center z-index-1000000 bg-transparent-45">
-        <div style={{ minWidth: '400px', minHeight: '300px' }} className="pos-rel bg-white">
+        <div style={{ minWidth: '400px', minHeight: '300px' }} className="pos-rel bg-white border-radius-12px">
           <div className='pad-10'>{this.state.dialogText2}</div>
           {this.state.dialogContent2 && this.state.dialogContent2()}
           {this.state.dialogInputLabel2 && (
