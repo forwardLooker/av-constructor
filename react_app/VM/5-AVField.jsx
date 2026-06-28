@@ -573,8 +573,8 @@ class AVFieldOriginal extends AVItem {
         return React.createElement(vkuiComponentClass, {
           key: idx,
           ...this.R.reject(this.R.isEmpty, (i.attributes || {})),
-          ...this.R.omit(['childrenFromProp'], propsObj),
           style: { ...i.style, ...(i.isHovered && i.hoverStyle) },
+          ...this.R.omit(['childrenFromProp'], propsObj),
           onMouseEnter: (e) => {
             i.isHovered = true;
 
@@ -605,8 +605,8 @@ class AVFieldOriginal extends AVItem {
       return React.createElement(vkuiComponentClass, {
         key: idx,
         ...this.R.reject(this.R.isEmpty, (i.attributes || {})),
-        ...this.R.omit(['childrenFromProp'], propsObj),
         style: { ...i.style, ...(i.isHovered && i.hoverStyle) },
+        ...this.R.omit(['childrenFromProp'], propsObj),
         onMouseEnter: (e) => {
           i.isHovered = true;
 
@@ -637,6 +637,7 @@ class AVFieldOriginal extends AVItem {
     if (i.viewItemType === 'd') {
       return (
         <div key={idx} style={{ ...i.style, ...(i.isHovered && i.hoverStyle) }} {...i.attributes}
+          {...this.R.omit(['childrenFromProp'], propsObj)}
           onMouseEnter={(e) => {
             i.isHovered = true;
 
@@ -2596,7 +2597,7 @@ class AVFieldOriginal extends AVItem {
             <AVButton
                 onClick={() => {
                   gridItems.push({});
-                  this.setState({_value: gridItems}, () => {
+                  this.setState({_value: [...gridItems]}, () => {
                     this.props.onChangeFunc(this.state._value);
                   })
                 }}
