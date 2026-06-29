@@ -261,7 +261,11 @@ class AVFieldOriginal extends AVItem {
           }
         })
         item.items?.forEach(i => {
-          activateConstructor(i);
+          try {
+            activateConstructor(i);
+          } catch (err) {
+            console.error(err);
+          }
         })
       }
       activateConstructor(this.props.fieldItem);
