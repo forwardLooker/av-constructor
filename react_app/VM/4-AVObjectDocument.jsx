@@ -251,17 +251,21 @@ export class AVObjectDocument extends AVItem {
           <div className={`${this.props.noOkCancelPanel ? 'no-display' : 'row'} justify-end`}>
             <div className="row align-center justify-center">
               {this._renderButtonsByServices()}
-              <AVButton onClick={this.saveAndClose}>OK</AVButton>
-              <AVButton onClick={this.closeWithoutSave}>Отмена</AVButton>
-              <div className="row align-center pad-0-2">
-                {this.isDeepEqual(this.state._newData, this.state._newDataBeforeUpdate) ? (
-                  <AVIcon name="saveDisabled"></AVIcon>
-                ) : (
-                  <AVIcon name="saveActive" onClick={this.save}></AVIcon>
-                )}
-              </div>
-              <AVButton onClick={this.toggleDesign}>Дизайнер</AVButton>
-              <AVButton onClick={this.toggleToJSON}>JSON</AVButton>
+              {!window.vk_app && (
+                <>
+                  <AVButton onClick={this.saveAndClose}>OK</AVButton>
+                  <AVButton onClick={this.closeWithoutSave}>Отмена</AVButton>
+                  <div className="row align-center pad-0-2">
+                    {this.isDeepEqual(this.state._newData, this.state._newDataBeforeUpdate) ? (
+                      <AVIcon name="saveDisabled"></AVIcon>
+                    ) : (
+                      <AVIcon name="saveActive" onClick={this.save}></AVIcon>
+                    )}
+                  </div>
+                  <AVButton onClick={this.toggleDesign}>Дизайнер</AVButton>
+                  <AVButton onClick={this.toggleToJSON}>JSON</AVButton>
+                </>
+              )}
             </div>
           </div>
         </div>
