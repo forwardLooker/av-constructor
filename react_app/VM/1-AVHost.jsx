@@ -147,6 +147,17 @@ export class AVHost extends AVItem {
         config = await this.Host.getConfig();
       }
       
+      
+      if (window.vk_app) {
+        const vkUserClass = this.Host.getClassByName('Пользователь');
+        const vkUserObjDocs = await vkUserClass.getObjectDocuments();
+        console.log('Загрузка класса данных Пользователь vkUserObjDocs:', vkUserObjDocs);
+        if (vkUserObjDocs.length === 0 && this.Host.vkUser) {
+          console.log('Создание объекта Пользователь в базе this.Host.vkUser:', this.Host.vkUser);
+          vkUserClass.createObjectDocument({ ...this.Host.vkUser, name: this.Host.vkUser.first_name + ' ' + this.Host.vkUser.last_name, vkId: this.Host.vkUser.id })
+        }
+      }
+      
       if (this.user && (this.user.email !== 'arta.vision.constructor@gmail.com')) { //admin
         const usersClass = this.Host.getClassByName('Пользователи');
         const usersArr = await usersClass.getObjectDocuments();
