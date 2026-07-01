@@ -149,13 +149,91 @@ export class AVHost extends AVItem {
       
       
       if (window.vk_app) {
-        const vkUserClass = this.Host.getClassByName('Пользователь');
-        const vkUserObjDocs = await vkUserClass.getObjectDocuments();
-        console.log('Загрузка класса данных Пользователь vkUserObjDocs:', vkUserObjDocs);
-        if (vkUserObjDocs.length === 0 && this.Host.vkUser) {
-          console.log('Создание объекта Пользователь в базе this.Host.vkUser:', this.Host.vkUser);
-          vkUserClass.createObjectDocument({ ...this.Host.vkUser, name: this.Host.vkUser.first_name + ' ' + this.Host.vkUser.last_name, vkId: this.Host.vkUser.id })
-        }
+        // const vkUserClass = this.Host.getClassByName('Пользователь');
+        // const vkUserObjDocs = await vkUserClass.getObjectDocuments();
+        // console.log('Загрузка класса данных Пользователь vkUserObjDocs:', vkUserObjDocs);
+        // if (vkUserObjDocs.length === 0 && this.Host.vkUser) {
+        //   console.log('Создание объекта Пользователь в базе this.Host.vkUser:', this.Host.vkUser);
+        //   vkUserClass.createObjectDocument({ ...this.Host.vkUser, name: this.Host.vkUser.first_name + ' ' + this.Host.vkUser.last_name, vkId: this.Host.vkUser.id })
+        // }
+        
+        // // Загрузка Друзей в базу данных
+        // const vkFriendsClass = this.Host.getClassByName('Друзья');
+        // const vkFriendsObjDocs = await vkUserClass.getObjectDocuments();
+        
+        // const systemLogClass = this.Host.getClassByName('Системный log');
+        // const systemLogObjDocs = await systemLogClass.getObjectDocuments();
+        // if (systemLogObjDocs.some(o => o.name === 'Друзья загружены')) {
+        //   this._friendsLoaded = true;
+        //   console.log('Дрзуья загружены Лог успешно найден');
+        // }
+        // if (!this._friendsLoaded) {
+        //   this._friendsLoaded = true;
+        //   await this.vkBridge.send('VKWebAppGetAuthToken', {
+        //     app_id: 54509391,
+        //     scope: 'friends,status'
+        //   })
+        //     .then(async (data) => {
+        //       if (data.access_token) {
+        //         // Ключ доступа пользователя получен
+        //         const friendsList = await this.vkBridge.send('VKWebAppCallAPIMethod', {
+        //           method: 'friends.get',
+        //           params: {
+        //             v: '5.131',
+        //             access_token: data.access_token,
+        //             fields: 'bdate,can_post,can_see_all_posts,can_write_private_message,city,contacts,country,domain,education,has_mobile,timezone,last_seen,nickname,online,photo_100,photo_200_orig,photo_50,photo_id,relation,sex,status,universities'
+        //           }
+        //         });
+        //         console.log('vk friends.get', friendsList);
+        //         friendsList.response.items.map(vkFrObj => ({
+        //           bdate: vkFrObj.bdate || '',
+        //           can_post: vkFrObj.can_post || '',
+        //           can_see_all_posts: vkFrObj.can_see_all_posts || '',
+        //           can_write_private_message: vkFrObj.can_write_private_message || '',
+        //           city: vkFrObj.city || '',
+        //           contacts: vkFrObj.contacts || '',
+        //           country: vkFrObj.country || '',
+        //           domain: vkFrObj.domain || '',
+        //           education: vkFrObj.education || '',
+        //           has_mobile: vkFrObj.has_mobile || '',
+        //           timezone: vkFrObj.timezone || '',
+        //           last_seen: vkFrObj.last_seen || '',
+        //           nickname: vkFrObj.nickname || '',
+        //           online: vkFrObj.online || '',
+        //           photo_100: vkFrObj.photo_100 || '',
+        //           photo_200_orig: vkFrObj.photo_200_orig || '',
+        //           photo_50: vkFrObj.photo_50 || '',
+        //           photo_id: vkFrObj.photo_id || '',
+        //           relation: vkFrObj.relation || '',
+        //           sex: vkFrObj.sex || '',
+        //           status: vkFrObj.status || '',
+        //           universities: vkFrObj.universities || '',
+
+        //           'Название': `День рождения: ${vkFrObj.first_name} ${vkFrObj.last_name}`,
+        //           first_name: vkFrObj.first_name || '',
+        //           last_name: vkFrObj.last_name || '',
+        //           vkId: vkFrObj.id,
+        //         })).forEach(frObj => {
+        //           let findedFriend = vkFriendsObjDocs.find(obj => obj.vkId === frObj.vkId);
+        //           if (!findedFriend) {
+        //             vkFriendsClass.createObjectDocument(frObj)
+        //           } else {
+        //             if (findedFriend.bdate !== frObj.bdate) {
+        //               console.log('Обнаружен объект в классе Друзья для обновления bdate', findedFriend);
+        //               const objDocItem = this.Host.getObjectDocumentByReference(findedFriend.reference);
+        //               objDocItem.saveData({ bdate: frObj.bdate });
+        //             }
+        //           }
+        //         });
+        //         const systemLogClass = this.Host.getClassByName('Системный log');
+        //         systemLogClass.createObjectDocument({ name: 'Друзья загружены' });
+        //       }
+        //     })
+        //     .catch((error) => {
+        //       // Ошибка
+        //       console.log(error);
+        //     });
+        // }
       }
       
       if (this.user && (this.user.email !== 'arta.vision.constructor@gmail.com')) { //admin
@@ -300,71 +378,71 @@ export class AVHost extends AVItem {
             (<AVClass classItem={this.state.selectedTreeItem}
               itemFullScreenMode={this.state.itemFullScreenMode}
               onChangeFunc={async classItem => {
-                const systemLogClass = this.Host.getClassByName('Системный log');
-                const systemLogObjDocs = await systemLogClass.getObjectDocuments();
-                if (systemLogObjDocs.some(o => o.name = 'Праздники загружены')) {
-                  this._prazdnikiLoaded = true;
-                  console.log('Праздники Лог успешно найден');
-                }
-                if (!this._prazdnikiLoaded && window.vk_app && classItem.name === 'Праздники') {
-                  this._prazdnikiLoaded = true;
-                  await this.vkBridge.send('VKWebAppGetAuthToken', {
-                    app_id: 54509391,
-                    scope: 'friends,status'
-                  })
-                    .then(async (data) => {
-                      if (data.access_token) {
-                        // Ключ доступа пользователя получен
-                        const friendsList = await this.vkBridge.send('VKWebAppCallAPIMethod', {
-                          method: 'friends.get',
-                          params: {
-                            v: '5.131',
-                            access_token: data.access_token,
-                            fields: 'bdate,can_post,can_see_all_posts,can_write_private_message,city,contacts,country,domain,education,has_mobile,timezone,last_seen,nickname,online,photo_100,photo_200_orig,photo_50,photo_id,relation,sex,status,universities'
-                          }
-                        });
-                        console.log('vk friends.get', friendsList);
-                        friendsList.response.items.filter(i => !!i.bdate).map(vkFrObj => ({
-                          bdate: vkFrObj.bdate || '',
-                          can_post: vkFrObj.can_post || '',
-                          can_see_all_posts: vkFrObj.can_see_all_posts || '',
-                          can_write_private_message: vkFrObj.can_write_private_message || '',
-                          city: vkFrObj.city || '',
-                          contacts: vkFrObj.contacts || '',
-                          country: vkFrObj.country || '',
-                          domain: vkFrObj.domain || '',
-                          education: vkFrObj.education || '',
-                          has_mobile: vkFrObj.has_mobile || '',
-                          timezone: vkFrObj.timezone || '',
-                          last_seen: vkFrObj.last_seen || '',
-                          nickname: vkFrObj.nickname || '',
-                          online: vkFrObj.online || '',
-                          photo_100: vkFrObj.photo_100 || '',
-                          photo_200_orig: vkFrObj.photo_200_orig || '',
-                          photo_50: vkFrObj.photo_50 || '',
-                          photo_id: vkFrObj.photo_id || '',
-                          relation: vkFrObj.relation || '',
-                          sex: vkFrObj.sex || '',
-                          status: vkFrObj.status || '',
-                          universities: vkFrObj.universities || '',
+                // const systemLogClass = this.Host.getClassByName('Системный log');
+                // const systemLogObjDocs = await systemLogClass.getObjectDocuments();
+                // if (systemLogObjDocs.some(o => o.name === 'Праздники загружены')) {
+                //   this._prazdnikiLoaded = true;
+                //   console.log('Праздники Лог успешно найден');
+                // }
+                // if (!this._prazdnikiLoaded && window.vk_app && classItem.name === 'Праздники') {
+                //   this._prazdnikiLoaded = true;
+                //   await this.vkBridge.send('VKWebAppGetAuthToken', {
+                //     app_id: 54509391,
+                //     scope: 'friends,status'
+                //   })
+                //     .then(async (data) => {
+                //       if (data.access_token) {
+                //         // Ключ доступа пользователя получен
+                //         const friendsList = await this.vkBridge.send('VKWebAppCallAPIMethod', {
+                //           method: 'friends.get',
+                //           params: {
+                //             v: '5.131',
+                //             access_token: data.access_token,
+                //             fields: 'bdate,can_post,can_see_all_posts,can_write_private_message,city,contacts,country,domain,education,has_mobile,timezone,last_seen,nickname,online,photo_100,photo_200_orig,photo_50,photo_id,relation,sex,status,universities'
+                //           }
+                //         });
+                //         console.log('vk friends.get', friendsList);
+                //         friendsList.response.items.filter(i => !!i.bdate).map(vkFrObj => ({
+                //           bdate: vkFrObj.bdate || '',
+                //           can_post: vkFrObj.can_post || '',
+                //           can_see_all_posts: vkFrObj.can_see_all_posts || '',
+                //           can_write_private_message: vkFrObj.can_write_private_message || '',
+                //           city: vkFrObj.city || '',
+                //           contacts: vkFrObj.contacts || '',
+                //           country: vkFrObj.country || '',
+                //           domain: vkFrObj.domain || '',
+                //           education: vkFrObj.education || '',
+                //           has_mobile: vkFrObj.has_mobile || '',
+                //           timezone: vkFrObj.timezone || '',
+                //           last_seen: vkFrObj.last_seen || '',
+                //           nickname: vkFrObj.nickname || '',
+                //           online: vkFrObj.online || '',
+                //           photo_100: vkFrObj.photo_100 || '',
+                //           photo_200_orig: vkFrObj.photo_200_orig || '',
+                //           photo_50: vkFrObj.photo_50 || '',
+                //           photo_id: vkFrObj.photo_id || '',
+                //           relation: vkFrObj.relation || '',
+                //           sex: vkFrObj.sex || '',
+                //           status: vkFrObj.status || '',
+                //           universities: vkFrObj.universities || '',
                           
-                          'Название': `День рождения: ${vkFrObj.first_name} ${vkFrObj.last_name}`,
-                          first_name: vkFrObj.first_name || '',
-                          last_name: vkFrObj.last_name || '',
-                          vkId: vkFrObj.id,
-                        })).forEach(frObj => {
-                          classItem.createObjectDocument(frObj)
-                        });
-                        const systemLogClass = this.Host.getClassByName('Системный log');
-                        systemLogClass.createObjectDocument({ name: 'Праздники загружены' });
-                      }
-                    })
-                    .catch((error) => {
-                      // Ошибка
-                      console.log(error);
-                    });
-                }
-                this.setState({ selectedTreeItem: classItem })
+                //           'Название': `День рождения: ${vkFrObj.first_name} ${vkFrObj.last_name}`,
+                //           first_name: vkFrObj.first_name || '',
+                //           last_name: vkFrObj.last_name || '',
+                //           vkId: vkFrObj.id,
+                //         })).forEach(frObj => {
+                //           classItem.createObjectDocument(frObj)
+                //         });
+                //         const systemLogClass = this.Host.getClassByName('Системный log');
+                //         systemLogClass.createObjectDocument({ name: 'Праздники загружены' });
+                //       }
+                //     })
+                //     .catch((error) => {
+                //       // Ошибка
+                //       console.log(error);
+                //     });
+                // }
+                // this.setState({ selectedTreeItem: classItem })
               }}
             ></AVClass>) : ''}
           {this.state.selectedTreeItem?.itemType === 'domain' ?
