@@ -260,6 +260,7 @@ export class AVClass extends AVItem {
         {this.state.selectedObjectDocument && (
           <div className={`pos-abs trbl-0 col ${this.props.itemFullScreenMode ? '' : 'pad-4'} z-index-10 bg-app-back`}>
             <AVObjectDocument
+              classItem={this.props.classItem || this.state.classItem}
               fieldDescriptors={this.state.fieldDescriptors}
               objectDocument={this.state.selectedObjectDocument}
               onCloseFunc={() => {this.setState({selectedObjectDocument: null})}}

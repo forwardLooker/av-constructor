@@ -13,6 +13,7 @@ import { AVContextMenu } from '../V/AVContextMenu.jsx';
 
 export class AVObjectDocument extends AVItem {
   static defaultProps = {
+    classItem: null,
     fieldDescriptors: [],
     objectDocument: null,
     objectDocumentPath: '', // применяется вместо выше представленных полей за счёт дидимаунта, для организации роута на объект на весь экран

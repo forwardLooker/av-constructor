@@ -91,8 +91,14 @@ export class Host extends Item {
     return classItem;
   }
 
-  getClassByName(name) {
-    const classData = this.findDeepObjInItemsBy({name: name}, {items: this.config});
+  getClassByName(name, domainId) {
+    let classData;
+    if (domainId) {
+      const appUserDomainInConfig = this.findDeepObjInItemsBy({ id: domainId, itemType: 'domain' }, { items: this.config });
+      classData = this.findDeepObjInItemsBy({ name: name }, { items: appUserDomainInConfig.items });
+    } else {
+      classData = this.findDeepObjInItemsBy({ name: name }, { items: this.config });
+    }
     let classItem;
     if (classData) {
       classItem = new Class({serverRef: classData.reference, name});
