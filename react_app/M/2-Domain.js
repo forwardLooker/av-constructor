@@ -180,7 +180,8 @@ export class Domain extends Item {
     } else {
       targetDomainToAddNewDomain.items = [domainInitData]
     }
-    await workspaceDocRef.update({items: workspaceConfig.items});
+    await workspaceDocRef.update({ items: workspaceConfig.items });
+    return this.Host.getDomain(newDomain);
   }
 
 

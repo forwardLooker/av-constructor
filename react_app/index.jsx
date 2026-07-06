@@ -34,32 +34,75 @@ export class App extends React.PureComponent {
 
 async function vkStart () {
   host = new Host();
-  vkClass = host.getClassByPath('Domains/workspace/Domains/T4mhHKJGircmevLZbBHm/Classes/z3A9B1SghE3xHKzStVth');
+  // vkClass = host.getClassByPath('Domains/workspace/Domains/T4mhHKJGircmevLZbBHm/Classes/z3A9B1SghE3xHKzStVth');
   // vkClass = host.getClassByPath('Domains/workspace/Domains/fKEKGydMtMgcGv5Iwn4s/Classes/4qEmXDmHobTXfNnziIbE');
   
-  const [c] = await Promise.all([host.getConfig.bind(host)(), vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
+  // const [c] = await Promise.all([host.getConfig.bind(host)(), vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
+  const [c, vkUser] = await Promise.all([host.getConfig.bind(host)(), vkBridge.send('VKWebAppGetUserInfo')]);
   config = c;
   
   // Загрузка данных vkUser в базу данных
-  const vkUser = await vkBridge.send('VKWebAppGetUserInfo');
-  const vkUserClass = host.getClassByName('Пользователь');
-  const vkUserObjDocs = await vkUserClass.getObjectDocuments();
+  const vkAppUserDomainName = `vk id:${vkUser.id}`;
+  let appUserDomainInConfig = host.findDeepObjInItemsBy({ name: vkAppUserDomainName }, { items: config });
+  let newUserInitialization;
+  if (!appUserDomainInConfig) {
+    newUserInitialization = true;
+    console.log('existed User Domain not found. Start creating new User Domain');
+    const workspaceInConfig = host.findDeepObjInItemsBy({ name: 'Workspace' }, { items: config });
+    const workspaceDomainItem = host.getDomain(workspaceInConfig.reference);
+    const appUserDomainItem = await workspaceDomainItem.createDomain(vkAppUserDomainName);
+    
+    const initBaseDomainInConfig = host.findDeepObjInItemsBy({ name: 'vk id:293289885' }, { items: config });
+    console.log('Поиск исходного Домена для инициализации нового Юзера initBaseDomainInConfig:', initBaseDomainInConfig);
+    
+    const vkMainBaseClassInConfig = host.findDeepObjInItemsBy({ name: 'vk main' }, { items: initBaseDomainInConfig.items });
+    const vkClubsAndBarsClassInConfig = host.findDeepObjInItemsBy({ name: 'Клубы и Бары' }, { items: initBaseDomainInConfig.items }); 
+    
+    const vkSystemLogClassInConfig = host.findDeepObjInItemsBy({ name: 'Системный log' }, { items: initBaseDomainInConfig.items });
+    const vkFriendsClassInConfig = host.findDeepObjInItemsBy({ name: 'Друзья' }, { items: initBaseDomainInConfig.items }); 
+    const vkUserClassInConfig = host.findDeepObjInItemsBy({ name: 'Пользователь' }, { items: initBaseDomainInConfig.items });
+    await Promise.all([
+      appUserDomainItem.createClassCopyFromReferenceWithData(vkMainBaseClassInConfig.reference),
+      appUserDomainItem.createClassCopyFromReferenceWithData(vkClubsAndBarsClassInConfig.reference),
+
+      appUserDomainItem.createClassCopyFromReference(vkSystemLogClassInConfig.reference),
+      appUserDomainItem.createClassCopyFromReference(vkFriendsClassInConfig.reference),
+      appUserDomainItem.createClassCopyFromReference(vkUserClassInConfig.reference),
+    ]);
+    
+    config = await host.getConfig();
+    appUserDomainInConfig = host.findDeepObjInItemsBy({ name: vkAppUserDomainName }, { items: config });
+  }
+  
+  const vkClassInConfig = host.findDeepObjInItemsBy({ name: 'vk main' }, { items: appUserDomainInConfig.items });
+  vkClass = host.getClass(vkClassInConfig.reference);
+  await Promise.all([vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
+
+  
+  const vkUserClass = host.findDeepObjInItemsBy({ name: 'Пользователь' }, { items: appUserDomainInConfig.items });
+  let vkUserObjDocs;
+  if (!newUserInitialization) {
+    vkUserObjDocs = await vkUserClass.getObjectDocuments();
+  }
   console.log('Загрузка класса данных Пользователь vkUserObjDocs:', vkUserObjDocs);
-  if (vkUserObjDocs.length === 0 && vkUser) {
+  if (newUserInitialization || (vkUserObjDocs?.length === 0 && vkUser)) {
     console.log('Создание объекта Пользователь в базе vkUser:', vkUser);
     vkUserClass.createObjectDocument({ ...vkUser, name: vkUser.first_name + ' ' + vkUser.last_name, vkId: vkUser.id })
   }
   
   // Загрузка Друзей в базу данных          
-  const systemLogClass = host.getClassByName('Системный log');
-  const systemLogObjDocs = await systemLogClass.getObjectDocuments();
+  const systemLogClass = host.findDeepObjInItemsBy({ name: 'Системный log' }, { items: appUserDomainInConfig.items });
+  let systemLogObjDocs;
+  if (!newUserInitialization) {
+    systemLogObjDocs = await systemLogClass.getObjectDocuments();
+  }
   let _friendsLoaded;
-  if (systemLogObjDocs.some(o => o.name === 'Друзья загружены')) {
+  if (!newUserInitialization && systemLogObjDocs?.some(o => o.name === 'Друзья загружены')) {
     _friendsLoaded = true;
     console.log('Друзья загружены Лог успешно найден');
   }
   if (!_friendsLoaded) {
-    const vkFriendsClass = host.getClassByName('Друзья');
+    const vkFriendsClass = host.findDeepObjInItemsBy({ name: 'Друзья' }, { items: appUserDomainInConfig.items });;
     const vkFriendsObjDocs = await vkFriendsClass.getObjectDocuments();
     await vkBridge.send('VKWebAppGetAuthToken', {
       app_id: 54509391,
