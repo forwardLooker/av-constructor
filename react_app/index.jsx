@@ -61,14 +61,13 @@ async function vkStart () {
     const vkSystemLogClassInConfig = host.findDeepObjInItemsBy({ name: 'Системный log' }, { items: initBaseDomainInConfig.items });
     const vkFriendsClassInConfig = host.findDeepObjInItemsBy({ name: 'Друзья' }, { items: initBaseDomainInConfig.items }); 
     const vkUserClassInConfig = host.findDeepObjInItemsBy({ name: 'Пользователь' }, { items: initBaseDomainInConfig.items });
-    await Promise.all([
-      appUserDomainItem.createClassCopyFromReferenceWithData(vkMainBaseClassInConfig.reference),
-      appUserDomainItem.createClassCopyFromReferenceWithData(vkClubsAndBarsClassInConfig.reference),
+    
+    await appUserDomainItem.createClassCopyFromReferenceWithData(vkMainBaseClassInConfig.reference),
+    await appUserDomainItem.createClassCopyFromReferenceWithData(vkClubsAndBarsClassInConfig.reference),
 
-      appUserDomainItem.createClassCopyFromReference(vkSystemLogClassInConfig.reference),
-      appUserDomainItem.createClassCopyFromReference(vkFriendsClassInConfig.reference),
-      appUserDomainItem.createClassCopyFromReference(vkUserClassInConfig.reference),
-    ]);
+    await appUserDomainItem.createClassCopyFromReference(vkSystemLogClassInConfig.reference),
+    await appUserDomainItem.createClassCopyFromReference(vkFriendsClassInConfig.reference),
+    await appUserDomainItem.createClassCopyFromReference(vkUserClassInConfig.reference),
     
     config = await host.getConfig();
     appUserDomainInConfig = host.findDeepObjInItemsBy({ name: vkAppUserDomainName }, { items: config });
