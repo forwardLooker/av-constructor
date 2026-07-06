@@ -79,7 +79,8 @@ async function vkStart () {
   await Promise.all([vkClass.getFieldDescriptors.bind(vkClass)(), vkClass.getObjectDocuments.bind(vkClass)()]);
 
   
-  const vkUserClass = host.findDeepObjInItemsBy({ name: 'Пользователь' }, { items: appUserDomainInConfig.items });
+  const vkUserClassInConfig = host.findDeepObjInItemsBy({ name: 'Пользователь' }, { items: appUserDomainInConfig.items });
+  const vkUserClass = host.getClass(vkUserClassInConfig.reference);
   let vkUserObjDocs;
   if (!newUserInitialization) {
     vkUserObjDocs = await vkUserClass.getObjectDocuments();
@@ -91,7 +92,8 @@ async function vkStart () {
   }
   
   // Загрузка Друзей в базу данных          
-  const systemLogClass = host.findDeepObjInItemsBy({ name: 'Системный log' }, { items: appUserDomainInConfig.items });
+  const systemLogClassInConfig = host.findDeepObjInItemsBy({ name: 'Системный log' }, { items: appUserDomainInConfig.items });
+  const systemLogClass = host.getClass(systemLogClassInConfig.reference);
   let systemLogObjDocs;
   if (!newUserInitialization) {
     systemLogObjDocs = await systemLogClass.getObjectDocuments();
@@ -102,7 +104,8 @@ async function vkStart () {
     console.log('Друзья загружены Лог успешно найден');
   }
   if (!_friendsLoaded) {
-    const vkFriendsClass = host.findDeepObjInItemsBy({ name: 'Друзья' }, { items: appUserDomainInConfig.items });;
+    const vkFriendsClassInConfig = host.findDeepObjInItemsBy({ name: 'Друзья' }, { items: appUserDomainInConfig.items });
+    const vkFriendsClass = host.getClass(vkFriendsClassInConfig.reference);
     const vkFriendsObjDocs = await vkFriendsClass.getObjectDocuments();
     await vkBridge.send('VKWebAppGetAuthToken', {
       app_id: 54509391,
