@@ -532,6 +532,12 @@ class AVFieldOriginal extends AVItem {
     }
         
     let vkuiComponentClass = vkui[i.viewItemType] || vkicons[i.viewItemType];
+    if (!vkuiComponentClass && i.viewItemType.split('.').length === 2) {
+      const componentPathArr = i.viewItemType.split('.');
+      const first = vkui[componentPathArr[0]];
+      const second = first[componentPathArr[1]];
+      vkuiComponentClass = second;
+    }
     let propsObj = (i.props && this.R.pipe(
       this.R.map(this.R.props(['propName', 'propValue'])),
       this.R.fromPairs
