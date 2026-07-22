@@ -565,6 +565,14 @@ class AVFieldOriginal extends AVItem {
           const computedValue = lamdaFunc(objDoc);
           propsObj[key] = computedValue;
         }
+        if (pObj.type === 'functionWithThis') {
+          const lamdaText = propsObj[key];
+          let lamdaFunc = new Function('objDoc', lamdaText);
+          lamdaFunc = lamdaFunc.bind(this);
+          const computedValue = lamdaFunc(objDoc);
+          propsObj[key] = computedValue;
+        }
+
       })
     }
 

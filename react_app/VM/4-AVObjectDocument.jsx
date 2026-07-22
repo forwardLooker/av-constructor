@@ -1882,7 +1882,7 @@ export class AVObjectDocument extends AVItem {
                         label: 'type',
                         dataType: 'string',
                         variant: 'select',
-                        valuesList: ['string', 'number', 'boolean', 'dispatch', 'objDocFromClassByFunction'],
+                        valuesList: ['string', 'number', 'boolean', 'dispatch', 'objDocFromClassByFunction', 'functionWithThis'],
                         gridColumnWidth: '200px',
                       }]
                     }}
