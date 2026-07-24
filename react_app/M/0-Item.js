@@ -7,6 +7,9 @@ export class Item {
   get vkUser() {
     return Item.vkUser;
   }
+  set vkUser(vkUser) {
+    Item.vkUser = vkUser;
+  }
 
   get Host() {
     return Item.Host // сеттится в конструкторе Хоста

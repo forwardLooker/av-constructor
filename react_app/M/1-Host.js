@@ -84,6 +84,16 @@ export class Host extends Item {
     const domain = new Domain({serverRef: dmnRef, id});
     return domain
   }
+  
+  getDomainByName(name) {
+    let domainData = this.findDeepObjInItemsBy({ name: name, itemType: 'domain' }, { items: this.config });
+    let domainItem;
+    if (domainData) {
+      domainItem = new Domain({ serverRef: domainData.reference });
+    }
+    return domainItem;
+  }
+
     
   getClassByPath(path) {
     const clsRef = this.db.doc(path);
