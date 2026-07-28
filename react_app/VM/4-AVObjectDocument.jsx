@@ -1940,6 +1940,19 @@ export class AVObjectDocument extends AVItem {
                       this.Host.$hostElement.forceUpdate();
                     }}
                   ></AVField>
+                  <AVField
+                    fieldItem={{
+                      label: 'onLoadFunction(this, objDocArr, item, $objectDocument)',
+                      dataType: 'string',
+                      variant: 'textarea'
+                    }}
+                    value={itemSelected.map?.onLoadFunction}
+                    onChangeFunc={(value) => itemSelected.map.onLoadFunction = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+
 
 
                   {/* <AVField

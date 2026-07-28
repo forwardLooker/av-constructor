@@ -377,6 +377,12 @@ class AVFieldOriginal extends AVItem {
                 objDocArr = transformation(objDocArr);
               }
               this.state.sourceClassObjectDocuments[`${i.map.sourceClassName} - ${i.map.transformationFunction}`] = objDocArr;
+              if (i.map.onLoadFunction) {
+                let onLoadFunc = new Function('objDocArr', 'item', '$objectDocument', i.map.onLoadFunction);
+                onLoadFunc = onLoadFunc.bind(this);
+                onLoadFunc(objDocArr, i, this.props.$objectDocument);
+              }
+
             } 
           }
           loadObjectDocumentsForMapping(i.items)
