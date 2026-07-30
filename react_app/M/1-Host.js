@@ -89,7 +89,7 @@ export class Host extends Item {
     let domainData = this.findDeepObjInItemsBy({ name: name, itemType: 'domain' }, { items: this.config });
     let domainItem;
     if (domainData) {
-      domainItem = new Domain({ serverRef: domainData.reference });
+      domainItem = new Domain({ serverRef: domainData.reference, id: domainData.id });
     }
     return domainItem;
   }

@@ -1930,6 +1930,18 @@ export class AVObjectDocument extends AVItem {
                   ></AVField>
                   <AVField
                     fieldItem={{
+                      label: 'sourceDomainName',
+                      dataType: 'string',
+                    }}
+                    value={itemSelected.map?.sourceDomainName}
+                    onChangeFunc={(value) => itemSelected.map.sourceDomainName = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+
+                  <AVField
+                    fieldItem={{
                       label: 'transformationFunction(return objDocArr)',
                       dataType: 'string',
                       variant: 'textarea'

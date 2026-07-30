@@ -370,7 +370,14 @@ class AVFieldOriginal extends AVItem {
         items.forEach(async i => {
           if (i.map?.isMapMode && i.map?.sourceClassName) {
             if (!this.state.sourceClassObjectDocuments[`${i.map.sourceClassName} - ${i.map.transformationFunction}`]) {
-              const classItem = this.Host.getClassByName(i.map.sourceClassName, this.props.$objectDocument.props.classItem.metadata.domainId);
+              let domainId;
+              if (i.map.sourceDomainName) {
+                const domainItem = this.Host.getDomainByName(i.map.sourceDomainName);
+                domainId = domainItem.id
+              } else {
+                domainId = this.props.$objectDocument.props.classItem.metadata.domainId;
+              }
+              const classItem = this.Host.getClassByName(i.map.sourceClassName, domainId);
               let objDocArr = await classItem.getObjectDocuments();
               if (i.map.transformationFunction) {
                 const transformation = new Function('objDocArr', i.map.transformationFunction);
