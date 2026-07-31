@@ -56,14 +56,12 @@ async function vkStart () {
     console.log('Поиск исходного Домена для инициализации нового Юзера initBaseDomainInConfig:', initBaseDomainInConfig);
     
     const vkMainBaseClassInConfig = host.findDeepObjInItemsBy({ name: 'vk main' }, { items: initBaseDomainInConfig.items });
-    const vkClubsAndBarsClassInConfig = host.findDeepObjInItemsBy({ name: 'Клубы и Бары' }, { items: initBaseDomainInConfig.items }); 
     
     const vkSystemLogClassInConfig = host.findDeepObjInItemsBy({ name: 'Системный log' }, { items: initBaseDomainInConfig.items });
     const vkFriendsClassInConfig = host.findDeepObjInItemsBy({ name: 'Друзья' }, { items: initBaseDomainInConfig.items }); 
     const vkUserClassInConfig = host.findDeepObjInItemsBy({ name: 'Пользователь' }, { items: initBaseDomainInConfig.items });
     
     await appUserDomainItem.createClassCopyFromReferenceWithData(vkMainBaseClassInConfig.reference),
-    await appUserDomainItem.createClassCopyFromReferenceWithData(vkClubsAndBarsClassInConfig.reference),
 
     await appUserDomainItem.createClassCopyFromReference(vkSystemLogClassInConfig.reference),
     await appUserDomainItem.createClassCopyFromReference(vkFriendsClassInConfig.reference),
