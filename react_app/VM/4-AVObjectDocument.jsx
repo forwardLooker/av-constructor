@@ -519,7 +519,7 @@ export class AVObjectDocument extends AVItem {
               <div className='_tab-head row' style={fieldItem.tabHeadStyle}>
                 {fieldItem.items.map(tab => tab && (
                   <div
-                    className={['_tab-head-item', 'pad-4-8',
+                    className={['_tab-head-item cursor-default', 'pad-4-8',
                       (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'border-2' : 'border',
                       (fieldItem.selectedTabLabel === tab.label) && !tab.redirectToUrl ? 'font-weight-500' : ''
                     ].join(' ')}
