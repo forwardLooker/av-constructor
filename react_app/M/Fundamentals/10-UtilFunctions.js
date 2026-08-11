@@ -4,6 +4,12 @@ import * as R from 'ramda'
 export class UtilFunctions {
   static noop = () => {};
   static R = R;
+  
+  static extractDateFromBrackets = (text) => {
+    const secondPart = text.split("(")[1];
+    const dateString = secondPart.split(")")[0];
+    return new Date(dateString.split('.')[2], Number(dateString.split('.')[1]) - 1, Number(dateString.split('.')[0]));
+  }
 
   static deepClone = (objectToClone) => {
     // return JSON.parse(JSON.stringify(objectToClone))

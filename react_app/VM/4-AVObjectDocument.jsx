@@ -1919,6 +1919,29 @@ export class AVObjectDocument extends AVItem {
                   ></AVField>
                   <AVField
                     fieldItem={{
+                      label: 'sourceObjDocPropName',
+                      dataType: 'string',
+                    }}
+                    value={itemSelected.map?.sourceObjDocPropName}
+                    onChangeFunc={(value) => itemSelected.map.sourceObjDocPropName = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+
+                  <AVField
+                    fieldItem={{
+                      label: 'sourceThisStateName',
+                      dataType: 'string',
+                    }}
+                    value={itemSelected.map?.sourceThisStateName}
+                    onChangeFunc={(value) => itemSelected.map.sourceThisStateName = value}
+                    onBlurFunc={e => {
+                      this.Host.$hostElement.forceUpdate();
+                    }}
+                  ></AVField>
+                  <AVField
+                    fieldItem={{
                       label: 'sourceClassName',
                       dataType: 'string',
                     }}

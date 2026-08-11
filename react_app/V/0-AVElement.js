@@ -8,6 +8,8 @@ export class AVElement extends React.PureComponent {
   styled = styled;
   static R = UtilFunctions.R;
   R = UtilFunctions.R;
+  
+  extractDateFromBrackets = UtilFunctions.extractDateFromBrackets;
 
   static noop = UtilFunctions.noop;
   noop = UtilFunctions.noop;

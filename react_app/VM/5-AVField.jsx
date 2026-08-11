@@ -580,9 +580,9 @@ class AVFieldOriginal extends AVItem {
         }
         if (pObj.type === 'functionWithThis') {
           const lamdaText = propsObj[key];
-          let lamdaFunc = new Function('objDoc', lamdaText);
+          let lamdaFunc = new Function('objDoc', 'item', lamdaText);
           lamdaFunc = lamdaFunc.bind(this);
-          const computedValue = lamdaFunc(objDoc);
+          const computedValue = lamdaFunc(objDoc, i);
           propsObj[key] = computedValue;
         }
 
@@ -815,7 +815,22 @@ class AVFieldOriginal extends AVItem {
       if (!i.map?.isMapMode) {
         return this._renderOneDivInDivItem(i, idx, objDocFromMap);
       } else {
-        const arrayFromSource = this.state.sourceClassObjectDocuments[`${i.map?.sourceClassName} - ${i.map?.transformationFunction}`];
+        let arrayFromSource;
+        if (i.map?.sourceClassName) {
+          arrayFromSource = this.state.sourceClassObjectDocuments[`${i.map?.sourceClassName} - ${i.map?.transformationFunction}`];
+        } else if (i.map?.sourceThisStateName) {
+          arrayFromSource = this.state[i.map.sourceThisStateName];
+          if (i.map.transformationFunction && arrayFromSource) {
+            const transformation = new Function('objDocArr', i.map.transformationFunction);
+            arrayFromSource = transformation(arrayFromSource);
+          }
+        } else if (i.map?.sourceObjDocPropName) {
+          arrayFromSource = objDocFromMap[i.map.sourceObjDocPropName];
+          if (i.map.transformationFunction && arrayFromSource) {
+            const transformation = new Function('objDocArr', i.map.transformationFunction);
+            arrayFromSource = transformation(arrayFromSource);
+          }
+        }
         return arrayFromSource?.map((objDoc, oIdx) => {
           return this._renderOneDivInDivItem(i, idx+oIdx, objDoc);
         })
