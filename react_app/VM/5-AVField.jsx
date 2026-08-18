@@ -610,7 +610,7 @@ class AVFieldOriginal extends AVItem {
             i.isHovered = true;
 
             if (i.onActions?.onMouseEnter) {
-              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this, sourceItem: i })
             }
 
             this.forceUpdate();
@@ -619,14 +619,14 @@ class AVFieldOriginal extends AVItem {
             i.isHovered = false;
 
             if (i.onActions?.onMouseLeave) {
-              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this, sourceItem: i })
             }
 
             this.forceUpdate();
           },
           onClick: (e) => {
             if (i.onActions?.onClick) {
-              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this })
+              this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this, sourceItem: i })
             }
           }
 
@@ -642,7 +642,7 @@ class AVFieldOriginal extends AVItem {
           i.isHovered = true;
 
           if (i.onActions?.onMouseEnter) {
-            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this })
+            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseEnter, sourceAVFieldComponent: this, sourceItem: i })
           }
 
           this.forceUpdate();
@@ -651,14 +651,14 @@ class AVFieldOriginal extends AVItem {
           i.isHovered = false;
 
           if (i.onActions?.onMouseLeave) {
-            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this })
+            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onMouseLeave, sourceAVFieldComponent: this, sourceItem: i })
           }
 
           this.forceUpdate();
         },
         onClick: (e) => {
           if (i.onActions?.onClick) {
-            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this, sourceObjDoc: objDoc })
+            this.props.$objectDocument.activateActionHandler({ e, actionName: i.onActions.onClick, sourceAVFieldComponent: this, sourceObjDoc: objDoc, sourceItem: i })
           }
         }
 
