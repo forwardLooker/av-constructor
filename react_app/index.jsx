@@ -95,12 +95,12 @@ async function vkStart () {
   if (!newUserInitialization) {
     systemLogObjDocs = await systemLogClass.getObjectDocuments();
   }
-  let _friendsLoaded;
-  if (!newUserInitialization && systemLogObjDocs?.some(o => o.name === 'Друзья загружены')) {
-    _friendsLoaded = true;
-    console.log('Друзья загружены Лог успешно найден');
-  }
-  if (!_friendsLoaded) {
+  // let _friendsLoaded;
+  // if (!newUserInitialization && systemLogObjDocs?.some(o => o.name === 'Друзья загружены')) {
+  //   _friendsLoaded = true;
+  //   console.log('Друзья загружены Лог успешно найден');
+  // }
+  if (true) {
     const vkFriendsClassInConfig = host.findDeepObjInItemsBy({ name: 'Друзья' }, { items: appUserDomainInConfig.items });
     const vkFriendsClass = host.getClass(vkFriendsClassInConfig.reference);
     const vkFriendsObjDocs = await vkFriendsClass.getObjectDocuments();
@@ -160,7 +160,7 @@ async function vkStart () {
               }
             }
           });
-          systemLogClass.createObjectDocument({ name: 'Друзья загружены' });
+          // systemLogClass.createObjectDocument({ name: 'Друзья загружены' });
         }
       })
       .catch((error) => {
