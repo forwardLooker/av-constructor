@@ -40,6 +40,8 @@ export class AVClass extends AVItem {
     isLinearChartVisible: false,
     
     classItem: null,
+    
+    adjustment: [], // для вьюхи Корректировка
   }
   
   gridRef;
@@ -235,6 +237,10 @@ export class AVClass extends AVItem {
     if (this.state.currentViewName === 'Charts') {
       return this._renderCharts()
     }
+    if (this.state.currentViewName === 'Корректировка') {
+      return this._renderAdjustment()
+    }
+
     return this.props.classItem?.getViewComponentByName(this.state.currentViewName, this);
   }
 
@@ -327,6 +333,69 @@ export class AVClass extends AVItem {
           <div id="curve_chart" style={{ width: '900px', height: '500px' }}>LineChart</div>
         )}
 
+      </div>
+    )
+  }
+  
+  _renderAdjustment() {
+    return (
+      <div>
+        <AVButton onClick={() => {
+          console.log('Корректировка Выполнить started this.state.adjustment:', this.state.adjustment);
+          console.log('Корректировка Выполнить this.props.classItem.data:', this.props.classItem.data);
+          if (this.state.adjustment.length === 0) return;
+          const objDocsArr = this.props.classItem.data;
+          const fieldsToChange = this.state.adjustment.filter(adj => adj.operationType === 'изменить');
+          const fieldsToDelete = this.state.adjustment.filter(adj => adj.operationType === 'удалить');
+          let objSavedCount = 0;
+          objDocsArr.forEach(async obj => {
+            // изменение
+            const objDocItem = this.Host.getObjectDocumentByReference(obj.reference);
+            let dataToSave = {};
+            fieldsToChange.forEach(f => {
+              const changeFunction = new Function('value', 'objectDocumentData', f.changeFunction);
+              dataToSave[f.name] = changeFunction(obj[f.name], obj);
+            });
+            // удаление
+            fieldsToDelete.forEach(f => {
+              dataToSave[f.name] = this.Host.FieldValue.delete();
+            });
+            await objDocItem.saveData(dataToSave);
+            objSavedCount = objSavedCount + 1;
+            if (objSavedCount === objDocsArr.length) {
+              await this._loadGridData();
+              console.log('Сохранение объектов прошло успешно, Grid перезагружен this.props.classItem.data:', this.props.classItem.data);
+            }
+          })
+        }}>Выполнить</AVButton>
+        <AVField
+          fieldItem={{
+            label: 'Поля для изменения',
+            dataType: 'array',
+            labelPosition: 'top',
+            items: [{
+              name: 'operationType',
+              dataType: 'string',
+              variant: 'select',
+              valuesList: ['удалить', 'изменить'],
+              gridColumnWidth: '100px',
+            },
+            {
+              name: 'name',
+              dataType: 'string',
+              gridColumnWidth: '100px',
+            },
+            {
+              name: 'changeFunction',
+              label: 'changeFunction((value, objectDocumentData), return value)',
+              dataType: 'string',
+            }]
+
+          }}
+          value={this.state.adjustment}
+          onChangeFunc={(value) => this.state.adjustment = value}
+        >
+        </AVField>
       </div>
     )
   }
