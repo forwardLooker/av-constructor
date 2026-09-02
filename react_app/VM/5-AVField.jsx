@@ -821,14 +821,16 @@ class AVFieldOriginal extends AVItem {
         } else if (i.map?.sourceThisStateName) {
           arrayFromSource = this.state[i.map.sourceThisStateName];
           if (i.map.transformationFunction && arrayFromSource) {
-            const transformation = new Function('objDocArr', i.map.transformationFunction);
-            arrayFromSource = transformation(arrayFromSource);
+            let transformation = new Function('objDocArr', 'sourceObjDocFromMap', i.map.transformationFunction);
+            transformation = transformation.bind(this);
+            arrayFromSource = transformation(arrayFromSource, objDocFromMap);
           }
         } else if (i.map?.sourceObjDocPropName) {
           arrayFromSource = objDocFromMap[i.map.sourceObjDocPropName];
           if (i.map.transformationFunction && arrayFromSource) {
-            const transformation = new Function('objDocArr', i.map.transformationFunction);
-            arrayFromSource = transformation(arrayFromSource);
+            let transformation = new Function('objDocArr', 'sourceObjDocFromMap', i.map.transformationFunction);
+            transformation = transformation.bind(this);
+            arrayFromSource = transformation(arrayFromSource, objDocFromMap);
           }
         }
         return arrayFromSource?.map((objDoc, oIdx) => {

@@ -1965,7 +1965,7 @@ export class AVObjectDocument extends AVItem {
 
                   <AVField
                     fieldItem={{
-                      label: 'transformationFunction(return objDocArr)',
+                      label: 'transformationFunction(objDocArr, sourceObjDocFromMap, this)(return objDocArr)',
                       dataType: 'string',
                       variant: 'textarea'
                     }}
