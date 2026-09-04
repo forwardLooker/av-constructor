@@ -2,7 +2,7 @@
   "name": "av-constructor",
   "homepage": ".",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.2.7",
   "description": "AnVar Constructor",
   "babel": {
     "presets": [
