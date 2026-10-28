@@ -87,6 +87,8 @@ export class AVGrid extends AVElement {
 
   _sortInGrid = () => {
     this.state._columns.forEach(column => {
+      const sortAscend = this.R.sortWith([this.R.ascend(this.R.prop(column.name))]);
+      const sortDescend = this.R.sortWith([this.R.descend(this.R.prop(column.name))]);
       if (column.sortInGrid === 'ascend') {
         let items;
         if (column.dataType === 'number') {
@@ -96,7 +98,7 @@ export class AVGrid extends AVElement {
         } else {
           items = sortAscend(this.state._items)
         }
-        this.state_items = items;
+        this.state._items = items;
         this.state.sortingType = 'descend';
       }
       if (column.sortInGrid === 'descend') {
@@ -108,7 +110,7 @@ export class AVGrid extends AVElement {
         } else {
           items = sortDescend(this.state._items)
         }
-        this.state_items = items;
+        this.state._items = items;
         this.state.sortingType = 'ascend';
       }
     })
