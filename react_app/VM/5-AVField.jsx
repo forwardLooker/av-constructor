@@ -2705,7 +2705,7 @@ class AVFieldOriginal extends AVItem {
           <AVFieldOriginal.styles.input
             className="flex-1"
             autoComplete="off"
-            value={value?.name}
+            value={value?.name || value?.["Название"]}
             readOnly
           ></AVFieldOriginal.styles.input>
           <AVButton onClick={() => this.showClass(fieldItem.variantItemReference)} disabled={readOnly}>
@@ -2720,7 +2720,7 @@ class AVFieldOriginal extends AVItem {
           <AVFieldOriginal.styles.input
             className="flex-1"
             autoComplete="off"
-            value={value?.name}
+            value={value?.name || value?.["Название"]}
             readOnly
           ></AVFieldOriginal.styles.input>
           <AVButton onClick={() => this.showItemStructure(fieldItem.variantItemReference)} disabled={readOnly}>
