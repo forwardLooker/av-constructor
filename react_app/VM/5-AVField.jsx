@@ -251,10 +251,10 @@ class AVFieldOriginal extends AVItem {
       const activateConstructor = (item) => {
         item.actionListeners?.forEach(({ actionName, actionHandlerFunction }) => {
           if (actionName === 'constructor') {
-            let f = new Function('item', '$objectDocument', actionHandlerFunction);
+            let f = new Function('item', '$objectDocument', 'React', actionHandlerFunction);
             f = f.bind(this);
             try {
-              f(item, this.props.$objectDocument);
+              f(item, this.props.$objectDocument, React);
             } catch (error) {
               console.log('AVField constructor() actionHandlerFunction', error)
             }
@@ -537,6 +537,9 @@ class AVFieldOriginal extends AVItem {
   }
   
   _renderOneDivInDivItem = (i, idx, objDoc) => {
+    if (i.null) {
+      return null
+    }
     if (i.viewItemType === 'vertical-layout') {
       if (!i.items || i.items?.length === 0) {
         i.items =[{viewItemType: 'space div'}]

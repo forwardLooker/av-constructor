@@ -2190,7 +2190,7 @@ export class AVObjectDocument extends AVItem {
                           gridColumnWidth: '400px',
                         }, {
                           name: 'actionHandlerFunction',
-                          label: 'actionHandlerFunction(this, item, $objectDocument, e||e[], sourceAVFieldComponent, sourceItem, sourceObjDoc)',
+                          label: 'actionHandlerFunction(this, item, $objectDocument, React, e||e[], sourceAVFieldComponent, sourceItem, sourceObjDoc)',
                           dataType: 'string',
                           variant: 'textarea'
                         }]
