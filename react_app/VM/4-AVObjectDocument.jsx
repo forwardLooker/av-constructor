@@ -4088,6 +4088,9 @@ export class AVObjectDocument extends AVItem {
         insertIndex = 1 + this.state.designDropTargetLevel2.container.items.findIndex(i => i === this.state.designDropTargetLevel2)
       }
       this.state.designDropTargetLevel2.container.items.splice(insertIndex, 0, this.state.designDragElement);
+      if (this.state.designDropTargetLevel2.container === this.state.designDragContainer && cutIndex > insertIndex) {
+        cutIndex = cutIndex + 1;
+      }
       
     } else {
       if (this.state.designDropSide === 'left' || this.state.designDropSide === 'right') {
