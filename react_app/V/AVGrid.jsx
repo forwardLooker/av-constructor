@@ -95,6 +95,8 @@ export class AVGrid extends AVElement {
           items = this.state._items.sort((a, b) => a[column.name] - b[column.name])
         } else if (column.dataType === 'boolean') {
           items = this.state._items.sort((a, b) => !b[column.name] - !a[column.name])
+        } else if (column.variant === 'date' || column.variant === 'vk-date-input') {
+          items = this.state._items.sort((a, b) => new Date(a[column.name]) - new Date(b[column.name]))
         } else {
           items = sortAscend(this.state._items)
         }
@@ -107,6 +109,8 @@ export class AVGrid extends AVElement {
           items = this.state._items.sort((a, b) => b[column.name] - a[column.name])
         } else if (column.dataType === 'boolean') {
           items = this.state._items.sort((a, b) => !a[column.name] - !b[column.name])
+        } else if (column.variant === 'date' || column.variant === 'vk-date-input') {
+          items = this.state._items.sort((a, b) => new Date(b[column.name]) - new Date(a[column.name]))
         } else {
           items = sortDescend(this.state._items)
         }
@@ -264,6 +268,8 @@ export class AVGrid extends AVElement {
                  items = this.state._items.sort((a, b) => a[column.name] - b[column.name])
                } else if (column.dataType === 'boolean') {
                  items = this.state._items.sort((a, b) => !b[column.name] - !a[column.name])
+               } else if (column.variant === 'date' || column.variant === 'vk-date-input') {
+                 items = this.state._items.sort((a, b) => new Date(a[column.name]) - new Date(b[column.name]))
                } else {
                  items = sortAscend(this.state._items)
                }
@@ -277,6 +283,8 @@ export class AVGrid extends AVElement {
                  items = this.state._items.sort((a, b) => b[column.name] - a[column.name])
                } else if (column.dataType === 'boolean') {
                  items = this.state._items.sort((a, b) => !a[column.name] - !b[column.name])
+               } else if (column.variant === 'date' || column.variant === 'vk-date-input') {
+                 items = this.state._items.sort((a, b) => new Date(b[column.name]) - new Date(a[column.name]))
                } else {
                  items = sortDescend(this.state._items)
                }
