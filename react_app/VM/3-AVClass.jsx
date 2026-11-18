@@ -108,7 +108,7 @@ export class AVClass extends AVItem {
         //   ['2007', 1030, 540]
         // ]);
         
-        let dataset = this.state.objectDocuments.map(obj => ([obj['Дата'], Number(obj['Сумма'])]));
+        let dataset = this.state.objectDocuments.map(obj => ([obj[this.state.linearChartDate], Number(obj[this.state.linearChartAmount])]));
         dataset = dataset.sort((a, b) => {
           if (((new Date(a[0])) < (new Date(b[0])))) {
             return -1
